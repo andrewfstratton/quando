@@ -1,0 +1,48 @@
+<html>
+    <head>
+        <title>Setup Device</title>
+        <meta charset="UTF-8">
+        <script type="text/javascript">
+            function ajax(url, callback) {
+                var x_h_o = null;
+                if (window.ActiveXObject) {
+                    x_h_o = new ActiveXObject("Microsoft.XMLHTTP");
+                 } else {
+                     x_h_o = new XMLHttpRequest();
+                 }
+                 x_h_o.open("GET", url, true);
+                 x_h_o.send(null);
+                 x_h_o.onreadystatechange = function() {
+                      if(x_h_o.readyState == 4) {
+                          callback(JSON.parse(x_h_o.responseText));
+                      }
+                 }
+            }
+            
+            function onload() {
+                ajax("/client/js", function(response) {
+                    if (response.success) {
+                        var list = document.getElementById("list_js");
+                        var ip = response.ip;
+                        document.getElementById("ip").innerHTML = ip;
+                        list.innerHTML = '';
+                        var result = '';
+                        for(var i=0; i<response.files.length; i++) {
+                            result += '<button onclick="setJs(\'' + response.files[i] + '\');">' + response.files[i] + '</button><br/>';
+                        }
+                        list.innerHTML = result;
+                    }
+                });
+            }
+            function setJs(name) {
+                localStorage.setItem('client_js', name);
+                document.location="/client"; // TODO Check
+            }
+        </script>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body onload="onload();">
+        <div>Setup Device [<span id="ip"></span>]</div>
+        <div id='list_js'>Loading...</div>
+    </body>
+</html>
