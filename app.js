@@ -15,10 +15,6 @@ const router = express.Router()
 const http = require('http').Server(app)
 const io = require('socket.io')(http)
 
-io.on('connection', (socket) => {
-    console.log('a user connected')
-})
-
 var server = http.listen(80, () => {
     var host = server.address().address
     var port = server.address().port
@@ -46,7 +42,7 @@ app.use(session({
         // name: may need this later - if sessions exist for clients...
         httpOnly: false,
     },
-    store: new mongo_store({ url: 'mongodb://localhost/quando' })
+    store: new mongo_store({ url: 'mongodb://127.0.0.1/quando' })
 }))
 app.use('/', (req, res, next) => {
     // console.log(">>" + JSON.stringify(req.session.user))

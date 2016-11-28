@@ -4,19 +4,6 @@
     self.leap = null;
     self.leap_start_check_time = 0;
     self.vitrines = new Map();
-    var _socket = io.connect('http://' + location.hostname)
-
-    function endSame(longer, shorter) {
-        var loc = longer.indexOf(shorter, longer.length - shorter.length)
-        return loc >= 0
-    }
-
-    _socket.on('deploy', function(data) {
-        var locStr = location + "" // have to force change to string...
-        if (locStr.endsWith(data.script)) {
-            location.reload(true); // nocache reload - probably not necessary
-        }
-    });
 
     var Config = self.Config = {
     };
@@ -302,8 +289,7 @@ console.log(handed);
                         // remove focus from any elements - since the cursor isn't over them
                         self._removeFocus();
                     }
-                    }
-                }).use('screenPosition', {
+                }}).use('screenPosition', {
                     scale: 1, verticalOffset: screen.height
                 });
         }

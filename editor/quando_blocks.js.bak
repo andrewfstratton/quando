@@ -26,7 +26,7 @@
             if(resp.success) { 
                 callback(resp.files);
             } else {
-                alert(resp.message);
+                alert(resp);
             }
         });
     };
