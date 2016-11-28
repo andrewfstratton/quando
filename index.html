@@ -1,0 +1,22 @@
+<html>
+    <head>
+        <title>Start</title>
+        <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+        <META HTTP-EQUIV="Expires" CONTENT="-1">
+        <meta charset="UTF-8">
+        <script type="text/javascript">
+            function redirect() {
+                var url = '/client/setup';
+                var item = localStorage.getItem('client_js');
+                if (item != null) {
+                    url = '/client/js/' + item
+                }
+                document.location = url;
+            }
+            </script>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body onload="redirect();">
+        <div>Starting...</div>
+    </body>
+</html>
