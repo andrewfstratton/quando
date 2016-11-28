@@ -8,26 +8,37 @@ const script = require("./script")
 const client_deploy = "./client/deployed_js/"
 const user = require("./user")
 const mongo_store = require('connect-mongo')(session)
+const path = require("path")
 
 const router = express.Router()
 
+const http = require('http').Server(app)
+const io = require('socket.io')(http)
+
+io.on('connection', (socket) => {
+    console.log('a user connected')
+})
+
+var server = http.listen(80, () => {
+    var host = server.address().address
+    var port = server.address().port
+    console.log("Quando Server listening at http://%s:%s", host, port)
+})
+
 const media_map = {
-    'video': __dirname + '\\client\\video',
-    'audio': __dirname + '\\client\\audio',
-    'images': __dirname + '\\client\\images'
+    'video': path.join(__dirname, 'client', 'video'),
+    'audio': path.join(__dirname, 'client', 'audio'),
+    'images': path.join(__dirname, 'client', 'images')
 }
 
 app.use(morgan('dev'))
 // Static for Editor
-app.use('/editor', express.static(__dirname + '/editor'))
-app.use('/css', express.static(__dirname + '/css'))
-app.use('/js', express.static(__dirname + '/js'))
-app.use('/blockly', express.static(__dirname + '/blockly'))
-app.use('/fonts', express.static(__dirname + '/fonts'))
-app.use('/closure-library', express.static(__dirname + '/closure-library'))
+app.use('/editor', express.static(path.join(__dirname, 'editor')))
+app.use('/blockly', express.static(path.join(__dirname, 'blockly')))
+app.use('/closure-library', express.static(path.join(__dirname, 'closure-library')))
 
 app.use(session({
-        secret: 'quando_secret',
+    secret: 'quando_secret',
     resave: false, // i.e. only save when changed
     saveUninitialized: true,
     cookie: {
@@ -38,7 +49,7 @@ app.use(session({
     store: new mongo_store({ url: 'mongodb://localhost/quando' })
 }))
 app.use('/', (req, res, next) => {
-    console.log(">>" + JSON.stringify(req.session.user))
+    // console.log(">>" + JSON.stringify(req.session.user))
     next()
 })
 app.get('/login', (req, res) => {
@@ -53,13 +64,11 @@ app.use(body_parser.json())
 app.post('/login', (req, res) => {
     let body = req.body
     if (body.userid && body.password) {
-        user.getOnIdPassword(body.userid, body.password, (err, result) => {
-            if (err) {
-                res.json({ 'success': false, 'message': 'Login Failed, please try again' })
-            } else {
-                req.session.user = result
-                res.json({ 'success': true })
-            }
+        user.getOnIdPassword(body.userid, body.password).then((result) => {
+            req.session.user = result
+            res.json({ 'success': true })
+        }, (err) => {
+            res.json({ 'success': false, 'message': 'Login Failed, please try again' + err })
         })
     } else {
         res.json({ 'success': false, 'message': 'Need UserId and password' })
@@ -72,53 +81,38 @@ app.delete('/login', (req, res) => {
 })
 
 app.post('/script', (req, res) => {
-    script.save(req.body.name, req.body.id, req.body.userid, req.body.script, (err) => {
-        if (err) {
-            res.json({ 'success': false, 'message': err })
-        } else {
-            res.json({ 'success': true })
-        }
-    })
+    script.save(req.body.name, req.body.id, req.body.userid, req.body.script).then(
+        (doc) => { res.json({ 'success': true }) },
+        (err) => { res.json({ 'success': false, 'message': err }) })
 })
 
 app.get('/script/names/:userid', (req, res) => {
-    script.getNamesOnOwnerID(req.params.userid, (err, list) => {
-        if (err) {
-            res.json({ 'success': false, 'message': err })
-        } else {
-            res.json({ 'success': true, list: list })
-        }
-    })
+    script.getNamesOnOwnerID(req.params.userid).then(
+        (list) => { res.json({ 'success': true, 'list': list }) },
+        (err) => { res.json({ 'success': false, 'message': err }) })
 })
 
 app.get('/script/id/:id', (req, res) => {
     let id = req.params.id
-    script.getOnId(id, (err, result) => {
-        if (err) {
-            res.json({ 'success': false, 'message': err })
-        } else {
-            res.json({ 'success': true, doc: result })
-        }
-    })
+    script.getOnId(id).then(
+        (result) => { res.json({ 'success': true, 'doc': result }) },
+        (err) => { res.json({ 'success': false, 'message': err }) })
 })
 
 app.delete('/script/id/:id', (req, res) => {
     let id = req.params.id
-    script.deleteOnId(id, (err, result) => {
-        if (err) {
-            res.json({ 'success': false, 'message': err })
-        } else {
-            res.json({ 'success': true })
-        }
-    })
+    script.deleteOnId(id).then(
+        (doc) => { res.json({ 'success': true }) },
+        (err) => { res.json({ 'success': false, 'message': err }) })
 })
 
 app.put('/script/deploy/:filename', (req, res) => {
-    let filename = req.params.filename
+    let filename = req.params.filename + ".js"
     let script = req.body.javascript
-    fs.writeFile(client_deploy + filename + ".js", script, (err) => {
+    fs.writeFile(client_deploy + filename, script, (err) => {
         if (!err) {
             res.json({ 'success': true })
+            io.emit('deploy', {script:filename})
         } else {
             res.json({ 'success': false, 'message': 'Failed to deploy script' })
         }
@@ -138,28 +132,22 @@ app.get('/file/type/:media', (req, res) => {
             }
         })
     } else {
-        res.json({ 'success': false, 'message': 'Failed to find folder - Error in configuration or Deployment' })
+        res.json({ 'success': false, 'message': "Failed to find folder for '" + req.params.media + "' - Error in configuration or Deployment" })
     }
 })
 
-var server = app.listen(80, () => {
-    var host = server.address().address
-    var port = server.address().port
-    console.log("Quando Server listening at http://%s:%s", host, port)
-})
-
 // Static for client
-let client_dir = __dirname + "\\client"
-app.use('/client/audio', express.static(client_dir + '\\audio'))
-app.use('/client/images', express.static(client_dir + '\\images'))
-app.use('/client/video', express.static(client_dir + '\\video'))
-app.use('/client/text', express.static(client_dir + '\\text'))
-app.use('/client/leap', express.static(client_dir + '\\leap'))
-app.use('/client/setup', express.static(client_dir + '\\setup.html'))
-app.use('/client/client.css', express.static(client_dir + '\\client.css'))
-app.use('/client/quando_browser.js', express.static(client_dir + '\\quando_browser.js'))
-app.use('/client/transparent.png', express.static(client_dir + '\\transparent.png'))
-app.use('/client/deployed_js', express.static(client_dir + '\\deployed_js'))
+let client_dir = path.join(__dirname, "client")
+app.use('/client/audio', express.static(path.join(client_dir, 'audio')))
+app.use('/client/images', express.static(path.join(client_dir, 'images')))
+app.use('/client/video', express.static(path.join(client_dir, 'video')))
+app.use('/client/text', express.static(path.join(client_dir, 'text')))
+app.use('/client/leap', express.static(path.join(client_dir, 'leap')))
+app.use('/client/setup', express.static(path.join(client_dir, 'setup.html')))
+app.use('/client/client.css', express.static(path.join(client_dir, 'client.css')))
+app.use('/client/quando_browser.js', express.static(path.join(client_dir, 'quando_browser.js')))
+app.use('/client/transparent.png', express.static(path.join(client_dir, 'transparent.png')))
+app.use('/client/deployed_js', express.static(path.join(client_dir, 'deployed_js')))
 
 app.get('/client/js/:filename', (req, res) => {
     let filename = req.params.filename
@@ -176,7 +164,7 @@ app.get('/client/js/:filename', (req, res) => {
 })
 
 app.get('/client/js', (req, res) => {
-    fs.readdir(__dirname + '\\client\\deployed_js', (err, files) => {
+    fs.readdir(path.join(__dirname, 'client', 'deployed_js'), (err, files) => {
         if (!err) {
             require('dns').lookup(require('os').hostname(), function (err, add, fam) {
                 res.json({ 'success': true, ip: add, 'files': files })
@@ -190,8 +178,8 @@ app.get('/client/js', (req, res) => {
     })
 })
 
-app.use('/client', express.static(client_dir + '\\index.html'))
+app.use('/client', express.static(path.join(client_dir, 'index.html')))
 
-user.getOnIdPassword("test", "password", (err, doc) => {
-    console.log(err, doc)
-})
+// user.save("test5", "test4", null).then(
+//     () => { console.log("Success") },
+//     (err) => { console.log("Fail : ", err) } )

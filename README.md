@@ -1,5 +1,5 @@
 # quando
-## Visual Programming for Digitally Interactive Exhibits
+## Visual Programming for Digital Interactive Exhibits
 
 ### To Install
 
