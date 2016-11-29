@@ -183,22 +183,45 @@
                 filename = prompt("Please enter the deployment filename \n(without a suffix)", _deploy);
             }
             if (filename !== null) {
-                $.ajax({
-                    url: '/script/deploy/' + encodeURI(filename),
-                    type: 'PUT',
-                    data: { javascript: code },
-                    success: function () {
-                        _deploy = filename;
-                        _success("Deployed as '" + filename + ".js'");
-                        var deploy_window = window.open('/client/js/' + filename + ".js", 'quando_deployed_test',
-                            'left=0,top=0,width=9999,height=9999');
-                        deploy_window.focus(); // moveTo(0,0);
-                    },
-                    error: function () {
-                        alert('Failed to find server');
-                    }
-                });
+                if (filename == '') {
+                    alert('Filename cannot be blank')
+                } else {
+                    $.ajax({
+                        url: '/script/deploy/' + encodeURI(filename),
+                        type: 'PUT',
+                        data: { javascript: code },
+                        success: function () {
+                            _deploy = filename;
+                            _success("Deployed as '" + filename + ".js'");
+                        },
+                        error: function () {
+                            alert('Failed to find server');
+                        }
+                    });
+                }
             }
+        } else {
+            alert('Behaviour incomplete.')
+        }
+    };
+    self.handle_test = function () {
+        var code = quando_editor.getCode();
+        if (code) {
+            var filename = "_";
+            $.ajax({
+                url: '/script/deploy/' + encodeURI(filename),
+                type: 'PUT',
+                data: { javascript: code },
+                success: function () {
+                    _success("Opening Test...");
+                    var deploy_window = window.open('/client/js/' + filename + ".js", 'quando_deployed_test',
+                        'left=0,top=0,width=9999,height=9999');
+                    deploy_window.focus(); // moveTo(0,0);
+                },
+                error: function () {
+                    alert('Failed to find server');
+                }
+            });
         } else {
             alert('Behaviour incomplete.')
         }

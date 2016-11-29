@@ -92,9 +92,14 @@
                             <span class="glyphicon glyphicon-remove-sign"></span> Clear
                         </button>
                     </div>
-                    <button type="button" class="btn btn-primary" onclick="index.handle_deploy();">
-                        <span class="glyphicon glyphicon-briefcase"></span> Deploy
-                    </button>
+                        <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-primary" onclick="index.handle_test();">
+                            <span class="glyphicon glyphicon-eye-open"></span> Test
+                        </button>
+                        <button type="button" class="btn btn-primary" onclick="index.handle_deploy();">
+                            <span class="glyphicon glyphicon-briefcase"></span> Deploy
+                        </button>
+                    </div>
                     <button type="button" class="btn btn-warning" onclick="index.handle_logout();">
                         Logout
                     </button>
