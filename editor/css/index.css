@@ -24,3 +24,6 @@ body {
 #editor_content {
     background-color: #ddffff;
 }
+.blocklySvg text {
+  fill:black;
+}
