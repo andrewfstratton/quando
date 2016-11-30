@@ -1,8 +1,8 @@
 <html>
-    <head>
-        <title>Setup Device</title>
-        <meta charset="UTF-8">
-        <script type="text/javascript">
+<head>
+    <title>Setup Device</title>
+    <meta charset="UTF-8">
+    <script type="text/javascript">
             function ajax(url, callback) {
                 var x_h_o = null;
                 if (window.ActiveXObject) {
@@ -39,10 +39,13 @@
                 document.location="/client"; // TODO Check
             }
         </script>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    </head>
-    <body onload="onload();">
-        <div>Setup Device [<span id="ip"></span>]</div>
-        <div id='list_js'>Loading...</div>
-    </body>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/client/favicon.ico">
+</head>
+
+<body onload="onload();">
+    <div>Setup Device [<span id="ip"></span>]</div>
+    <div id='list_js'>Loading...</div>
+</body>
+
 </html>

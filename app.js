@@ -121,6 +121,7 @@ app.get('/file/type/:media', (req, res) => {
     if (folder) {
         fs.readdir(folder, (err, files) => {
             if (!err) {
+                // let files = files.split(',')
                 // console.log("Get File list files=" + files)
                 res.json({ 'success': true, 'files': files })
             } else {
@@ -143,6 +144,7 @@ app.use('/client/setup', express.static(path.join(client_dir, 'setup.html')))
 app.use('/client/client.css', express.static(path.join(client_dir, 'client.css')))
 app.use('/client/quando_browser.js', express.static(path.join(client_dir, 'quando_browser.js')))
 app.use('/client/transparent.png', express.static(path.join(client_dir, 'transparent.png')))
+app.use('/client/favicon.ico', express.static(path.join(client_dir, 'favicon.ico')))
 app.use('/client/deployed_js', express.static(path.join(client_dir, 'deployed_js')))
 
 app.get('/client/js/:filename', (req, res) => {

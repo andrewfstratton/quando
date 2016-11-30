@@ -1,4 +1,4 @@
-(function () {
+(function() {
     var self = this["index"] = {};
     var _userid = null;
     var _content = '';
@@ -6,7 +6,7 @@
     var _remote_list = [];
     var PREFIX = 'quando_';
 
-    window.onload = function () {
+    window.onload = function() {
         self.setup();
     };
     function _encodeXml(str) {
@@ -16,8 +16,8 @@
             .replace(/"/g, '&quot;')
             .replace(/'/g, '&apos;');
     }
-    self.setup = function () {
-        $('#login_modal').keypress(function (e) {
+    self.setup = function() {
+        $('#login_modal').keypress(function(e) {
             if (e.which === 13) {
                 self.handle_login();
             }
@@ -26,7 +26,7 @@
         $('#loading_modal').modal('toggle');
         $.ajax({
             url: '/login',
-            success: function (res) {
+            success: function(res) {
                 if (res.success) {
                     _success('Logged in');
                     _userid = res.userid;
@@ -37,14 +37,14 @@
                 $('#loading_modal').modal('toggle');
                 quando_editor.inject(Blockly);
             },
-            error: function () {
+            error: function() {
                 _error('Failed to find server');
                 $('#loading_modal').modal('toggle');
                 quando_editor.inject(Blockly);
             }
         });
     };
-    self.handle_login = function () {
+    self.handle_login = function() {
         var userid = $('#userid').val();
         var password = $('#password').val();
         var message_elem = $('#login_modal_footer_message');
@@ -53,7 +53,7 @@
             url: '/login',
             type: 'POST',
             data: { 'userid': userid, 'password': password },
-            success: function (res, status, xhr) {
+            success: function(res, status, xhr) {
                 if (res.success) {
                     message_elem.html('');
                     _success('Logged in');
@@ -65,12 +65,12 @@
                     message_elem.html('Failed: ' + res.message);
                 }
             },
-            error: function () {
+            error: function() {
                 message_elem.html('Failed to find server ');
             }
         });
     };
-    self.handle_load = function () {
+    self.handle_load = function() {
         if (_userid) {
             _remote_load_list();
             $('#remote_load_modal').modal('toggle');
@@ -79,43 +79,43 @@
             $('#local_load_modal').modal('toggle');
         }
     };
-    self.handle_save = function () {
+    self.handle_save = function() {
         if (_userid) {
             $('#remote_save_modal').modal('toggle');
         } else {
             $('#local_save_modal').modal('toggle');
         }
     };
-    self.handle_clear = function () {
+    self.handle_clear = function() {
         _info('Cleared...');
         _content = '';
         _deploy = '';
         Blockly.mainWorkspace.clear();
     };
-    self.handle_logout = function () {
+    self.handle_logout = function() {
         $.ajax({
             url: '/login',
             type: 'DELETE',
-            success: function (res, status, xhr) {
+            success: function(res, status, xhr) {
                 _info('Logged out');
                 _userid = null;
                 _show_user_status();
             },
-            error: function () {
+            error: function() {
                 $('#loading_modal_message').html('Failed to find server');
             }
         });
     };
-    self.handle_remote_to_local_load = function () {
+    self.handle_remote_to_local_load = function() {
         _local_load_list();
         $('#remote_load_modal').modal('toggle');
         $('#local_load_modal').modal('toggle');
     };
-    self.handle_remote_to_local_save = function () {
+    self.handle_remote_to_local_save = function() {
         $('#remote_save_modal').modal('toggle');
         $('#local_save_modal').modal('toggle');
     };
-    self.handle_local_save = function () {
+    self.handle_local_save = function() {
         var key = $("#local_save_key").val();
         localStorage.setItem(PREFIX + key, JSON.stringify({
             deploy: _deploy,
@@ -125,7 +125,7 @@
         $('#local_save_modal').modal('toggle');
         _saved(key);
     };
-    self.handle_remote_save = function () {
+    self.handle_remote_save = function() {
         var name = escape($("#remote_save_key").val());
         var obj = JSON.stringify({ deploy: _deploy, xml: _getXml(), content: _content });
         debugger
@@ -133,7 +133,7 @@
             url: '/script',
             type: 'POST',
             data: { userid: _userid, name: name, script: obj },
-            success: function (res) {
+            success: function(res) {
                 if (res.success) {
                     $('#remote_save_modal').modal('toggle');
                     _saved(name);
@@ -141,19 +141,19 @@
                     alert('Failed to save');
                 }
             },
-            error: function () {
+            error: function() {
                 alert('Failed to find server');
             }
         });
     };
-    self.handle_show_xml = function () {
+    self.handle_show_xml = function() {
         $("#menu_dropdown").dropdown("toggle");
         $('#show_modal_title').html('Show Xml');
         $('#show_modal').modal('toggle');
         $('#show_modal_code').removeClass("language-javascript").addClass("language-xml");
         $('#show_modal_code').html(_encodeXml(_getXml()));
     };
-    self.handle_show_code = function () {
+    self.handle_show_code = function() {
         $("#menu_dropdown").dropdown("toggle");
         $('#show_modal_title').html('Show Code');
         $('#show_modal').modal('toggle');
@@ -175,7 +175,7 @@
     function _warning(message) {
         _notify(message, 'warn');
     }
-    self.handle_deploy = function () {
+    self.handle_deploy = function() {
         var code = quando_editor.getCode();
         if (code) {
             var filename = "guest";
@@ -190,11 +190,11 @@
                         url: '/script/deploy/' + encodeURI(filename),
                         type: 'PUT',
                         data: { javascript: code },
-                        success: function () {
+                        success: function() {
                             _deploy = filename;
                             _success("Deployed as '" + filename + ".js'");
                         },
-                        error: function () {
+                        error: function() {
                             alert('Failed to find server');
                         }
                     });
@@ -204,7 +204,7 @@
             alert('Behaviour incomplete.')
         }
     };
-    self.handle_test = function () {
+    self.handle_test = function() {
         var code = quando_editor.getCode();
         if (code) {
             var filename = "_";
@@ -212,13 +212,13 @@
                 url: '/script/deploy/' + encodeURI(filename),
                 type: 'PUT',
                 data: { javascript: code },
-                success: function () {
+                success: function() {
                     _success("Opening Test...");
                     var deploy_window = window.open('/client/js/' + filename + ".js", 'quando_deployed_test',
                         'left=0,top=0,width=9999,height=9999');
                     deploy_window.focus(); // moveTo(0,0);
                 },
-                error: function () {
+                error: function() {
                     alert('Failed to find server');
                 }
             });
@@ -226,16 +226,50 @@
             alert('Behaviour incomplete.')
         }
     };
-    self.local_load = function (key) {
+    self.handle_file = function(media, block_id, widget_id) {
+        $('#file_modal').modal('toggle');
+        $('#file_list').html('Loading...');
+        $.ajax({
+            url: '/file/type/' + media,
+            success: function(res) {
+                if (res.success) {
+                    if (res.files.length === 0) {
+                        $('#file_list').html('No saves available');
+                    } else {
+                        $('#file_list').html('');
+                        res.files.forEach(function(filename) {
+                            $('#file_list').append(_file_list_add(filename, false,
+                                'handle_file_selected', block_id, widget_id));
+                        });
+                    }
+                } else {
+                    alert('Failed to find server files');
+                    $('#file_modal').modal('toggle');
+                }
+            },
+            error: function() {
+                alert('Failed to access server');
+                $('#file_modal').modal('toggle');
+            }
+        });
+    }
+    self.handle_file_selected = function(filename, block_id, widget_id) {
+        // alert(filename + widget_id)
+        let block = Blockly.mainWorkspace.getBlockById(block_id);
+        block.setFieldValue(filename, widget_id)
+        $('#file_modal').modal('toggle');
+        // TODO get/return/set filename
+    }
+    self.local_load = function(key) {
         var obj = JSON.parse(localStorage.getItem(key));
         var name = key.slice(PREFIX.length);
         _loaded(obj, '#local_load_modal', name);
     };
-    self.remote_load = function (index) {
-        debugger
+    self.remote_load = function(index) {
+        // debugger
         $.ajax({
             url: '/script/id/' + _remote_list[index].id,
-            success: function (res) {
+            success: function(res) {
                 if (res.success) {
                     let xml = JSON.parse(res.doc.xml)
                     _loaded(xml, '#remote_load_modal', res.doc.name);
@@ -243,30 +277,30 @@
                     alert('Failed to find script');
                 }
             },
-            error: function () {
+            error: function() {
                 alert('Failed to access server');
             }
         });
     };
-    self.local_delete = function (key) {
+    self.local_delete = function(key) {
         if (confirm("Delete forever '" + key + "'?")) {
             localStorage.removeItem(key);
             _local_load_list();
         }
     };
-    self.remote_delete = function (index) {
+    self.remote_delete = function(index) {
         if (confirm("Delete forever '" + _remote_list[index].name + "' saved "
             + _remote_list[index].date + " ?")) {
             $.ajax({
                 url: '/script/id/' + _remote_list[index].id,
                 type: 'DELETE',
-                success: function (res) {
+                success: function(res) {
                     if (!res.success) {
                         alert(res.message); // V hard to fail - if possible at all    
                     }
                     _remote_load_list();
                 },
-                error: function () {
+                error: function() {
                     alert('Failed to find server');
                 }
             });
@@ -296,7 +330,7 @@
     function _remote_load_list() {
         $.ajax({
             url: '/script/names/' + _userid,
-            success: function (res) {
+            success: function(res) {
                 if (res.success) {
                     let list = res.list;
                     _remote_list = list;
@@ -313,7 +347,7 @@
                     alert(res.message)
                 }
             },
-            error: function () {
+            error: function() {
                 alert('Failed to find server');
             }
         });
@@ -349,6 +383,17 @@
             + '<a class="list-group-item col-sm-1 glyphicon glyphicon-remove-sign" onclick="index.'
             + del_fn_name + '(\'' + id + '\')"></a>'
             + '<div class="col-sm-1"> </div>'
+            + '</div>\n';
+        return result;
+    }
+    function _file_list_add(name, folder, fn_name, block_id, widget_id) {
+        
+        var result = '<div class="row"><div class="col-sm-1"> </div>'
+            + '<a class="list-group-item col-md-5" onclick="index.'
+                + `${fn_name}('${name}', '${block_id}', '${widget_id}')">${name}</a>`
+            // + '<a class="list-group-item col-sm-1 glyphicon glyphicon-folder-close" onclick="index.'
+            // + fn_name + '(\'' + name + '\')"></a>'
+            // + '<div class="col-sm-1"> </div>'
             + '</div>\n';
         return result;
     }

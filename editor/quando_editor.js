@@ -6,6 +6,7 @@
     var CHECK_INPUT_PREFIX = 'CHECK_INPUT_';
     var COLOUR_INPUT_PREFIX = 'COLOUR_INPUT_';
     var MENU_INPUT_PREFIX = 'MENU_INPUT_';
+    var FILE_INPUT_PREFIX = 'FILE_INPUT_';
 
     var encodeXml = function (str) {
         return str.replace(/&/g, '&amp;')
@@ -14,11 +15,11 @@
             .replace(/"/g, '&quot;')
             .replace(/'/g, '&apos;');
     };
-    
-    var dom_select = function(dom_id) {
+
+    var dom_select = function (dom_id) {
         window.getSelection().removeAllRanges();
-        var select = document.createRange();  
-        select.selectNode(dom_id);  
+        var select = document.createRange();
+        select.selectNode(dom_id);
         window.getSelection().addRange(select);
     };
 
@@ -27,14 +28,14 @@
         var code = self.getCode();
         var dom_code = document.getElementById("code_content");
         dom_code.innerHTML = "<code><pre>" + code + "</pre></code>";
-//        dom_select(dom_code);
+        //        dom_select(dom_code);
     };
-    
+
     self.showXml = function () {
         var xml = encodeXml(self.getXml());
         var dom_xml = document.getElementById("xml_content");
         dom_xml.innerHTML = "<code><pre>" + xml + "</pre></code>";
-//        dom_select(dom_xml);
+        //        dom_select(dom_xml);
     };
 
     self.importXml = function () {
@@ -47,7 +48,7 @@
     self.getCode = function () {
         var result = "Unknown failure to generate Code";
         try {
-//            result = 'quando = require("./quando_runtime.js");\n\n';
+            //            result = 'quando = require("./quando_runtime.js");\n\n';
             result = Blockly.JavaScript.workspaceToCode(Blockly.mainWorkspace);
         } catch (e) {
             result += "\n" + e;
@@ -60,7 +61,7 @@
         var xmlText = Blockly.Xml.domToPrettyText(xmlDom);
         return xmlText;
     };
-    
+
     var _undefinedDefault = function (val, alt) {
         if (!_exists(val)) {
             val = alt;
@@ -72,11 +73,11 @@
         return document.getElementById(_undefinedDefault(val, alt));
     };
 
-    var _exists = function(val) {
+    var _exists = function (val) {
         return !(typeof val === 'undefined');
     };
 
-    var _isEqual = function(constant, val) {
+    var _isEqual = function (constant, val) {
         var result = false;
         if (_exists(val)) {
             result = (val === constant);
@@ -84,37 +85,37 @@
         return result;
     };
 
-    var _isTrue = function(val) {
+    var _isTrue = function (val) {
         return _isEqual(true, val);
     };
 
-    var _isFalse = function(val) {
+    var _isFalse = function (val) {
         return _isEqual(false, val);
     };
-    
-    var _startsWith = function(string, substring) {
+
+    var _startsWith = function (string, substring) {
         return string.indexOf(substring) === 0;
     };
-    
-    self.getText = function(block, name) {
+
+    self.getText = function (block, name) {
         // get the text input value using the block and the name of the input
         // field - also prefix double qoutes within the string...
         return block.getFieldValue(TEXT_INPUT_PREFIX + name).replace(/"/g, '\\"');
     };
 
-    self.getNumber = function(block, name) {
+    self.getNumber = function (block, name) {
         return block.getFieldValue(NUMBER_INPUT_PREFIX + name);
     };
 
-    self.getColour = function(block, name) {
+    self.getColour = function (block, name) {
         return block.getFieldValue(COLOUR_INPUT_PREFIX + name);
     };
 
-    self.getStatement = function(block, name) {
+    self.getStatement = function (block, name) {
         return Blockly.JavaScript.statementToCode(block, name);
     };
 
-    self.getCheck = function(block, name) {
+    self.getCheck = function (block, name) {
         var result = false;
         if (block.getFieldValue(CHECK_INPUT_PREFIX + name) === 'TRUE') {
             result = true;
@@ -122,21 +123,25 @@
         return result;
     };
 
-    self.getMenu = function(block, name) {
+    self.getMenu = function (block, name) {
         return block.getFieldValue(MENU_INPUT_PREFIX + name);
     };
 
-    self.setMenuText = function(block, name, text) {
+    self.getFile = function (block, name) {
+        return block.getFieldValue(FILE_INPUT_PREFIX + name);
+    };
+
+    self.setMenuText = function (block, name, text) {
         let menudrop = block.getField(MENU_INPUT_PREFIX + name);
         menudrop.setText(text);
     };
 
-    self.resetMenu = function(block, name) {
+    self.resetMenu = function (block, name) {
         let menudrop = block.getField(MENU_INPUT_PREFIX + name);
         menudrop.setValue(0);
     };
-    
-    var _handleInterface = function(blockly, json, _this, sofar) {
+
+    var _handleInterface = function (blockly, json, _this, sofar) {
         var interface = json.interface;
         // Should handle if not an array (object)
         if (typeof interface !== 'object') {
@@ -149,10 +154,10 @@
             _ERROR("Failed to add interface widgets - json.interface is not an Array");
             return;
         } // Else ok so far...
-        interface.forEach (function(widget) {
+        interface.forEach(function (widget) {
             if (typeof widget !== 'object') {
-                _WARNING("Ignoring element in interface Block '"+json.name+"' - not an object");
-           } else {
+                _WARNING("Ignoring element in interface Block '" + json.name + "' - not an object");
+            } else {
                 // TODO handle title and name out of order?!
                 var title = widget.name; // by default
                 if (_exists(widget.title)) { // replace default
@@ -210,17 +215,17 @@
                             var widget_id = TEXT_INPUT_PREFIX + widget.name;
                             if (typeof widget['change'] == 'function') {
                                 sofar.appendField(
-                                        new Blockly.FieldTextInput(widget[key],
-                                            widget['change']), widget_id);
-                                            //TODO add this for all changeable inputs
+                                    new Blockly.FieldTextInput(widget[key],
+                                        widget['change']), widget_id);
+                                //TODO add this for all changeable inputs
                             } else {
                                 sofar.appendField(
-                                        new Blockly.FieldTextInput(widget[key]), widget_id);
+                                    new Blockly.FieldTextInput(widget[key]), widget_id);
                             }
                             break;
                         case 'number':
                             var widget_id = NUMBER_INPUT_PREFIX + widget.name;
-                            var numberInput = new Blockly.FieldTextInput(''+widget[key],
+                            var numberInput = new Blockly.FieldTextInput('' + widget[key],
                                 Blockly.FieldTextInput.numberValidator);
                             sofar.appendField(numberInput, widget_id);
                             break;
@@ -235,7 +240,7 @@
                             break;
                         case 'colour':
                             var widget_id = COLOUR_INPUT_PREFIX + widget.name;
-                            var colourInput = new Blockly.FieldColour(''+widget[key]);
+                            var colourInput = new Blockly.FieldColour('' + widget[key]);
                             sofar.appendField(colourInput, widget_id);
                             break;
                         case 'menu':
@@ -260,30 +265,42 @@
                                 console.log("No Menu List " + widget_id);
                             }
                             break;
+                        case 'file':
+                            var widget_id = FILE_INPUT_PREFIX + widget.name;
+                            sofar.appendField(String.fromCharCode(0x2023));
+                            var fileInput = new Blockly.FieldTextInput("** CHOOSE A FILE **");
+                            var val = widget[key]; // val is the ?base? folder
+                            var handle_file = this["index"].handle_file;
+                            fileInput.showEditor_ = (function() {
+                                let block_id = this.sourceBlock_.id
+                                handle_file(val, block_id, widget_id) 
+                            });
+                            sofar.appendField(fileInput, widget_id);
+                            break;
                         case 'statement':
                             sofar = _this.appendStatementInput(widget[key]);
                             break;
-//                            case 'title': break; // Yes, this is correct
-//                            case 'name': break; // Yes, this is correct
-//                            case 'width': break; // Yes, this is correct
-//                            case 'height': break; // Yes, this is correct
+                        //                            case 'title': break; // Yes, this is correct
+                        //                            case 'name': break; // Yes, this is correct
+                        //                            case 'width': break; // Yes, this is correct
+                        //                            case 'height': break; // Yes, this is correct
                     }
-//                        console.log(key + ":" + widget[key]);
+                    //                        console.log(key + ":" + widget[key]);
                 }
             }
         });
 
     };
-    
-    var _ERROR = function(msg) {
+
+    var _ERROR = function (msg) {
         console.log("**ERROR: " + msg);
     };
 
-    var _WARNING = function(msg) {
+    var _WARNING = function (msg) {
         console.log("  warning: " + msg);
     };
 
-    var _addToBlockly  = function(blockly, json) {
+    var _addToBlockly = function (blockly, json) {
         if (!_exists(json.name)) {
             _ERROR("Failed to create Block - missing name property");
             return;
@@ -341,9 +358,9 @@
                 }
             };
             if (_exists(json.valid_in)) {
-                blockly.Blocks[id].onchange = function() {
+                blockly.Blocks[id].onchange = function () {
                     var valid_ids = [];
-                    json.valid_in.forEach( function(iter) {
+                    json.valid_in.forEach(function (iter) {
                         valid_ids.push('quando_' + iter);
                     });
                     var legal = false;
@@ -359,11 +376,11 @@
                     } else {
                         this.setWarningText(
                             "Block must exist within one of\n" + json.valid_in.join("\n"));
-                    }                    
+                    }
                 };
             }
         } else {
-            blockly.Blocks[id] = {init: json.block_init};
+            blockly.Blocks[id] = { init: json.block_init };
         }
     };
 
@@ -377,22 +394,27 @@
         blockly.BlockSvg.START_HAT = true; // Set the Vitrine to have a 'starting' hat
 
         var toolbox_elem = document.getElementById('toolbox');
-        var workspace = blockly.inject(blockly_editor_div, {'toolbox': toolbox_elem,
+        var workspace = blockly.inject(blockly_editor_div, {
+            'toolbox': toolbox_elem,
             'zoom':
-                    {controls: true,
-                        wheel: true,
-                        startScale: 1.0,
-                        maxScale: 3,
-                        minScale: 0.3,
-                        scaleSpeed: 1.2},
-            'media':'./media/'  // TODO make across homepages as well
+            {
+                controls: true,
+                wheel: true,
+                startScale: 1.0,
+                maxScale: 3,
+                minScale: 0.3,
+                scaleSpeed: 1.2
+            },
+            'media': './media/'  // TODO make across homepages as well
         });
 
-//        workspace.updateToolbox(toolbox_elem);
+        //        workspace.updateToolbox(toolbox_elem);
 
         // Change the menu colour
-        var map = {'quando_rules':CONFIG.RULE_COLOUR,
-            'quando_actions':CONFIG.ACTION_COLOUR};
+        var map = {
+            'quando_rules': CONFIG.RULE_COLOUR,
+            'quando_actions': CONFIG.ACTION_COLOUR
+        };
         for (var key in map) {
             var elem = _fromDom(key, null);
             if (elem !== null) {
@@ -402,16 +424,15 @@
             }
         }
         self.category = [];
-        quando_blocks.addBlocks(self, function() {
-            self.category.forEach(function (json) {
-                console.log('Adding ' + json.name);
-                _addToBlockly(blockly, json);
-            });
-            workspace.updateToolbox(toolbox_elem);
+        quando_blocks.addBlocks(self);
+        self.category.forEach(function (json) {
+            console.log('Adding ' + json.name);
+            _addToBlockly(blockly, json);
         });
+        workspace.updateToolbox(toolbox_elem);
     };
 
-    self.defineBlock = function(json) {
+    self.defineBlock = function (json) {
         self.category.push(json);
         var id = self.PREFIX + json.name;
         return id;
@@ -433,27 +454,29 @@
         return self.defineBlock(json);
     };
 
-    self.getParent = function(block, ids) {
+    self.getParent = function (block, ids) {
         var valid_ids = [];
-        ids.forEach( function(iter) {
+        ids.forEach(function (iter) {
             valid_ids.push('quando_' + iter);
         });
         var found = false;
         var check_block = block.getSurroundParent();
-        do {
-            if (valid_ids.indexOf(check_block.type) !== -1) {
-                found = check_block;
-            } else {
-                check_block = check_block.getSurroundParent();
-            }
-        } while ((found === false) && check_block);
+        if (check_block != null) {
+            do {
+                if (valid_ids.indexOf(check_block.type) !== -1) {
+                    found = check_block;
+                } else {
+                    check_block = check_block.getSurroundParent();
+                }
+            } while ((found === false) && check_block);
+        }
         if (found === false) {
             found = undefined; //TODO code refactor?
         }
         return found;
     };
-    
-    self.pushToParent = function(block, ids, play) {
+
+    self.pushToParent = function (block, ids, play) {
         var index = -1;
         var parent = self.getParent(block, ids);
         if (typeof parent !== 'undefined') {
