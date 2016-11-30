@@ -126,7 +126,7 @@
         _saved(key);
     };
     self.handle_remote_save = function() {
-        var name = escape($("#remote_save_key").val());
+        var name = encodeURI($("#remote_save_key").val());
         var obj = JSON.stringify({ deploy: _deploy, xml: _getXml(), content: _content });
         debugger
         $.ajax({
