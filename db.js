@@ -1,3 +1,4 @@
+"use strict"
 const mongodb = require("mongodb")
 
 const host = "127.0.0.1"

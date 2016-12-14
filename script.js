@@ -1,3 +1,4 @@
+"use strict"
 const db = require('./db')
 let ObjectID = require("mongodb").ObjectID
 const COLLECTION = 'script'
@@ -11,7 +12,7 @@ exports.save = (name, id, userid, script) => {
 
 exports.getNamesOnOwnerID = (userid) => {
     return new Promise((success, fail) => {
-        const query = { $query: { ownerid: { $eq: userid } } }
+        const query = { ownerid: { $eq: userid } }
         const options = { sort: [['date', 'desc']] }
         const fields = { name: 1, date: 1 }
         db.getArray(COLLECTION, query, fields, options).then((result) => {
@@ -30,7 +31,7 @@ exports.getNamesOnOwnerID = (userid) => {
 exports.getOnId = (id) => {
     return new Promise((success, fail) => {
         const oid = new ObjectID(id)
-        const query = { $query: { _id: { $eq: oid } } }
+        const query = { _id: { $eq: oid } }
         const options = { limit: 1 }
         const fields = { _id: 0 }
         db.getArray(COLLECTION, query, fields, options).then((result) => {

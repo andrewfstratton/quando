@@ -328,23 +328,21 @@ ${statement}});
         // TODO refactor
         Blockly.mainWorkspace.addChangeListener(function (ev) {
             let workspace = Blockly.Workspace.getById(ev.workspaceId);
+            let block = workspace.getBlockById(ev.blockId);
+            let topBlocks = Blockly.mainWorkspace.getAllBlocks();
             if (ev.type == Blockly.Events.CHANGE) {
-                let block = workspace.getBlockById(ev.blockId);
                 if (block.type == PREFIX + WHEN_VITRINE_BLOCK) {
-                    let topBlocks = Blockly.mainWorkspace.getAllBlocks();
                     for (var checkblock of topBlocks) {
                         if ((checkblock.type == PREFIX + LABEL_TO_BLOCK)
                             || (checkblock.type == PREFIX + LABEL_BLOCK)) {
                             let menuid = quando_editor.getMenu(checkblock, LABEL_TO_MENU);
                             if (menuid == block.id) {
-                                quando_editor.setMenuText(checkblock, LABEL_TO_MENU, ev.newValue);
+                                    quando_editor.setMenuText(checkblock, LABEL_TO_MENU, ev.newValue);
                             }
                         }
                     }
                 }
             } else if (ev.type == Blockly.Events.CREATE) {
-                let topBlocks = Blockly.mainWorkspace.getAllBlocks();
-                let block = workspace.getBlockById(ev.blockId);
                 for (var checkblock of topBlocks) {
                     if ((checkblock.type == PREFIX + LABEL_TO_BLOCK)
                         || (checkblock.type == PREFIX + LABEL_BLOCK)) {
@@ -356,8 +354,6 @@ ${statement}});
                     }
                 }
             } else if (ev.type == Blockly.Events.DELETE) {
-                let topBlocks = Blockly.mainWorkspace.getAllBlocks();
-                let block = workspace.getBlockById(ev.blockId);
                 for (var checkblock of topBlocks) {
                     if ((checkblock.type == PREFIX + LABEL_TO_BLOCK)
                         || (checkblock.type == PREFIX + LABEL_BLOCK)) {

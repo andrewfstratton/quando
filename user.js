@@ -1,9 +1,10 @@
+"use strict"
 const db = require('./db')
 const COLLECTION = 'user'
 
 exports.getOnIdPassword = (id, password) => {
     return new Promise((success, fail) => {
-        const query = { $query: { _id: { $eq: id }, password: { $eq: password } } }
+        const query = { _id: { $eq: id }, password: { $eq: password } }
         const options = { limit: 1 }
         const fields = { _id: 0, password: 0 }
         db.getArray(COLLECTION, query, fields, options).then(

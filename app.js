@@ -1,3 +1,4 @@
+"use strict"
 const express = require('express')
 const app = express()
 const fs = require("fs")
@@ -15,8 +16,8 @@ const router = express.Router()
 const http = require('http').Server(app)
 const io = require('socket.io')(http)
 
-var server = http.listen(80, () => {
-    var host = server.address().address
+var server = http.listen(process.env.PORT || 80, () => {
+    var host = process.env.IP || server.address().address
     var port = server.address().port
     console.log("Quando Server listening at http://%s:%s", host, port)
 })
