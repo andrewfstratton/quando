@@ -153,13 +153,27 @@
             }
         });
 
+        var _getOnContained = function(block, container, contained, otherwise) {
+            let result = otherwise;
+            if (quando_editor.getParent(block, [container])) {
+                result = contained;
+            }
+            return result;
+        }
+        var _getStyleOnContained = function(block, container) {
+            return 'set' + _getOnContained(block, container, "Display", "Default") + 'Style';
+        }
+
+        let COLOUR = 'colour';
         quando_editor.defineBlock({
-            name: 'Background', colour: '140', category: 'extras',
+            name: 'Background', title: 'Background Display Colour', colour: '140', category: 'extras',
             interface: [
-                { name: 'Colour', text: 'black' }
+                { name: COLOUR, title: '', colour: '#ff0000' }
             ],
             javascript: function (block) {
-                return 'quando.setBackgroundColour("' + quando_editor.getText(block, 'Colour') + '");\n';
+                let method = _getStyleOnContained(block, WHEN_VITRINE_BLOCK);
+                let colour = quando_editor.getColour(block, COLOUR);
+                return `quando.${method}('#quando_image', 'background-color', '${colour}');\n`;
             }
         });
 
@@ -169,7 +183,9 @@
             name: 'Display', title: 'Show Image',
             interface: [ FILE_IMAGE ],
             javascript: function (block) {
-                return 'quando.image("/client/images/' + quando_editor.getFile(block, IMAGE) + '");\n';
+                let method = _getStyleOnContained(block, WHEN_VITRINE_BLOCK);
+                let image = quando_editor.getFile(block, IMAGE);
+                return `quando.${method}('#quando_image', 'background-image', 'url("/client/images/${image}")');\n`;
             }
         });
         var VIDEO = 'Video';
@@ -203,7 +219,6 @@
             }
         });
         var CHECK_AUDIO = ' Audio';
-        var CHECK_IMAGE = ' Image';
         var CHECK_TEXT = ' Text';
         var CHECK_VIDEO = ' Video';
         var CLEAR = 'Clear';
@@ -211,7 +226,6 @@
             name: CLEAR,
             interface: [
                 { name: CHECK_AUDIO, check: false },
-                { name: CHECK_IMAGE, check: false },
                 { name: CHECK_TEXT, check: false },
                 { name: CHECK_VIDEO, check: false }
             ],
@@ -219,9 +233,6 @@
                 result = "";
                 if (quando_editor.getCheck(block, CHECK_AUDIO)) {
                     result += 'quando.clear_audio();\n';
-                }
-                if (quando_editor.getCheck(block, CHECK_IMAGE)) {
-                    result += 'quando.image();\n';
                 }
                 if (quando_editor.getCheck(block, CHECK_TEXT)) {
                     result += 'quando.text();\n';
@@ -308,7 +319,8 @@
         let WHEN_VITRINE_BLOCK = 'When Display Case';
         let WHEN_VITRINE_TEXT = 'title';
         quando_editor.defineBlock({
-            name: WHEN_VITRINE_BLOCK, next: false, previous: false, category: 'dig', colour: self.CONFIG.RULE_COLOUR,
+            name: WHEN_VITRINE_BLOCK, title: 'When Display', next: false, previous: false,
+                category: 'dig', colour: self.CONFIG.RULE_COLOUR,
             interface: [{
                 name: WHEN_VITRINE_TEXT, title: '', text: 'Title and label',
             },
@@ -404,7 +416,6 @@ ${statement}});
         let STYLE_BLOCK = 'Style';
         let STYLE_MENU = 'style';
         let DIV_MENU = 'div';
-        let COLOUR = 'colour';
         quando_editor.defineBlock({
             name: STYLE_BLOCK, title: '', category: 'dig', colour: DIG_COLOUR,
             interface: [
@@ -416,6 +427,8 @@ ${statement}});
                 { name: COLOUR, title: '', colour: '#ff0000' },
             ],
             javascript: (block) => {
+                let result ="";
+                let method = _getStyleOnContained(block, WHEN_VITRINE_BLOCK);
                 let div = quando_editor.getMenu(block, DIV_MENU);
                 switch (div) {
                     case 'Title': div = '#quando_title';
@@ -426,16 +439,22 @@ ${statement}});
                         break;
                 }
                 let style = quando_editor.getMenu(block, STYLE_MENU);
-                let value = "'" + quando_editor.getColour(block, COLOUR) + "'";
+                let value = quando_editor.getColour(block, COLOUR);
                 if (style == 'Font Colour') {
                     style = 'color';
                 } else {
-                    style = 'backgroundColor ';
+                    style = 'background-color '; // not actually javascript?!
+                    // so backgroundColor won't work - has to be CSS interpreted...'
+                    let bigint = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(value);
+                    let r = parseInt(bigint[1], 16);
+                    let g = parseInt(bigint[2], 16);
+                    let b = parseInt(bigint[3], 16);
+                    value = `rgba(${r}, ${g}, ${b}, 0.6)`;
+                    if (div == '.quando_label') { // Need to put in the transition opacity
+                        result += `quando.${method}('${div}.focus', '${style}', 'rgba(${r}, ${g}, ${b}, 1)');\n`;
+                    }
                 }
-                result = `for (var div of document.querySelectorAll('${div}')) {
-    div.style.${style} = ${value};
-}
-`;
+                result += `quando.${method}('${div}', '${style}', '${value}');\n`;
                 return result;
             },
         });
@@ -448,6 +467,7 @@ ${statement}});
                 { name: FONT_SIZE, title: '', number: 24 }, { title: 'pt' },
             ],
             javascript: (block) => {
+                let method = _getStyleOnContained(block, WHEN_VITRINE_BLOCK);
                 let div = quando_editor.getMenu(block, DIV_MENU);
                 switch (div) {
                     case 'Title': div = '#quando_title';
@@ -457,12 +477,8 @@ ${statement}});
                     case 'Label': div = '.quando_label';
                         break;
                 }
-                let value = "'" + quando_editor.getNumber(block, FONT_SIZE) + "pt'";
-                style = 'fontSize';
-                result = `for (var div of document.querySelectorAll('${div}')) {
-    div.style.fontSize = ${value};
-}
-`;
+                let value = quando_editor.getNumber(block, FONT_SIZE) + "pt";
+                result = `quando.${method}('${div}', 'font-size', '${value}');\n`;
                 return result;
             },
         });

@@ -1,9 +1,10 @@
 (function () {
     var self = this["quando"] = {};
-    self.colour = 'black';
     self.leap = null;
     self.leap_start_check_time = 0;
     self.vitrines = new Map();
+    self.override_id = 'quando_css_override';
+
     var _socket = io.connect('http://' + location.hostname)
 
     function endSame(longer, shorter) {
@@ -74,9 +75,7 @@
         callback(); // do it straight away
         return setInterval(callback, time_secs * 1000);
     };
-    self.setBackgroundColour = function(colour) {
-        self.colour = colour;
-    };
+
     self.title = function (txt) {
         var elem = document.getElementById('quando_title');
         if (!txt) {
@@ -96,16 +95,10 @@
         }
     };
     self.image = function (img) {
-        var style = document.getElementById('quando_image').style;
-        var url = 'transparent.png';
         if (img) {
             url = 'url(\'' + img + '\')';
+            self.setDisplayStyle('#quando_image', 'background-image', url);
         }
-        style['background'] = url;
-        style['background-repeat'] = 'no-repeat';
-        style['background-size'] = 'contain';
-        style['background-position'] = 'center center';
-        style['background-color'] = self.colour;
     };
 
     self.do_duration = function (seconds, now, later, inc, dec) {
@@ -229,7 +222,7 @@
                 var hands = frame.hands;
                 for (var i=0; i<hands.length; i++) {
                     var handed = hands[i].type;
-console.log(handed);
+//console.log(handed);
                     if (handed === "left") {
                         now_left = true;
                     }
@@ -310,25 +303,48 @@ console.log(handed);
     }
 
     self.showVitrine = function(id) {
-        // TODO find vitrine
+        // Find vitrine
         let vitrine = self.vitrines.get(id);
-        // Clear current labels
-        var elem = document.getElementById('quando_labels');
-        elem.innerHTML = '';
-        for(var id of ['title','text']) {
-            let div = document.getElementById('quando_' + id);
-            div.style.fontSize = "";
-            div.style.color = "";
-            div.style.backgroundColor = "";
-//            for (var prop of ['color', 'backgroundColor', 'fontSize', 'opacity']) {
-//                div.style.removeProperty(prop);
-//            }        
-        }
+        // Clear current labels, title and text
+        document.getElementById('quando_labels').innerHTML = '';
+        self.title();
+        self.text();
+        self._resetStyle();
         vitrine();
     }
     
     self.addLabel = function(id, title) {
         var elem = document.getElementById('quando_labels');
         elem.innerHTML += `<div class='quando_label' onclick="quando.showVitrine('${id}');">${title}</div>`;
-    }    
+    }
+    
+    let _style = function(style_id, id, property, value) {
+        let style = document.getElementById(style_id);
+        if (style == null) {
+            let styleElem = document.createElement('style');
+            styleElem.type = "text/css";
+            styleElem.id = style_id;
+            document.head.appendChild(styleElem);
+            style = styleElem;
+        }
+        let rule = `${id} \{${property}: ${value};\}\n`;
+        style.appendChild(document.createTextNode(rule));
+    }
+
+    self.setDisplayStyle = function(id, property, value) {
+        _style(self.override_id, id, property, value);
+    }
+
+    self.setDefaultStyle = function(id, property, value) {
+        _style("quando_css", id, property, value);
+    }
+
+    self._resetStyle = function() {
+        var elem = document.getElementById(self.override_id);
+        if (elem != null) {
+            if (elem.parentNode) {
+                elem.parentNode.removeChild(elem);
+            }
+        }
+    }
 })();

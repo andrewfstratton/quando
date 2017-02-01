@@ -11,13 +11,12 @@ body {
     margin: 0px;
     background-color: rgba(224, 119, 0, 0.6);
     border: 0px;  /* solid grey; */
-    opacity: 0.8;   /*  filter: alpha(opacity=60); /* For IE8 and earlier */
 }
 .quando_label::before {
     content: '\25b6';
 }
 .quando_label {
-    font-size: 36px;
+    font-size: 25px;
     color: ffffff;
     padding: 5px;
     margin-bottom: 5px;
@@ -25,12 +24,12 @@ body {
 #quando_labels {
     position: absolute;
     z-index: 100;
-    bottom: 15%;
+    bottom: 5%;
     width: 50%;
     left:10%;
 }
 #quando_title {
-    font-size: 48px;
+    font-size: 50px;
     top: 0px;
     width: 100%;
     vertical-align: text-top;
@@ -38,7 +37,7 @@ body {
     text-align: center;
 }
 #quando_text {
-    font-size: 32px;
+    font-size: 25px;
     padding: 5px;
 /*    margin: 10px;*/
     top: 15%;
@@ -98,7 +97,7 @@ body {
     opacity: 0.7;
     background: #ffcc00;
     border-radius: 100%;
-    visibility:hidden; // make it invisble to start - the leap movement will make it appear
+    visibility:hidden; /* make it invisible to start - the leap movement will make it appear */
     -webkit-transition: width 0.1s linear;
     -moz-transition: width 0.1s linear;
     -o-transition: width 0.1s linear;
@@ -106,13 +105,12 @@ body {
 /*    background: radial-gradient(100px 100px, circle, #ffff00, #000);*/
 }
 .quando_label {
-    -webkit-transition: opacity 0.8s linear;
-    -moz-transition: opacity 0.8s linear;
-    -o-transition: opacity 0.8s linear;
-    transition: opacity 0.8s linear;
-    background-color: rgb(224, 119, 0);
-    opacity: 0.7;
+    -webkit-transition: background-color 0.8s linear;
+    -moz-transition: background-color 0.8s linear;
+    -o-transition: background-color 0.8s linear;
+    transition: background-color 0.8s linear;
+    background-color: rgba(224, 119, 0, 0.6);
 }
 .quando_label.focus {
-    opacity: 1;
+    background-color: rgba(224, 119, 0, 1);
 }
