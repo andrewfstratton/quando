@@ -187,8 +187,7 @@
                             var width = 32;
                             // TODO set width and height from source file...
                             // This isn't simple - and relies on dom loading
-                            // of image with callback. Alternately, the
-                            // meSch platform could provide the info...
+                            // of image with callback.
                             if (_exists(widget.width)) {
                                 width = widget.width;
                             } else {
