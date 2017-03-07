@@ -2,14 +2,13 @@
     var self = this["quando_blocks"] = {};
     var PREFIX = 'quando_'; // TODO share with quando_editor
     self.CONFIG = {
-        ACTION_COLOUR: 120, // Green
-        RULE_COLOUR: 290, // Purple - see http://colorizer.org/
-        //        RULE_COLOUR: 230, // Blue - see http://colorizer.org/
-        //        DEVICE_COLOUR: 0, // Red
-        //        DEVICE_COLOUR: 180, // Turquoise
-        //        DEVICE_COLOUR: 290, // Purple
-        BLOCKLY_SATURATION: 0.25,
-        BLOCKLY_VALUE: 0.85,
+        DISPLAY_COLOUR: '#eeee66',
+        MEDIA_COLOUR: '#88ee88',
+        STYLE_COLOUR: '#eebbee',
+        TIME_COLOUR: '#eebbaa',
+        LEAP_MOTION_COLOUR: '#bbbbbb',
+        BLOCKLY_SATURATION: 0.25, // default for hue only colour - probably not used anymore - see http://colorizer.org/
+        BLOCKLY_VALUE: 0.85, // ditto
     };
 
     var ajax_get = function (url, callback) {
@@ -30,8 +29,8 @@
         var FREQUENCY = 'FREQUENCY';
         var UNITS_MENU = 'UNITS_MENU';
 
-        quando_editor.defineBlock({
-            name: 'Check', next: false, previous: false, category: 'extras', colour: '230',
+        quando_editor.defineTime({
+            name: 'Check', next: false, previous: false,
             interface: [
                 { name: FREQUENCY, title: '', number: 1 },
                 {
@@ -64,8 +63,8 @@
 
         var DURATION = 'DURATION';
         var EVERY_BLOCK = 'Every';
-        quando_editor.defineBlock({
-            name: EVERY_BLOCK, next: false, previous: false, category: 'extras', colour: '230',
+        quando_editor.defineTime({
+            name: EVERY_BLOCK, next: false, previous: false,
             interface: [
                 { name: DURATION, title: '', number: 1 },
                 { menu: ['Seconds', 'Minutes', 'Hours'], name: UNITS_MENU, title: '' },
@@ -93,8 +92,8 @@
         });
 
         var TIME = 'TIME';
-        quando_editor.defineBlock({
-            name: 'After', category: 'extras', colour: '230',
+        quando_editor.defineTime({
+            name: 'After',
             interface: [
                 { name: TIME, title: '', number: 1 },
                 { title: 'Seconds' },
@@ -113,7 +112,7 @@
         });
 
         var ID_GREETING = "Greeting";
-        quando_editor.defineAction({
+        quando_editor.defineMedia({
             name: 'Show "', title: 'Show Text',
             interface: [{ name: ID_GREETING, title: '"', text: '.type your text here..' }, { title: '"' }],
             javascript: function (block) {
@@ -122,7 +121,7 @@
         });
 
         var DO_DURATION = 'Do for';
-        quando_editor.defineRule({
+        quando_editor.defineTime({
             name: DO_DURATION,
             interface: [
                 { name: DURATION, title: '', number: '1' }, MENU_UNITS,
@@ -165,8 +164,8 @@
         }
 
         let COLOUR = 'colour';
-        quando_editor.defineBlock({
-            name: 'Background', title: 'Background Display Colour', colour: '140', category: 'extras',
+        quando_editor.defineStyle({
+            name: 'Background', title: 'Background Display Colour',
             interface: [
                 { name: COLOUR, title: '', colour: '#ff0000' }
             ],
@@ -179,7 +178,7 @@
 
         var IMAGE = 'Images';
         var FILE_IMAGE = {name: IMAGE, title:'', file:'images'};
-        quando_editor.defineAction({
+        quando_editor.defineMedia({
             name: 'Display', title: 'Show Image',
             interface: [ FILE_IMAGE ],
             javascript: function (block) {
@@ -190,7 +189,7 @@
         });
         var VIDEO = 'Video';
         var FILE_VIDEO = { name: VIDEO, title: '', file: 'video' };
-        quando_editor.defineAction({
+        quando_editor.defineMedia({
             name: 'Show Video', title: 'Play Video',
             interface: [FILE_VIDEO],
             javascript: function (block) {
@@ -205,7 +204,7 @@
         });
         var AUDIO = 'Audio';
         var FILE_AUDIO = {name: AUDIO, title:'', file:'audio'};
-        quando_editor.defineAction({
+        quando_editor.defineMedia({
             name: 'Play Audio',
             interface: [ FILE_AUDIO ],
             javascript: function(block) {
@@ -222,7 +221,7 @@
         var CHECK_TEXT = ' Text';
         var CHECK_VIDEO = ' Video';
         var CLEAR = 'Clear';
-        quando_editor.defineAction({
+        quando_editor.defineMedia({
             name: CLEAR,
             interface: [
                 { name: CHECK_AUDIO, check: false },
@@ -244,7 +243,7 @@
             }
         });
         var WAIT_ON = 'Wait On';
-        quando_editor.defineRule({
+        quando_editor.defineTime({
             name: WAIT_ON,
             valid_in: [EVERY_BLOCK, DO_DURATION, WAIT_ON, FOREVER_BLOCK],
             interface: [
@@ -263,7 +262,7 @@
         });
 
         var FOREVER_BLOCK = 'Forever';
-        quando_editor.defineRule({
+        quando_editor.defineTime({
             name: FOREVER_BLOCK, next: false, previous: false,
             interface: [
                 { statement: STATEMENT }
@@ -280,7 +279,7 @@
         });
         var LEAP_BLOCK = 'When Hands';
         var HAND_COUNT = 'hand_count';
-        quando_editor.defineRule({
+        quando_editor.defineLeapMotion({
             name: LEAP_BLOCK, next: false, previous: false,
             interface: [
                 { name: HAND_COUNT, title: ' = ', number: 1 },
@@ -297,7 +296,7 @@
         var HANDED_BLOCK = 'When Hand ';
         var HAND_LEFT = 'Left';
         var HAND_RIGHT = 'Right';
-        quando_editor.defineRule({
+        quando_editor.defineLeapMotion({
             name: HANDED_BLOCK, next: false, previous: false,
             interface: [
                 { name: HAND_LEFT, check: false },
@@ -318,9 +317,8 @@
         let DIG_COLOUR = 0;
         let WHEN_VITRINE_BLOCK = 'When Display Case';
         let WHEN_VITRINE_TEXT = 'title';
-        quando_editor.defineBlock({
+        quando_editor.defineDisplay({
             name: WHEN_VITRINE_BLOCK, title: 'When Display', next: false, previous: false,
-                category: 'dig', colour: self.CONFIG.RULE_COLOUR,
             interface: [{
                 name: WHEN_VITRINE_TEXT, title: '', text: 'Title and label',
             },
@@ -402,9 +400,9 @@ ${statement}});
         }
         let LABEL_TEXT = 'text';
         let LABEL_TO_BLOCK = 'Label to';
-        quando_editor.defineBlock({
+        quando_editor.defineDisplay({
             // TODO must be in a vitrine...?
-            name: LABEL_TO_BLOCK, title: 'Label', category: 'dig', colour: self.CONFIG.RULE_COLOUR,
+            name: LABEL_TO_BLOCK, title: 'Label',
             interface: [
                 {
                     name: LABEL_TO_MENU,
@@ -416,8 +414,8 @@ ${statement}});
         let STYLE_BLOCK = 'Style';
         let STYLE_MENU = 'style';
         let DIV_MENU = 'div';
-        quando_editor.defineBlock({
-            name: STYLE_BLOCK, title: '', category: 'dig', colour: DIG_COLOUR,
+        quando_editor.defineStyle({
+            name: STYLE_BLOCK, title: '',
             interface: [
                 { menu: ['Title', 'Text', 'Label'], name: DIV_MENU, title: '' },
                 {
@@ -460,8 +458,8 @@ ${statement}});
         });
         let FONT_SIZE_BLOCK = 'Font Size';
         let FONT_SIZE = 'font size';
-        quando_editor.defineBlock({
-            name: FONT_SIZE_BLOCK, category: 'dig', colour: DIG_COLOUR,
+        quando_editor.defineStyle({
+            name: FONT_SIZE_BLOCK,
             interface: [
                 { menu: ['Title', 'Text', 'Label'], name: DIV_MENU, title: '' },
                 { name: FONT_SIZE, title: '', number: 24 }, { title: 'pt' },
@@ -484,7 +482,7 @@ ${statement}});
         });
 
         quando_editor.defineBlock({
-            name: 'When ', next: false, previous: false, category: 'fuel', colour: '320',
+            name: 'When ', next: false, previous: false, category: 'extras', colour: '320',
             interface: [
                 {
                     menu: ['Diesel', 'Petrol', 'VAT', 'Fuel Tax'],
@@ -496,7 +494,7 @@ ${statement}});
         });
 
         quando_editor.defineBlock({
-            name: 'Text ', category: 'fuel', colour: '80',
+            name: 'Text ', category: 'extras', colour: '80',
             interface: [
                 { name: 'message', text: 'message' },
                 { name: 'to', text: 'mobile' }

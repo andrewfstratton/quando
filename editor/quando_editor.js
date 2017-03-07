@@ -345,7 +345,8 @@
                         this.setPreviousStatement(true);
                     }
                     if (_exists(json.colour)) {
-                        // Note: otherwise black...
+                        // Note: otherwise black...which will be the same colour as overriden text
+                        // N.B. Can use rgb format, i.e. '#bbbbbb' is grey
                         this.setColour(json.colour);
                     }
                     if (_exists(json.javascript)) {
@@ -411,8 +412,11 @@
 
         // Change the menu colour
         var map = {
-            'quando_rules': CONFIG.RULE_COLOUR,
-            'quando_actions': CONFIG.ACTION_COLOUR
+            'quando_display': CONFIG.DISPLAY_COLOUR,
+            'quando_media': CONFIG.MEDIA_COLOUR,
+            'quando_style': CONFIG.STYLE_COLOUR,
+            'quando_time': CONFIG.TIME_COLOUR,
+            'quando_leap_motion': CONFIG.LEAP_MOTION_COLOUR
         };
         for (var key in map) {
             var elem = _fromDom(key, null);
@@ -437,20 +441,28 @@
         return id;
     };
 
-    self.defineAction = function (json) {
-        json.category = 'quando_actions';
+    function _defineBlock(json, category, colour) {
+        json.category = category;
         if (!_exists(json.colour)) {
-            json.colour = self.CONFIG.ACTION_COLOUR;
+            json.colour = colour;
         }
         return self.defineBlock(json);
     };
 
-    self.defineRule = function (json) {
-        json.category = 'quando_rules';
-        if (!_exists(json.colour)) {
-            json.colour = self.CONFIG.RULE_COLOUR;
-        }
-        return self.defineBlock(json);
+    self.defineDisplay = function (json) {
+        return _defineBlock(json, 'quando_display', self.CONFIG.DISPLAY_COLOUR);
+    };
+    self.defineMedia = function (json) {
+        return _defineBlock(json, 'quando_media', self.CONFIG.MEDIA_COLOUR);
+    };
+    self.defineStyle = function (json) {
+        return _defineBlock(json, 'quando_style', self.CONFIG.STYLE_COLOUR);
+    };
+    self.defineTime = function (json) {
+        return _defineBlock(json, 'quando_time', self.CONFIG.TIME_COLOUR);
+    };
+    self.defineLeapMotion = function (json) {
+        return _defineBlock(json, 'quando_leap_motion', self.CONFIG.LEAP_MOTION_COLOUR);
     };
 
     self.getParent = function (block, ids) {
