@@ -17,6 +17,7 @@
     "fs": "0.0.1-security",
     "mongodb": "^2.2.11",
     "morgan": "^1.7.0",
-    "socket.io": "^1.7.0"
+    "socket.io": "^1.7.0",
+    "serialport": "^4.0.7"
   }
 }
