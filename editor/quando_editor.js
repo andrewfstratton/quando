@@ -284,7 +284,6 @@
                         //                            case 'width': break; // Yes, this is correct
                         //                            case 'height': break; // Yes, this is correct
                     }
-                    //                        console.log(key + ":" + widget[key]);
                 }
             }
         });
