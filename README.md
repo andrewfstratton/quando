@@ -5,12 +5,13 @@
 
 Prerequisites: Chrome, Node JS, mongoDB (complete install in c:\mongodb) running as a service (see at bottom)
 
-1. Get the repository
-1.1. Most likely as a zip
+1. EITHER Get the repository as a copy
+1.1. As a zip from github.com/andrewfstratton/quando
 1.2. Unzip to c:\ or wherever you like - the zip creates a folder called quando-master
 1.3. Rename the folder to C:\quando
-2. In the command line, in C:\quando, npm update - this will likely take a while
-3. Download blockly from github (most likely) and unzip into C:\quando\blockly
+3. OR clone the repository in C: using git clone https://github.com/andrewfstratton/quando.git
+4. In the command line, in C:\quando, npm update - this will likely take a while
+5. Download blockly from github (most likely) and unzip into C:\quando\blockly
 
 ### To run
 
