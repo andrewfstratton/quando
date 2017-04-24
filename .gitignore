@@ -32,6 +32,7 @@ jspm_packages
 blockly
 closure-library
 client/deployed_js/*
+client/images/dolls_house/*
 
 # Optional npm cache directory
 .npm
