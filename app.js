@@ -117,8 +117,11 @@ app.put('/script/deploy/:filename', (req, res) => {
     })
 })
 
-ubit.get_serial((err)=>{console.log("Error:" + err)},
-    (serial)=>{
+function ubit_error() {
+    setTimeout(function() { ubit.get_serial(ubit_error, ubit_success); }, 1000);
+    // Checks every second for plugged in micro:bit
+}
+function ubit_success(serial) {
         serial.on('data', (data) => {
             var ubit = JSON.parse(data)
             if (ubit.button == 'a') {
@@ -131,7 +134,10 @@ ubit.get_serial((err)=>{console.log("Error:" + err)},
                 io.emit('ubit', {ir:true})
             }
         })
-    })
+        serial.on('disconnect', ubit_error);
+}
+
+ubit.get_serial(ubit_error, ubit_success)
 
 app.get('/file/type/:media', (req, res) => {
     var folder = media_map[req.params.media]
