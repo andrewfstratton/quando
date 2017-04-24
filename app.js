@@ -15,6 +15,7 @@ const router = express.Router()
 
 const http = require('http').Server(app)
 const io = require('socket.io')(http)
+const ubit = require('./ubit')
 
 var server = http.listen(process.env.PORT || 80, () => {
     var host = process.env.IP || server.address().address
@@ -115,6 +116,22 @@ app.put('/script/deploy/:filename', (req, res) => {
         }
     })
 })
+
+ubit.get_serial((err)=>{console.log("Error:" + err)},
+    (serial)=>{
+        serial.on('data', (data) => {
+            var ubit = JSON.parse(data)
+            if (ubit.button == 'a') {
+                io.emit('ubit', {button:'a'})
+            }
+            if (ubit.button == 'b') {
+                io.emit('ubit', {button:'a'})
+            }
+            if (ubit.ir) {
+                io.emit('ubit', {ir:true})
+            }
+        })
+    })
 
 app.get('/file/type/:media', (req, res) => {
     var folder = media_map[req.params.media]
