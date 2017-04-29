@@ -90,6 +90,7 @@
         _info('Cleared...');
         _content = '';
         _deploy = '';
+        $('#file_name').html('[no file]');
         Blockly.mainWorkspace.clear();
     };
     self.handle_logout = function() {
@@ -314,18 +315,23 @@
         }
     }
     function _loaded(obj, modal_id, name) {
-        _showXml(obj.xml);
-        _content = obj.content;
-        _deploy = obj.deploy;
-        $(modal_id).modal('toggle');
-        _success('Loaded...');
-        $("#local_save_key").val(name);
-        $("#remote_save_key").val(name);
+        Blockly.mainWorkspace.clear(); // Note - this is deferred - so must force the load to be later
+        setTimeout(() => {
+            _showXml(obj.xml);
+            _content = obj.content;
+            _deploy = obj.deploy;
+            $(modal_id).modal('toggle');
+            _success('Loaded...');
+            $("#local_save_key").val(name);
+            $("#remote_save_key").val(name);
+            $('#file_name').html(name);
+        }, 0);
     }
     function _saved(name) {
         _success('Saved...');
         $("#local_save_key").val(name);
         $("#remote_save_key").val(name);
+        $('#file_name').html(name);
     }
     function _remote_load_list() {
         $.ajax({
@@ -367,7 +373,6 @@
     }
     function _showXml(xmlText) {
         if (xmlText) {
-            Blockly.mainWorkspace.clear();
             xmlDom = Blockly.Xml.textToDom(xmlText);
             Blockly.Xml.domToWorkspace(xmlDom, Blockly.mainWorkspace);
             Blockly.mainWorkspace.scrollCenter();
