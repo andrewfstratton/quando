@@ -99,7 +99,9 @@
             clearTimeout(self.idle_callback_id);
             self.idle_callback_id = setTimeout(self.idle_callback, self.idle_reset_secs);
         } else { // this means we are now idle and must wakeup
-            self.idle_active_callback();
+            if (self.idle_active_callback) {
+                self.idle_active_callback();
+            }
         }
     }
 
