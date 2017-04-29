@@ -2,6 +2,8 @@
     var self = this["quando"] = {};
     self.leap = null;
     self.leap_start_check_time = 0;
+    self.idle_reset_secs = 0;
+    self.idle_callback_id = 0;
     self.vitrines = new Map();
     self.override_id = 'quando_css_override';
 
@@ -16,6 +18,21 @@
         var locStr = location + "" // have to force change to string...
         if (locStr.endsWith(data.script)) {
             location.reload(true); // nocache reload - probably not necessary
+        }
+    });
+
+    document.onmousemove = idle_reset;
+    document.onclick = idle_reset;
+    document.onkeydown = idle_reset;
+    document.onkeyup = idle_reset;
+
+    _socket.on('ubit', function(data) {
+        if (data.button == 'a') {
+            alert("button a pressed")
+        } else if (data.button == 'b') {
+            alert("button b pressed")
+        } else if (data.ir) {
+            idle_reset();
         }
     });
 
@@ -75,6 +92,34 @@
         callback(); // do it straight away
         return setInterval(callback, time_secs * 1000);
     };
+
+
+    function idle_reset() {
+        if (self.idle_reset_secs > 0) {
+            clearTimeout(self.idle_callback_id);
+            self.idle_callback_id = setTimeout(self.idle_callback, self.idle_reset_secs);
+        } else { // this means we are now idle and must wakeup
+            self.idle_active_callback();
+        }
+    }
+
+    self.idle = function(time_secs, idle_fn, active_fn) {
+        clearTimeout(self.idle_callback_id);
+        self.idle_reset_secs = time_secs * 1000;
+        self.idle_callback = function() {
+            self.idle_reset_secs = 0; // why - surely I need to intercept idle_reset 
+            // actually - this will work to force idle_rest to call idle_active_callback instead
+            idle_fn();
+        };
+        self.idle_active_callback = function() {
+            clearTimeout(self.idle_callback_id);
+            self.idle_reset_secs = time_secs * 1000; // resets to idle detection
+            self.idle_callback_id = setTimeout(self.idle_callback, self.idle_reset_secs);
+            // so, restarts timeout when active
+            active_fn();
+        };
+        self.idle_callback_id = setTimeout(self.idle_callback, self.idle_reset_secs);
+    }
 
     self.title = function (txt) {
         var elem = document.getElementById('quando_title');
@@ -188,17 +233,20 @@
     
     self.hands = function(count, do_fn) {
         var hands = "None";
-        var handler = function() {
+        var handler = function () {
             frame = self.leap.frame();
-            if (frame.hands && (frame.hands.length !== hands)) {
-//                var now = (new Date).getTime();
-//                if (now > self.leap_start_check_time+1000) {
-//                    self.leap_start_check_time = now;
+            if (frame.hands) {
+                idle_reset(); // any hand data means there is a visitor present...
+                if (frame.hands.length !== hands) {
+                    //                var now = (new Date).getTime();
+                    //                if (now > self.leap_start_check_time+1000) {
+                    //                    self.leap_start_check_time = now;
                     hands = frame.hands.length;
                     if (hands === count) {
                         do_fn();
                     }
-//                }
+                    //                }
+                }
             }
         };
         if (self.leap) {
@@ -218,20 +266,21 @@
             frame = self.leap.frame();
             var now_left = false;
             var now_right = false;
-            if (frame.hands && (frame.hands.length !== 0)) {
-                var hands = frame.hands;
-                for (var i=0; i<hands.length; i++) {
-                    var handed = hands[i].type;
-//console.log(handed);
-                    if (handed === "left") {
-                        now_left = true;
-                    }
-                    if (handed === "right") {
-                        now_right = true;
+            if (frame.hands) {
+                idle_reset(); // any hand data means there is a visitor present...
+                if (frame.hands.length !== 0) {
+                    var hands = frame.hands;
+                    for (var i = 0; i < hands.length; i++) {
+                        var handed = hands[i].type;
+                        if (handed === "left") {
+                            now_left = true;
+                        }
+                        if (handed === "right") {
+                            now_right = true;
+                        }
                     }
                 }
             }
-//console.log("now right=" + now_right + ", left=" + now_left);
             if ((now_right === right) && (now_left === left)) {
                 do_fn();
             }
@@ -259,7 +308,6 @@
         }
     }
     self._handle_transition = function(ev) {
-//        alert("click it" + ev);
         ev.target.click();
     }
     
@@ -274,27 +322,29 @@
             // TODO Should this be deferred?
             (self.vitrines.values().next().value)();
             leap.loop(
-                { hand: function (hand) {
-                    let [x, y] = hand.screenPosition(hand.palmPosition);
-                    let cursor = document.getElementById('cursor');
-                    cursor.style.left = x + 'px';
-                    cursor.style.top = y + 'px';
-                    cursor.style.visibility = "hidden";
-                    let elem = document.elementFromPoint(x, y);
-                    cursor.style.visibility = "visible";
-                    if (elem) {
-                        if (!elem.classList.contains("focus")) {
-                            // remove focus from all other elements - since the cursor isn't over them
-                            self._removeFocus();
-                            if (elem.classList.contains("quando_label")) {
-                                elem.classList.add("focus");
-                                elem.addEventListener("transitionend", self._handle_transition);
+                {
+                    hand: function (hand) {
+                        idle_reset();
+                        let [x, y] = hand.screenPosition(hand.palmPosition);
+                        let cursor = document.getElementById('cursor');
+                        cursor.style.left = x + 'px';
+                        cursor.style.top = y + 'px';
+                        cursor.style.visibility = "hidden";
+                        let elem = document.elementFromPoint(x, y);
+                        cursor.style.visibility = "visible";
+                        if (elem) {
+                            if (!elem.classList.contains("focus")) {
+                                // remove focus from all other elements - since the cursor isn't over them
+                                self._removeFocus();
+                                if (elem.classList.contains("quando_label")) {
+                                    elem.classList.add("focus");
+                                    elem.addEventListener("transitionend", self._handle_transition);
+                                }
                             }
+                        } else {
+                            // remove focus from any elements - since the cursor isn't over them
+                            self._removeFocus();
                         }
-                    } else {
-                        // remove focus from any elements - since the cursor isn't over them
-                        self._removeFocus();
-                    }
                     }
                 }).use('screenPosition', {
                     scale: 1, verticalOffset: screen.height

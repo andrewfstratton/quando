@@ -2,11 +2,11 @@
     var self = this["quando_blocks"] = {};
     var PREFIX = 'quando_'; // TODO share with quando_editor
     self.CONFIG = {
-        DISPLAY_COLOUR: '#eeee66',
-        MEDIA_COLOUR: '#88ee88',
-        STYLE_COLOUR: '#eebbee',
-        TIME_COLOUR: '#eebbaa',
-        LEAP_MOTION_COLOUR: '#bbbbbb',
+        DISPLAY_COLOUR: '#ee9955',
+        MEDIA_COLOUR: '#55cc55',
+        STYLE_COLOUR: '#cc99cc',
+        TIME_COLOUR: '#9999cc',
+        LEAP_MOTION_COLOUR: '#999999',
         BLOCKLY_SATURATION: 0.25, // default for hue only colour - probably not used anymore - see http://colorizer.org/
         BLOCKLY_VALUE: 0.85, // ditto
     };
@@ -91,19 +91,26 @@
             }
         });
 
-        var TIME = 'TIME';
         quando_editor.defineTime({
             name: 'After',
             interface: [
-                { name: TIME, title: '', number: 1 },
-                { title: 'Seconds' },
+                { name: DURATION, title: '', number: 1 },
+                { menu: ['Seconds', 'Minutes', 'Hours'], name: UNITS_MENU, title: '' },
                 { statement: STATEMENT }
             ],
             javascript: function (block) {
-                var time = quando_editor.getNumber(block, TIME); // seconds
+                var duration = quando_editor.getNumber(block, DURATION);
+                switch (quando_editor.getMenu(block, UNITS_MENU)) {
+                    case 'Minutes':
+                        duration *= 60;
+                        break;
+                    case 'Hours':
+                        duration *= 60 * 60;
+                        break;
+                };
                 var statement = quando_editor.getStatement(block, STATEMENT);
                 var result = "quando.after("
-                    + time
+                    + duration
                     + ", function() {\n"
                     + statement
                     + "});\n";
@@ -411,6 +418,22 @@ ${statement}});
             ],
             javascript: _label_javascript,
         });
+        let SHOW_DISPLAY = 'Show Display';
+        let SHOW_DISPLAY_MENU = 'show display menu';
+        quando_editor.defineDisplay({
+            name: SHOW_DISPLAY,
+            interface: [{
+                    name: SHOW_DISPLAY_MENU, title:'',
+                    menu: _label_menu
+                }],
+            javascript: (block) => {
+                let menuid = quando_editor.getMenu(block, SHOW_DISPLAY_MENU);
+                // find when block on id, then get it's title
+                let whenblock = Blockly.mainWorkspace.getBlockById(menuid);
+                var result = `quando.showVitrine("${menuid}");\n`;
+                return result;                
+            }
+        });
         let STYLE_BLOCK = 'Style';
         let STYLE_MENU = 'style';
         let DIV_MENU = 'div';
@@ -481,25 +504,56 @@ ${statement}});
             },
         });
 
+        let EXPLORATION_RULE = 'Exploration Rule';
         quando_editor.defineBlock({
-            name: 'When ', next: false, previous: false, category: 'extras', colour: '320',
+            name: EXPLORATION_RULE, title:'When', category: 'extras', colour: '#55bb55',
             interface: [
-                {
-                    menu: ['Diesel', 'Petrol', 'VAT', 'Fuel Tax'],
-                    name: UNITS_MENU, title: ''
-                },
-                { menu: ['Increases', 'Decreases'] },
+                { name: 'title', title:'', text: ''},
+                { name: 'text', title: '', text: ''},
                 { statement: STATEMENT }
             ]
         });
 
+        let EXPLORATION_ACTION = 'Exploration Action';
         quando_editor.defineBlock({
-            name: 'Text ', category: 'extras', colour: '80',
+            name: EXPLORATION_ACTION, title:'Do', category: 'extras', colour: '#5555bb',
             interface: [
-                { name: 'message', text: 'message' },
-                { name: 'to', text: 'mobile' }
+                { name: 'title', title:'', text: ''},
+                { name: 'text', title: '', text: ''}
             ]
         });
-
+        
+        let WHEN_IDLE = 'When Idle for';
+        let ACTIVE_STATEMENT = 'ACTIVE_STATEMENT'
+        quando_editor.defineTime({
+            name: WHEN_IDLE, next: false, previous: false,
+            interface: [
+                { name: DURATION, title: '', number: '10' }, MENU_UNITS,
+                { statement: STATEMENT },
+                { row: 'then when active', statement: ACTIVE_STATEMENT }
+            ],
+            javascript: (block) => {
+                var duration = quando_editor.getNumber(block, DURATION);
+                switch (quando_editor.getMenu(block, UNITS_MENU)) {
+                    case 'Minutes':
+                        duration *= 60;
+                        break;
+                    case 'Hours':
+                        duration *= 60 * 60;
+                        break;
+                };
+                block.postfix = '';
+                var statement = quando_editor.getStatement(block, STATEMENT);
+                var active_statement = quando_editor.getStatement(block, ACTIVE_STATEMENT);
+                var result = "quando.idle("
+                    + duration
+                    + ", function() {\n"
+                    + statement
+                    + "}, function() {\n"
+                    + active_statement + block.postfix // Is this possible if not embedded?
+                    + "});\n";
+                return result;
+            },
+        });
     };
 })();
