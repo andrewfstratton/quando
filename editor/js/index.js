@@ -136,7 +136,7 @@
             success: function(res) {
                 if (res.success) {
                     $('#remote_save_modal').modal('toggle');
-                    _saved(name);
+                    _saved(decodeURI(name));
                 } else {
                     alert('Failed to save');
                 }
