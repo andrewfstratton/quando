@@ -127,6 +127,15 @@
             }
         });
 
+        let SHOW_TITLE = "Show Title";
+        quando_editor.defineMedia({
+            name: 'Show Title "',
+            interface: [{ name: SHOW_TITLE, title:'', text: '.type your title here..' }, { title: '"' }],
+            javascript: function (block) {
+                return 'quando.title("' + quando_editor.getText(block, SHOW_TITLE) + '");\n';
+            }
+        });
+
         var DO_DURATION = 'Do for';
         quando_editor.defineTime({
             name: DO_DURATION,
@@ -530,7 +539,7 @@ ${statement}});
             interface: [
                 { name: DURATION, title: '', number: '10' }, MENU_UNITS,
                 { statement: STATEMENT },
-                { row: 'then when active', statement: ACTIVE_STATEMENT }
+                { row: 'Then When Active', statement: ACTIVE_STATEMENT }
             ],
             javascript: (block) => {
                 var duration = quando_editor.getNumber(block, DURATION);
