@@ -376,6 +376,7 @@
         document.getElementById('quando_labels').innerHTML = '';
         self.title();
         self.text();
+        self.video();
         self._resetStyle();
         vitrine();
     }
