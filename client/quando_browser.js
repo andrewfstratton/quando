@@ -317,7 +317,7 @@
         document.querySelector('#quando_title').addEventListener('contextmenu',
             (ev) => {
                 ev.preventDefault();
-                location.href = "../client/setup.html";
+                location.href = "../../client/setup";
                 return false;
             }, false);
         if (self.vitrines.size != 0) {
