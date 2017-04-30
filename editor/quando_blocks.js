@@ -480,7 +480,7 @@ ${statement}});
                     let g = parseInt(bigint[2], 16);
                     let b = parseInt(bigint[3], 16);
                     value = `rgba(${r}, ${g}, ${b}, 0.6)`;
-                    if (div == '.quando_label') { // Need to put in the transition opacity
+                    if (div == '.quando_label') { // Need to put in the transition opacity - I think this is working now
                         result += `quando.${method}('${div}.focus', '${style}', 'rgba(${r}, ${g}, ${b}, 1)');\n`;
                     }
                 }

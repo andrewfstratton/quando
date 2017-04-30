@@ -6,6 +6,7 @@
     self.idle_callback_id = 0;
     self.vitrines = new Map();
     self.override_id = 'quando_css_override';
+    self.pinching = false;
 
     var _socket = io.connect('http://' + location.hostname)
 
@@ -314,12 +315,14 @@
     }
     
     self.startVitrine = function(leap) {
-        document.querySelector('#quando_title').addEventListener('contextmenu',
+        document.querySelector('#quando_title').addEventListener('contextmenu', // right click title to go to setup
             (ev) => {
                 ev.preventDefault();
                 location.href = "../../client/setup";
                 return false;
             }, false);
+        self.pinching = false;
+        _style("quando_css", '#cursor', 'opacity', 0.6);
         if (self.vitrines.size != 0) {
             // TODO Should this be deferred?
             (self.vitrines.values().next().value)();
@@ -329,18 +332,30 @@
                         idle_reset();
                         let [x, y] = hand.screenPosition(hand.palmPosition);
                         let cursor = document.getElementById('cursor');
+                        let pinch = hand.pinchStrength.toPrecision(2);
+                        if (pinch <= 0.6) {
+                            self.pinching = false;
+                            _style("quando_css", '#cursor', 'opacity', 0.6);
+                        } else if (pinch >= 0.9) {
+                            _style("quando_css", '#cursor', 'opacity', 1.0);
+                        }
                         cursor.style.left = x + 'px';
                         cursor.style.top = y + 'px';
                         cursor.style.visibility = "hidden";
                         let elem = document.elementFromPoint(x, y);
                         cursor.style.visibility = "visible";
                         if (elem) {
-                            if (!elem.classList.contains("focus")) {
+                            if (elem.classList.contains("quando_label")) {
+                                if (!self.pinching && (pinch >= 0.9)) {
+                                        elem.click();
+                                        self.pinching = true;
+                                }
+                            }
+                            if (!elem.classList.contains("focus")) { // the element is not in 'focus'
                                 // remove focus from all other elements - since the cursor isn't over them
                                 self._removeFocus();
                                 if (elem.classList.contains("quando_label")) {
                                     elem.classList.add("focus");
-                                    elem.addEventListener("transitionend", self._handle_transition);
                                 }
                             }
                         } else {
@@ -349,7 +364,7 @@
                         }
                     }
                 }).use('screenPosition', {
-                    scale: 1, verticalOffset: screen.height
+                    scale: 0.7, verticalOffset: screen.height
                 });
         }
     }

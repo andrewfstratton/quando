@@ -13,13 +13,13 @@ body {
     border: 0px;  /* solid grey; */
 }
 .quando_label::before {
-    content: '\25b6';
+    content: '\25b6\0020';
 }
 .quando_label {
     font-size: 25px;
     color: ffffff;
     padding: 5px;
-    margin-bottom: 5px;
+    margin: 2px 2px 5px 2px;
 }
 #quando_labels {
     position: absolute;
@@ -88,11 +88,11 @@ body {
     background-color: black;
 }
 #cursor {
-    width: 80px;
-    height: 80px;
+    width: 60px;
+    height: 60px;
     position: fixed;
-    margin-left: -40px;
-    margin-top: -40px;
+    margin-left: -30px;
+    margin-top: -30px;
     z-index: 910;
     opacity: 0.7;
     background: #ffcc00;
@@ -105,12 +105,11 @@ body {
 /*    background: radial-gradient(100px 100px, circle, #ffff00, #000);*/
 }
 .quando_label {
-    -webkit-transition: background-color 1.2s linear;
-    -moz-transition: background-color 1.2s linear;
-    -o-transition: background-color 1.2s linear;
-    transition: background-color 1.2s linear;
+    font-weight: normal;
     background-color: rgba(224, 119, 0, 0.6);
 }
 .quando_label.focus {
+    font-weight: 700;
+    margin: 0px 0px 3px 0px;
     background-color: rgba(224, 119, 0, 1);
 }
