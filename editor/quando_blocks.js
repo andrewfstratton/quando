@@ -233,27 +233,37 @@
                 return result;
             }
         });
-        var CHECK_AUDIO = ' Audio';
         var CHECK_TEXT = ' Text';
+        var CHECK_TITLE = ' Title';
+        var CHECK_IMAGE = ' Image';
         var CHECK_VIDEO = ' Video';
+        var CHECK_AUDIO = ' Audio';
         var CLEAR = 'Clear';
         quando_editor.defineMedia({
             name: CLEAR,
             interface: [
-                { name: CHECK_AUDIO, check: false },
                 { name: CHECK_TEXT, check: false },
-                { name: CHECK_VIDEO, check: false }
+                { name: CHECK_TITLE, check: false },
+                { name: CHECK_IMAGE, check: false },
+                { name: CHECK_VIDEO, check: false },
+                { name: CHECK_AUDIO, check: false }
             ],
             javascript: function (block) {
                 result = "";
-                if (quando_editor.getCheck(block, CHECK_AUDIO)) {
-                    result += 'quando.clear_audio();\n';
-                }
                 if (quando_editor.getCheck(block, CHECK_TEXT)) {
                     result += 'quando.text();\n';
                 }
+                if (quando_editor.getCheck(block, CHECK_TITLE)) {
+                    result += 'quando.title();\n';
+                }
+                if (quando_editor.getCheck(block, CHECK_IMAGE)) {
+                    result += `quando.setDisplayStyle('#quando_image', 'background-image', 'url("/client/transparent.png")');\n`;
+                }
                 if (quando_editor.getCheck(block, CHECK_VIDEO)) {
                     result += 'quando.clear_video();\n';
+                }
+                if (quando_editor.getCheck(block, CHECK_AUDIO)) {
+                    result += 'quando.clear_audio();\n';
                 }
                 return result;
             }
@@ -564,5 +574,27 @@ ${statement}});
                 return result;
             },
         });
+        var PEPPER_BLOCK = 'When Visitor Says';
+        var ID_PEPPER = "Pepper_says";
+        quando_editor.defineMedia({
+            name: PEPPER_BLOCK, next: true, previous: true,
+            interface: [{ name: ID_PEPPER, title: '"', text: '.type your text here..' }, { title: '"' },
+                { statement: STATEMENT }
+            ],
+            javascript: function (block) {
+                var statement = quando_editor.getStatement(block, STATEMENT);
+                var result = "['topic':'u: (" + quando_editor.getText(block, ID_PEPPER) + ") "
+                    + statement + "']";
+                return result;
+            }
+        });
+        quando_editor.defineMedia({
+            name: 'Say',
+            interface: [{ name: ID_PEPPER, title: '"', text: '.type your text here..' }, { title: '"' }],
+            javascript: function (block) {
+                return quando_editor.getText(block, ID_PEPPER)+'';
+            }
+        });
+
     };
 })();
