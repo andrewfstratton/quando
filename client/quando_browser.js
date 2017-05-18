@@ -22,6 +22,17 @@
         }
     });
 
+    function idle_reset() {
+        if (self.idle_reset_secs > 0) {
+            clearTimeout(self.idle_callback_id);
+            self.idle_callback_id = setTimeout(self.idle_callback, self.idle_reset_secs);
+        } else { // this means we are now idle and must wakeup
+            if (self.idle_active_callback) {
+                self.idle_active_callback();
+            }
+        }
+    }
+
     document.onmousemove = idle_reset;
     document.onclick = idle_reset;
     document.onkeydown = idle_reset;
@@ -29,13 +40,27 @@
 
     _socket.on('ubit', function(data) {
         if (data.button == 'a') {
-            alert("button a pressed")
+            console.log("button a pressed")
         } else if (data.button == 'b') {
-            alert("button b pressed")
+            console.log("button b pressed")
         } else if (data.ir) {
             idle_reset();
+        } else if (data.orientation) {
+            if (data.orientation == "up") {
+                document.dispatchEvent(new CustomEvent("ubitUp"));
+            } else if (data.orientation == "down") {
+                document.dispatchEvent(new CustomEvent("ubitDown"));
+            }
         }
     });
+
+    self.ubitUp = function(callback) {
+        document.addEventListener("ubitUp", callback);
+    }
+
+    self.ubitDown = function(callback) {
+        document.addEventListener("ubitDown", callback);
+    }
 
     var Config = self.Config = {
     };
@@ -94,24 +119,12 @@
         return setInterval(callback, time_secs * 1000);
     };
 
-
-    function idle_reset() {
-        if (self.idle_reset_secs > 0) {
-            clearTimeout(self.idle_callback_id);
-            self.idle_callback_id = setTimeout(self.idle_callback, self.idle_reset_secs);
-        } else { // this means we are now idle and must wakeup
-            if (self.idle_active_callback) {
-                self.idle_active_callback();
-            }
-        }
-    }
-
     self.idle = function(time_secs, idle_fn, active_fn) {
         clearTimeout(self.idle_callback_id);
         self.idle_reset_secs = time_secs * 1000;
         self.idle_callback = function() {
             self.idle_reset_secs = 0; // why - surely I need to intercept idle_reset 
-            // actually - this will work to force idle_rest to call idle_active_callback instead
+            // actually - this will work to force idle_reset to call idle_active_callback instead
             idle_fn();
         };
         self.idle_active_callback = function() {
@@ -233,7 +246,7 @@
             }
         });
     };
-    
+
     self.hands = function(count, do_fn) {
         var hands = "None";
         var handler = function () {

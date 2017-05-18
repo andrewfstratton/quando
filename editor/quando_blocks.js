@@ -542,6 +542,32 @@ ${statement}});
             ]
         });
         
+        let UP_DOWN_MENU = "Up Down";
+        quando_editor.defineDisplay({
+            name: 'When micro:bit', next: false, previous: false,
+            interface: [
+                { menu: ['Up', 'Down'], name: UP_DOWN_MENU, title: '' },
+                { statement: STATEMENT }
+            ],
+            javascript: function (block) {
+                let fn = '';
+                switch (quando_editor.getMenu(block, UP_DOWN_MENU)) {
+                    case 'Up':
+                        fn = "ubitUp";
+                        break;
+                    case 'Down':
+                        fn = "ubitDown";
+                        break;
+                };
+                var statement = quando_editor.getStatement(block, STATEMENT);
+                var result = "quando." + fn + "("
+                    + "function() {\n"
+                    + statement
+                    + "});\n";
+                return result;
+            }
+        });
+        
         let WHEN_IDLE = 'When Idle for';
         let ACTIVE_STATEMENT = 'ACTIVE_STATEMENT'
         quando_editor.defineTime({
@@ -574,27 +600,5 @@ ${statement}});
                 return result;
             },
         });
-        var PEPPER_BLOCK = 'When Visitor Says';
-        var ID_PEPPER = "Pepper_says";
-        quando_editor.defineMedia({
-            name: PEPPER_BLOCK, next: true, previous: true,
-            interface: [{ name: ID_PEPPER, title: '"', text: '.type your text here..' }, { title: '"' },
-                { statement: STATEMENT }
-            ],
-            javascript: function (block) {
-                var statement = quando_editor.getStatement(block, STATEMENT);
-                var result = "['topic':'u: (" + quando_editor.getText(block, ID_PEPPER) + ") "
-                    + statement + "']";
-                return result;
-            }
-        });
-        quando_editor.defineMedia({
-            name: 'Say',
-            interface: [{ name: ID_PEPPER, title: '"', text: '.type your text here..' }, { title: '"' }],
-            javascript: function (block) {
-                return quando_editor.getText(block, ID_PEPPER)+'';
-            }
-        });
-
     };
 })();
