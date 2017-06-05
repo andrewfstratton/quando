@@ -568,6 +568,28 @@ ${statement}});
             }
         });
         
+        let WHEN_HEADING_MIN = "Min";
+        let WHEN_HEADING_MAX = "Max";
+        quando_editor.defineDisplay({
+            name: 'When heading between ', next: false, previous: false,
+            interface: [
+                { name: WHEN_HEADING_MIN, title: '', number: '0' },
+                { name: WHEN_HEADING_MAX, title: ' and ', number: '359' },
+                {title: ' degrees'},
+                { statement: STATEMENT }
+            ],
+            javascript: function (block) {
+                let min = quando_editor.getNumber(block, WHEN_HEADING_MIN);
+                let max = quando_editor.getNumber(block, WHEN_HEADING_MAX);
+                var statement = quando_editor.getStatement(block, STATEMENT);
+                var result = "quando.ubitHeading(" + min + "," + max + ","
+                    + "function() {\n"
+                    + statement
+                    + "});\n";
+                return result;
+            }
+        });
+        
         let WHEN_IDLE = 'When Idle for';
         let ACTIVE_STATEMENT = 'ACTIVE_STATEMENT'
         quando_editor.defineTime({

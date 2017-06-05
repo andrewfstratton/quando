@@ -51,6 +51,8 @@
             } else if (data.orientation == "down") {
                 document.dispatchEvent(new CustomEvent("ubitDown"));
             }
+        } else if (data.heading) {
+            document.dispatchEvent(new CustomEvent("ubitHeading", {'detail':data.heading}));
         }
     });
 
@@ -60,6 +62,16 @@
 
     self.ubitDown = function(callback) {
         document.addEventListener("ubitDown", callback);
+    }
+
+    self.ubitHeading = function(min, max, callback) {
+        document.addEventListener("ubitHeading", (ev)=> {
+            let heading = ev.detail;
+            if ((heading >= min) && (heading <= max)) {
+                callback();
+            }
+//            callback();
+        });
     }
 
     var Config = self.Config = {

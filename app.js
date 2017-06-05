@@ -117,12 +117,17 @@ app.put('/script/deploy/:filename', (req, res) => {
     })
 })
 
+var reported = false
 function ubit_error(err) {
-//    console.log(err);
+    if (!reported && err) {
+        console.log(err);
+        reported = true;
+    }
     setTimeout(function() { ubit.get_serial(ubit_error, ubit_success); }, 1000);
     // Checks every second for plugged in micro:bit
 }
 function ubit_success(serial) {
+    reported = false;
     let orientation = false
     serial.on('data', (data) => {
         try {
@@ -141,6 +146,9 @@ function ubit_success(serial) {
                     orientation = ubit.orientation;
                     io.emit('ubit', {'orientation': orientation})
                 }
+            }
+            if (ubit.heading) {
+                io.emit('ubit', {'heading':ubit.heading});
             }
         } catch(err) {
             console.log(err + ":" + data);
