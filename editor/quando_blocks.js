@@ -25,7 +25,8 @@
 
         var STATEMENT = 'STATEMENT';
         var DURATION = 'DURATION';
-        var MENU_UNITS = { name: 'Units', title: '', menu: ['Seconds', 'Minutes'] };
+        var MENU_UNITS_MINS = { name: 'Units_mins', title: '', menu: ['Seconds', 'Minutes'] };
+        var MENU_UNITS_HOURS = { name: 'Units_hours', title: '', menu: ['Seconds', 'Minutes', 'Hours'] };
         var FREQUENCY = 'FREQUENCY';
         var UNITS_MENU = 'UNITS_MENU';
 
@@ -61,29 +62,25 @@
             }
         });
 
-        var DURATION = 'DURATION';
         var EVERY_BLOCK = 'Every';
         quando_editor.defineTime({
             name: EVERY_BLOCK, next: false, previous: false,
             interface: [
-                { name: DURATION, title: '', number: 1 },
-                { menu: ['Seconds', 'Minutes', 'Hours'], name: UNITS_MENU, title: '' },
+                { name: DURATION, title: '', number: '1' }, MENU_UNITS_HOURS,
                 { statement: STATEMENT }
             ],
             javascript: function (block) {
-                var duration = quando_editor.getNumber(block, DURATION);
-                switch (quando_editor.getMenu(block, UNITS_MENU)) {
-                    case 'Minutes':
-                        duration *= 60;
-                        break;
-                    case 'Hours':
-                        duration *= 60 * 60;
-                        break;
-                };
+                var seconds = quando_editor.getNumber(block, DURATION) * 1;
+                if (quando_editor.getMenu(block, MENU_UNITS_MINS.name) === 'Minutes') {
+                    seconds *= 60;
+                }
+                if (quando_editor.getMenu(block, MENU_UNITS_MINS.name) === 'Hours') {
+                    seconds *= 60*60;
+                }
                 block.postfix = '';
                 var statement = quando_editor.getStatement(block, STATEMENT);
                 var result = "quando.every("
-                    + duration
+                    + seconds
                     + ", function() {\n"
                     + statement + block.postfix
                     + "});\n";
@@ -94,23 +91,20 @@
         quando_editor.defineTime({
             name: 'After',
             interface: [
-                { name: DURATION, title: '', number: 1 },
-                { menu: ['Seconds', 'Minutes', 'Hours'], name: UNITS_MENU, title: '' },
+                { name: DURATION, title: '', number: '1' }, MENU_UNITS_HOURS,
                 { statement: STATEMENT }
             ],
             javascript: function (block) {
-                var duration = quando_editor.getNumber(block, DURATION);
-                switch (quando_editor.getMenu(block, UNITS_MENU)) {
-                    case 'Minutes':
-                        duration *= 60;
-                        break;
-                    case 'Hours':
-                        duration *= 60 * 60;
-                        break;
-                };
+                var seconds = quando_editor.getNumber(block, DURATION) * 1;
+                if (quando_editor.getMenu(block, MENU_UNITS_MINS.name) === 'Minutes') {
+                    seconds *= 60;
+                }
+                if (quando_editor.getMenu(block, MENU_UNITS_MINS.name) === 'Hours') {
+                    seconds *= 60*60;
+                }
                 var statement = quando_editor.getStatement(block, STATEMENT);
                 var result = "quando.after("
-                    + duration
+                    + seconds
                     + ", function() {\n"
                     + statement
                     + "});\n";
@@ -140,13 +134,13 @@
         quando_editor.defineTime({
             name: DO_DURATION,
             interface: [
-                { name: DURATION, title: '', number: '1' }, MENU_UNITS,
+                { name: DURATION, title: '', number: '1' }, MENU_UNITS_MINS,
                 { statement: STATEMENT }
             ],
             javascript: function (block) {
                 block.postfix = '';
                 var seconds = quando_editor.getNumber(block, DURATION) * 1;
-                if (quando_editor.getMenu(block, MENU_UNITS.name) === 'Minutes') {
+                if (quando_editor.getMenu(block, MENU_UNITS_MINS.name) === 'Minutes') {
                     seconds *= 60;
                 }
                 var closing_parent = quando_editor.getParent(block, [EVERY_BLOCK, DO_DURATION, WAIT_ON, FOREVER_BLOCK]);
@@ -595,25 +589,20 @@ ${statement}});
         quando_editor.defineTime({
             name: WHEN_IDLE, next: false, previous: false,
             interface: [
-                { name: DURATION, title: '', number: '10' }, MENU_UNITS,
+                { name: DURATION, title: '', number: '10' }, MENU_UNITS_MINS,
                 { statement: STATEMENT },
                 { row: 'Then When Active', statement: ACTIVE_STATEMENT }
             ],
             javascript: (block) => {
-                var duration = quando_editor.getNumber(block, DURATION);
-                switch (quando_editor.getMenu(block, UNITS_MENU)) {
-                    case 'Minutes':
-                        duration *= 60;
-                        break;
-                    case 'Hours':
-                        duration *= 60 * 60;
-                        break;
-                };
+                var seconds = quando_editor.getNumber(block, DURATION) * 1;
+                if (quando_editor.getMenu(block, MENU_UNITS_MINS.name) === 'Minutes') {
+                    seconds *= 60;
+                }
                 block.postfix = '';
                 var statement = quando_editor.getStatement(block, STATEMENT);
                 var active_statement = quando_editor.getStatement(block, ACTIVE_STATEMENT);
                 var result = "quando.idle("
-                    + duration
+                    + seconds
                     + ", function() {\n"
                     + statement
                     + "}, function() {\n"
