@@ -494,11 +494,13 @@ ${statement}});
         });
         let FONT_SIZE_BLOCK = 'Font Size';
         let FONT_SIZE = 'font size';
+        let FONT_UNIT_MENU = "Font unit";
         quando_editor.defineStyle({
             name: FONT_SIZE_BLOCK,
             interface: [
                 { menu: ['Title', 'Text', 'Label'], name: DIV_MENU, title: '' },
-                { name: FONT_SIZE, title: '', number: 24 }, { title: 'pt' },
+                { name: FONT_SIZE, title: '', number: 24 },
+                { menu: ['pt', '% width'], name: FONT_UNIT_MENU, title: '' }
             ],
             javascript: (block) => {
                 let method = _getStyleOnContained(block, WHEN_VITRINE_BLOCK);
@@ -511,8 +513,10 @@ ${statement}});
                     case 'Label': div = '.quando_label';
                         break;
                 }
-                let value = quando_editor.getNumber(block, FONT_SIZE) + "pt";
-                result = `quando.${method}('${div}', 'font-size', '${value}');\n`;
+                let value = quando_editor.getNumber(block, FONT_SIZE)
+                let unit = quando_editor.getMenu(block, FONT_UNIT_MENU);
+                if (unit == '% width') { unit = 'vw'; }
+                result = `quando.${method}('${div}', 'font-size', '${value}${unit}');\n`;
                 return result;
             },
         });
