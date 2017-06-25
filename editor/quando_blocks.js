@@ -71,10 +71,10 @@
             ],
             javascript: function (block) {
                 var seconds = quando_editor.getNumber(block, DURATION) * 1;
-                if (quando_editor.getMenu(block, MENU_UNITS_MINS.name) === 'Minutes') {
+                if (quando_editor.getMenu(block, MENU_UNITS_HOURS.name) === 'Minutes') {
                     seconds *= 60;
                 }
-                if (quando_editor.getMenu(block, MENU_UNITS_MINS.name) === 'Hours') {
+                if (quando_editor.getMenu(block, MENU_UNITS_HOURS.name) === 'Hours') {
                     seconds *= 60*60;
                 }
                 block.postfix = '';
@@ -96,10 +96,10 @@
             ],
             javascript: function (block) {
                 var seconds = quando_editor.getNumber(block, DURATION) * 1;
-                if (quando_editor.getMenu(block, MENU_UNITS_MINS.name) === 'Minutes') {
+                if (quando_editor.getMenu(block, MENU_UNITS_HOURS.name) === 'Minutes') {
                     seconds *= 60;
                 }
-                if (quando_editor.getMenu(block, MENU_UNITS_MINS.name) === 'Hours') {
+                if (quando_editor.getMenu(block, MENU_UNITS_HOURS.name) === 'Hours') {
                     seconds *= 60*60;
                 }
                 var statement = quando_editor.getStatement(block, STATEMENT);
@@ -589,7 +589,7 @@ ${statement}});
         quando_editor.defineTime({
             name: WHEN_IDLE, next: false, previous: false,
             interface: [
-                { name: DURATION, title: '', number: '10' }, MENU_UNITS_MINS,
+                { name: DURATION, title: '', number: '1' }, MENU_UNITS_MINS,
                 { statement: STATEMENT },
                 { row: 'Then When Active', statement: ACTIVE_STATEMENT }
             ],
