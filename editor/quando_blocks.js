@@ -427,9 +427,24 @@ ${statement}});
                 {
                     name: LABEL_TO_MENU,
                     menu: _label_menu
-                },
+                }
             ],
             javascript: _label_javascript,
+        });
+        let WHEN_LABEL_BLOCK = 'When Label';
+        let WHEN_LABEL_TEXT = 'When label text';
+        quando_editor.defineDisplay({
+            name: WHEN_LABEL_BLOCK,
+            interface: [
+                { name: WHEN_LABEL_TEXT, title:'', text:'**Put label text here**' },
+                { statement: STATEMENT }
+            ],
+            javascript: (block) => {
+                let text = quando_editor.getText(block, WHEN_LABEL_TEXT);
+                let statement = quando_editor.getStatement(block, STATEMENT);
+                let result = `quando.addLabelStatement("${text}", function() {\n${statement}});\n`;
+                return result;
+            }
         });
         let SHOW_DISPLAY = 'Show Display';
         let SHOW_DISPLAY_MENU = 'show display menu';
@@ -494,13 +509,11 @@ ${statement}});
         });
         let FONT_SIZE_BLOCK = 'Font Size';
         let FONT_SIZE = 'font size';
-        let FONT_UNIT_MENU = "Font unit";
         quando_editor.defineStyle({
             name: FONT_SIZE_BLOCK,
             interface: [
                 { menu: ['Title', 'Text', 'Label'], name: DIV_MENU, title: '' },
-                { name: FONT_SIZE, title: '', number: 24 },
-                { menu: ['pt', '% width'], name: FONT_UNIT_MENU, title: '' }
+                { name: FONT_SIZE, title: '', number: 100 }, {title: '+ characters across screen'}
             ],
             javascript: (block) => {
                 let method = _getStyleOnContained(block, WHEN_VITRINE_BLOCK);
@@ -513,10 +526,8 @@ ${statement}});
                     case 'Label': div = '.quando_label';
                         break;
                 }
-                let value = quando_editor.getNumber(block, FONT_SIZE)
-                let unit = quando_editor.getMenu(block, FONT_UNIT_MENU);
-                if (unit == '% width') { unit = 'vw'; }
-                result = `quando.${method}('${div}', 'font-size', '${value}${unit}');\n`;
+                let value = 100/quando_editor.getNumber(block, FONT_SIZE);
+                result = `quando.${method}('${div}', 'font-size', '${value}vw');\n`;
                 return result;
             },
         });

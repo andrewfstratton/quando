@@ -70,7 +70,6 @@
             if ((heading >= min) && (heading <= max)) {
                 callback();
             }
-//            callback();
         });
     }
 
@@ -408,9 +407,22 @@
     
     self.addLabel = function(id, title) {
         var elem = document.getElementById('quando_labels');
-        elem.innerHTML += `<div class='quando_label' onclick="quando.showVitrine('${id}');">${title}</div>`;
+        var div = document.createElement('div');
+        div.className = 'quando_label';
+        div.innerHTML = title;
+        elem.appendChild(div);
+        div.onclick = function() { quando.showVitrine(id)};
     }
     
+    self.addLabelStatement = function(text, fn) {
+        var elem = document.getElementById('quando_labels');
+        var div = document.createElement('div');
+        div.className = 'quando_label';
+        div.innerHTML = text;
+        elem.appendChild(div);
+        div.onclick = fn;
+    }
+
     let _style = function(style_id, id, property, value) {
         let style = document.getElementById(style_id);
         if (style == null) {
