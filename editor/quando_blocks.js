@@ -164,7 +164,7 @@
 
         var _getOnContained = function(block, container, contained, otherwise) {
             let result = otherwise;
-            if (quando_editor.getParent(block, [container])) {
+            if (quando_editor.getParent(block, container)) {
                 result = contained;
             }
             return result;
@@ -180,7 +180,7 @@
                 { name: COLOUR, title: '', colour: '#ff0000' }
             ],
             javascript: function (block) {
-                let method = _getStyleOnContained(block, WHEN_VITRINE_BLOCK);
+                let method = _getStyleOnContained(block, [WHEN_VITRINE_BLOCK, WHEN_IDLE]);
                 let colour = quando_editor.getColour(block, COLOUR);
                 return `quando.${method}('#quando_image', 'background-color', '${colour}');\n`;
             }
@@ -192,7 +192,7 @@
             name: 'Display', title: 'Show Image',
             interface: [ FILE_IMAGE ],
             javascript: function (block) {
-                let method = _getStyleOnContained(block, WHEN_VITRINE_BLOCK);
+                let method = _getStyleOnContained(block, [WHEN_VITRINE_BLOCK, WHEN_IDLE]);
                 let image = quando_editor.getFile(block, IMAGE);
                 return `quando.${method}('#quando_image', 'background-image', 'url("/client/media/${image}")');\n`;
             }
@@ -477,7 +477,7 @@ ${statement}});
             ],
             javascript: (block) => {
                 let result ="";
-                let method = _getStyleOnContained(block, WHEN_VITRINE_BLOCK);
+                let method = _getStyleOnContained(block, [WHEN_VITRINE_BLOCK, WHEN_IDLE]);
                 let div = quando_editor.getMenu(block, DIV_MENU);
                 switch (div) {
                     case 'Title': div = '#quando_title';
@@ -516,7 +516,7 @@ ${statement}});
                 { name: FONT_SIZE, title: '', number: 100 }, {title: '+ characters across screen'}
             ],
             javascript: (block) => {
-                let method = _getStyleOnContained(block, WHEN_VITRINE_BLOCK);
+                let method = _getStyleOnContained(block, [WHEN_VITRINE_BLOCK, WHEN_IDLE]);
                 let div = quando_editor.getMenu(block, DIV_MENU);
                 switch (div) {
                     case 'Title': div = '#quando_title';
