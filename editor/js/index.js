@@ -227,21 +227,36 @@
             alert('Behaviour incomplete.')
         }
     };
-    self.handle_file = function(media, block_id, widget_id) {
-        $('#file_modal').modal('toggle');
+    self.handle_file = function(media, block_id, widget_id, path='') {
+// console.log(`media='${media}', path='${path}'`);
+    // note - path must have a slash at the end
+        var file_modal = $('#file_modal');
+        file_modal.modal('show');
         $('#file_list').html('Loading...');
         $.ajax({
-            url: '/file/type/' + media,
+            url: '/file/type' + path + '/' + media,
             success: function(res) {
                 if (res.success) {
-                    if (res.files.length === 0) {
-                        $('#file_list').html('No saves available');
-                    } else {
-                        $('#file_list').html('');
-                        res.files.forEach(function(filename) {
-                            $('#file_list').append(_file_list_add(filename, false,
-                                'handle_file_selected', block_id, widget_id));
-                        });
+                    $('#file_list').html('');
+                    if (path != '') {
+                        var parent_path ='';
+                        var slash_loc = path.lastIndexOf('/');
+                        if (slash_loc > 0) {
+                            parent_path = path.substring(0, slash_loc);
+                        }
+                        $('#file_list').append(_folder_list_add('..', media, parent_path,
+                            block_id, widget_id));
+                    }
+                    for (var i in res.folders) {
+                        $('#file_list').append(_folder_list_add(res.folders[i], media, path+'/'+res.folders[i],
+                            block_id, widget_id));
+                    }
+                    if (path != '') {
+                        path = path.substring(1) + '/'; // strip off the intial slash and put infront of the file
+                    }
+                    for (var i in res.files) {
+                        $('#file_list').append(_file_list_add(res.files[i], path,
+                            'handle_file_selected', block_id, widget_id));
                     }
                 } else {
                     alert('Failed to find server files');
@@ -254,11 +269,13 @@
             }
         });
     }
+    self.handle_folder_selected = function(media, block_id, widget_id, path) {
+        self.handle_file(media, block_id, widget_id, path);
+    }
     self.handle_file_selected = function(filename, block_id, widget_id) {
-        // alert(filename + widget_id)
         let block = Blockly.mainWorkspace.getBlockById(block_id);
         block.setFieldValue(filename, widget_id)
-        $('#file_modal').modal('toggle');
+        $('#file_modal').modal('hide');
         // TODO get/return/set filename
     }
     self.local_load = function(key) {
@@ -391,14 +408,17 @@
             + '</div>\n';
         return result;
     }
-    function _file_list_add(name, folder, fn_name, block_id, widget_id) {
-        
+    function _file_list_add(file_name, path, fn_name, block_id, widget_id) {
         var result = '<div class="row"><div class="col-sm-1"> </div>'
             + '<a class="list-group-item col-md-5" onclick="index.'
-                + `${fn_name}('${name}', '${block_id}', '${widget_id}')">${name}</a>`
-            // + '<a class="list-group-item col-sm-1 glyphicon glyphicon-folder-close" onclick="index.'
-            // + fn_name + '(\'' + name + '\')"></a>'
-            // + '<div class="col-sm-1"> </div>'
+            + `${fn_name}('${path}${file_name}', '${block_id}', '${widget_id}')">${file_name}</a>`
+            + '</div>\n';
+        return result;
+    }
+    function _folder_list_add(folder_name, media, path, block_id, widget_id) {
+        var result = '<div class="row"><div class="col-sm-1"> </div>'
+            + '<a class="list-group-item col-md-5" onclick="index.'
+                + `handle_folder_selected('${media}', '${block_id}', '${widget_id}', '${path}')">&#x1f5c1; ${folder_name}</a>`
             + '</div>\n';
         return result;
     }

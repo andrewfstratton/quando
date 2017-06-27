@@ -23,10 +23,11 @@ var server = http.listen(process.env.PORT || 80, () => {
     console.log("Quando Server listening at http://%s:%s", host, port)
 })
 
-const media_map = {
-    'video': path.join(__dirname, 'client', 'video'),
-    'audio': path.join(__dirname, 'client', 'audio'),
-    'images': path.join(__dirname, 'client', 'images')
+const MEDIA_FOLDER = path.join(__dirname, 'client', 'media')
+const MEDIA_MAP = {
+    'video': ['ogg','ogv','mp4','webm'],
+    'audio': ['mp3'],
+    'images': ['bmp', 'jpg', 'jpeg', 'png']
 }
 
 app.use(morgan('dev'))
@@ -159,30 +160,45 @@ function ubit_success(serial) {
 
 ubit.get_serial(ubit_error, ubit_success)
 
-app.get('/file/type/:media', (req, res) => {
-    var folder = media_map[req.params.media]
-    // console.log("Get File list folder=" + folder)
-    if (folder) {
-        fs.readdir(folder, (err, files) => {
-            if (!err) {
-                // let files = files.split(',')
-                // console.log("Get File list files=" + files)
-                res.json({ 'success': true, 'files': files })
-            } else {
-                res.json({ 'success': false, 'message': 'Failed to retrieve contents of folder' })
+app.get('/file/type/*', (req, res) => {
+    let filename = req.params[0]
+    let media = path.basename(filename)
+    let folder = filename.substring(0, filename.length - media.length)
+    let folderpath = path.join(MEDIA_FOLDER, folder)
+    let suffixes = MEDIA_MAP[media] // these are the relevant filename endings - excluding the '.'
+    fs.readdir(folderpath, (err, files) => {
+        if (!err) {
+            let filelist = files.toString().split(',')
+            let filtered = []
+            let folders = []
+            for (let i in filelist) {
+                let stat = fs.statSync(path.join(folderpath,filelist[i]))
+                if (stat.isDirectory()) {
+                    folders.push(filelist[i])
+                } else {
+                    for (let s in suffixes) {
+                        if (filelist[i].endsWith('.'+suffixes[s])) {
+                            filtered.push(filelist[i])
+                        }
+                    }
+                }
             }
-        })
-    } else {
-        res.json({ 'success': false, 'message': "Failed to find folder for '" + req.params.media + "' - Error in configuration or Deployment" })
-    }
+            res.json({ 'success': true, 'files': filtered, 'folders':folders })
+        } else {
+            res.json({ 'success': false, 'message': 'Failed to retrieve contents of folder' })
+        }
+    })
 })
 
 // Static for client
 let client_dir = path.join(__dirname, "client")
-app.use('/client/audio', express.static(path.join(client_dir, 'audio')))
-app.use('/client/images', express.static(path.join(client_dir, 'images')))
-app.use('/client/video', express.static(path.join(client_dir, 'video')))
-app.use('/client/text', express.static(path.join(client_dir, 'text')))
+//VV These should be deprecated
+    app.use('/client/audio', express.static(path.join(client_dir, 'audio')))
+    app.use('/client/images', express.static(path.join(client_dir, 'images')))
+    app.use('/client/video', express.static(path.join(client_dir, 'video')))
+    app.use('/client/text', express.static(path.join(client_dir, 'text')))
+//^^ Down to here
+app.use('/client/media', express.static(path.join(client_dir, 'media')))
 app.use('/client/leap', express.static(path.join(client_dir, 'leap')))
 app.use('/client/setup', express.static(path.join(client_dir, 'setup.html')))
 app.use('/client/client.css', express.static(path.join(client_dir, 'client.css')))

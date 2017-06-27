@@ -194,7 +194,7 @@
             javascript: function (block) {
                 let method = _getStyleOnContained(block, WHEN_VITRINE_BLOCK);
                 let image = quando_editor.getFile(block, IMAGE);
-                return `quando.${method}('#quando_image', 'background-image', 'url("/client/images/${image}")');\n`;
+                return `quando.${method}('#quando_image', 'background-image', 'url("/client/media/${image}")');\n`;
             }
         });
         var VIDEO = 'Video';
@@ -204,7 +204,7 @@
             interface: [FILE_VIDEO],
             javascript: function (block) {
                 var video_url = quando_editor.getFile(block, VIDEO);
-                var result = "quando.video('/client/video/" + video_url + "'";
+                var result = "quando.video('/client/media/" + video_url + "'";
                 if (quando_editor.getParent(block, [WAIT_ON, FOREVER_BLOCK])) {
                     result += ", inc, dec";
                 }
@@ -219,7 +219,7 @@
             interface: [ FILE_AUDIO ],
             javascript: function(block) {
                 var _url = quando_editor.getFile(block, AUDIO);
-                var result = "quando.audio('/client/audio/" + _url + "'";
+                var result = "quando.audio('/client/media/" + _url + "'";
                 if (quando_editor.getParent(block,[WAIT_ON, FOREVER_BLOCK])) {
                     result += ", inc, dec";
                 }
