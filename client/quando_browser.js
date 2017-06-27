@@ -374,6 +374,8 @@
                                         elem.click();
                                         self.pinching = true;
                                 }
+                            } else if (pinch >= 0.9) {
+                                self.pinching = true;
                             }
                             if (!elem.classList.contains("focus")) { // the element is not in 'focus'
                                 // remove focus from all other elements - since the cursor isn't over them
