@@ -1,5 +1,5 @@
 body {
-    font-family: sans-serif;
+    font-family: arial, sans-serif;
 }
 #quando_text,
 #quando_title {
@@ -16,7 +16,7 @@ body {
     content: '\25b6\0020';
 }
 .quando_label {
-    font-size: 25px;
+    font-size: 2.1vw;
     color: ffffff;
     padding: 5px;
     margin: 2px 2px 5px 2px;
@@ -29,7 +29,7 @@ body {
     left:10%;
 }
 #quando_title {
-    font-size: 50px;
+    font-size: 3.7vw;
     top: 0px;
     width: 100%;
     vertical-align: text-top;
@@ -37,7 +37,7 @@ body {
     text-align: center;
 }
 #quando_text {
-    font-size: 25px;
+    font-size: 1.8vw;
     padding: 5px;
 /*    margin: 10px;*/
     top: 15%;
@@ -88,11 +88,11 @@ body {
     background-color: black;
 }
 #cursor {
-    width: 60px;
-    height: 60px;
+    width: 4.4vw;
+    height: 4.4vw;
     position: fixed;
-    margin-left: -30px;
-    margin-top: -30px;
+    margin-left: -2.2vw;
+    margin-top: -2.2vw;
     z-index: 910;
     opacity: 0.7;
     background: #ffcc00;
