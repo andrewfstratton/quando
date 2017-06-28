@@ -228,8 +228,6 @@
         }
     };
     self.handle_file = function(media, block_id, widget_id, path='') {
-// console.log(`media='${media}', path='${path}'`);
-    // note - path must have a slash at the end
         var file_modal = $('#file_modal');
         file_modal.modal('show');
         $('#file_list').html('Loading...');

@@ -24,3 +24,5 @@ Prerequisites: Chrome, Node JS, mongoDB (complete install in c:\mongodb), github
 7. and 127.0.0.1/client/setup to choose a deployed behaviour (and see external IP address)
 
 If everything is fine - then try restarting to see if everything boots correctly - and test remotely to be sure that you can edit remotely.
+
+Optional - npm install -g nodemon

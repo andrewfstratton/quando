@@ -6,6 +6,8 @@ RADIO_BUTTON_A = 'A'
 RADIO_BUTTON_B = 'B'
 RADIO_FACE_UP = 'U'
 RADIO_FACE_DOWN = 'D'
+RADIO_LEFT = 'L'
+RADIO_RIGHT = 'R'
 RADIO_HEADING = 'H'
 
 def test():
@@ -49,6 +51,12 @@ def proxy():
                 if incoming == RADIO_FACE_DOWN:
                     display.show('v')
                     print('{"orientation":"down"}')
+                if incoming == RADIO_LEFT:
+                    display.show('<')
+                    print('{"orientation":"left"}')
+                if incoming == RADIO_RIGHT:
+                    display.show('>')
+                    print('{"orientation":"right"}')
                 heading = incoming.find(RADIO_HEADING)
                 if (heading >= 0):
                     heading = incoming[1:]
