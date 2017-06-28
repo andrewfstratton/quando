@@ -183,23 +183,25 @@
         } );
     };
     self.video = function (vid, inc, dec) {
-        if (inc) { inc(); }
-        var video = document.getElementById('quando_video');
-        video.pause();
-        video.src = vid;
-        video.load();
-        video.style.visibility = 'visible';
-        video.addEventListener('canplay', function() {
-            var onend = self.clear_video;
-            if (dec) {
-                onend = function() {
-                    self.clear_video();
-                    dec();
-                };
-            }
-            video.addEventListener('ended', onend);
-            video.play();
-        });
+       if (vid != undefined) {
+            if (inc) { inc(); }
+            var video = document.getElementById('quando_video');
+            video.pause();
+            video.src = vid;
+            video.load();
+            video.style.visibility = 'visible';
+            video.addEventListener('canplay', function() {
+                var onend = self.clear_video;
+                if (dec) {
+                    onend = function() {
+                        self.clear_video();
+                        dec();
+                    };
+                }
+                video.addEventListener('ended', onend);
+                video.play();
+            });
+        }
     };
     self.clear_video = function() {
         var video = document.getElementById('quando_video');
