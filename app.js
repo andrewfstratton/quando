@@ -177,7 +177,7 @@ app.get('/file/type/*', (req, res) => {
                     folders.push(filelist[i])
                 } else {
                     for (let s in suffixes) {
-                        if (filelist[i].endsWith('.'+suffixes[s])) {
+                        if (filelist[i].toLowerCase().endsWith('.'+suffixes[s])) {
                             filtered.push(filelist[i])
                         }
                     }
