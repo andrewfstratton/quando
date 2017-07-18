@@ -248,12 +248,17 @@
                             if (typeof list != 'undefined') {
                                 if (typeof widget[key] != 'function') {
                                     // TODO should check that this is an array
-                                    let menu_list = [];
+                                    var menu_list = [];
                                     list.forEach(function (item) {
-                                        if (typeof item === 'string' || item instanceof String) {
+                                        if (Array.isArray(item)) {
+                                            // should be a two tuple
+                                            var name = item[0]; // may be false/null to indicate unselectable
+                                            var title = item[1];
+                                            menu_list.push([name, title]);
+                                        } else if (typeof item === 'string' || item instanceof String) {
                                             menu_list.push([item, item]);
                                         } else {
-                                            menu_list.push(item);
+                                            console.log("Error parsing Menu item: '" + item + "'");
                                         }
                                     });
                                     list = menu_list;
@@ -414,6 +419,7 @@
             'quando_display': CONFIG.DISPLAY_COLOUR,
             'quando_media': CONFIG.MEDIA_COLOUR,
             'quando_style': CONFIG.STYLE_COLOUR,
+            'quando_client': CONFIG.CLIENT_COLOUR,
             'quando_time': CONFIG.TIME_COLOUR,
             'quando_leap_motion': CONFIG.LEAP_MOTION_COLOUR
         };
@@ -456,6 +462,9 @@
     };
     self.defineStyle = function (json) {
         return _defineBlock(json, 'quando_style', self.CONFIG.STYLE_COLOUR);
+    };
+    self.defineClient = function (json) {
+        return _defineBlock(json, 'quando_client', self.CONFIG.CLIENT_COLOUR);
     };
     self.defineTime = function (json) {
         return _defineBlock(json, 'quando_time', self.CONFIG.TIME_COLOUR);

@@ -5,7 +5,7 @@ body {
 #quando_title {
     position: absolute;
     visibility: hidden; 
-    z-index: 100;
+    z-index: 99;
     display: table-cell;
     color: ffffff;
     margin: 0px;
@@ -30,10 +30,11 @@ body {
 }
 #quando_title {
     font-size: 3.7vw;
-    top: 0px;
-    width: 100%;
-    vertical-align: text-top;
-    left:0px;
+    top: 0%;
+/*    width: 100%; */
+    vertical-align: top; /* was text-top */
+    left:0%;
+    right:0%;
     text-align: center;
 }
 #quando_text {

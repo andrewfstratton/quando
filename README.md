@@ -19,10 +19,14 @@ Prerequisites: Chrome, Node JS, mongoDB (complete install in c:\mongodb), github
 4. run c:\mongodb\bin\mongo
 4.1. use quando
 4.2. db.user.insert({_id:'test',password:'text'})
-5. run node app.js
+5. run quando (which runs node app.js)
 6. Then open 127.0.0.1/editor for the editor, login as test/test
 7. and 127.0.0.1/client/setup to choose a deployed behaviour (and see external IP address)
 
 If everything is fine - then try restarting to see if everything boots correctly - and test remotely to be sure that you can edit remotely.
 
 Optional - npm install -g nodemon
+
+To update (assuming quando has changed), use:
+git pull
+quando

@@ -415,7 +415,7 @@
         div.className = 'quando_label';
         div.innerHTML = title;
         elem.appendChild(div);
-        div.onclick = function() { quando.showVitrine(id)};
+        div.onclick = function() { setTimeout(function() {quando.showVitrine(id)}, 0) };
     }
     
     self.addLabelStatement = function(text, fn) {
@@ -427,7 +427,7 @@
         div.onclick = fn;
     }
 
-    let _style = function(style_id, id, property, value) {
+    let _style = function(style_id, id, property, value, separator=null) {
         let style = document.getElementById(style_id);
         if (style == null) {
             let styleElem = document.createElement('style');
@@ -436,16 +436,33 @@
             document.head.appendChild(styleElem);
             style = styleElem;
         }
+        if (separator) {
+            for(var child of style.childNodes) {
+                var data = child.data;
+                if (data.startsWith(id + ' ')) {
+                    data = data.replace(id + ' ', '');
+                    if (data.startsWith('{' + property + ': ')) {
+                        data = data.replace('{' + property + ': ', '');
+                        var endOf = data.lastIndexOf(';}');
+                        if (endOf != -1) {
+                            data = data.substring(0, endOf);
+                            value = data + separator + value; // Note - this appends the new property
+            console.log(value);
+                        }
+                    }
+                }
+            }
+        }
         let rule = `${id} \{${property}: ${value};\}\n`;
         style.appendChild(document.createTextNode(rule));
     }
 
-    self.setDisplayStyle = function(id, property, value) {
-        _style(self.override_id, id, property, value);
+    self.setDisplayStyle = function(id, property, value, separator=null) {
+        _style(self.override_id, id, property, value, separator);
     }
 
-    self.setDefaultStyle = function(id, property, value) {
-        _style("quando_css", id, property, value);
+    self.setDefaultStyle = function(id, property, value, separator=null) {
+        _style("quando_css", id, property, value, separator);
     }
 
     self._resetStyle = function() {
@@ -456,4 +473,8 @@
             }
         }
     }
+
+    // constructor
+//    _style('quando_css', '#quando_title', 'top', '0px');
+
 })();

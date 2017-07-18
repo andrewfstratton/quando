@@ -108,7 +108,7 @@ radio.on()
 if button_a.is_pressed():
     visitor_sense()
 elif button_b.is_pressed():
-    ()
+    test()
 else:
     gesture()
     
