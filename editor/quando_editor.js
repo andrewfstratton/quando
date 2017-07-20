@@ -8,7 +8,6 @@
     var MENU_INPUT_PREFIX = 'MENU_INPUT_';
     var FILE_INPUT_PREFIX = 'FILE_INPUT_';
     var EXTRAS_ID = "_EXTRAS";
-    var OPTIONS_ID = "_OPTIONS";
     var DOWN_ARROW = '\u25bc';
     var UP_ARROW = '\u25b2';
 
@@ -385,51 +384,26 @@
                         sofar = extras_dummy;
                         extras_dummy.setVisible(false);
                         extras_selector.showEditor_ = (function() {
-                            var options_visible = false;
+                            var extras_visible = false;
                             if (extras_selector.getText() == DOWN_ARROW) {
                                 // i.e. now show everything...
                                 extras_selector.setText(UP_ARROW);
-                                options_visible = true;
+                                extras_visible = true;
                             } else {
                                 extras_selector.setText(DOWN_ARROW);
                             }
-//                            extras_dummy.setVisible(options_visible); // this is the DummyInput
                             var input_list = extras_dummy.sourceBlock_.inputList;
                             input_list.forEach(function(blockly_input) {
-                                if ((blockly_input.name == EXTRAS_ID)
-                                    || (!options_visible && (blockly_input.name == OPTIONS_ID))) {
-                                    blockly_input.setVisible(options_visible);
+                                if (blockly_input.name == EXTRAS_ID) {
+                                    blockly_input.setVisible(extras_visible);
                                     blockly_input.fieldRow.forEach(function(field) {
-                                        field.setVisible(options_visible);
+                                        field.setVisible(extras_visible);
                                     });
                                 }
                             });
                             extras_dummy.sourceBlock_.render();
                         });
                         sofar = _handleInterface(json.extras, json.extras.name, this, sofar, false);
-                        // this hides all the children
-                    }
-                    if (_exists(json.options)) {
-                        var options_selector = new Blockly.FieldTextInput("...");
-                        sofar.appendField(options_selector); // this goes either into normal or extras
-                        options_selector.setVisible(!_exists(json.extras));
-                        var options_dummy = this.appendDummyInput(OPTIONS_ID);
-                        sofar = options_dummy;
-                        options_dummy.setVisible(false);
-                        options_selector.showEditor_ = (function() {
-                            var options_visible = !options_dummy.isVisible();
-                            var input_list = options_dummy.sourceBlock_.inputList;
-                            input_list.forEach(function(blockly_input) {
-                                if (blockly_input.name == OPTIONS_ID) {
-                                    blockly_input.setVisible(options_visible);
-                                    blockly_input.fieldRow.forEach(function(field){
-                                        field.setVisible(options_visible);
-                                    });
-                                }
-                            });
-                            options_dummy.sourceBlock_.render();
-                        });
-                        sofar = _handleInterface(json.options, json.options.name, this, sofar, false);
                         // this hides all the children
                     }
                     if (_exists(json.javascript)) {

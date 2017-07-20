@@ -617,10 +617,6 @@
                 { name: 'text', title: '', text: ''}
             ],
             extras:[ {name: 'test'} ],
-            options: [
-                {name: 'opt 1', text:'value'},
-                {name: 'opt 2'},
-            ],
         });
         
         let UP_DOWN_MENU = "Up Down";
