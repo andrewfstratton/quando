@@ -33,7 +33,7 @@
         var UNITS_MENU = 'UNITS_MENU';
 
         quando_editor.defineTime({
-            name: 'Check', next: false, previous: false,
+            name: 'Check',
             interface: [
                 { name: FREQUENCY, title: '', number: 1 },
                 {
@@ -59,14 +59,16 @@
                     + time
                     + ", function() {\n"
                     + statement
-                    + "});\n";
+                    + "}"
+                    + _getOnContained(block, [WHEN_VITRINE_BLOCK], "", ", false")
+                    + ");\n";
                 return result;
             }
         });
 
         var EVERY_BLOCK = 'Every';
         quando_editor.defineTime({
-            name: EVERY_BLOCK, next: false, previous: false,
+            name: EVERY_BLOCK,
             interface: [
                 { name: DURATION, title: '', number: '1' }, MENU_UNITS_HOURS,
                 { statement: STATEMENT }
@@ -85,7 +87,9 @@
                     + seconds
                     + ", function() {\n"
                     + statement + block.postfix
-                    + "});\n";
+                    + "}"
+                    + _getOnContained(block, [WHEN_VITRINE_BLOCK], "", ", false")
+                    + ");\n";
                 return result;
             }
         });
@@ -109,7 +113,9 @@
                     + seconds
                     + ", function() {\n"
                     + statement
-                    + "});\n";
+                    + "}"
+                    + _getOnContained(block, [WHEN_VITRINE_BLOCK], "", ", false")
+                    + ");\n";
                 return result;
             }
         });
@@ -196,36 +202,53 @@
             javascript: function (block) {
                 let method = _getStyleOnContained(block, [WHEN_VITRINE_BLOCK, WHEN_IDLE]);
                 let image = quando_editor.getFile(block, IMAGE);
-                return `quando.${method}('#quando_image', 'background-image', 'url("/client/media/${image}")');\n`;
+                return `quando.image_update_video("/client/media/${image}");\n`
+                    + `quando.${method}('#quando_image', 'background-image', 'url("/client/media/${image}")');\n`;
             }
         });
         var VIDEO = 'Video';
+        var MEDIA_LOOP_MENU= 'MEDIA_LOOP_MENU';
+        var CHECK_STOP_WITH_DISPLAY = '   With display';
         var FILE_VIDEO = { name: VIDEO, title: '', file: 'video' };
         quando_editor.defineMedia({
-            name: 'Show Video', title: 'Play Video',
-            interface: [FILE_VIDEO],
+            name: 'Show Video', title: 'Play',
+            interface: [
+                { name: MEDIA_LOOP_MENU, title:'', menu:['Forever', 'Once'] },
+                { title: 'Video' },
+                FILE_VIDEO],
+            // extras: [
+            //     {title: CHECK_STOP_WITH_DISPLAY, check:true},
+            // ],
             javascript: function (block) {
                 var video_url = quando_editor.getFile(block, VIDEO);
-                var result = "quando.video('/client/media/" + video_url + "'";
+                var loop = (quando_editor.getMenu(block, MEDIA_LOOP_MENU) == 'Forever');
+                var result = "quando.video('/client/media/" + video_url + "'" + ", " + loop;
                 if (quando_editor.getParent(block, [WAIT_ON, FOREVER_BLOCK])) {
                     result += ", inc, dec";
                 }
-                result += ");\n";;
+                result += ");\n";
                 return result;
             }
         });
         var AUDIO = 'Audio';
         var FILE_AUDIO = {name: AUDIO, title:'', file:'audio'};
         quando_editor.defineMedia({
-            name: 'Play Audio',
-            interface: [ FILE_AUDIO ],
+            name: 'Play',
+            interface: [
+                { name: MEDIA_LOOP_MENU, title:'', menu:['Forever', 'Once'] },
+                { title: 'Audio' },
+                FILE_AUDIO ],
+            // extras: [
+            //     {title: CHECK_STOP_WITH_DISPLAY, check:true  },
+            // ],
             javascript: function(block) {
                 var _url = quando_editor.getFile(block, AUDIO);
-                var result = "quando.audio('/client/media/" + _url + "'";
+                var loop = (quando_editor.getMenu(block, MEDIA_LOOP_MENU) == 'Forever');
+                var result = "quando.audio('/client/media/" + _url + "'" + ", " + loop;
                 if (quando_editor.getParent(block,[WAIT_ON, FOREVER_BLOCK])) {
                     result += ", inc, dec";
                 }
-                result += ");\n";;
+                result += ");\n";
                 return result;
             }
         });
@@ -299,6 +322,7 @@
 
             }
         });
+
         var LEAP_BLOCK = 'When Hands';
         var HAND_COUNT = 'hand_count';
         quando_editor.defineLeapMotion({
@@ -349,10 +373,9 @@
             javascript: (block) => {
                 let title = quando_editor.getText(block, WHEN_VITRINE_TEXT);
                 var statement = quando_editor.getStatement(block, STATEMENT);
-                var result = `quando.vitrine("${block.id}", () => {
-quando.title("${title}");
-${statement}});
-`;
+                var result = `quando.vitrine("${block.id}", function() {\n`
+                    + `quando.title("${title}");\n`
+                    + `${statement}});\n`;
                 return result;
             }
         });
@@ -472,7 +495,7 @@ ${statement}});
         quando_editor.defineStyle({
             name: STYLE_BLOCK, title: '',
             interface: [
-                { menu: ['Title', 'Text', 'Label'], name: DIV_MENU, title: '' },
+                { menu: ['Title', 'Text', 'Labels'], name: DIV_MENU, title: '' },
                 {
                     menu: ['Font Colour', 'Background Colour'],
                     name: STYLE_MENU, title: ''
@@ -488,7 +511,7 @@ ${statement}});
                         break;
                     case 'Text': div = '#quando_text';
                         break;
-                    case 'Label': div = '.quando_label';
+                    case 'Labels': div = '.quando_label';
                         break;
                 }
                 let style = quando_editor.getMenu(block, STYLE_MENU);
@@ -517,7 +540,7 @@ ${statement}});
         quando_editor.defineStyle({
             name: FONT_SIZE_BLOCK,
             interface: [
-                { menu: ['Title', 'Text', 'Label'], name: DIV_MENU, title: '' },
+                { menu: ['Title', 'Text', 'Labels'], name: DIV_MENU, title: '' },
                 { name: FONT_SIZE, title: '', number: 100 }, {title: '+ characters across screen'}
             ],
             javascript: (block) => {
@@ -528,7 +551,7 @@ ${statement}});
                         break;
                     case 'Text': div = '#quando_text';
                         break;
-                    case 'Label': div = '.quando_label';
+                    case 'Labels': div = '.quando_label';
                         break;
                 }
                 let value = 100/quando_editor.getNumber(block, FONT_SIZE);
@@ -542,7 +565,7 @@ ${statement}});
         quando_editor.defineStyle({
             name: FONT_TYPE_BLOCK,
             interface: [
-                { menu: ['Title', 'Text', 'Label'], name: DIV_MENU, title: '' },
+                { menu: ['Title', 'Text', 'Labels'], name: DIV_MENU, title: '' },
                 {
                     menu: ['sans-serif', 'Arial', 'Helvetica', 'Arial Black', 'Gadget', 'Comic Sans MS', 'cursive',
                         'Impact', 'Charcoal', "Lucida Sans Unicode", "Lucida Grande", 'Tahoma', 'Geneva',
@@ -563,7 +586,7 @@ ${statement}});
                         break;
                     case 'Text': div = '#quando_text';
                         break;
-                    case 'Label': div = '.quando_label';
+                    case 'Labels': div = '.quando_label';
                         break;
                 }
                 let font_name = quando_editor.getMenu(block, FONT_NAME_MENU);
@@ -574,25 +597,30 @@ ${statement}});
 
         let EXPLORATION_RULE = 'Exploration Rule';
         quando_editor.defineBlock({
-            name: EXPLORATION_RULE, title:'\u25bc When', category: 'extras', colour: '#55bb55',
+            name: EXPLORATION_RULE, title:'When', category: 'extras', colour: '#55bb55',
             interface: [
                 { name: 'title', title:'', text: ''},
-                { name: 'text', title: '', text: ''},
-                { statement: STATEMENT }
+                { name: 'text', title: '', text: ''}
             ],
             extras: [
                 { name: 'extra'},
-            ],
-//            options: ['o1','o2'],
+                { name: 'text3', title: '', text: 'default'},
+                { statement: STATEMENT }
+            ]
         });
 
         let EXPLORATION_ACTION = 'Exploration Action';
         quando_editor.defineBlock({
-            name: EXPLORATION_ACTION, title:'[-] Do', category: 'extras', colour: '#5555bb',
+            name: EXPLORATION_ACTION, title:'Do', category: 'extras', colour: '#5555bb',
             interface: [
                 { name: 'title', title:'', text: ''},
                 { name: 'text', title: '', text: ''}
-            ]
+            ],
+            extras:[ {name: 'test'} ],
+            options: [
+                {name: 'opt 1', text:'value'},
+                {name: 'opt 2'},
+            ],
         });
         
         let UP_DOWN_MENU = "Up Down";
@@ -677,7 +705,7 @@ ${statement}});
         quando_editor.defineClient({
             name: CONTENT_POSITION,
             interface: [
-                { menu: ['Title', 'Text', 'Label'], name: DIV_MENU, title: '' },
+                { menu: ['Title', 'Text', 'Labels'], name: DIV_MENU, title: '' },
                 { name: POSITION_SIZE, title: '', number: 0 }, {title: '%'},
                 { menu: ['top', 'bottom', 'left', 'right'], name: DIRECTION_MENU, title: 'from' }
             ],
@@ -689,7 +717,7 @@ ${statement}});
                         break;
                     case 'Text': div = '#quando_text';
                         break;
-                    case 'Label': div = '#quando_labels';
+                    case 'Labels': div = '#quando_labels';
                         break;
                 }
                 let direction = quando_editor.getMenu(block, DIRECTION_MENU);
@@ -709,7 +737,7 @@ ${statement}});
         quando_editor.defineClient({
             name: CONTENT_SIZE,
             interface: [
-                { menu: ['Title', 'Text', 'Label'], name: DIV_MENU, title: '' },
+                { menu: ['Title', 'Text', 'Labels'], name: DIV_MENU, title: '' },
                 { name: POSITION_SIZE, title: '', number: 100 }, {title: '%'},
                 { menu: ['height', 'width'], name: DIMENSION_MENU, title: 'of' },
             ],
@@ -721,7 +749,7 @@ ${statement}});
                         break;
                     case 'Text': div = '#quando_text';
                         break;
-                    case 'Label': div = '#quando_labels';
+                    case 'Labels': div = '#quando_labels';
                         break;
                 }
                 let dimension = quando_editor.getMenu(block, DIMENSION_MENU);

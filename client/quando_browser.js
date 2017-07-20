@@ -7,6 +7,7 @@
     self.vitrines = new Map();
     self.override_id = 'quando_css_override';
     self.pinching = false;
+    self._vitrine_destructors = [];
 
     var _socket = io.connect('http://' + location.hostname)
 
@@ -65,8 +66,8 @@
     }
 
     self.ubitHeading = function(min, max, callback) {
-        document.addEventListener("ubitHeading", (ev)=> {
-            let heading = ev.detail;
+        document.addEventListener("ubitHeading", function (ev) {
+            var heading = ev.detail;
             if ((heading >= min) && (heading <= max)) {
                 callback();
             }
@@ -121,13 +122,23 @@
         return _properties[name];
     };
 
-    self.after = function (time_secs, callback) {
-        setTimeout(callback, time_secs * 1000);
+    self.after = function (time_secs, callback, destruct=true) {
+        var timeout = setTimeout(callback, time_secs * 1000);
+        if (destruct) {
+            self.addDestructor(function() {
+                clearTimeout(timeout);
+            });
+        }
     };
 
-    self.every = function (time_secs, callback) {
+    self.every = function (time_secs, callback, destruct=true) {
         callback(); // do it straight away
-        return setInterval(callback, time_secs * 1000);
+        var id = setInterval(callback, time_secs * 1000);
+        if (destruct) {
+            self.addDestructor(function() {
+                clearInterval(id);
+            });
+        }
     };
 
     self.idle = function(time_secs, idle_fn, active_fn) {
@@ -166,10 +177,12 @@
             elem.innerHTML = txt;
         }
     };
-    self.image = function (img) {
-        if (img) {
-            url = 'url(\'' + img + '\')';
-            self.setDisplayStyle('#quando_image', 'background-image', url);
+    self.image_update_video = function (img) {
+        var image = document.getElementById('quando_image');
+        if (image.src != window.location.origin + img ) {
+            // i.e. only stop the video when the image is different - still need to set the image style...
+            // TODO this needs checking for behavioural side effects
+            self.clear_video();
         }
     };
 
@@ -182,10 +195,12 @@
             if (dec) { dec(); }
         } );
     };
-    self.video = function (vid, inc, dec) {
-       if (vid != undefined) {
+
+    self.video = function (vid, loop=false, inc, dec) {
+        var video = document.getElementById('quando_video');
+        video.loop = loop;
+        if (video.src != window.location.origin + vid) { // i.e. ignore when already playing
             if (inc) { inc(); }
-            var video = document.getElementById('quando_video');
             video.pause();
             video.src = vid;
             video.load();
@@ -194,7 +209,7 @@
                 var onend = self.clear_video;
                 if (dec) {
                     onend = function() {
-                        self.clear_video();
+                        self.clear_video(); // TODO - remove?
                         dec();
                     };
                 }
@@ -203,6 +218,7 @@
             });
         }
     };
+
     self.clear_video = function() {
         var video = document.getElementById('quando_video');
         video.pause();
@@ -211,24 +227,28 @@
         // Remove all event listeners...
         video.parentNode.replaceChild(video.cloneNode(true), video);
     };
-    self.audio = function (audio_in, inc, dec) {
-        if (inc) { inc(); }
-        var audio = document.getElementById('quando_audio');
-        audio.pause();
-        audio.src = audio_in;
-        audio.load();
 
-        audio.addEventListener('canplay', function() {
-            var onend = self.clear_audio;
-            if (dec) {
-                onend = function() {
-                    self.clear_audio();
-                    dec();
-                };
-            }
-            audio.addEventListener('ended', onend);
-            audio.play();
-        });
+    self.audio = function (audio_in, loop=false, inc, dec) {
+        var audio = document.getElementById('quando_audio');
+        if ( audio.src != window.location.origin + audio_in) { // src include http://127.0.0.1/
+            if (inc) { inc(); }
+            audio.pause();
+            audio.src = audio_in;
+            audio.loop = loop;
+            audio.load();
+
+            audio.addEventListener('canplay', function() {
+                var onend = self.clear_audio;
+                if (dec) {
+                    onend = function() {
+                        self.clear_audio();
+                        dec();
+                    };
+                }
+                audio.addEventListener('ended', onend);
+                audio.play();
+            });
+        }
     };
     self.clear_audio = function() {
         var audio = document.getElementById('quando_audio');
@@ -279,12 +299,12 @@
             }
         };
         if (self.leap) {
-            self.every(1/20, handler);
+            self.every(1/20, handler, false);
         } else {
             self.leap = new Leap.Controller();
             self.leap.connect();
             self.leap.on('connect', function() {
-                self.every(1/20, handler);
+                self.every(1/20, handler, false);
             });
         }
     };
@@ -315,12 +335,12 @@
             }
         };
         if (self.leap) {
-            self.every(1/20, handler);
+            self.every(1/20, handler, false);
         } else {
             self.leap = new Leap.Controller();
             self.leap.connect();
             self.leap.on('connect', function() {
-                self.every(1/20, handler);
+                self.every(1/20, handler, false);
             });
         }
     };
@@ -330,7 +350,7 @@
     }
     
     self._removeFocus = function() {
-        let focused = document.getElementsByClassName('focus');
+        var focused = document.getElementsByClassName('focus');
         for (var focus of focused) {
             focus.classList.remove('focus');
             focus.removeEventListener("transitionend", self._handle_transition);
@@ -351,14 +371,15 @@
         _style("quando_css", '#cursor', 'opacity', 0.6);
         if (self.vitrines.size != 0) {
             // TODO Should this be deferred?
-            (self.vitrines.values().next().value)();
+            (self.vitrines.values().next().value)(); // this runs the very first vitrine :)
+            // can't use [0] because we don't know the id of the first entry
             leap.loop(
                 {
                     hand: function (hand) {
                         idle_reset();
-                        let [x, y] = hand.screenPosition(hand.palmPosition);
-                        let cursor = document.getElementById('cursor');
-                        let pinch = hand.pinchStrength.toPrecision(2);
+                        var [x, y] = hand.screenPosition(hand.palmPosition);
+                        var cursor = document.getElementById('cursor');
+                        var pinch = hand.pinchStrength.toPrecision(2);
                         if (pinch <= 0.6) {
                             self.pinching = false;
                             _style("quando_css", '#cursor', 'opacity', 0.6);
@@ -368,7 +389,7 @@
                         cursor.style.left = x + 'px';
                         cursor.style.top = y + 'px';
                         cursor.style.visibility = "hidden";
-                        let elem = document.elementFromPoint(x, y);
+                        var elem = document.elementFromPoint(x, y);
                         cursor.style.visibility = "visible";
                         if (elem) {
                             if (elem.classList.contains("quando_label")) {
@@ -398,13 +419,19 @@
     }
 
     self.showVitrine = function(id) {
+        // performa ny desctructors - which will cancel pending events, etc.
+        var destructor = self._vitrine_destructors.pop();
+        while (destructor) {
+            destructor();
+            destructor = self._vitrine_destructors.pop();
+        }
         // Find vitrine
-        let vitrine = self.vitrines.get(id);
+        var vitrine = self.vitrines.get(id);
         // Clear current labels, title and text
         document.getElementById('quando_labels').innerHTML = '';
         self.title();
         self.text();
-        self.video();
+//        self.video(); removed to make sure video can continue playing between displays
         self._resetStyle();
         vitrine();
     }
@@ -427,10 +454,10 @@
         div.onclick = fn;
     }
 
-    let _style = function(style_id, id, property, value, separator=null) {
-        let style = document.getElementById(style_id);
+    var _style = function(style_id, id, property, value, separator=null) {
+        var style = document.getElementById(style_id);
         if (style == null) {
-            let styleElem = document.createElement('style');
+            var styleElem = document.createElement('style');
             styleElem.type = "text/css";
             styleElem.id = style_id;
             document.head.appendChild(styleElem);
@@ -453,7 +480,7 @@
                 }
             }
         }
-        let rule = `${id} \{${property}: ${value};\}\n`;
+        var rule = `${id} \{${property}: ${value};\}\n`;
         style.appendChild(document.createTextNode(rule));
     }
 
@@ -472,6 +499,10 @@
                 elem.parentNode.removeChild(elem);
             }
         }
+    }
+
+    self.addDestructor = function(fn) {
+        self._vitrine_destructors.push(fn);
     }
 
     // constructor

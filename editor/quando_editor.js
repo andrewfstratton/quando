@@ -7,6 +7,10 @@
     var COLOUR_INPUT_PREFIX = 'COLOUR_INPUT_';
     var MENU_INPUT_PREFIX = 'MENU_INPUT_';
     var FILE_INPUT_PREFIX = 'FILE_INPUT_';
+    var EXTRAS_ID = "_EXTRAS";
+    var OPTIONS_ID = "_OPTIONS";
+    var DOWN_ARROW = '\u25bc';
+    var UP_ARROW = '\u25b2';
 
     var encodeXml = function (str) {
         return str.replace(/&/g, '&amp;')
@@ -141,31 +145,33 @@
         menudrop.setValue(0);
     };
 
-    var _handleInterface = function (blockly, json, _this, sofar) {
-        var interface = json.interface;
+    var _handleInterface = function (interface, name, _this, sofar, visible=true) {
         // Should handle if not an array (object)
         if (typeof interface !== 'object') {
-            _ERROR("Failed to add interface widgets - json.interface is of type '"
+            _ERROR("Failed to add interface widgets - json " + name + " is of type '"
                 + typeof interface + "'");
             return;
         } // Else ok so far...
         // Check if an Array?!
         if (Object.prototype.toString.call(interface) !== '[object Array]') {
-            _ERROR("Failed to add interface widgets - json.interface is not an Array");
+            _ERROR("Failed to add interface widgets - json " + name + " is not an Array");
             return;
         } // Else ok so far...
         interface.forEach(function (widget) {
             if (typeof widget !== 'object') {
-                _WARNING("Ignoring element in interface Block '" + json.name + "' - not an object");
+                _WARNING("Ignoring element in interface Block '" + name + "' - not an object");
             } else {
                 // TODO handle title and name out of order?!
+                var fields = [];
                 var title = widget.name; // by default
                 if (_exists(widget.title)) { // replace default
                     title = widget.title;
                 }
                 if (_exists(title)) { // assuming it exists
                     if (title !== '') { // and it's not empty
-                        sofar.appendField(title); // then show the title
+                        var field = new Blockly.FieldLabel(title);
+                        sofar.appendField(field); // then show the title
+                        fields.push(field);
                     }
                 }
                 for (var key in widget) {
@@ -173,7 +179,9 @@
                         case 'row':
                             var title = widget[key];
                             sofar = _this.appendDummyInput();
-                            sofar.appendField(title);
+                            var field = new Blockly.FieldLabel(title);
+                            sofar.appendField(field);
+                            fields.push(field);
                             break;
                         case 'image':
                             var url = widget[key];
@@ -208,25 +216,28 @@
                             } else {
                                 _WARNING("Image widget missing alternate text...setting to '*'");
                             }
-                            sofar.appendField(new Blockly.FieldImage(url, width, height, alt));
+                            var field = new Blockly.FieldImage(url, width, height, alt);
+                            sofar.appendField(field);
+                            fields.push(field);
                             break;
                         case 'text':
                             var widget_id = TEXT_INPUT_PREFIX + widget.name;
                             if (typeof widget['change'] == 'function') {
-                                sofar.appendField(
-                                    new Blockly.FieldTextInput(widget[key],
-                                        widget['change']), widget_id);
+                                var field = new Blockly.FieldTextInput(widget[key], widget['change']);
+                                sofar.appendField(field, widget_id);
+                                fields.push(field);
                                 //TODO add this for all changeable inputs
                             } else {
-                                sofar.appendField(
-                                    new Blockly.FieldTextInput(widget[key]), widget_id);
+                                var field = new Blockly.FieldTextInput(widget[key]);
+                                sofar.appendField(field, widget_id);
+                                fields.push(field);
                             }
                             break;
                         case 'number':
                             var widget_id = NUMBER_INPUT_PREFIX + widget.name;
-                            var numberInput = new Blockly.FieldTextInput('' + widget[key],
-                                Blockly.FieldTextInput.numberValidator);
-                            sofar.appendField(numberInput, widget_id);
+                            var field = new Blockly.FieldNumber('' + widget[key]);
+                            sofar.appendField(field, widget_id);
+                            fields.push(field);
                             break;
                         case 'check':
                             var widget_id = CHECK_INPUT_PREFIX + widget.name;
@@ -234,13 +245,15 @@
                             if (widget[key] === true) {
                                 blockly_boolean = 'TRUE';
                             }
-                            var checkInput = new Blockly.FieldCheckbox(blockly_boolean);
-                            sofar.appendField(checkInput, widget_id);
+                            var field = new Blockly.FieldCheckbox(blockly_boolean);
+                            sofar.appendField(field, widget_id);
+                            fields.push(field);
                             break;
                         case 'colour':
                             var widget_id = COLOUR_INPUT_PREFIX + widget.name;
-                            var colourInput = new Blockly.FieldColour('' + widget[key]);
-                            sofar.appendField(colourInput, widget_id);
+                            var field = new Blockly.FieldColour('' + widget[key]);
+                            sofar.appendField(field, widget_id);
+                            fields.push(field);
                             break;
                         case 'menu':
                             var widget_id = MENU_INPUT_PREFIX + widget.name;
@@ -263,15 +276,18 @@
                                     });
                                     list = menu_list;
                                 }
-                                var menuInput = new Blockly.FieldDropdown(list);
-                                sofar.appendField(menuInput, widget_id);
+                                var field = new Blockly.FieldDropdown(list);
+                                sofar.appendField(field, widget_id);
+                                fields.push(field);
                             } else {
                                 console.log("No Menu List " + widget_id);
                             }
                             break;
                         case 'file':
                             var widget_id = FILE_INPUT_PREFIX + widget.name;
-                            sofar.appendField(String.fromCharCode(0x2023));
+                            var field = new Blockly.FieldLabel(String.fromCharCode(0x2023));
+                            sofar.appendField(field);
+                            fields.push(field);
                             var fileInput = new Blockly.FieldTextInput("** CHOOSE A FILE **");
                             var val = widget[key]; // val is the ?base? folder
                             var handle_file = this["index"].handle_file;
@@ -280,6 +296,7 @@
                                 handle_file(val, block_id, widget_id) 
                             });
                             sofar.appendField(fileInput, widget_id);
+                            fields.push(fileInput);
                             break;
                         case 'statement':
                             sofar = _this.appendStatementInput(widget[key]);
@@ -288,11 +305,16 @@
                         //                            case 'name': break; // Yes, this is correct
                         //                            case 'width': break; // Yes, this is correct
                         //                            case 'height': break; // Yes, this is correct
+                    } // switch key
+                    if (visible == false) {
+                        fields.forEach(function(field) {
+                            field.setVisible(false);
+                        })
                     }
-                }
-            }
-        });
-
+                } // for
+            } // else
+        }); // foreach
+        return sofar;
     };
 
     var _ERROR = function (msg) {
@@ -353,11 +375,65 @@
                         // N.B. Can use rgb format, i.e. '#bbbbbb' is grey
                         this.setColour(json.colour);
                     }
+                    if (_exists(json.interface)) {
+                        sofar = _handleInterface(json.interface, json.interface.name, this, sofar);
+                    }
+                    if (_exists(json.extras)) {
+                        var extras_selector = new Blockly.FieldTextInput(DOWN_ARROW);
+                        sofar.appendField(extras_selector);
+                        var extras_dummy = this.appendDummyInput(EXTRAS_ID);
+                        sofar = extras_dummy;
+                        extras_dummy.setVisible(false);
+                        extras_selector.showEditor_ = (function() {
+                            var options_visible = false;
+                            if (extras_selector.getText() == DOWN_ARROW) {
+                                // i.e. now show everything...
+                                extras_selector.setText(UP_ARROW);
+                                options_visible = true;
+                            } else {
+                                extras_selector.setText(DOWN_ARROW);
+                            }
+//                            extras_dummy.setVisible(options_visible); // this is the DummyInput
+                            var input_list = extras_dummy.sourceBlock_.inputList;
+                            input_list.forEach(function(blockly_input) {
+                                if ((blockly_input.name == EXTRAS_ID)
+                                    || (!options_visible && (blockly_input.name == OPTIONS_ID))) {
+                                    blockly_input.setVisible(options_visible);
+                                    blockly_input.fieldRow.forEach(function(field) {
+                                        field.setVisible(options_visible);
+                                    });
+                                }
+                            });
+                            extras_dummy.sourceBlock_.render();
+                        });
+                        sofar = _handleInterface(json.extras, json.extras.name, this, sofar, false);
+                        // this hides all the children
+                    }
+                    if (_exists(json.options)) {
+                        var options_selector = new Blockly.FieldTextInput("...");
+                        sofar.appendField(options_selector); // this goes either into normal or extras
+                        options_selector.setVisible(!_exists(json.extras));
+                        var options_dummy = this.appendDummyInput(OPTIONS_ID);
+                        sofar = options_dummy;
+                        options_dummy.setVisible(false);
+                        options_selector.showEditor_ = (function() {
+                            var options_visible = !options_dummy.isVisible();
+                            var input_list = options_dummy.sourceBlock_.inputList;
+                            input_list.forEach(function(blockly_input) {
+                                if (blockly_input.name == OPTIONS_ID) {
+                                    blockly_input.setVisible(options_visible);
+                                    blockly_input.fieldRow.forEach(function(field){
+                                        field.setVisible(options_visible);
+                                    });
+                                }
+                            });
+                            options_dummy.sourceBlock_.render();
+                        });
+                        sofar = _handleInterface(json.options, json.options.name, this, sofar, false);
+                        // this hides all the children
+                    }
                     if (_exists(json.javascript)) {
                         blockly.JavaScript[id] = json.javascript;
-                    }
-                    if (_exists(json.interface)) {
-                        sofar = _handleInterface(blockly, json, this, sofar);
                     }
                 }
             };
