@@ -186,34 +186,16 @@
         }
     };
 
-    self.do_duration = function (seconds, now, later, inc, dec) {
-        if (inc) { inc(); }
-        now(inc ? inc : function() { console.log("dummy"); }, dec ? dec : function() {});
-        // TODO - this isn't called by the library yet...didn't work?!
-        self.after(seconds, function() {
-            later(inc ? inc : function() {}, dec ? dec : function() {});
-            if (dec) { dec(); }
-        } );
-    };
-
-    self.video = function (vid, loop=false, inc, dec) {
+    self.video = function (vid, loop=false) {
         var video = document.getElementById('quando_video');
         video.loop = loop;
         if (video.src != window.location.origin + vid) { // i.e. ignore when already playing
-            if (inc) { inc(); }
             video.pause();
             video.src = vid;
             video.load();
             video.style.visibility = 'visible';
             video.addEventListener('canplay', function() {
-                var onend = self.clear_video;
-                if (dec) {
-                    onend = function() {
-                        self.clear_video(); // TODO - remove?
-                        dec();
-                    };
-                }
-                video.addEventListener('ended', onend);
+                video.addEventListener('ended', self.clear_video);
                 video.play();
             });
         }
@@ -228,24 +210,15 @@
         video.parentNode.replaceChild(video.cloneNode(true), video);
     };
 
-    self.audio = function (audio_in, loop=false, inc, dec) {
+    self.audio = function (audio_in, loop=false) {
         var audio = document.getElementById('quando_audio');
+        audio.loop = loop;
         if ( audio.src != window.location.origin + audio_in) { // src include http://127.0.0.1/
-            if (inc) { inc(); }
             audio.pause();
             audio.src = audio_in;
-            audio.loop = loop;
             audio.load();
-
             audio.addEventListener('canplay', function() {
-                var onend = self.clear_audio;
-                if (dec) {
-                    onend = function() {
-                        self.clear_audio();
-                        dec();
-                    };
-                }
-                audio.addEventListener('ended', onend);
+                audio.addEventListener('ended', self.clear_audio);
                 audio.play();
             });
         }
@@ -256,30 +229,6 @@
         audio.src = '';
     };
     
-    
-    self.wait = function(do_now, finished) {
-        var count = 0;
-        do_now(function() { // inc
-            count++;
-        }, function() { // dec
-            count--;
-            if (count === 0) {
-                finished();
-            }
-        });
-    };
-    self.forever = function(now) {
-        var count = 1;
-        now(function() { // inc
-            count++;
-        }, function() { // dec
-            count--;
-            if (count === 0) {
-                self.after(0, (function() { self.forever(now); } ));
-            }
-        });
-    };
-
     self.hands = function(count, do_fn) {
         var hands = "None";
         var handler = function () {

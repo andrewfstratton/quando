@@ -45,7 +45,9 @@
         var import_xml = document.getElementById("import_xml").value;
         Blockly.mainWorkspace.clear();
         xmlDom = Blockly.Xml.textToDom(import_xml);
-        Blockly.Xml.domToWorkspace(xmlDom, Blockly.mainWorkspace);
+        setTimeout( function() { // this may stop the reload problem - not proven...
+            Blockly.Xml.domToWorkspace(xmlDom, Blockly.mainWorkspace);
+        }, 0);
     };
 
     self.getCode = function () {

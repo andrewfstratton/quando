@@ -81,13 +81,10 @@
                 if (quando_editor.getMenu(block, MENU_UNITS_HOURS.name) === 'Hours') {
                     seconds *= 60*60;
                 }
-                block.postfix = '';
                 var statement = quando_editor.getStatement(block, STATEMENT);
                 var result = "quando.every("
                     + seconds
-                    + ", function() {\n"
-                    + statement + block.postfix
-                    + "}"
+                    + ", function() {\n" + statement + "}"
                     + _getOnContained(block, [WHEN_VITRINE_BLOCK], "", ", false")
                     + ");\n";
                 return result;
@@ -135,38 +132,6 @@
             interface: [{ name: SHOW_TITLE, title:'', text: '.type your title here..' }, { title: '"' }],
             javascript: function (block) {
                 return 'quando.title("' + quando_editor.getText(block, SHOW_TITLE) + '");\n';
-            }
-        });
-
-        var DO_DURATION = 'Do for';
-        quando_editor.defineTime({
-            name: DO_DURATION,
-            interface: [
-                { name: DURATION, title: '', number: '1' }, MENU_UNITS_MINS,
-                { statement: STATEMENT }
-            ],
-            javascript: function (block) {
-                block.postfix = '';
-                var seconds = quando_editor.getNumber(block, DURATION) * 1;
-                if (quando_editor.getMenu(block, MENU_UNITS_MINS.name) === 'Minutes') {
-                    seconds *= 60;
-                }
-                var closing_parent = quando_editor.getParent(block, [EVERY_BLOCK, DO_DURATION, WAIT_ON, FOREVER_BLOCK]);
-                var result = '';
-                if (quando_editor.getParent(block, [WAIT_ON, FOREVER_BLOCK])) {
-                    result += 'inc();\n';
-                }
-                var statement = quando_editor.getStatement(block, STATEMENT);
-                result += "quando.do_duration(" + seconds + ",\n"
-                    + "function() {\n"
-                    + statement;
-                result += block.postfix + "},\n"
-                    + "function() {\n";
-                if (quando_editor.getParent(block, [WAIT_ON, FOREVER_BLOCK])) {
-                    closing_parent.postfix += 'dec();\n';
-                }
-                closing_parent.postfix += "});\n";
-                return result;
             }
         });
 
@@ -222,11 +187,7 @@
             javascript: function (block) {
                 var video_url = quando_editor.getFile(block, VIDEO);
                 var loop = (quando_editor.getMenu(block, MEDIA_LOOP_MENU) == 'Forever');
-                var result = "quando.video('/client/media/" + video_url + "'" + ", " + loop;
-                if (quando_editor.getParent(block, [WAIT_ON, FOREVER_BLOCK])) {
-                    result += ", inc, dec";
-                }
-                result += ");\n";
+                var result = "quando.video('/client/media/" + video_url + "'" + ", " + loop + ");\n";
                 return result;
             }
         });
@@ -244,11 +205,7 @@
             javascript: function(block) {
                 var _url = quando_editor.getFile(block, AUDIO);
                 var loop = (quando_editor.getMenu(block, MEDIA_LOOP_MENU) == 'Forever');
-                var result = "quando.audio('/client/media/" + _url + "'" + ", " + loop;
-                if (quando_editor.getParent(block,[WAIT_ON, FOREVER_BLOCK])) {
-                    result += ", inc, dec";
-                }
-                result += ");\n";
+                var result = "quando.audio('/client/media/" + _url + "'" + ", " + loop + ");\n";
                 return result;
             }
         });
@@ -285,41 +242,6 @@
                     result += 'quando.clear_audio();\n';
                 }
                 return result;
-            }
-        });
-        var WAIT_ON = 'Wait On';
-        quando_editor.defineTime({
-            name: WAIT_ON,
-            valid_in: [EVERY_BLOCK, DO_DURATION, WAIT_ON, FOREVER_BLOCK],
-            interface: [
-                { statement: STATEMENT }
-            ],
-            javascript: function (block) {
-                block.postfix = '';
-                var statement = quando_editor.getStatement(block, STATEMENT);
-                var result = "quando.wait(\n"
-                    + " function (inc, dec) {\n"
-                    + statement + block.postfix + '},\nfunction() {\n';
-                var closing_parent = quando_editor.getParent(block, [EVERY_BLOCK, DO_DURATION, WAIT_ON, FOREVER_BLOCK]);
-                closing_parent.postfix += "});\n";
-                return result;
-            }
-        });
-
-        var FOREVER_BLOCK = 'Forever';
-        quando_editor.defineTime({
-            name: FOREVER_BLOCK, next: false, previous: false,
-            interface: [
-                { statement: STATEMENT }
-            ],
-            javascript: function (block) {
-                block.postfix = "dec();\n";
-                var statement = quando_editor.getStatement(block, STATEMENT);
-                var result = "quando.forever(\n"
-                    + " function(inc, dec) {\n"
-                    + statement + block.postfix + "});";
-                return result;
-
             }
         });
 
@@ -683,16 +605,12 @@
                 if (quando_editor.getMenu(block, MENU_UNITS_MINS.name) === 'Minutes') {
                     seconds *= 60;
                 }
-                block.postfix = '';
                 var statement = quando_editor.getStatement(block, STATEMENT);
                 var active_statement = quando_editor.getStatement(block, ACTIVE_STATEMENT);
                 var result = "quando.idle("
                     + seconds
-                    + ", function() {\n"
-                    + statement
-                    + "}, function() {\n"
-                    + active_statement + block.postfix // Is this possible if not embedded?
-                    + "});\n";
+                    + ", function() {\n" + statement + "}, function() {\n"
+                    + active_statement + "});\n";
                 return result;
             },
         });
