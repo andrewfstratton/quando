@@ -397,6 +397,7 @@
                         }
                     }
                 }
+                quando_editor.updateExtras(block); // Any Extras menu will be updated
             } else if (ev.type == Blockly.Events.CREATE) {
                 for (var checkblock of topBlocks) {
                     if ((checkblock.type == PREFIX + LABEL_TO_BLOCK)
@@ -408,6 +409,7 @@
                         }
                     }
                 }
+                quando_editor.updateExtras(block); // Any Extras menu will be updated
             } else if (ev.type == Blockly.Events.DELETE) {
                 for (var checkblock of topBlocks) {
                     if ((checkblock.type == PREFIX + LABEL_TO_BLOCK)

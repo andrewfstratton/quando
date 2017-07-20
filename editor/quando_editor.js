@@ -8,8 +8,8 @@
     var MENU_INPUT_PREFIX = 'MENU_INPUT_';
     var FILE_INPUT_PREFIX = 'FILE_INPUT_';
     var EXTRAS_ID = "_EXTRAS";
-    var DOWN_ARROW = '\u25bc';
-    var UP_ARROW = '\u25b2';
+    var EXTRAS_UP = "\u25b2";
+    var EXTRAS_DOWN = "...";
 
     var encodeXml = function (str) {
         return str.replace(/&/g, '&amp;')
@@ -378,33 +378,23 @@
                         sofar = _handleInterface(json.interface, json.interface.name, this, sofar);
                     }
                     if (_exists(json.extras)) {
-                        var extras_selector = new Blockly.FieldTextInput(DOWN_ARROW);
-                        sofar.appendField(extras_selector);
+                        var extras_selector = new Blockly.FieldTextInput(EXTRAS_DOWN);
+                        sofar.appendField(extras_selector, 'EXTRAS_OPEN'); // need id for persistence and loading render
                         var extras_dummy = this.appendDummyInput(EXTRAS_ID);
                         sofar = extras_dummy;
                         extras_dummy.setVisible(false);
-                        extras_selector.showEditor_ = (function() {
+                        extras_selector.showEditor_ = (function() { // toggle the dropdown
                             var extras_visible = false;
-                            if (extras_selector.getText() == DOWN_ARROW) {
+                            if (extras_selector.getValue() == EXTRAS_DOWN) {
                                 // i.e. now show everything...
-                                extras_selector.setText(UP_ARROW);
+                                extras_selector.setValue(EXTRAS_UP);
                                 extras_visible = true;
                             } else {
-                                extras_selector.setText(DOWN_ARROW);
-                            }
-                            var input_list = extras_dummy.sourceBlock_.inputList;
-                            input_list.forEach(function(blockly_input) {
-                                if (blockly_input.name == EXTRAS_ID) {
-                                    blockly_input.setVisible(extras_visible);
-                                    blockly_input.fieldRow.forEach(function(field) {
-                                        field.setVisible(extras_visible);
-                                    });
-                                }
-                            });
-                            extras_dummy.sourceBlock_.render();
+                                extras_selector.setValue(EXTRAS_DOWN);
+                            } // Note - the CHANGE event will trigger updateExtras()
                         });
                         sofar = _handleInterface(json.extras, json.extras.name, this, sofar, false);
-                        // this hides all the children
+                        // i.e hides all the children
                     }
                     if (_exists(json.javascript)) {
                         blockly.JavaScript[id] = json.javascript;
@@ -554,4 +544,20 @@
         }
         return index;
     };
+
+    self.updateExtras = function(block) {
+        var field = block.getField('EXTRAS_OPEN');
+        if (field) {
+            var visible = (field.getValue() == EXTRAS_UP);
+            block.inputList.forEach(function(blockly_input) {
+                if (blockly_input.name == EXTRAS_ID) {
+                    blockly_input.setVisible(visible);
+                    blockly_input.fieldRow.forEach(function(field) {
+                        field.setVisible(visible);
+                    });
+                }
+            });
+            block.render();
+        }
+    }
 })();
