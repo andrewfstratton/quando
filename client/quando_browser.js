@@ -324,46 +324,66 @@
             // can't use [0] because we don't know the id of the first entry
             leap.loop(
                 {
-                    hand: function (hand) {
+                    hand: function(hand) {
                         idle_reset();
                         var [x, y] = hand.screenPosition(hand.palmPosition);
                         var cursor = document.getElementById('cursor');
-                        var pinch = hand.pinchStrength.toPrecision(2);
-                        if (pinch <= 0.6) {
-                            self.pinching = false;
-                            _style("quando_css", '#cursor', 'opacity', 0.6);
-                        } else if (pinch >= 0.9) {
-                            _style("quando_css", '#cursor', 'opacity', 1.0);
-                        }
                         cursor.style.left = x + 'px';
                         cursor.style.top = y + 'px';
                         cursor.style.visibility = "hidden";
                         var elem = document.elementFromPoint(x, y);
                         cursor.style.visibility = "visible";
-                        if (elem) {
-                            if (elem.classList.contains("quando_label")) {
-                                if (!self.pinching && (pinch >= 0.9)) {
-                                        elem.click();
-                                        self.pinching = true;
-                                }
-                            } else if (pinch >= 0.9) {
-                                self.pinching = true;
-                            }
-                            if (!elem.classList.contains("focus")) { // the element is not in 'focus'
-                                // remove focus from all other elements - since the cursor isn't over them
-                                self._removeFocus();
-                                if (elem.classList.contains("quando_label")) {
-                                    elem.classList.add("focus");
-                                }
-                            }
-                        } else {
-                            // remove focus from any elements - since the cursor isn't over them
-                            self._removeFocus();
-                        }
+                        self.leap_hover(hand, elem);
                     }
                 }).use('screenPosition', {
                     scale: 0.7, verticalOffset: screen.height
                 });
+        }
+    }
+
+    self.leap_hover = function(hand, elem) {
+        if (elem) {
+            if (!elem.classList.contains("focus")) { // the element is not in 'focus'
+                // remove focus from all other elements - since the cursor isn't over them
+                self._removeFocus();
+                if (elem.classList.contains("quando_label")) {
+                    elem.classList.add("focus");
+                    elem.addEventListener("transitionend", self._handle_transition);
+                }
+            }
+        } else {
+            // remove focus from any elements - since the cursor isn't over any
+            self._removeFocus();
+        }
+    }
+
+    self.leap_pinch = function(hand, elem) {
+        var pinch = hand.pinchStrength.toPrecision(2);
+        if (pinch <= 0.6) {
+            self.pinching = false;
+            _style("quando_css", '#cursor', 'opacity', 0.6);
+        } else if (pinch >= 0.9) {
+            _style("quando_css", '#cursor', 'opacity', 1.0);
+        }
+        if (elem) {
+            if (elem.classList.contains("quando_label")) {
+                if (!self.pinching && (pinch >= 0.9)) {
+                        elem.click();
+                        self.pinching = true;
+                }
+            } else if (pinch >= 0.9) {
+                self.pinching = true;
+            }
+            if (!elem.classList.contains("focus")) { // the element is not in 'focus'
+                // remove focus from all other elements - since the cursor isn't over them
+                self._removeFocus();
+                if (elem.classList.contains("quando_label")) {
+                    elem.classList.add("focus");
+                }
+            }
+        } else {
+            // remove focus from any elements - since the cursor isn't over them
+            self._removeFocus();
         }
     }
 
