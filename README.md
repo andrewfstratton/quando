@@ -27,6 +27,7 @@ If everything is fine - then try restarting to see if everything boots correctly
 
 Optional - npm install -g nodemon
 
-To update (assuming quando has changed), use:
+To update (assuming quando has changed), First kill the Node.js process in the task manager,
+then use:
 git pull
 quando
