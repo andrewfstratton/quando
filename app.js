@@ -133,23 +133,24 @@ function ubit_success(serial) {
     serial.on('data', (data) => {
         try {
             var ubit = JSON.parse(data)
-            if (ubit.button == 'a') {
-                io.emit('ubit', {button:'a'})
-            }
-            if (ubit.button == 'b') {
-                io.emit('ubit', {button:'b'})
-            }
-            if (ubit.ir) {
-                io.emit('ubit', {ir:true})
-            }
-            if (ubit.orientation) { //so we have a message
-                if (ubit.orientation != orientation) {
-                    orientation = ubit.orientation;
-                    io.emit('ubit', {'orientation': orientation})
+            if (ubit && io) {
+                if (ubit.button == 'a') {
+                    io.emit('ubit', {button:'a'})
+                } else if (ubit.button == 'b') {
+                    io.emit('ubit', {button:'b'})
                 }
-            }
-            if (ubit.heading) {
-                io.emit('ubit', {'heading':ubit.heading});
+                if (ubit.ir) {
+                    io.emit('ubit', {ir:true})
+                }
+                if (ubit.orientation) { //so we have a message
+                    if (ubit.orientation != orientation) {
+                        orientation = ubit.orientation;
+                        io.emit('ubit', {'orientation': orientation})
+                    }
+                }
+                if (ubit.heading) {
+                    io.emit('ubit', {'heading':ubit.heading});
+                }
             }
         } catch(err) {
             console.log(err + ":" + data);

@@ -203,7 +203,7 @@
     };
     self.image_update_video = function (img) {
         var image = document.getElementById('quando_image');
-        if (image.src != window.location.origin + img ) {
+        if (image.src != encodeURI(window.location.origin + img)) {
             // i.e. only stop the video when the image is different - still need to set the image style...
             // TODO this needs checking for behavioural side effects
             self.clear_video();
@@ -213,7 +213,7 @@
     self.video = function (vid, loop=false) {
         var video = document.getElementById('quando_video');
         video.loop = loop;
-        if (video.src != window.location.origin + vid) { // i.e. ignore when already playing
+        if (video.src != encodeURI(window.location.origin + vid)) { // i.e. ignore when already playing
             video.pause();
             video.src = vid;
             video.load();
@@ -237,7 +237,7 @@
     self.audio = function (audio_in, loop=false) {
         var audio = document.getElementById('quando_audio');
         audio.loop = loop;
-        if ( audio.src != window.location.origin + audio_in) { // src include http://127.0.0.1/
+        if ( audio.src != encodeURI(window.location.origin + audio_in)) { // src include http://127.0.0.1/
             audio.pause();
             audio.src = audio_in;
             audio.load();
