@@ -1,4 +1,4 @@
-# Remote micro:bit - boot with a button pressed for passive infrared, boot without for face up/down 
+# Remote micro:bit - boot with 'a' button pressed for passive infrared, boot without for face up/down 
 import radio
 from microbit import *
 
@@ -6,24 +6,18 @@ from microbit import *
 RADIO_IR = 'I'
 RADIO_BUTTON_A = 'A'
 RADIO_BUTTON_B = 'B'
-RADIO_FACE_UP = 'U'
-RADIO_FACE_DOWN = 'D'
+RADIO_FACE_UP = '^'
+RADIO_FACE_DOWN = 'v'
+RADIO_UP = 'U'
+RADIO_DOWN = 'D'
 RADIO_LEFT = 'L'
 RADIO_RIGHT = 'R'
 RADIO_HEADING = 'H'
 RADIO_TEST = '?' # uncommon
 
-def test():
-    while True:
-        radio.send(RADIO_TEST)
-        sleep(500)
-
 def gesture():
+    resend_face_up=resend_face_down=resend_up=resend_down=resend_left=resend_right=0
     last_heading = 999
-    resend_up = 0
-    resend_down = 0
-    resend_left = 0
-    resend_right = 0
     while True:
         heading = compass.heading()
         if (heading != last_heading) :
@@ -33,38 +27,54 @@ def gesture():
             if (abs(heading - last_heading))>10:
                 radio.send(RADIO_HEADING+str(heading))
                 last_heading = heading
-            display.show('*')
+                display.show('*')
         if accelerometer.is_gesture('face up'):
+            if resend_face_up == 50:
+                resend_face_up = 0
+            if resend_face_up == 0:
+                display.show('^')
+                radio.send(RADIO_FACE_UP)
+                resend_face_up=resend_face_down=resend_up=resend_down=resend_left=resend_right=0
+            resend_face_up += 1
+        elif accelerometer.is_gesture('face down'):
+            if resend_face_down == 50:
+                resend_face_down = 0
+            if resend_face_down == 0:
+                display.show('v')
+                radio.send(RADIO_FACE_DOWN)
+                resend_face_up=resend_face_down=resend_up=resend_down=resend_left=resend_right=0
+            resend_face_down += 1
+        if accelerometer.is_gesture('up'):
             if resend_up == 50:
                 resend_up = 0
             if resend_up == 0:
-                display.show('^')
-                radio.send(RADIO_FACE_UP)
-                resend_down = resend_left = resend_right = 0
+                display.show('U')
+                radio.send(RADIO_UP)
+                resend_face_up=resend_face_down=resend_up=resend_down=resend_left=resend_right=0
             resend_up += 1
-        if accelerometer.is_gesture('face down'):
+        elif accelerometer.is_gesture('down'):
             if resend_down == 50:
                 resend_down = 0
             if resend_down == 0:
-                display.show('v')
-                radio.send(RADIO_FACE_DOWN)
-                resend_left = resend_up = resend_right = 0
+                display.show('D')
+                radio.send(RADIO_DOWN)
+                resend_face_up=resend_face_down=resend_up=resend_down=resend_left=resend_right=0
             resend_down += 1
-        if accelerometer.is_gesture('left'):
+        elif accelerometer.is_gesture('left'):
             if resend_left == 50:
                 resend_left = 0
             if resend_left == 0:
                 display.show('<')
                 radio.send(RADIO_LEFT)
-                resend_down = resend_up = resend_right = 0
+                resend_face_up=resend_face_down=resend_up=resend_down=resend_left=resend_right=0
             resend_left += 1
-        if accelerometer.is_gesture('right'):
+        elif accelerometer.is_gesture('right'):
             if resend_right == 50:
                 resend_right = 0
             if resend_right == 0:
                 display.show('>')
                 radio.send(RADIO_RIGHT)
-                resend_down = resend_up = resend_left = 0
+                resend_face_up=resend_face_down=resend_up=resend_down=resend_left=resend_right=0
             resend_right += 1
         sleep(20)
     return # never does
@@ -105,10 +115,8 @@ def visitor_sense():
 #Main program
 radio.on()
     
-if button_a.is_pressed():
-    visitor_sense()
-elif button_b.is_pressed():
-    test()
-else:
+if not button_a.is_pressed() and not button_b.is_pressed():
     gesture()
+elif not button_a.is_pressed() and button_b.is_pressed():
+    visitor_sense()
     

@@ -4,8 +4,10 @@ from microbit import *
 RADIO_IR = 'I'
 RADIO_BUTTON_A = 'A'
 RADIO_BUTTON_B = 'B'
-RADIO_FACE_UP = 'U'
-RADIO_FACE_DOWN = 'D'
+RADIO_FACE_UP = '^'
+RADIO_FACE_DOWN = 'v'
+RADIO_UP = 'U'
+RADIO_DOWN = 'D'
 RADIO_LEFT = 'L'
 RADIO_RIGHT = 'R'
 RADIO_HEADING = 'H'
@@ -47,9 +49,15 @@ def proxy():
                     print('{"button":"b"}')
                 if incoming == RADIO_FACE_UP:
                     display.show('^')
-                    print('{"orientation":"up"}')
+                    print('{"orientation":"face up"}')
                 if incoming == RADIO_FACE_DOWN:
                     display.show('v')
+                    print('{"orientation":"face down"}')
+                if incoming == RADIO_UP:
+                    display.show('U')
+                    print('{"orientation":"up"}')
+                if incoming == RADIO_DOWN:
+                    display.show('D')
                     print('{"orientation":"down"}')
                 if incoming == RADIO_LEFT:
                     display.show('<')

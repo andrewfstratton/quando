@@ -543,21 +543,33 @@
             extras:[ {name: 'test'} ],
         });
         
-        let UP_DOWN_MENU = "Up Down";
+        let MICROBIT_GESTURE_MENU = "MicroBit Gesture";
         quando_editor.defineDisplay({
             name: 'When micro:bit', next: false, previous: false, colour: self.CONFIG.DEVICE_COLOUR,
             interface: [
-                { menu: ['Up', 'Down'], name: UP_DOWN_MENU, title: '' },
+                { menu: ['Face Up', 'Face Down', 'Up', 'Down', 'Left', 'Right'], name: MICROBIT_GESTURE_MENU, title: '' },
                 { statement: STATEMENT }
             ],
             javascript: function (block) {
                 let fn = '';
-                switch (quando_editor.getMenu(block, UP_DOWN_MENU)) {
+                switch (quando_editor.getMenu(block, MICROBIT_GESTURE_MENU)) {
+                    case 'Face Up':
+                        fn = "ubitFaceUp";
+                        break;
+                    case 'Face Down':
+                        fn = "ubitFaceDown";
+                        break;
                     case 'Up':
                         fn = "ubitUp";
                         break;
                     case 'Down':
                         fn = "ubitDown";
+                        break;
+                    case 'Left':
+                        fn = "ubitLeft";
+                        break;
+                    case 'Right':
+                        fn = "ubitRight";
                         break;
                 };
                 var statement = quando_editor.getStatement(block, STATEMENT);

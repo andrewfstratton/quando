@@ -51,6 +51,14 @@
                 document.dispatchEvent(new CustomEvent("ubitUp"));
             } else if (data.orientation == "down") {
                 document.dispatchEvent(new CustomEvent("ubitDown"));
+            } else if (data.orientation == "face up") {
+                document.dispatchEvent(new CustomEvent("ubitFaceUp"));
+            } else if (data.orientation == "face down") {
+                document.dispatchEvent(new CustomEvent("ubitFaceDown"));
+            } else if (data.orientation == "left") {
+                document.dispatchEvent(new CustomEvent("ubitLeft"));
+            } else if (data.orientation == "right") {
+                document.dispatchEvent(new CustomEvent("ubitRight"));
             }
         } else if (data.heading) {
             document.dispatchEvent(new CustomEvent("ubitHeading", {'detail':data.heading}));
@@ -63,6 +71,22 @@
 
     self.ubitDown = function(callback) {
         document.addEventListener("ubitDown", callback);
+    }
+
+    self.ubitFaceUp = function(callback) {
+        document.addEventListener("ubitFaceUp", callback);
+    }
+
+    self.ubitFaceDown = function(callback) {
+        document.addEventListener("ubitFaceDown", callback);
+    }
+
+    self.ubitLeft = function(callback) {
+        document.addEventListener("ubitLeft", callback);
+    }
+
+    self.ubitRight = function(callback) {
+        document.addEventListener("ubitRight", callback);
     }
 
     self.ubitHeading = function(min, max, callback) {
