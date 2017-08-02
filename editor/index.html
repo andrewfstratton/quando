@@ -94,7 +94,13 @@
                             <span class="glyphicon glyphicon-remove-sign"></span> Clear
                         </button>
                     </div>
-                        <div class="btn-group" role="group">
+                    <input id="upload_media" class="hidden" type="file" onchange="index.handle_upload_media();"/>
+                    <div class="btn-group" role="group">
+                        <label for="upload_media" type="button" class="btn btn-primary">
+                            <span class="glyphicon glyphicon-floppy-open"></span> Upload Media
+                        </label>
+                    </div>
+                    <div class="btn-group" role="group">
                         <button type="button" class="btn btn-primary" onclick="index.handle_test();">
                             <span class="glyphicon glyphicon-eye-open"></span> Test
                         </button>
@@ -273,11 +279,14 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">Select File</h4>
+                    <h4 class="modal-title file_modal_select_file">Select File</h4>
+                    <h4 class="modal-title file_modal_upload">Select Folder for Upload</h4>
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label>Remote files</label>
+                        <label class="file_modal_select_file">Remote files</label>
+                        <label class="file_modal_upload">Remote folder: </label>
+                        <span id="file_modal_path"></span>
                     </div>
                     <div class="form-group">
                         <div class="list-group" id="file_list">
@@ -286,6 +295,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
+                    <button type="button" class="btn file_modal_upload"
+                        onclick="index.handle_upload();">Upload</button>
                     <button type="button" class="btn" data-dismiss="modal">Cancel</button>
                 </div>
             </div>

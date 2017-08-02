@@ -129,7 +129,6 @@
     self.handle_remote_save = function() {
         var name = encodeURI($("#remote_save_key").val());
         var obj = JSON.stringify({ deploy: _deploy, xml: _getXml(), content: _content });
-        debugger
         $.ajax({
             url: '/script',
             type: 'POST',
@@ -228,13 +227,23 @@
         }
     };
     self.handle_file = function(media, block_id, widget_id, path='') {
+        // when media is 'UPLOAD', then we are uploading, note then that block_id and widget_id are null
         var file_modal = $('#file_modal');
+        if (media == 'UPLOAD') {
+            $('.file_modal_upload').show();
+            $('.file_modal_select_file').hide();
+        } else {
+            $('.file_modal_select_file').show();
+            $('.file_modal_upload').hide();
+        }
+                    $('#file_modal_path').html('Loading...');
         file_modal.modal('show');
         $('#file_list').html('Loading...');
         $.ajax({
             url: '/file/type' + path + '/' + media,
             success: function(res) {
                 if (res.success) {
+                    $('#file_modal_path').html(path);
                     $('#file_list').html('');
                     if (path != '') {
                         var parent_path ='';
@@ -271,10 +280,45 @@
         self.handle_file(media, block_id, widget_id, path);
     }
     self.handle_file_selected = function(filename, block_id, widget_id) {
-        let block = Blockly.mainWorkspace.getBlockById(block_id);
-        block.setFieldValue(filename, widget_id)
-        $('#file_modal').modal('hide');
+        // When blocK-id is null, then this is an upload - so do nothing...
+        if (block_id != null) {
+            var block = Blockly.mainWorkspace.getBlockById(block_id);
+            block.setFieldValue(filename, widget_id)
+            $('#file_modal').modal('hide');
+        }
         // TODO get/return/set filename
+    }
+    self.handle_upload_media = function() {
+        if ($('#upload_media').val()) {
+            self.handle_file('UPLOAD', null, null, '');
+        }
+    }
+    self.handle_upload = function() {
+        var file_in = $('#upload_media').val();
+        var filename = encodeURI(file_in.substring(1+file_in.lastIndexOf('\\')));
+        var remote_path = encodeURI($("#file_modal_path").html());
+        var form_data = new FormData();
+        form_data.append("upload_data", $('#upload_media')[0].files[0]); // wierd jquery format...
+        $.ajax({
+            // url: '/upload', // was '/file/upload' + remote_path + '/' + filename,
+            url: '/file/upload' + remote_path + '/' + filename,
+            type: 'POST',
+            data: form_data,
+            processData: false,
+            contentType: false,
+            success: function(res) {
+                if (res.success) {
+                    $('#file_modal').modal('toggle');
+                    _saved(decodeURI(remote_path + filename));
+                    $('#upload_media').val(null); // clear once finished - forces a change event next time
+                } else {
+                    alert('Failed to save');
+                }
+            },
+            error: function() {
+                alert('Failed to find server');
+            }
+        });
     }
     self.local_load = function(key) {
         var obj = JSON.parse(localStorage.getItem(key));
@@ -287,7 +331,7 @@
             url: '/script/id/' + _remote_list[index].id,
             success: function(res) {
                 if (res.success) {
-                    let xml = JSON.parse(res.doc.xml)
+                    var xml = JSON.parse(res.doc.xml)
                     _loaded(xml, '#remote_load_modal', res.doc.name);
                 } else {
                     alert('Failed to find script');
@@ -353,7 +397,7 @@
             url: '/script/names/' + _userid,
             success: function(res) {
                 if (res.success) {
-                    let list = res.list;
+                    var list = res.list;
                     _remote_list = list;
                     if (list.length === 0) {
                         $('#remote_load_list').html('No saves available');
@@ -409,14 +453,26 @@
     function _file_list_add(file_name, path, fn_name, block_id, widget_id) {
         var result = '<div class="row"><div class="col-sm-1"> </div>'
             + '<a class="list-group-item col-md-5" onclick="index.'
-            + `${fn_name}('${path}${file_name}', '${block_id}', '${widget_id}')">${file_name}</a>`
+            + `${fn_name}('${path}${file_name}', `;
+        if (block_id == null) {
+            result += 'null';
+        } else {
+            result += `'${block_id}'`;
+        }
+        result += `, '${widget_id}')">${file_name}</a>`
             + '</div>\n';
         return result;
     }
     function _folder_list_add(folder_name, media, path, block_id, widget_id) {
         var result = '<div class="row"><div class="col-sm-1"> </div>'
             + '<a class="list-group-item col-md-5" onclick="index.'
-                + `handle_folder_selected('${media}', '${block_id}', '${widget_id}', '${path}')">&#x1f5c1; ${folder_name}</a>`
+                + `handle_folder_selected('${media}', `;
+        if (block_id == null) {
+            result += 'null';
+        } else {
+            result += `'${block_id}'`;
+        }
+        result += `, '${widget_id}', '${path}')">&#x1f5c1; ${folder_name}</a>`
             + '</div>\n';
         return result;
     }

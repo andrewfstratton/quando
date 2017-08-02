@@ -467,7 +467,7 @@
                         if (endOf != -1) {
                             data = data.substring(0, endOf);
                             value = data + separator + value; // Note - this appends the new property
-            console.log(value);
+            // console.log(value);
                         }
                     }
                 }

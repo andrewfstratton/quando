@@ -2,6 +2,7 @@
 const express = require('express')
 const app = express()
 const fs = require("fs")
+const formidable = require('formidable')
 const morgan = require("morgan")
 const session = require("express-session")
 const body_parser = require("body-parser")
@@ -27,7 +28,8 @@ const MEDIA_FOLDER = path.join(__dirname, 'client', 'media')
 const MEDIA_MAP = {
     'video': ['ogg','ogv','mp4','webm'],
     'audio': ['mp3'],
-    'images': ['bmp', 'jpg', 'jpeg', 'png']
+    'images': ['bmp', 'jpg', 'jpeg', 'png'],
+    'UPLOAD': ['ogg','ogv','mp4','webm','mp3','bmp', 'jpg', 'jpeg', 'png'] // HACK to work for now
 }
 
 app.use(morgan('dev'))
@@ -189,6 +191,36 @@ app.get('/file/type/*', (req, res) => {
             res.json({ 'success': false, 'message': 'Failed to retrieve contents of folder' })
         }
     })
+})
+
+app.post('/file/upload/*', (req, res) => {
+    let filename = req.params[0]
+    let media = path.basename(filename)
+    let folder = filename.substring(0, filename.length - media.length)
+    let form = new formidable.IncomingForm()
+    form.multiples = true
+    form.uploadDir = path.join(MEDIA_FOLDER, folder)
+    form.keepExtensions = true
+    form.parse(req, (err, fields, files) => {
+        if (err) {
+            res.json({ 'success': false, 'message':'failed to upload' })
+        } else {
+            res.json({ 'success': true })
+        }
+    })
+    form.on('fileBegin', function (name, file) {
+        const [fileName, fileExt] = file.name.split('.')
+        file.path = path.join(form.uploadDir, `${fileName}_${new Date().getTime()}.${fileExt}`)
+    })
+    form.on('file', function(field, file) {
+        fs.rename(file.path, path.join(form.uploadDir, file.name));
+    });
+    form.on('error', function(err) {
+        res.json({ 'success': false, 'message':'an error has occured with form upload'+err })
+    });
+    form.on('aborted', function(err) {
+        res.json({ 'success': false, 'message':'Upload cancelled by browser' })
+    });
 })
 
 // Static for client
