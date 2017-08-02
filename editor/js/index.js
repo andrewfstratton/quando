@@ -309,7 +309,7 @@
             success: function(res) {
                 if (res.success) {
                     $('#file_modal').modal('toggle');
-                    _saved(decodeURI(remote_path + filename));
+                    _success('Uploaded...' + decodeURI(remote_path + filename));
                     $('#upload_media').val(null); // clear once finished - forces a change event next time
                 } else {
                     alert('Failed to save');
