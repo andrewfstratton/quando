@@ -47,14 +47,14 @@
         } else if (data.ir) {
             idle_reset();
         } else if (data.orientation) {
-            if (data.orientation == "up") {
+            if (data.orientation == "forward") {
+                document.dispatchEvent(new CustomEvent("ubitForward"));
+            } else if (data.orientation == "backward") {
+                document.dispatchEvent(new CustomEvent("ubitBack"));
+            } else if (data.orientation == "up") {
                 document.dispatchEvent(new CustomEvent("ubitUp"));
             } else if (data.orientation == "down") {
                 document.dispatchEvent(new CustomEvent("ubitDown"));
-            } else if (data.orientation == "face up") {
-                document.dispatchEvent(new CustomEvent("ubitFaceUp"));
-            } else if (data.orientation == "face down") {
-                document.dispatchEvent(new CustomEvent("ubitFaceDown"));
             } else if (data.orientation == "left") {
                 document.dispatchEvent(new CustomEvent("ubitLeft"));
             } else if (data.orientation == "right") {
@@ -62,31 +62,41 @@
             }
         } else if (data.heading) {
             document.dispatchEvent(new CustomEvent("ubitHeading", {'detail':data.heading}));
+            idle_reset();
         }
     });
 
-    self.ubitUp = function(callback) {
-        document.addEventListener("ubitUp", callback);
+    var _ubit_handle = function(event, callback, destruct) {
+        document.addEventListener(event, callback);
+        if (destruct) {
+            self.addDestructor(function() {
+                document.removeEventListener(event, callback);
+            });
+        }
     }
 
-    self.ubitDown = function(callback) {
-        document.addEventListener("ubitDown", callback);
+    self.ubitForward = function(callback, destruct=true) {
+        _ubit_handle("ubitForward", callback, destruct);
     }
 
-    self.ubitFaceUp = function(callback) {
-        document.addEventListener("ubitFaceUp", callback);
+    self.ubitBack = function(callback, destruct=true) {
+        _ubit_handle("ubitBack", callback, destruct);
     }
 
-    self.ubitFaceDown = function(callback) {
-        document.addEventListener("ubitFaceDown", callback);
+    self.ubitUp = function(callback, destruct=true) {
+        _ubit_handle("ubitUp", callback, destruct);
     }
 
-    self.ubitLeft = function(callback) {
-        document.addEventListener("ubitLeft", callback);
+    self.ubitDown = function(callback, destruct=true) {
+        _ubit_handle("ubitDown", callback, destruct);
     }
 
-    self.ubitRight = function(callback) {
-        document.addEventListener("ubitRight", callback);
+    self.ubitLeft = function(callback, destruct=true) {
+        _ubit_handle("ubitLeft", callback, destruct);
+    }
+
+    self.ubitRight = function(callback, destruct=true) {
+        _ubit_handle("ubitRight", callback, destruct);
     }
 
     self.ubitHeading = function(min, max, callback) {
@@ -101,29 +111,29 @@
     var Config = self.Config = {
     };
 
-    var _properties = [];
+    // var _properties = [];
 
-    var _newWhen = function (setup) {
-        var list = [];
-        setup(list);
-        return function (lookup, callback) { // return when handler creator
-            var current = list[lookup] || [];
-            current.push(callback);
-            list[lookup] = current;
-        }; // when handler creator
-    }; // newWhen
+    // var _newWhen = function (setup) {
+    //     var list = [];
+    //     setup(list);
+    //     return function (lookup, callback) { // return when handler creator
+    //         var current = list[lookup] || [];
+    //         current.push(callback);
+    //         list[lookup] = current;
+    //     }; // when handler creator
+    // }; // newWhen
 
-    var _whenCallback = function (key) {
-        // n.b. this is the list?!
-        var callbacks = this[key];
-        if (callbacks) {
-            var args = Array.prototype.slice.call(arguments).slice(1);
-            callbacks.forEach(function (update) {
-                update.apply(this, args); // i.e. any other arguments
-            });
-        }
-        ;
-    };
+    // var _whenCallback = function (key) {
+    //     // n.b. this is the list?!
+    //     var callbacks = this[key];
+    //     if (callbacks) {
+    //         var args = Array.prototype.slice.call(arguments).slice(1);
+    //         callbacks.forEach(function (update) {
+    //             update.apply(this, args); // i.e. any other arguments
+    //         });
+    //     }
+    //     ;
+    // };
 
 //    self.whenUpdated = _newWhen(
 //            function (list) {
@@ -138,13 +148,13 @@
 //            }
 //        );
 
-    self.setProperty = function (name, val) {
-        _properties[name] = val;
-    };
+    // self.setProperty = function (name, val) {
+    //     _properties[name] = val;
+    // };
 
-    self.getProperty = function (name) {
-        return _properties[name];
-    };
+    // self.getProperty = function (name) {
+    //     return _properties[name];
+    // };
 
     self.after = function (time_secs, callback, destruct=true) {
         var timeout = setTimeout(callback, time_secs * 1000);

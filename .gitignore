@@ -35,6 +35,7 @@ client/deployed_js/*
 client/images/dolls_house/*
 ubit/*.hex
 client/media/*
+ubit/tutorial
 
 # Optional npm cache directory
 .npm

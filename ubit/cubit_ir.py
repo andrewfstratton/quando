@@ -48,17 +48,17 @@ def proxy():
                     display.show('b')
                     print('{"button":"b"}')
                 if incoming == RADIO_FACE_UP:
-                    display.show('^')
-                    print('{"orientation":"face up"}')
-                if incoming == RADIO_FACE_DOWN:
-                    display.show('v')
-                    print('{"orientation":"face down"}')
-                if incoming == RADIO_UP:
-                    display.show('U')
+                    display.show(Image.HAPPY)
                     print('{"orientation":"up"}')
-                if incoming == RADIO_DOWN:
-                    display.show('D')
+                if incoming == RADIO_FACE_DOWN:
+                    display.show(Image.SAD)
                     print('{"orientation":"down"}')
+                if incoming == RADIO_UP:
+                    display.show('^')
+                    print('{"orientation":"forward"}')
+                if incoming == RADIO_DOWN:
+                    display.show('v')
+                    print('{"orientation":"backward"}')
                 if incoming == RADIO_LEFT:
                     display.show('<')
                     print('{"orientation":"left"}')

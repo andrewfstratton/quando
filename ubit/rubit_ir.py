@@ -15,8 +15,13 @@ RADIO_RIGHT = 'R'
 RADIO_HEADING = 'H'
 RADIO_TEST = '?' # uncommon
 
-def gesture():
+resend_face_up=resend_face_down=resend_up=resend_down=resend_left=resend_right=0
+
+def reset_resend():
+    global resend_face_up, resend_face_down, resend_up, resend_down, resend_left, resend_right
     resend_face_up=resend_face_down=resend_up=resend_down=resend_left=resend_right=0
+
+def heading():
     last_heading = 999
     while True:
         heading = compass.heading()
@@ -28,13 +33,19 @@ def gesture():
                 radio.send(RADIO_HEADING+str(heading))
                 last_heading = heading
                 display.show('*')
+        sleep(20)
+    return # never does
+
+def gesture():
+    global resend_face_up, resend_face_down, resend_up, resend_down, resend_left, resend_right
+    while True:
         if accelerometer.is_gesture('face up'):
             if resend_face_up == 50:
                 resend_face_up = 0
             if resend_face_up == 0:
                 display.show('^')
                 radio.send(RADIO_FACE_UP)
-                resend_face_up=resend_face_down=resend_up=resend_down=resend_left=resend_right=0
+                reset_resend()
             resend_face_up += 1
         elif accelerometer.is_gesture('face down'):
             if resend_face_down == 50:
@@ -42,7 +53,7 @@ def gesture():
             if resend_face_down == 0:
                 display.show('v')
                 radio.send(RADIO_FACE_DOWN)
-                resend_face_up=resend_face_down=resend_up=resend_down=resend_left=resend_right=0
+                reset_resend()
             resend_face_down += 1
         if accelerometer.is_gesture('up'):
             if resend_up == 50:
@@ -50,7 +61,7 @@ def gesture():
             if resend_up == 0:
                 display.show('U')
                 radio.send(RADIO_UP)
-                resend_face_up=resend_face_down=resend_up=resend_down=resend_left=resend_right=0
+                reset_resend()
             resend_up += 1
         elif accelerometer.is_gesture('down'):
             if resend_down == 50:
@@ -58,7 +69,7 @@ def gesture():
             if resend_down == 0:
                 display.show('D')
                 radio.send(RADIO_DOWN)
-                resend_face_up=resend_face_down=resend_up=resend_down=resend_left=resend_right=0
+                reset_resend()
             resend_down += 1
         elif accelerometer.is_gesture('left'):
             if resend_left == 50:
@@ -66,7 +77,7 @@ def gesture():
             if resend_left == 0:
                 display.show('<')
                 radio.send(RADIO_LEFT)
-                resend_face_up=resend_face_down=resend_up=resend_down=resend_left=resend_right=0
+                reset_resend()
             resend_left += 1
         elif accelerometer.is_gesture('right'):
             if resend_right == 50:
@@ -74,7 +85,7 @@ def gesture():
             if resend_right == 0:
                 display.show('>')
                 radio.send(RADIO_RIGHT)
-                resend_face_up=resend_face_down=resend_up=resend_down=resend_left=resend_right=0
+                reset_resend()
             resend_right += 1
         sleep(20)
     return # never does
@@ -117,6 +128,8 @@ radio.on()
     
 if not button_a.is_pressed() and not button_b.is_pressed():
     gesture()
+elif button_a.is_pressed() and not button_b.is_pressed():
+    heading()
 elif not button_a.is_pressed() and button_b.is_pressed():
     visitor_sense()
     

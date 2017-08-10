@@ -545,25 +545,25 @@
         
         let MICROBIT_GESTURE_MENU = "MicroBit Gesture";
         quando_editor.defineDisplay({
-            name: 'When micro:bit', next: false, previous: false, colour: self.CONFIG.DEVICE_COLOUR,
+            name: 'When micro:bit', colour: self.CONFIG.DEVICE_COLOUR,
             interface: [
-                { menu: ['Face Up', 'Face Down', 'Up', 'Down', 'Left', 'Right'], name: MICROBIT_GESTURE_MENU, title: '' },
+                { menu: ['Up', 'Down', 'Forward', 'Backward', 'Left', 'Right'], name: MICROBIT_GESTURE_MENU, title: '' },
                 { statement: STATEMENT }
             ],
             javascript: function (block) {
                 let fn = '';
                 switch (quando_editor.getMenu(block, MICROBIT_GESTURE_MENU)) {
-                    case 'Face Up':
-                        fn = "ubitFaceUp";
-                        break;
-                    case 'Face Down':
-                        fn = "ubitFaceDown";
-                        break;
                     case 'Up':
                         fn = "ubitUp";
                         break;
                     case 'Down':
                         fn = "ubitDown";
+                        break;
+                    case 'Forward':
+                        fn = "ubitForward";
+                        break;
+                    case 'Backward':
+                        fn = "ubitBackward";
                         break;
                     case 'Left':
                         fn = "ubitLeft";
@@ -576,7 +576,9 @@
                 var result = "quando." + fn + "("
                     + "function() {\n"
                     + statement
-                    + "});\n";
+                    + "}"
+                    + _getOnContained(block, [WHEN_VITRINE_BLOCK], "", ", false")
+                    + ");\n";
                 return result;
             }
         });
