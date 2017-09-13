@@ -8,7 +8,7 @@
         CLIENT_COLOUR: '#559999',
         TIME_COLOUR: '#ee6666',
         LEAP_MOTION_COLOUR: '#999999',
-        DEVICE_COLOUR: '#ee77aa',
+        DEVICE_COLOUR: '#bb66aa',
         BLOCKLY_SATURATION: 0.25, // default for hue only colour - probably not used anymore - see http://colorizer.org/
         BLOCKLY_VALUE: 0.85, // ditto
     };
@@ -543,9 +543,27 @@
             extras:[ {name: 'test'} ],
         });
         
+        quando_editor.defineDevice({
+            name: 'When Device',
+            interface: [
+                { name: 'name', title: '', text: 'Box' },
+                { statement: STATEMENT }
+            ],
+            javascript: function (block) {
+                var statement = quando_editor.getStatement(block, STATEMENT);
+                var result = "quando." + fn + "("
+                    + "function() {\n"
+                    + statement
+                    + "}"
+                    + _getOnContained(block, [WHEN_VITRINE_BLOCK], "", ", false")
+                    + ");\n";
+                return result;
+            }
+        });
+        
         let MICROBIT_GESTURE_MENU = "MicroBit Gesture";
-        quando_editor.defineDisplay({
-            name: 'When micro:bit', colour: self.CONFIG.DEVICE_COLOUR,
+        quando_editor.defineDevice({
+            name: 'When micro:bit',
             interface: [
                 { menu: ['Up', 'Down', 'Forward', 'Backward', 'Left', 'Right'], name: MICROBIT_GESTURE_MENU, title: '' },
                 { statement: STATEMENT }
@@ -582,11 +600,11 @@
                 return result;
             }
         });
-        
+
         let WHEN_HEADING_MIN = "Min";
         let WHEN_HEADING_MAX = "Max";
-        quando_editor.defineDisplay({
-            name: 'When heading between ', next: false, previous: false, colour: self.CONFIG.DEVICE_COLOUR,
+        quando_editor.defineDevice({
+            name: 'When heading between ', next: false, previous: false,
             interface: [
                 { name: WHEN_HEADING_MIN, title: '', number: '0' },
                 { name: WHEN_HEADING_MAX, title: ' and ', number: '359' },

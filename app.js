@@ -146,6 +146,7 @@ function ubit_success(serial) {
                 }
                 if (ubit.orientation) { //so we have a message
                     if (ubit.orientation != orientation) {
+                        // i.e. only tell the browser when the orientation changes
                         orientation = ubit.orientation;
                         io.emit('ubit', {'orientation': orientation})
                     }

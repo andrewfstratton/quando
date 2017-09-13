@@ -463,7 +463,8 @@
             'quando_style': CONFIG.STYLE_COLOUR,
             'quando_client': CONFIG.CLIENT_COLOUR,
             'quando_time': CONFIG.TIME_COLOUR,
-            'quando_leap_motion': CONFIG.LEAP_MOTION_COLOUR
+            'quando_leap_motion': CONFIG.LEAP_MOTION_COLOUR,
+            'quando_device': CONFIG.DEVICE_COLOUR
         };
         for (var key in map) {
             var elem = _fromDom(key, null);
@@ -510,6 +511,9 @@
     };
     self.defineTime = function (json) {
         return _defineBlock(json, 'quando_time', self.CONFIG.TIME_COLOUR);
+    };
+    self.defineDevice = function (json) {
+        return _defineBlock(json, 'quando_device', self.CONFIG.DEVICE_COLOUR);
     };
     self.defineLeapMotion = function (json) {
         return _defineBlock(json, 'quando_leap_motion', self.CONFIG.LEAP_MOTION_COLOUR);

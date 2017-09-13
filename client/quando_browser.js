@@ -5,9 +5,10 @@
     self.idle_reset_secs = 0;
     self.idle_callback_id = 0;
     self.vitrines = new Map();
-    self.override_id = 'quando_css_override';
+    self.DISPLAY_STYLE = 'quando_css_override';
     self.pinching = false;
     self._vitrine_destructors = [];
+    self.DEFAULT_STYLE = "quando_css";
 
     var _socket = io.connect('http://' + location.hostname)
 
@@ -47,10 +48,11 @@
         } else if (data.ir) {
             idle_reset();
         } else if (data.orientation) {
+            idle_reset(); // this is only received when the orientation changes
             if (data.orientation == "forward") {
                 document.dispatchEvent(new CustomEvent("ubitForward"));
             } else if (data.orientation == "backward") {
-                document.dispatchEvent(new CustomEvent("ubitBack"));
+                document.dispatchEvent(new CustomEvent("ubitBackward"));
             } else if (data.orientation == "up") {
                 document.dispatchEvent(new CustomEvent("ubitUp"));
             } else if (data.orientation == "down") {
@@ -79,8 +81,8 @@
         _ubit_handle("ubitForward", callback, destruct);
     }
 
-    self.ubitBack = function(callback, destruct=true) {
-        _ubit_handle("ubitBack", callback, destruct);
+    self.ubitBackward = function(callback, destruct=true) {
+        _ubit_handle("ubitBackward", callback, destruct);
     }
 
     self.ubitUp = function(callback, destruct=true) {
@@ -226,12 +228,10 @@
         if (video.src != encodeURI(window.location.origin + vid)) { // i.e. ignore when already playing
             video.pause();
             video.src = vid;
-            video.load();
+            video.autoplay = true;
+            video.addEventListener('ended', self.clear_video);
             video.style.visibility = 'visible';
-            video.addEventListener('canplay', function() {
-                video.addEventListener('ended', self.clear_video);
-                video.play();
-            });
+            video.load();
         }
     };
 
@@ -250,11 +250,9 @@
         if ( audio.src != encodeURI(window.location.origin + audio_in)) { // src include http://127.0.0.1/
             audio.pause();
             audio.src = audio_in;
+            audio.autoplay = true;
+            audio.addEventListener('ended', self.clear_audio);
             audio.load();
-            audio.addEventListener('canplay', function() {
-                audio.addEventListener('ended', self.clear_audio);
-                audio.play();
-            });
         }
     };
     self.clear_audio = function() {
@@ -351,7 +349,7 @@
                 return false;
             }, false);
         self.pinching = false;
-        _style("quando_css", '#cursor', 'opacity', 0.6);
+        self.setDefaultStyle('#cursor', 'opacity', 0.6);
         if (self.vitrines.size != 0) {
             // TODO Should this be deferred?
             (self.vitrines.values().next().value)(); // this runs the very first vitrine :)
@@ -395,9 +393,9 @@
         var pinch = hand.pinchStrength.toPrecision(2);
         if (pinch <= 0.6) {
             self.pinching = false;
-            _style("quando_css", '#cursor', 'opacity', 0.6);
+            self.setDefaultStyle('#cursor', 'opacity', 0.6);
         } else if (pinch >= 0.9) {
-            _style("quando_css", '#cursor', 'opacity', 1.0);
+            self.setDefaultStyle('#cursor', 'opacity', 1.0);
         }
         if (elem) {
             if (elem.classList.contains("quando_label")) {
@@ -422,7 +420,7 @@
     }
 
     self.showVitrine = function(id) {
-        // performa ny desctructors - which will cancel pending events, etc.
+        // perform any destructors - which will cancel pending events, etc.
         var destructor = self._vitrine_destructors.pop();
         while (destructor) {
             destructor();
@@ -488,15 +486,15 @@
     }
 
     self.setDisplayStyle = function(id, property, value, separator=null) {
-        _style(self.override_id, id, property, value, separator);
+        _style(self.DISPLAY_STYLE, id, property, value, separator);
     }
 
     self.setDefaultStyle = function(id, property, value, separator=null) {
-        _style("quando_css", id, property, value, separator);
+        _style(self.DEFAULT_STYLE, id, property, value, separator);
     }
 
     self._resetStyle = function() {
-        var elem = document.getElementById(self.override_id);
+        var elem = document.getElementById(self.DISPLAY_STYLE);
         if (elem != null) {
             if (elem.parentNode) {
                 elem.parentNode.removeChild(elem);
@@ -507,8 +505,4 @@
     self.addDestructor = function(fn) {
         self._vitrine_destructors.push(fn);
     }
-
-    // constructor
-//    _style('quando_css', '#quando_title', 'top', '0px');
-
 })();

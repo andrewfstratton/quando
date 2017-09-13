@@ -27,6 +27,10 @@ def direction():
 
 # Event loop.
 def proxy():
+    def forward(incoming, match, image, message):
+        if incoming == match:
+            display.show(image)
+            print(message)
     sleeps = 0
     while True:
         try:
@@ -38,33 +42,15 @@ def proxy():
                 sleep(10)
             else:
                 sleeps = 0
-                if incoming == RADIO_IR:
-                    display.show(Image.HEART, delay=0, wait=False)
-                    print('{"ir":true}')
-                if incoming == RADIO_BUTTON_A:
-                    display.show('a')
-                    print('{"button":"a"}')
-                if incoming == RADIO_BUTTON_B:
-                    display.show('b')
-                    print('{"button":"b"}')
-                if incoming == RADIO_FACE_UP:
-                    display.show(Image.HAPPY)
-                    print('{"orientation":"up"}')
-                if incoming == RADIO_FACE_DOWN:
-                    display.show(Image.SAD)
-                    print('{"orientation":"down"}')
-                if incoming == RADIO_UP:
-                    display.show('^')
-                    print('{"orientation":"forward"}')
-                if incoming == RADIO_DOWN:
-                    display.show('v')
-                    print('{"orientation":"backward"}')
-                if incoming == RADIO_LEFT:
-                    display.show('<')
-                    print('{"orientation":"left"}')
-                if incoming == RADIO_RIGHT:
-                    display.show('>')
-                    print('{"orientation":"right"}')
+                forward(incoming, RADIO_IR, Image.HEART, '{"ir":true}')
+                forward(incoming, RADIO_BUTTON_A, 'a', '{"button":"a"}')
+                forward(incoming, RADIO_BUTTON_B, 'b', '{"button":"b"}')
+                forward(incoming, RADIO_FACE_UP, Image.HAPPY, '{"orientation":"up"}')
+                forward(incoming, RADIO_FACE_DOWN, Image.SAD, '{"orientation":"down"}')
+                forward(incoming, RADIO_LEFT, '>', '{"orientation":"left"}')
+                forward(incoming, RADIO_RIGHT, '<', '{"orientation":"right"}')
+                forward(incoming, RADIO_UP, '^', '{"orientation":"forward"}')
+                forward(incoming, RADIO_DOWN, 'v', '{"orientation":"backward"}')
                 heading = incoming.find(RADIO_HEADING)
                 if (heading >= 0):
                     heading = incoming[1:]
