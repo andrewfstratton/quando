@@ -10,7 +10,6 @@ const find_microbit = (error, success) => {
             ports.forEach(function(port) {
                 if ((port.vendorId == "0D28") && (port.productId == "0204"))
                     comName = port.comName
-console.log(JSON.stringify(port))
             });
             if (comName != null) {
                 success(comName)
