@@ -166,7 +166,11 @@
                 var fields = [];
                 var title = widget.name; // by default
                 if (_exists(widget.title)) { // replace default
-                    title = widget.title;
+                    if (typeof widget.title == 'function') {
+
+                    } else {
+                        title = widget.title;
+                    }
                 }
                 if (_exists(title)) { // assuming it exists
                     if (title !== '') { // and it's not empty
