@@ -133,6 +133,7 @@ function ubit_success(serial) {
     reported = false;
     let orientation = false
     serial.on('data', (data) => {
+// console.log(data)
         try {
             var ubit = JSON.parse(data)
             if (ubit && io) {
@@ -144,22 +145,21 @@ function ubit_success(serial) {
                 if (ubit.ir) {
                     io.emit('ubit', {ir:true})
                 }
-                if (ubit.orientation) { //so we have a message
-                    if (ubit.orientation != orientation) {
-                        // i.e. only tell the browser when the orientation changes
-                        orientation = ubit.orientation;
-                        io.emit('ubit', {'orientation': orientation})
-                    }
+                if (ubit.orientation) {
+                    io.emit('ubit', {'orientation': ubit.orientation})
                 }
                 if (ubit.heading) {
-                    io.emit('ubit', {'heading':ubit.heading});
+                    io.emit('ubit', {'heading': ubit.heading})
+                }
+                if (ubit.roll) {
+                    io.emit('ubit', {'roll': ubit.roll})
                 }
             }
         } catch(err) {
-            console.log(err + ":" + data);
+            console.log(err + ":" + data)
         }
     })
-    serial.on('disconnect', ubit_error);
+    serial.on('disconnect', ubit_error)
 }
 
 ubit.get_serial(ubit_error, ubit_success)

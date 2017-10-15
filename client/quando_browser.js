@@ -10,7 +10,7 @@
     self._vitrine_destructors = [];
     self.DEFAULT_STYLE = "quando_css";
 
-    var _socket = io.connect('http://' + location.hostname)
+    var _socket = io.connect('http://' + window.location.hostname)
 
     function endSame(longer, shorter) {
         var loc = longer.indexOf(shorter, longer.length - shorter.length)
@@ -18,9 +18,9 @@
     }
 
     _socket.on('deploy', function(data) {
-        var locStr = location + "" // have to force change to string...
+        var locStr = decodeURIComponent(window.location.href)
         if (locStr.endsWith(data.script)) {
-            location.reload(true); // nocache reload - probably not necessary
+            window.location.reload(true); // nocache reload - probably not necessary
         }
     });
 
@@ -40,30 +40,48 @@
     document.onkeydown = idle_reset;
     document.onkeyup = idle_reset;
 
+    var last_gesture = "";
+
+    function _dispatch_event(event_name) {
+        document.dispatchEvent(new CustomEvent(event_name));
+    }
+
+    function _dispatch_gesture(gesture_name) {
+        if (gesture_name != last_gesture) {
+            last_gesture = gesture_name;
+            _dispatch_event(gesture_name);
+        }
+    }
     _socket.on('ubit', function(data) {
-        if (data.button == 'a') {
-            console.log("button a pressed")
-        } else if (data.button == 'b') {
-            console.log("button b pressed")
-        } else if (data.ir) {
+        if (data.ir) {
             idle_reset();
         } else if (data.orientation) {
             idle_reset(); // this is only received when the orientation changes
             if (data.orientation == "forward") {
-                document.dispatchEvent(new CustomEvent("ubitForward"));
+                _dispatch_gesture("ubitForward");
             } else if (data.orientation == "backward") {
-                document.dispatchEvent(new CustomEvent("ubitBackward"));
+                _dispatch_gesture("ubitBackward");
             } else if (data.orientation == "up") {
-                document.dispatchEvent(new CustomEvent("ubitUp"));
+                _dispatch_gesture("ubitUp");
             } else if (data.orientation == "down") {
-                document.dispatchEvent(new CustomEvent("ubitDown"));
+                _dispatch_gesture("ubitDown");
             } else if (data.orientation == "left") {
-                document.dispatchEvent(new CustomEvent("ubitLeft"));
+                _dispatch_gesture("ubitLeft");
             } else if (data.orientation == "right") {
-                document.dispatchEvent(new CustomEvent("ubitRight"));
+                _dispatch_gesture("ubitRight");
+            }
+        } else if (data.button) {
+            idle_reset();
+            if (data.button == "a") {
+                _dispatch_event("ubitA");
+            } else if (data.button == "b") {
+                _dispatch_event("ubitB");
             }
         } else if (data.heading) {
             document.dispatchEvent(new CustomEvent("ubitHeading", {'detail':data.heading}));
+            idle_reset();
+        } else if (data.roll) {
+            document.dispatchEvent(new CustomEvent("ubitRoll", {'detail':data.roll}));
             idle_reset();
         }
     });
@@ -101,13 +119,48 @@
         _ubit_handle("ubitRight", callback, destruct);
     }
 
-    self.ubitHeading = function(min, max, callback) {
-        document.addEventListener("ubitHeading", function (ev) {
-            var heading = ev.detail;
-            if ((heading >= min) && (heading <= max)) {
-                callback();
+    self.ubitA = function(callback, destruct=true) {
+        _ubit_handle("ubitA", callback, destruct);
+    }
+
+    self.ubitB = function(callback, destruct=true) {
+        _ubit_handle("ubitB", callback, destruct);
+    }
+
+    self.angle = function(min, max, event, callback, destruct=true) {
+        // take min and max modulus 360, i.e in range 0..359
+        min = min >= 0 ? min % 360 : (min % 360) + 360; // necessary since % of negatives don't work ?!
+        max = max >= 0 ? max % 360 : (max % 360) + 360;
+        var handler = function (ev) { // we need the function handler to allow destruction
+            var angle = ev.detail;
+            var match = false;
+            if (min <= max) {
+                if ((angle >= min) && (angle <= max)) {
+                    match = true;
+                }
+            } else { // min > max, e.g min is 345 (or was -15) max is 15
+                if ((angle >= min) || (angle <= max)) {
+                    match = true;
+                }
             }
-        });
+            if (match) {
+                callback(angle); // the angle is passed for debugging and maybe later use...
+            }
+        };
+        document.addEventListener(event, handler);
+        if (destruct) {
+            self.addDestructor(function() {
+                document.removeEventListener(event, handler);
+            });
+        }
+    }
+
+    self.ubitHeading = function(min, max, callback, destruct=true) {
+        self.angle(min, max, "ubitHeading", callback, destruct);
+    }
+
+    self.ubitRoll = function(min, max, callback, destruct=true) {
+        self.angle(min, max, "ubitRoll", callback, destruct);
     }
 
     var Config = self.Config = {
@@ -210,6 +263,10 @@
             elem.style.visibility='hidden';
         } else {
             elem.style.visibility='visible';
+            if (typeof txt == 'function') {
+                // HACK: N.B. This may be a security worry?!
+                txt = txt();
+            }
             elem.innerHTML = txt;
         }
     };
@@ -346,7 +403,7 @@
         document.querySelector('#quando_title').addEventListener('contextmenu', // right click title to go to setup
             (ev) => {
                 ev.preventDefault();
-                location.href = "../../client/setup";
+                window.location.href = "../../client/setup";
                 return false;
             }, false);
         self.pinching = false;

@@ -1,36 +1,84 @@
 import radio
 from microbit import *
 
-RADIO_IR = 'I'
-RADIO_BUTTON_A = 'A'
-RADIO_BUTTON_B = 'B'
-RADIO_FACE_UP = '^'
-RADIO_FACE_DOWN = 'v'
-RADIO_UP = 'U'
-RADIO_DOWN = 'D'
-RADIO_LEFT = 'L'
-RADIO_RIGHT = 'R'
-RADIO_HEADING = 'H'
+class COMMS:
+    IR = ('I', Image.HEART, '{"ir":true}')
+    BUTTON_A = ('a', 'a', '{"button":"a"}')
+    BUTTON_B = ('b', 'b', '{"button":"b"}')
+    FACE_UP = ('U', '^', '{"orientation":"up"}')
+    FACE_DOWN = ('D', 'v', '{"orientation":"down"}')
+    LEFT = ('L', '<', '{"orientation":"left"}')
+    RIGHT = ('R', '>', '{"orientation":"right"}')
+    UP = ('B', 'B', '{"orientation":"backward"}')
+    DOWN = ('F', 'F', '{"orientation":"forward"}')
+    HEADING = 'H'
+    ROLL = 'R'
+    arr = [IR, BUTTON_A, BUTTON_B, FACE_UP, FACE_DOWN, LEFT, RIGHT, UP, DOWN]
+    @classmethod
+    def forward(cls, incoming):
+        for i in cls.arr:
+            if i[0] == incoming:
+                display.show(i[1])
+                print(i[2])
+                break
 
-def test():
-    print("Started test")
-    while True:
-        str = radio.receive()
-        if (str is not None):
-            print("recd:%s" % str)
+_channel = 0
+CONFIG_FILE = 'config.txt'
 
-def direction():
+# The radio won't work unless it's switched on.
+def radio_on():
+    radio.config(channel=_channel) # set the channel
+    radio.on()
+
+def display_channel():
+    if _channel <= 9:
+        display.show(str(_channel))
+    else:
+        display.show(chr(_channel-10+ord('A')))
+
+def check_button(button, add):
+    global _channel # this allows us to change the global variable
+    if button.is_pressed():
+        _channel = _channel + add # which we do here
+        if _channel < 0:
+          _channel = 15
+        elif _channel > 15:
+            _channel = 0
+        save()
+        display_channel()
+        while button.is_pressed():
+            sleep(50) # this is 0.05 seconds, or 500 millisecon
+
+def config():
+    flip = 0
+    animation = ['-','+']
+    while button_a.is_pressed() and button_b.is_pressed():
+        display.show(animation[flip])
+        sleep(250)
+        flip = 1 - flip
+    display_channel()
     while True:
-        print('{"heading":' + str(compass.heading()) + '}')
-        sleep(100)
-    return # never
+        check_button(button_a, -1)
+        check_button(button_b, 1)
+
+def save():
+    with open(CONFIG_FILE, 'w') as file:
+        file.write(str(_channel))
+        
+def load():
+    global _channel
+    try:
+        with open(CONFIG_FILE, 'r') as file:
+            data = file.read()
+            _channel = int(data)
+    except:
+        print('{"message":"Initialising Channel"}')
+        save()
+    display_channel()
+    sleep(200)
 
 # Event loop.
 def proxy():
-    def forward(incoming, match, image, message):
-        if incoming == match:
-            display.show(image)
-            print(message)
     sleeps = 0
     while True:
         try:
@@ -38,36 +86,35 @@ def proxy():
             if incoming == None:
                 if sleeps == 50:
                     display.clear()
+                else:
+                    sleep(10)                        
                 sleeps += 1
-                sleep(10)
             else:
                 sleeps = 0
-                forward(incoming, RADIO_IR, Image.HEART, '{"ir":true}')
-                forward(incoming, RADIO_BUTTON_A, 'a', '{"button":"a"}')
-                forward(incoming, RADIO_BUTTON_B, 'b', '{"button":"b"}')
-                forward(incoming, RADIO_FACE_UP, Image.HAPPY, '{"orientation":"up"}')
-                forward(incoming, RADIO_FACE_DOWN, Image.SAD, '{"orientation":"down"}')
-                forward(incoming, RADIO_LEFT, '>', '{"orientation":"left"}')
-                forward(incoming, RADIO_RIGHT, '<', '{"orientation":"right"}')
-                forward(incoming, RADIO_UP, '^', '{"orientation":"forward"}')
-                forward(incoming, RADIO_DOWN, 'v', '{"orientation":"backward"}')
-                heading = incoming.find(RADIO_HEADING)
+                COMMS.forward(incoming)
+                heading = incoming.find(COMMS.HEADING)
                 if (heading >= 0):
                     heading = incoming[1:]
-                    display.show('*')
                     print('{"heading":'+heading+'}')
+                    heading = int(heading)
+                    needle = ((15 - heading)//30)%12
+                    display.show(Image.ALL_CLOCKS[needle])
+#                roll = incoming.find(COMMS.ROLL)
+#                if (roll >= 0):
+#                    roll = incoming[1:]
+#                    print('{"roll":'+roll+'}')
+            sleep(20)
         except:
             print('{"error":"packet"}')
             radio.off()
-            radio.on()
+            sleep(1000)
+            radio_on()
     return # never
 
-# The radio won't work unless it's switched on.
-radio.on()
 print('{"started":true}')
-if button_a.is_pressed():
-    direction()
-elif button_b.is_pressed():
-    test()
+load()
+radio_on()
+if button_a.is_pressed() and button_b.is_pressed():
+    config()
 else:
     proxy()

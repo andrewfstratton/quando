@@ -540,32 +540,34 @@
                 { name: 'title', title:'', text: ''},
                 { name: 'text', title: '', text: ''}
             ],
-            extras:[ {name: 'test'} ],
+            extras:[
+                {name: 'test'}
+                ],
         });
         
-        quando_editor.defineDevice({
-            name: 'When Device',
-            interface: [
-                { name: 'name', title: '', text: 'Box' },
-                { statement: STATEMENT }
-            ],
-            javascript: function (block) {
-                var statement = quando_editor.getStatement(block, STATEMENT);
-                var result = "quando." + fn + "("
-                    + "function() {\n"
-                    + statement
-                    + "}"
-                    + _getOnContained(block, [WHEN_VITRINE_BLOCK], "", ", false")
-                    + ");\n";
-                return result;
-            }
-        });
+        // quando_editor.defineDevice({
+        //     name: 'When Device',
+        //     interface: [
+        //         { name: 'name', title: '', text: 'Box' },
+        //         { statement: STATEMENT }
+        //     ],
+        //     javascript: function (block) {
+        //         var statement = quando_editor.getStatement(block, STATEMENT);
+        //         var result = "quando." + fn + "("
+        //             + "function() {\n"
+        //             + statement
+        //             + "}"
+        //             + _getOnContained(block, [WHEN_VITRINE_BLOCK], "", ", false")
+        //             + ");\n";
+        //         return result;
+        //     }
+        // });
         
         let MICROBIT_GESTURE_MENU = "MicroBit Gesture";
         quando_editor.defineDevice({
             name: 'When micro:bit',
             interface: [
-                { menu: ['Up', 'Down', 'Forward', 'Backward', 'Left', 'Right'], name: MICROBIT_GESTURE_MENU, title: '' },
+                { menu: ['Up', 'Down', 'Forward', 'Backward', 'Left', 'Right', 'A Button', 'B Button'], name: MICROBIT_GESTURE_MENU, title: '' },
                 { statement: STATEMENT }
             ],
             javascript: function (block) {
@@ -589,6 +591,12 @@
                     case 'Right':
                         fn = "ubitRight";
                         break;
+                    case 'A Button':
+                        fn = "ubitA";
+                        break;
+                    case 'B Button':
+                        fn = "ubitB";
+                        break;
                 };
                 var statement = quando_editor.getStatement(block, STATEMENT);
                 var result = "quando." + fn + "("
@@ -604,7 +612,7 @@
         let WHEN_HEADING_MIN = "Min";
         let WHEN_HEADING_MAX = "Max";
         quando_editor.defineDevice({
-            name: 'When heading between ', next: false, previous: false,
+            name: 'When heading between ',
             interface: [
                 { name: WHEN_HEADING_MIN, title: '', number: '0' },
                 { name: WHEN_HEADING_MAX, title: ' and ', number: '359' },
@@ -618,7 +626,9 @@
                 var result = "quando.ubitHeading(" + min + "," + max + ","
                     + "function() {\n"
                     + statement
-                    + "});\n";
+                    + "}"
+                    + _getOnContained(block, [WHEN_VITRINE_BLOCK], "", ", false")
+                    + ");\n";
                 return result;
             }
         });
