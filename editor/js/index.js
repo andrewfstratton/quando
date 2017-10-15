@@ -236,7 +236,7 @@
             $('.file_modal_select_file').show();
             $('.file_modal_upload').hide();
         }
-                    $('#file_modal_path').html('Loading...');
+        $('#file_modal_path').html('Loading...');
         file_modal.modal('show');
         $('#file_list').html('Loading...');
         $.ajax({
