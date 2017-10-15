@@ -69,6 +69,8 @@
                 _dispatch_gesture("ubitLeft");
             } else if (data.orientation == "right") {
                 _dispatch_gesture("ubitRight");
+            } else if (data.orientation == "") { // this is the micro bit started
+                last_gesture = "";
             }
         } else if (data.button) {
             idle_reset();
