@@ -22,7 +22,6 @@
         xhr.send(null);
     };
 
-
     self.addBlocks = function (quando_editor) {
 
         var STATEMENT = 'STATEMENT';
@@ -302,46 +301,37 @@
             }
         });
 
-        // TODO refactor
-        Blockly.mainWorkspace.addChangeListener(function (ev) {
-            let workspace = Blockly.Workspace.getById(ev.workspaceId);
-            let block = workspace.getBlockById(ev.blockId);
+        function _update_menus(ev, block_id, text=false) {
             let topBlocks = Blockly.mainWorkspace.getAllBlocks();
-            if (ev.type == Blockly.Events.CHANGE) {
-                if (block.type == PREFIX + WHEN_VITRINE_BLOCK) {
-                    for (var checkblock of topBlocks) {
-                        if ((checkblock.type == PREFIX + LABEL_TO_BLOCK)
-                            || (checkblock.type == PREFIX + LABEL_BLOCK)) {
-                            let menuid = quando_editor.getMenu(checkblock, LABEL_TO_MENU);
-                            if (menuid == block.id) {
-                                    quando_editor.setMenuText(checkblock, LABEL_TO_MENU, ev.newValue);
-                            }
-                        }
-                    }
-                }
-                quando_editor.updateExtras(block); // Any Extras menu will be updated
-            } else if (ev.type == Blockly.Events.CREATE) {
-                for (var checkblock of topBlocks) {
-                    if ((checkblock.type == PREFIX + LABEL_TO_BLOCK)
-                        || (checkblock.type == PREFIX + LABEL_BLOCK)) {
-                        let menuid = quando_editor.getMenu(checkblock, LABEL_TO_MENU);
-                        if (menuid == block.id) {
-                            quando_editor.setMenuText(checkblock, LABEL_TO_MENU,
-                                quando_editor.getText(block, WHEN_VITRINE_TEXT));
-                        }
-                    }
-                }
-                quando_editor.updateExtras(block); // Any Extras menu will be updated
-            } else if (ev.type == Blockly.Events.DELETE) {
-                for (var checkblock of topBlocks) {
-                    if ((checkblock.type == PREFIX + LABEL_TO_BLOCK)
-                        || (checkblock.type == PREFIX + LABEL_BLOCK)) {
-                        let menuid = quando_editor.getMenu(checkblock, LABEL_TO_MENU);
-                        if (menuid == ev.ids[0]) {
+            let matchBlock = [PREFIX + LABEL_TO_BLOCK, PREFIX + SHOW_DISPLAY];
+            for (var checkblock of topBlocks) {
+                if (matchBlock.includes(checkblock.type)) {
+console.log('change:'+checkblock.type)
+                    let menuid = quando_editor.getMenu(checkblock, LABEL_TO_MENU);
+                    if (menuid == block_id) {
+                        if (text) {
+                            quando_editor.setMenuText(checkblock, LABEL_TO_MENU, text);
+                        } else {
                             quando_editor.resetMenu(checkblock, LABEL_TO_MENU);
                         }
                     }
                 }
+            }            
+        }
+
+        Blockly.mainWorkspace.addChangeListener(function (ev) {
+            let workspace = Blockly.Workspace.getById(ev.workspaceId);
+            let block = workspace.getBlockById(ev.blockId);
+            if (ev.type == Blockly.Events.CHANGE) {
+                if (block.type == PREFIX + WHEN_VITRINE_BLOCK) {
+                    _update_menus(ev, block.id, ev.newValue);
+                }
+                quando_editor.updateExtras(block); // Any Extras menu will be updated
+            } else if (ev.type == Blockly.Events.CREATE) {
+                _update_menus(ev, block.id, quando_editor.getText(block, WHEN_VITRINE_TEXT));
+                quando_editor.updateExtras(block); // Any Extras menu will be updated
+            } else if (ev.type == Blockly.Events.DELETE) {
+                _update_menus(ev, ev.ids[0]);
             }
         });
 
@@ -357,7 +347,6 @@
             }
             return choices;
         }
-        let LABEL_BLOCK = 'Label';
         let LABEL_TO_MENU = 'to';
         let _label_javascript = function (block) {
             let menuid = quando_editor.getMenu(block, LABEL_TO_MENU);
@@ -367,8 +356,8 @@
             var result = `quando.addLabel("${menuid}", "${title}");\n`;
             return result;
         }
-        let LABEL_TEXT = 'text';
         let LABEL_TO_BLOCK = 'Label to';
+        let LABEL_TEXT = 'text';
         quando_editor.defineDisplay({
             // TODO must be in a vitrine...?
             name: LABEL_TO_BLOCK, title: 'Label',
@@ -401,11 +390,11 @@
         quando_editor.defineDisplay({
             name: SHOW_DISPLAY,
             interface: [{
-                    name: SHOW_DISPLAY_MENU, title:'',
+                    name: LABEL_TO_MENU, title:'',
                     menu: _label_menu
                 }],
             javascript: (block) => {
-                let menuid = quando_editor.getMenu(block, SHOW_DISPLAY_MENU);
+                let menuid = quando_editor.getMenu(block, LABEL_TO_MENU);
                 // find when block on id, then get it's title
                 let whenblock = Blockly.mainWorkspace.getBlockById(menuid);
                 var result = `quando.showVitrine("${menuid}");\n`;
