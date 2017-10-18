@@ -31,40 +31,6 @@
         var FREQUENCY = 'FREQUENCY';
         var UNITS_MENU = 'UNITS_MENU';
 
-        quando_editor.defineTime({
-            name: 'Check',
-            interface: [
-                { name: FREQUENCY, title: '', number: 1 },
-                {
-                    menu: ['Second', 'Minute', 'Hour', 'Day'],
-                    name: UNITS_MENU, title: 'times per'
-                },
-                { statement: STATEMENT }
-            ],
-            javascript: function (block) {
-                var frequency = quando_editor.getNumber(block, FREQUENCY);
-                var seconds = 1;
-                switch (quando_editor.getMenu(block, UNITS_MENU)) {
-                    case 'Minute': seconds = 60;
-                        break;
-                    case 'Hour': seconds = 60 * 60;
-                        break;
-                    case 'Day': seconds = 60 * 60 * 24;
-                        break;
-                };
-                var time = seconds / frequency;
-                var statement = quando_editor.getStatement(block, STATEMENT);
-                var result = "quando.every("
-                    + time
-                    + ", function() {\n"
-                    + statement
-                    + "}"
-                    + _getOnContained(block, [WHEN_VITRINE_BLOCK], "", ", false")
-                    + ");\n";
-                return result;
-            }
-        });
-
         var EVERY_BLOCK = 'Every';
         quando_editor.defineTime({
             name: EVERY_BLOCK,
@@ -161,7 +127,7 @@
         var IMAGE = 'Images';
         var FILE_IMAGE = {name: IMAGE, title:'', file:'images'};
         quando_editor.defineMedia({
-            name: 'Display', title: 'Show Image',
+            name: 'Display', title: '\uD83D\uDCF7 Show Image',
             interface: [ FILE_IMAGE ],
             javascript: function (block) {
                 let method = _getStyleOnContained(block, [WHEN_VITRINE_BLOCK, WHEN_IDLE]);
@@ -175,9 +141,9 @@
         var CHECK_STOP_WITH_DISPLAY = '   With display';
         var FILE_VIDEO = { name: VIDEO, title: '', file: 'video' };
         quando_editor.defineMedia({
-            name: 'Show Video', title: 'Play',
+            name: 'Show Video', title: '\uD83D\uDCFA Play',
             interface: [
-                { name: MEDIA_LOOP_MENU, title:'', menu:['Forever', 'Once'] },
+                { name: MEDIA_LOOP_MENU, title:'', menu:['Once', 'Forever'] },
                 { title: 'Video' },
                 FILE_VIDEO],
             // extras: [
@@ -193,9 +159,9 @@
         var AUDIO = 'Audio';
         var FILE_AUDIO = {name: AUDIO, title:'', file:'audio'};
         quando_editor.defineMedia({
-            name: 'Play',
+            name: 'Play', title: '\uD83D\uDD0A Play',
             interface: [
-                { name: MEDIA_LOOP_MENU, title:'', menu:['Forever', 'Once'] },
+                { name: MEDIA_LOOP_MENU, title:'', menu:['Once', 'Forever'] },
                 { title: 'Audio' },
                 FILE_AUDIO ],
             // extras: [
@@ -244,42 +210,42 @@
             }
         });
 
-        var LEAP_BLOCK = 'When Hands';
-        var HAND_COUNT = 'hand_count';
-        quando_editor.defineLeapMotion({
-            name: LEAP_BLOCK, next: false, previous: false,
-            interface: [
-                { name: HAND_COUNT, title: ' = ', number: 1 },
-                { statement: STATEMENT }
-            ],
-            javascript: function (block) {
-                var statement = quando_editor.getStatement(block, STATEMENT);
-                var result = "quando.hands(" + quando_editor.getNumber(block, HAND_COUNT) + ",\n"
-                    + " function() {\n"
-                    + statement + "});";
-                return result;
-            }
-        });
-        var HANDED_BLOCK = 'When Hand ';
-        var HAND_LEFT = 'Left';
-        var HAND_RIGHT = 'Right';
-        quando_editor.defineLeapMotion({
-            name: HANDED_BLOCK, next: false, previous: false,
-            interface: [
-                { name: HAND_LEFT, check: false },
-                { name: HAND_RIGHT, check: false },
-                { statement: STATEMENT }
-            ],
-            javascript: function (block) {
-                var statement = quando_editor.getStatement(block, STATEMENT);
-                var result = "quando.handed("
-                    + quando_editor.getCheck(block, HAND_LEFT) + ",\n"
-                    + quando_editor.getCheck(block, HAND_RIGHT) + ",\n"
-                    + " function() {\n"
-                    + statement + "});";
-                return result;
-            }
-        });
+        // var LEAP_BLOCK = 'When Hands';
+        // var HAND_COUNT = 'hand_count';
+        // quando_editor.defineLeapMotion({
+        //     name: LEAP_BLOCK, next: false, previous: false,
+        //     interface: [
+        //         { name: HAND_COUNT, title: ' = ', number: 1 },
+        //         { statement: STATEMENT }
+        //     ],
+        //     javascript: function (block) {
+        //         var statement = quando_editor.getStatement(block, STATEMENT);
+        //         var result = "quando.hands(" + quando_editor.getNumber(block, HAND_COUNT) + ",\n"
+        //             + " function() {\n"
+        //             + statement + "});";
+        //         return result;
+        //     }
+        // });
+        // var HANDED_BLOCK = 'When Hand ';
+        // var HAND_LEFT = 'Left';
+        // var HAND_RIGHT = 'Right';
+        // quando_editor.defineLeapMotion({
+        //     name: HANDED_BLOCK, next: false, previous: false,
+        //     interface: [
+        //         { name: HAND_LEFT, check: false },
+        //         { name: HAND_RIGHT, check: false },
+        //         { statement: STATEMENT }
+        //     ],
+        //     javascript: function (block) {
+        //         var statement = quando_editor.getStatement(block, STATEMENT);
+        //         var result = "quando.handed("
+        //             + quando_editor.getCheck(block, HAND_LEFT) + ",\n"
+        //             + quando_editor.getCheck(block, HAND_RIGHT) + ",\n"
+        //             + " function() {\n"
+        //             + statement + "});";
+        //         return result;
+        //     }
+        // });
 
         let DIG_COLOUR = 0;
         let WHEN_VITRINE_BLOCK = 'When Display Case';
@@ -369,21 +335,6 @@ console.log('change:'+checkblock.type)
             ],
             javascript: _label_javascript,
         });
-        let WHEN_LABEL_BLOCK = 'When Label';
-        let WHEN_LABEL_TEXT = 'When label text';
-        quando_editor.defineDisplay({
-            name: WHEN_LABEL_BLOCK,
-            interface: [
-                { name: WHEN_LABEL_TEXT, title:'', text:'**Put label text here**' },
-                { statement: STATEMENT }
-            ],
-            javascript: (block) => {
-                let text = quando_editor.getText(block, WHEN_LABEL_TEXT);
-                let statement = quando_editor.getStatement(block, STATEMENT);
-                let result = `quando.addLabelStatement("${text}", function() {\n${statement}});\n`;
-                return result;
-            }
-        });
 
         let SHOW_DISPLAY = 'Show Display';
         let SHOW_DISPLAY_MENU = 'show display menu';
@@ -399,6 +350,22 @@ console.log('change:'+checkblock.type)
                 let whenblock = Blockly.mainWorkspace.getBlockById(menuid);
                 var result = `quando.showVitrine("${menuid}");\n`;
                 return result;                
+            }
+        });
+
+        let WHEN_LABEL_BLOCK = 'When Label';
+        let WHEN_LABEL_TEXT = 'When label text';
+        quando_editor.defineDisplay({
+            name: WHEN_LABEL_BLOCK,
+            interface: [
+                { name: WHEN_LABEL_TEXT, title:'', text:'**Put label text here**' },
+                { statement: STATEMENT }
+            ],
+            javascript: (block) => {
+                let text = quando_editor.getText(block, WHEN_LABEL_TEXT);
+                let statement = quando_editor.getStatement(block, STATEMENT);
+                let result = `quando.addLabelStatement("${text}", function() {\n${statement}});\n`;
+                return result;
             }
         });
 
@@ -508,31 +475,31 @@ console.log('change:'+checkblock.type)
             },
         });
 
-        let EXPLORATION_RULE = 'Exploration Rule';
-        quando_editor.defineBlock({
-            name: EXPLORATION_RULE, title:'When', category: 'extras', colour: '#55bb55',
-            interface: [
-                { name: 'title', title:'', text: ''},
-                { name: 'text', title: '', text: ''}
-            ],
-            extras: [
-                { name: 'extra'},
-                { name: 'text3', title: '', text: 'default'},
-                { statement: STATEMENT }
-            ]
-        });
+        // let EXPLORATION_RULE = 'Exploration Rule';
+        // quando_editor.defineBlock({
+        //     name: EXPLORATION_RULE, title:'When', category: 'extras', colour: '#55bb55',
+        //     interface: [
+        //         { name: 'title', title:'', text: ''},
+        //         { name: 'text', title: '', text: ''}
+        //     ],
+        //     extras: [
+        //         { name: 'extra'},
+        //         { name: 'text3', title: '', text: 'default'},
+        //         { statement: STATEMENT }
+        //     ]
+        // });
 
-        let EXPLORATION_ACTION = 'Exploration Action';
-        quando_editor.defineBlock({
-            name: EXPLORATION_ACTION, title:'Do', category: 'extras', colour: '#5555bb',
-            interface: [
-                { name: 'title', title:'', text: ''},
-                { name: 'text', title: '', text: ''}
-            ],
-            extras:[
-                {name: 'test'}
-                ],
-        });
+        // let EXPLORATION_ACTION = 'Exploration Action';
+        // quando_editor.defineBlock({
+        //     name: EXPLORATION_ACTION, title:'Do', category: 'extras', colour: '#5555bb',
+        //     interface: [
+        //         { name: 'title', title:'', text: ''},
+        //         { name: 'text', title: '', text: ''}
+        //     ],
+        //     extras:[
+        //         {name: 'test'}
+        //         ],
+        // });
         
         // quando_editor.defineDevice({
         //     name: 'When Device',
@@ -644,6 +611,40 @@ console.log('change:'+checkblock.type)
                     + active_statement + "});\n";
                 return result;
             },
+        });
+
+        quando_editor.defineTime({
+            name: 'Check',
+            interface: [
+                { name: FREQUENCY, title: '', number: 1 },
+                {
+                    menu: ['Second', 'Minute', 'Hour', 'Day'],
+                    name: UNITS_MENU, title: 'times per'
+                },
+                { statement: STATEMENT }
+            ],
+            javascript: function (block) {
+                var frequency = quando_editor.getNumber(block, FREQUENCY);
+                var seconds = 1;
+                switch (quando_editor.getMenu(block, UNITS_MENU)) {
+                    case 'Minute': seconds = 60;
+                        break;
+                    case 'Hour': seconds = 60 * 60;
+                        break;
+                    case 'Day': seconds = 60 * 60 * 24;
+                        break;
+                };
+                var time = seconds / frequency;
+                var statement = quando_editor.getStatement(block, STATEMENT);
+                var result = "quando.every("
+                    + time
+                    + ", function() {\n"
+                    + statement
+                    + "}"
+                    + _getOnContained(block, [WHEN_VITRINE_BLOCK], "", ", false")
+                    + ");\n";
+                return result;
+            }
         });
 
         let CONTENT_POSITION = 'Position';
