@@ -9,6 +9,9 @@
     window.onload = function() {
         self.setup();
     };
+    window.onbeforeunload = function() {
+        return "Are you sure you want to leave the editor?"; // Doesn't seem to show this message in Chrome?!
+    };
     function _encodeXml(str) {
         return str.replace(/&/g, '&amp;')
             .replace(/</g, '&lt;')
