@@ -565,6 +565,30 @@ console.log('change:'+checkblock.type)
             }
         });
 
+        let WHEN_ROLL_MIN = "Min";
+        let WHEN_ROLL_MAX = "Max";
+        quando_editor.defineDevice({
+            name: 'When Roll between ',
+            interface: [
+                { name: WHEN_ROLL_MIN, title: '', number: '-90' },
+                { name: WHEN_ROLL_MAX, title: ' and ', number: '90' },
+                {title: ' degrees'},
+                { statement: STATEMENT }
+            ],
+            javascript: function (block) {
+                let min = quando_editor.getNumber(block, WHEN_ROLL_MIN);
+                let max = quando_editor.getNumber(block, WHEN_ROLL_MAX);
+                var statement = quando_editor.getStatement(block, STATEMENT);
+                var result = "quando.ubitRoll(" + min + "," + max + ","
+                    + "function() {\n"
+                    + statement
+                    + "}"
+                    + _getOnContained(block, [WHEN_VITRINE_BLOCK], "", ", false")
+                    + ");\n";
+                return result;
+            }
+        });
+
         let WHEN_HEADING_MIN = "Min";
         let WHEN_HEADING_MAX = "Max";
         quando_editor.defineDevice({
