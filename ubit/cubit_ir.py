@@ -1,4 +1,4 @@
-import radio
+import radio, math
 from microbit import *
 
 class COMMS:
@@ -111,10 +111,25 @@ def proxy():
             radio_on()
     return # never
 
+def roll():
+    last_roll = False
+    while True:
+        x = max(min(accelerometer.get_x()/1024, 1), -1)
+        roll = (90-int(math.degrees(math.acos(x))))%360
+        if (roll != last_roll) :
+            print('{"roll":'+str(roll)+'}')
+            last_roll = roll
+            needle = ((15 - roll)//30)%12
+            display.show(Image.ALL_CLOCKS[needle])
+        sleep(50)
+    return # never does
+    
 print('{"started":true}')
 load()
 radio_on()
 if button_a.is_pressed() and button_b.is_pressed():
     config()
+elif button_b.is_pressed():
+    roll()
 else:
     proxy()
