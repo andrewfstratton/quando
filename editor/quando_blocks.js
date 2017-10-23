@@ -272,7 +272,7 @@
             let matchBlock = [PREFIX + LABEL_TO_BLOCK, PREFIX + SHOW_DISPLAY];
             for (var checkblock of topBlocks) {
                 if (matchBlock.includes(checkblock.type)) {
-console.log('change:'+checkblock.type)
+//console.log('change:'+checkblock.type)
                     let menuid = quando_editor.getMenu(checkblock, LABEL_TO_MENU);
                     if (menuid == block_id) {
                         if (text) {
@@ -294,7 +294,9 @@ console.log('change:'+checkblock.type)
                 }
                 quando_editor.updateExtras(block); // Any Extras menu will be updated
             } else if (ev.type == Blockly.Events.CREATE) {
-                _update_menus(ev, block.id, quando_editor.getText(block, WHEN_VITRINE_TEXT));
+                if (block.type == PREFIX + WHEN_VITRINE_BLOCK) {
+                    _update_menus(ev, block.id, quando_editor.getText(block, WHEN_VITRINE_TEXT));
+                }
                 quando_editor.updateExtras(block); // Any Extras menu will be updated
             } else if (ev.type == Blockly.Events.DELETE) {
                 _update_menus(ev, ev.ids[0]);
