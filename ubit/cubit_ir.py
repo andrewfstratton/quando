@@ -111,17 +111,26 @@ def proxy():
             radio_on()
     return # never
 
-def roll():
+def roll_pitch():
     last_roll = False
+    last_pitch = False
     while True:
-        x = max(min(accelerometer.get_x()/1024, 1), -1)
-        roll = (90-int(math.degrees(math.acos(x))))%360
-        if (roll != last_roll) :
-            print('{"roll":'+str(roll)+'}')
+        x = accelerometer.get_x()/1024
+        y = accelerometer.get_y()/1024
+        z = accelerometer.get_z()/1024
+        roll = math.pi-(math.atan2(x, z)%(math.pi*2))
+        pitch = math.pi-(math.atan2(y, z)%(math.pi*2))
+#        if button_b.is_pressed():
+#            print('{roll:'+str(roll)+', pitch:'+str(pitch)+'}')
+#            sleep(200)
+        if roll != last_roll or pitch != last_pitch:
+            print('{roll:'+str(roll)+',pitch:'+str(pitch)+'}')
             last_roll = roll
-            needle = ((15 - roll)//30)%12
-            display.show(Image.ALL_CLOCKS[needle])
-        sleep(50)
+            last_pitch = pitch
+            display.show('+')
+            sleep(20)
+            display.show('-')
+        sleep(20)
     return # never does
     
 print('{"started":true}')
@@ -130,6 +139,6 @@ radio_on()
 if button_a.is_pressed() and button_b.is_pressed():
     config()
 elif button_b.is_pressed():
-    roll()
+    roll_pitch()
 else:
     proxy()
