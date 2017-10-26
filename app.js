@@ -133,7 +133,6 @@ function ubit_success(serial) {
     reported = false;
     let orientation = false
     serial.on('data', (data) => {
-// console.log(data)
         try {
             var ubit = JSON.parse(data)
             if (ubit && io) {
@@ -151,8 +150,10 @@ function ubit_success(serial) {
                 if (ubit.heading) {
                     io.emit('ubit', {'heading': ubit.heading})
                 }
-                if (ubit.roll) {
-                    io.emit('ubit', {'roll': ubit.roll})
+                if (ubit.roll_pitch) {
+                    let roll = ubit.roll_pitch[0]
+                    let pitch = ubit.roll_pitch[1]
+                    io.emit('ubit', {'roll': roll, 'pitch': pitch})
                 }
             }
         } catch(err) {

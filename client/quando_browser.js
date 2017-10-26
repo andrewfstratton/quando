@@ -82,8 +82,13 @@
         } else if (data.heading) {
             document.dispatchEvent(new CustomEvent("ubitHeading", {'detail':data.heading}));
             idle_reset();
-        } else if (data.roll) {
-            document.dispatchEvent(new CustomEvent("ubitRoll", {'detail':data.roll}));
+        } else if (data.roll || data.pitch) {
+            if (data.roll) {
+                document.dispatchEvent(new CustomEvent("ubitRoll", {'detail':data.roll}));
+            }
+            if (data.pitch) {
+               document.dispatchEvent(new CustomEvent("ubitPitch", {'detail':data.pitch}));
+            }
             idle_reset();
         }
     });
@@ -135,6 +140,8 @@
         max = max >= 0 ? max % 360 : (max % 360) + 360;
         var handler = function (ev) { // we need the function handler to allow destruction
             var angle = ev.detail;
+            angle = 180 * angle / Math.PI;
+            angle = (angle +360) % 360; // avoid negative remainder - % is not mod...
             var match = false;
             if (min <= max) {
                 if ((angle >= min) && (angle <= max)) {
