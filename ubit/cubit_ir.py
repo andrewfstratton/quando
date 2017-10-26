@@ -120,11 +120,8 @@ def roll_pitch():
         z = accelerometer.get_z()/1024
         roll = math.pi-(math.atan2(x, z)%(math.pi*2))
         pitch = math.pi-(math.atan2(y, z)%(math.pi*2))
-#        if button_b.is_pressed():
-#            print('{roll:'+str(roll)+', pitch:'+str(pitch)+'}')
-#            sleep(200)
         if roll != last_roll or pitch != last_pitch:
-            print('{roll:'+str(roll)+',pitch:'+str(pitch)+'}')
+            print('{"roll_pitch":['+str(roll)+','+str(pitch)+']}')
             last_roll = roll
             last_pitch = pitch
             display.show('+')
