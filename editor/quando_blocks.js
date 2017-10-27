@@ -2,15 +2,15 @@
     var self = this["quando_blocks"] = {};
     var PREFIX = 'quando_'; // TODO share with quando_editor
     self.CONFIG = {
-        DISPLAY_COLOUR: '#ee9955',
-        MEDIA_COLOUR: '#55cc55',
-        STYLE_COLOUR: '#cc99cc',
-        CLIENT_COLOUR: '#559999',
-        TIME_COLOUR: '#ee6666',
-        LEAP_MOTION_COLOUR: '#999999',
-        DEVICE_COLOUR: '#bb66aa',
-        BLOCKLY_SATURATION: 0.25, // default for hue only colour - probably not used anymore - see http://colorizer.org/
-        BLOCKLY_VALUE: 0.85, // ditto
+        DISPLAY_COLOUR: '#ffcc88',
+        MEDIA_COLOUR: '#b3ffb3',
+        STYLE_COLOUR: '#ffccff',
+        CLIENT_COLOUR: '#9cc9c9',
+        TIME_COLOUR: '#ffb3b3',
+        LEAP_MOTION_COLOUR: '#aaaaaa',
+        DEVICE_COLOUR: '#e6ccff',
+        BLOCKLY_SATURATION: 1, // default for hue only colour - probably not used anymore - see http://colorizer.org/
+        BLOCKLY_VALUE: 1, // ditto
     };
 
     var ajax_get = function (url, callback) {
