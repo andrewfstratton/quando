@@ -46,7 +46,7 @@
         if (data) {
             document.dispatchEvent(new CustomEvent(event_name, data));            
         } else {
-            ocument.dispatchEvent(new CustomEvent(event_name));
+            document.dispatchEvent(new CustomEvent(event_name));
         }
     }
 
