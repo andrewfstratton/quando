@@ -42,8 +42,12 @@
 
     var last_gesture = "";
 
-    function _dispatch_event(event_name) {
-        document.dispatchEvent(new CustomEvent(event_name));
+    function _dispatch_event(event_name, data=false) {
+        if (data) {
+            document.dispatchEvent(new CustomEvent(event_name, data));            
+        } else {
+            ocument.dispatchEvent(new CustomEvent(event_name));
+        }
     }
 
     function _dispatch_gesture(gesture_name) {
@@ -52,46 +56,6 @@
             _dispatch_event(gesture_name);
         }
     }
-    _socket.on('ubit', function(data) {
-        if (data.ir) {
-            idle_reset();
-        } else if (data.orientation) {
-            idle_reset(); // this is only received when the orientation changes
-            if (data.orientation == "forward") {
-                _dispatch_gesture("ubitForward");
-            } else if (data.orientation == "backward") {
-                _dispatch_gesture("ubitBackward");
-            } else if (data.orientation == "up") {
-                _dispatch_gesture("ubitUp");
-            } else if (data.orientation == "down") {
-                _dispatch_gesture("ubitDown");
-            } else if (data.orientation == "left") {
-                _dispatch_gesture("ubitLeft");
-            } else if (data.orientation == "right") {
-                _dispatch_gesture("ubitRight");
-            } else if (data.orientation == "") { // this is the micro bit started
-                last_gesture = "";
-            }
-        } else if (data.button) {
-            idle_reset();
-            if (data.button == "a") {
-                _dispatch_event("ubitA");
-            } else if (data.button == "b") {
-                _dispatch_event("ubitB");
-            }
-        } else if (data.heading) {
-            document.dispatchEvent(new CustomEvent("ubitHeading", {'detail':data.heading}));
-            idle_reset();
-        } else if (data.roll || data.pitch) {
-            if (data.roll) {
-                document.dispatchEvent(new CustomEvent("ubitRoll", {'detail':data.roll}));
-            }
-            if (data.pitch) {
-               document.dispatchEvent(new CustomEvent("ubitPitch", {'detail':data.pitch}));
-            }
-            idle_reset();
-        }
-    });
 
     var _ubit_handle = function(event, callback, destruct) {
         document.addEventListener(event, callback);
@@ -572,4 +536,46 @@
     self.addDestructor = function(fn) {
         self._vitrine_destructors.push(fn);
     }
+
+    _socket.on('ubit', function(data) {
+        if (data.ir) {
+            idle_reset();
+        } else if (data.orientation) {
+            idle_reset(); // this is only received when the orientation changes
+            if (data.orientation == "forward") {
+                _dispatch_gesture("ubitForward");
+            } else if (data.orientation == "backward") {
+                _dispatch_gesture("ubitBackward");
+            } else if (data.orientation == "up") {
+                _dispatch_gesture("ubitUp");
+            } else if (data.orientation == "down") {
+                _dispatch_gesture("ubitDown");
+            } else if (data.orientation == "left") {
+                _dispatch_gesture("ubitLeft");
+            } else if (data.orientation == "right") {
+                _dispatch_gesture("ubitRight");
+            } else if (data.orientation == "") { // this is the micro bit started
+                last_gesture = "";
+            }
+        } else if (data.button) {
+            idle_reset();
+            if (data.button == "a") {
+                _dispatch_event("ubitA");
+            }
+            if (data.button == "b") {
+                _dispatch_event("ubitB");
+            }
+        } else if (data.heading) {
+            _dispatch_event("ubitHeading", {'detail':data.heading});
+            idle_reset();
+        } else if (data.roll || data.pitch) {
+            if (data.roll) {
+                _dispatch_event("ubitRoll", {'detail':data.roll});
+            }
+            if (data.pitch) {
+                _dispatch_event("ubitPitch", {'detail':data.pitch});
+            }
+            idle_reset();
+        }
+    });
 })();

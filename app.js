@@ -136,9 +136,10 @@ function ubit_success(serial) {
         try {
             var ubit = JSON.parse(data)
             if (ubit && io) {
-                if (ubit.button == 'a') {
+                if (ubit.button_a) {
                     io.emit('ubit', {button:'a'})
-                } else if (ubit.button == 'b') {
+                }
+                if (ubit.button_b) {
                     io.emit('ubit', {button:'b'})
                 }
                 if (ubit.ir) {

@@ -14,20 +14,13 @@ class COMMS:
     HEADING = 'H'
     ROLL = 'R'
     arr = [IR, BUTTON_A, BUTTON_B, FACE_UP, FACE_DOWN, LEFT, RIGHT, UP, DOWN]
-    @classmethod
-    def forward(cls, incoming):
-        for i in cls.arr:
-            if i[0] == incoming:
-                display.show(i[1])
-                print(i[2])
-                break
 
 _channel = 0
 CONFIG_FILE = 'config.txt'
 
 # The radio won't work unless it's switched on.
 def radio_on():
-    radio.config(channel=_channel) # set the channel
+    radio.config(channel=_channel, length=128) # set the channel
     radio.on()
 
 def display_channel():
@@ -90,15 +83,23 @@ def proxy():
                     sleep(10)                        
                 sleeps += 1
             else:
+                messages = incoming.split('\n')
+                messages.pop() # drop the empty last one
+                result = '{'
+                for msg in messages:
+                    parts = msg.split(':')
+                    result += '"' + parts[1] + '":' + parts[2] + ','
+                    display.show(parts[0])
+                result = result[:-1] + '}' # drop , and put in curly brace
+                print(result)
                 sleeps = 0
-                COMMS.forward(incoming)
-                heading = incoming.find(COMMS.HEADING)
-                if (heading >= 0):
-                    heading = incoming[1:]
-                    print('{"heading":'+heading+'}')
-                    heading = int(heading)
-                    needle = ((15 - heading)//30)%12
-                    display.show(Image.ALL_CLOCKS[needle])
+#                heading = incoming.find(COMMS.HEADING)
+#                if (heading >= 0):
+#                    heading = incoming[1:]
+#                    print('{"heading":'+heading+'}')
+#                    heading = int(heading)
+#                    needle = ((15 - heading)//30)%12
+#                    display.show(Image.ALL_CLOCKS[needle])
 #                roll = incoming.find(COMMS.ROLL)
 #                if (roll >= 0):
 #                    roll = incoming[1:]

@@ -3,22 +3,19 @@ import radio, math
 from microbit import *
 
 # Common - easier this way due to simple build process
-class COMMS: # message, icon/character, json - which is ignored for rubit
-    IR = ('I', Image.HEART, '{"ir":true}')
-    BUTTON_A = ('a', 'a', '{"button":"a"}')
-    BUTTON_B = ('b', 'b', '{"button":"b"}')
-    FACE_UP = ('U', '^', '{"orientation":"up"}')
-    FACE_DOWN = ('D', 'v', '{"orientation":"down"}')
-    LEFT = ('L', '<', '{"orientation":"left"}')
-    RIGHT = ('R', '>', '{"orientation":"right"}')
-    UP = ('B', 'B', '{"orientation":"backward"}')
-    DOWN = ('F', 'F', '{"orientation":"forward"}')
+class COMMS: # character, json
+    IR = (Image.HEART, 'ir:true\n')
+    BUTTON_A = ('a', 'button_a:true\n')
+    BUTTON_B = ('b', 'button_b:true\n')
+    FACE_UP = ('^', 'orientation:"up"\n')
+    FACE_DOWN = ('v', 'orientation:"down"\n')
+    LEFT = ('<', 'orientation:"left"\n')
+    RIGHT = ('>', 'orientation:"right"\n')
+    UP = ('B', 'orientation:"backward"\n')
+    DOWN = ('F', 'orientation:"forward"\n')
     HEADING = 'H'
     ROLL = 'R'
     arr = [IR, BUTTON_A, BUTTON_B, FACE_UP, FACE_DOWN, LEFT, RIGHT, UP, DOWN]
-    @staticmethod
-    def send(tuple):
-        radio.send(tuple[0])
 
 _channel = 0
 CONFIG_FILE = 'config.txt'
@@ -26,7 +23,7 @@ CONFIG_FILE = 'config.txt'
 # The radio won't work unless it's switched on.
 def radio_on():
     print('{"channel":' + str(_channel) + '}')
-    radio.config(channel=_channel) # set the channel
+    radio.config(channel=_channel, length=128) # set the channel
     radio.on()
 
 def display_channel():
@@ -73,11 +70,17 @@ def gesture():
     last_gesture = ""
     ticks = 0
     while True:
+        msg = ""
+        msg_a = COMMS.BUTTON_A[0]+':'+COMMS.BUTTON_A[1]
+        msg_b = COMMS.BUTTON_B[0]+':'+COMMS.BUTTON_B[1]
         if button_a.was_pressed():
-            COMMS.send(COMMS.BUTTON_A)
+            msg = msg_a
+            if button_b.is_pressed():
+                msg += msg_b
         if button_b.was_pressed():
-            COMMS.send(COMMS.BUTTON_B)
-
+            msg = msg_b
+            if button_a.is_pressed():
+                msg += msg_a
         gest = accelerometer.current_gesture()
         if gest == last_gesture:
             ticks += 1
@@ -103,8 +106,11 @@ def gesture():
             elif gest == 'right':
                 comms = COMMS.RIGHT
             if comms != False:
-                display.show(comms[1])
-                COMMS.send(comms[0])
+                display.show(comms[0])
+                msg += comms[0]+':'+comms[1]
+        if msg != "":
+            radio.send(msg)
+            print(msg)
     return # never does
 
 #        if (pin0.read_digital() == 1):
@@ -123,14 +129,14 @@ def heading():
             compass.calibrate()
         heading = compass.heading()
         if (heading != last_heading) :
-            radio.send(COMMS.HEADING+str(heading))
+            radio.send(COMMS.HEADING+str(heading)+'\n')
             last_heading = heading
             needle = ((15 - heading)//30)%12
             display.show(Image.ALL_CLOCKS[needle])
 #        x = min(accelerometer.get_x()/1024, 1)
 #        roll = int(math.degrees(math.acos(max(x,-1))))
 #        if (roll != last_roll) :
-#            radio.send(COMMS.ROLL+str(roll))
+#            radio.send(COMMS.ROLL+str(roll)+'\n')
 #            last_roll = roll
         sleep(20)
         display.show(' ')
