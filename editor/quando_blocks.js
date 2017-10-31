@@ -732,5 +732,25 @@
                 return result;
             },
         });
+
+        let PROJECTION_ACTION = 'Projection Action';
+        quando_editor.defineDisplay({
+            name: PROJECTION_ACTION, title:'',
+            interface: [
+                { name: 'front_rear', menu: ['Normal', 'Rear'], title: '' },
+                { title:'Projection'}
+            ],
+            javascript: (block) => {
+                let method = _getStyleOnContained(block, [WHEN_VITRINE_BLOCK, WHEN_IDLE]);
+                let front_rear = quando_editor.getMenu(block, 'front_rear');
+                let scale = '1,1';
+                if (front_rear == 'Rear') {
+                    scale = '-1,1';
+                }
+                result = `quando.${method}('html', 'transform', 'scale(${scale})');\n`;
+                return result;
+            },
+        });
+
     };
 })();
