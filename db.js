@@ -4,7 +4,7 @@ const mongodb = require("mongodb")
 const host = "127.0.0.1"
 const port = 27017
 const db_name = "quando"
-const mongo_url = 'mongodb://' + host + ':' + port + '/' + db_name
+const mongo_url = `mongodb://${host}:${port}/${db_name}`
 
 let cached_db = null
 
