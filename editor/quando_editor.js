@@ -539,20 +539,7 @@
                 }
             } while ((found === false) && check_block);
         }
-        if (found === false) {
-            found = undefined; //TODO code refactor?
-        }
         return found;
-    };
-
-    self.pushToParent = function (block, ids, play) {
-        var index = -1;
-        var parent = self.getParent(block, ids);
-        if (typeof parent !== 'undefined') {
-            var playlist = parent.quando_playlist;
-            index = playlist.push(play) - 1;
-        }
-        return index;
     };
 
     self.updateExtras = function(block) {
