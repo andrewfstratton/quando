@@ -420,35 +420,35 @@
         }
     }
 
-    self.leap_pinch = function(hand, elem) {
-        var pinch = hand.pinchStrength.toPrecision(2);
-        if (pinch <= 0.6) {
-            self.pinching = false;
-            self.setDefaultStyle('#cursor', 'opacity', 0.6);
-        } else if (pinch >= 0.9) {
-            self.setDefaultStyle('#cursor', 'opacity', 1.0);
-        }
-        if (elem) {
-            if (elem.classList.contains("quando_label")) {
-                if (!self.pinching && (pinch >= 0.9)) {
-                        elem.click();
-                        self.pinching = true;
-                }
-            } else if (pinch >= 0.9) {
-                self.pinching = true;
-            }
-            if (!elem.classList.contains("focus")) { // the element is not in 'focus'
-                // remove focus from all other elements - since the cursor isn't over them
-                self._removeFocus();
-                if (elem.classList.contains("quando_label")) {
-                    elem.classList.add("focus");
-                }
-            }
-        } else {
-            // remove focus from any elements - since the cursor isn't over them
-            self._removeFocus();
-        }
-    }
+    // self.leap_pinch = function(hand, elem) {
+    //     var pinch = hand.pinchStrength.toPrecision(2);
+    //     if (pinch <= 0.6) {
+    //         self.pinching = false;
+    //         self.setDefaultStyle('#cursor', 'opacity', 0.6);
+    //     } else if (pinch >= 0.9) {
+    //         self.setDefaultStyle('#cursor', 'opacity', 1.0);
+    //     }
+    //     if (elem) {
+    //         if (elem.classList.contains("quando_label")) {
+    //             if (!self.pinching && (pinch >= 0.9)) {
+    //                     elem.click();
+    //                     self.pinching = true;
+    //             }
+    //         } else if (pinch >= 0.9) {
+    //             self.pinching = true;
+    //         }
+    //         if (!elem.classList.contains("focus")) { // the element is not in 'focus'
+    //             // remove focus from all other elements - since the cursor isn't over them
+    //             self._removeFocus();
+    //             if (elem.classList.contains("quando_label")) {
+    //                 elem.classList.add("focus");
+    //             }
+    //         }
+    //     } else {
+    //         // remove focus from any elements - since the cursor isn't over them
+    //         self._removeFocus();
+    //     }
+    // }
 
     self.showVitrine = function(id) {
         // perform any destructors - which will cancel pending events, etc.
