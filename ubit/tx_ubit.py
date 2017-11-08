@@ -14,7 +14,7 @@ class COMMS: # character, json
     UP = ('B', 'orientation:"backward"\n')
     DOWN = ('F', 'orientation:"forward"\n')
     HEADING = 'H'
-    ROLL = 'R'
+    ROLL_PITCH = 'R'
     arr = [IR, BUTTON_A, BUTTON_B, FACE_UP, FACE_DOWN, LEFT, RIGHT, UP, DOWN]
 
 _channel = 0
@@ -23,7 +23,7 @@ CONFIG_FILE = 'config.txt'
 # The radio won't work unless it's switched on.
 def radio_on():
     print('{"channel":' + str(_channel) + '}')
-    radio.config(channel=_channel, length=128) # set the channel
+    radio.config(channel=_channel, power=1, length=128) # set the channel
     radio.on()
 
 def display_channel():
@@ -110,11 +110,8 @@ def gesture():
                 msg += comms[0]+':'+comms[1]
         if msg != "":
             radio.send(msg)
-            print(msg)
+#            print(msg)
     return # never does
-
-#        if (pin0.read_digital() == 1):
-#           COMMS.send(COMMS.IR)
 
 def heading():
     while button_a.is_pressed() and button_b.is_pressed():
@@ -123,7 +120,6 @@ def heading():
         display.show('+')
         sleep(500)
     last_heading = 180
-    last_roll = 180
     while True:
         if button_a.is_pressed() and button_b.is_pressed():
             compass.calibrate()
@@ -133,25 +129,44 @@ def heading():
             last_heading = heading
             needle = ((15 - heading)//30)%12
             display.show(Image.ALL_CLOCKS[needle])
-#        x = min(accelerometer.get_x()/1024, 1)
-#        roll = int(math.degrees(math.acos(max(x,-1))))
-#        if (roll != last_roll) :
-#            radio.send(COMMS.ROLL+str(roll)+'\n')
-#            last_roll = roll
         sleep(20)
         display.show(' ')
     return # never does
 
+def roll_pitch():
+    last_roll = False
+    last_pitch = False
+    while True:
+        x = accelerometer.get_x()/1024
+        y = accelerometer.get_y()/1024
+        z = accelerometer.get_z()/1024
+        roll = math.pi-(math.atan2(x, z)%(math.pi*2))
+        pitch = math.pi-(math.atan2(y, z)%(math.pi*2))
+        if roll != last_roll or pitch != last_pitch:
+            radio.send(COMMS.ROLL_PITCH+':roll_pitch:['+str(roll)+','+str(pitch)+']\n')
+            last_roll = roll
+            last_pitch = pitch
+            display.show('+')
+            sleep(20)
+            display.show('-')
+        sleep(20)
+    return # never does
 #Main program
 print('{"started":true}')
 load()
 radio_on()
-if button_a.is_pressed() and button_b.is_pressed():
+if button_a.is_pressed() and not button_b.is_pressed(): # a pressed
     config()
-elif not button_a.is_pressed() and button_b.is_pressed():
-    heading()
-else:
+elif not button_a.is_pressed() and button_b.is_pressed(): # b pressed
+    roll_pitch()
+#elif button_a.is_pressed() and button_b.is_pressed(): # a and b pressed
+#    heading()
+else: # nothing pressed
     gesture()
 
+
+# def visitor_sense(): loop this:
+#        if (pin0.read_digital() == 1):
+#           COMMS.send(COMMS.IR)
 #elif button_a.is_pressed() and not button_b.is_pressed():
 #    visitor_sense()

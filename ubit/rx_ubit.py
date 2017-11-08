@@ -1,26 +1,12 @@
 import radio, math
 from microbit import *
 
-class COMMS:
-    IR = ('I', Image.HEART, '{"ir":true}')
-    BUTTON_A = ('a', 'a', '{"button":"a"}')
-    BUTTON_B = ('b', 'b', '{"button":"b"}')
-    FACE_UP = ('U', '^', '{"orientation":"up"}')
-    FACE_DOWN = ('D', 'v', '{"orientation":"down"}')
-    LEFT = ('L', '<', '{"orientation":"left"}')
-    RIGHT = ('R', '>', '{"orientation":"right"}')
-    UP = ('B', 'B', '{"orientation":"backward"}')
-    DOWN = ('F', 'F', '{"orientation":"forward"}')
-    HEADING = 'H'
-    ROLL = 'R'
-    arr = [IR, BUTTON_A, BUTTON_B, FACE_UP, FACE_DOWN, LEFT, RIGHT, UP, DOWN]
-
 _channel = 0
 CONFIG_FILE = 'config.txt'
 
 # The radio won't work unless it's switched on.
 def radio_on():
-    radio.config(channel=_channel, length=128) # set the channel
+    radio.config(channel=_channel, power=0, length=128) # set the channel
     radio.on()
 
 def display_channel():
@@ -90,20 +76,9 @@ def proxy():
                     parts = msg.split(':')
                     result += '"' + parts[1] + '":' + parts[2] + ','
                     display.show(parts[0])
-                result = result[:-1] + '}' # drop , and put in curly brace
+                result = result[:-1] + '}' # replace the last , with }
                 print(result)
                 sleeps = 0
-#                heading = incoming.find(COMMS.HEADING)
-#                if (heading >= 0):
-#                    heading = incoming[1:]
-#                    print('{"heading":'+heading+'}')
-#                    heading = int(heading)
-#                    needle = ((15 - heading)//30)%12
-#                    display.show(Image.ALL_CLOCKS[needle])
-#                roll = incoming.find(COMMS.ROLL)
-#                if (roll >= 0):
-#                    roll = incoming[1:]
-#                    print('{"roll":'+roll+'}')
             sleep(20)
         except:
             print('{"error":"packet"}')
@@ -112,31 +87,10 @@ def proxy():
             radio_on()
     return # never
 
-def roll_pitch():
-    last_roll = False
-    last_pitch = False
-    while True:
-        x = accelerometer.get_x()/1024
-        y = accelerometer.get_y()/1024
-        z = accelerometer.get_z()/1024
-        roll = math.pi-(math.atan2(x, z)%(math.pi*2))
-        pitch = math.pi-(math.atan2(y, z)%(math.pi*2))
-        if roll != last_roll or pitch != last_pitch:
-            print('{"roll_pitch":['+str(roll)+','+str(pitch)+']}')
-            last_roll = roll
-            last_pitch = pitch
-            display.show('+')
-            sleep(20)
-            display.show('-')
-        sleep(20)
-    return # never does
-    
 print('{"started":true}')
 load()
 radio_on()
-if button_a.is_pressed() and button_b.is_pressed():
+if button_a.is_pressed() and not button_b.is_pressed():
     config()
-elif button_b.is_pressed():
-    roll_pitch()
 else:
     proxy()
