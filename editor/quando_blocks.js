@@ -752,5 +752,39 @@
             },
         });
 
+        let CHANGE_WITH_BLOCK = 'When Change';
+        let CHANGE_VALUE = 'Value';
+        let CHANGE_VARIABLE = 'Variable';
+        let CURSOR_LEFT_RIGHT = '\u21D4 Cursor';
+        let CURSOR_UP_DOWN = '\u21D5 Cursor';
+        let UBIT_ROLL = 'micro:bit Roll';
+        let UBIT_PITCH = 'micro:bit Pitch';
+        quando_editor.defineDevice({
+            name: CHANGE_WITH_BLOCK, title: '',
+            interface: [
+                { name: CHANGE_VALUE, menu: [CURSOR_LEFT_RIGHT, CURSOR_UP_DOWN, 'VR Zoom'], title: '' },
+                { name: CHANGE_VARIABLE, title: ' changes with ', menu: [UBIT_ROLL, UBIT_PITCH, 'Leap Height']}
+            ],
+            javascript: function (block) {
+                let value = quando_editor.getMenu(block, CHANGE_VALUE);
+                switch (value) {
+                    case CURSOR_UP_DOWN: value = 'cursor_up_down';
+                        break;
+                    case CURSOR_LEFT_RIGHT: value = 'cursor_left_right';
+                        break;
+                }
+                let variable = quando_editor.getMenu(block, CHANGE_VARIABLE);
+                switch (variable) {
+                    case UBIT_ROLL: variable = 'handleUbitRoll';
+                        break;
+                    case UBIT_PITCH: variable = 'handleUbitPitch';
+                        break;
+                }
+                var result = "quando." + variable + "(quando." + value + ", []"
+                    + _getOnContained(block, [WHEN_VITRINE_BLOCK], "", ", false")
+                    + ");\n";
+                return result;
+            }
+        });
     };
 })();

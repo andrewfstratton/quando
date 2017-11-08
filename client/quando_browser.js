@@ -98,7 +98,7 @@
         _ubit_handle("ubitB", callback, destruct);
     }
 
-    self.angle = function(min, max, event, callback, destruct=true) {
+    self.angle = function(min, max, event, callback, destruct=true, extras=[]) {
         // take min and max modulus 360, i.e in range 0..359
         min = min >= 0 ? min % 360 : (min % 360) + 360; // necessary since % of negatives don't work ?!
         max = max >= 0 ? max % 360 : (max % 360) + 360;
@@ -117,7 +117,7 @@
                 }
             }
             if (match) {
-                callback(angle); // the angle is passed for debugging and maybe later use...
+                callback(ev.detail, extras); // the angle is passed as radians
             }
         };
         document.addEventListener(event, handler);
@@ -136,6 +136,55 @@
         self.angle(min, max, "ubitRoll", callback, destruct);
     }
 
+    self.handleUbitRoll = function(callback, extras=[], destruct=true) {
+        self.angle(0, 359, "ubitRoll", callback, destruct, extras);
+    }
+
+    self.handleUbitPitch = function(callback, extras=[], destruct=true) {
+        self.angle(0, 359, "ubitPitch", callback, destruct, extras);
+    }
+
+    function _clamp_angle(radians, clamp, range, last) {
+        if (radians < -clamp) {
+            radians = -clamp;
+        }
+        if (radians > clamp) {
+            radians = clamp;
+        }
+        let value = (range/2) + (radians/clamp) * range/2;
+        let diff = last - value;
+        // Dampen
+        diff *= 0.25;
+        value = last - diff
+        return value;
+    }
+    self.last_clamped_y = screen.width;
+    self.last_clamped_x = screen.height;
+    self.cursor_up_down = function(angle, extras) {
+        var y = _clamp_angle(angle, Math.PI/4, screen.height, self.last_clamped_y);
+        self.last_clamped_y = y;
+        var x = self.last_clamped_x;
+        var cursor = document.getElementById('cursor');
+        cursor.style.top = y + 'px';
+        cursor.style.visibility = "hidden";
+        var elem = document.elementFromPoint(x, y);
+        cursor.style.visibility = "visible";
+        self.hover(elem);
+        idle_reset();
+    }
+
+    self.cursor_left_right = function(angle, extras) {
+        x = _clamp_angle(angle, Math.PI/4, screen.width, self.last_clamped_x);
+        self.last_clamped_x = x;
+        var y = self.last_clamped_y;
+        var cursor = document.getElementById('cursor');
+        cursor.style.left = x + 'px';
+        cursor.style.visibility = "hidden";
+        var elem = document.elementFromPoint(x, y);
+        cursor.style.visibility = "visible";
+        self.hover(elem);
+        idle_reset();
+    }
     var Config = self.Config = {
     };
 
@@ -389,14 +438,14 @@
                 {
                     hand: function(hand) {
                         idle_reset();
-                        var [x, y] = hand.screenPosition(hand.palmPosition);
+                      var [x, y] = hand.screenPosition(hand.palmPosition);
                         var cursor = document.getElementById('cursor');
                         cursor.style.left = x + 'px';
                         cursor.style.top = y + 'px';
-                        cursor.style.visibility = "hidden";
+                        cursor.style.visibility = "hidden"; // must be hidden, or elem will be the cursor
                         var elem = document.elementFromPoint(x, y);
                         cursor.style.visibility = "visible";
-                        self.leap_hover(hand, elem);
+                        self.hover(elem);
                     }
                 }).use('screenPosition', {
                     scale: 0.7, verticalOffset: screen.height
@@ -404,7 +453,7 @@
         }
     }
 
-    self.leap_hover = function(hand, elem) {
+    self.hover = function(elem) {
         if (elem) {
             if (!elem.classList.contains("focus")) { // the element is not in 'focus'
                 // remove focus from all other elements - since the cursor isn't over them
