@@ -98,7 +98,7 @@
         _ubit_handle("ubitB", callback, destruct);
     }
 
-    self.angle = function(min, max, event, callback, destruct=true, extras=[]) {
+    self.angle = function(min, max, event, callback, destruct=true, extras={}) {
         // take min and max modulus 360, i.e in range 0..359
         min = min >= 0 ? min % 360 : (min % 360) + 360; // necessary since % of negatives don't work ?!
         max = max >= 0 ? max % 360 : (max % 360) + 360;
@@ -136,15 +136,22 @@
         self.angle(min, max, "ubitRoll", callback, destruct);
     }
 
-    self.handleUbitRoll = function(callback, extras=[], destruct=true) {
+    self.handleUbitRoll = function(callback, extras={}, destruct=true) {
         self.angle(0, 359, "ubitRoll", callback, destruct, extras);
     }
 
-    self.handleUbitPitch = function(callback, extras=[], destruct=true) {
+    self.handleUbitPitch = function(callback, extras={}, destruct=true) {
         self.angle(0, 359, "ubitPitch", callback, destruct, extras);
     }
 
-    function _clamp_angle(radians, clamp, range, last) {
+    function _clamp_angle(radians, clamp, range, extras, last) {
+        if (extras.inverted) {
+            radians = -radians;
+        }
+        var dampen = 0.25;
+        if (extras.dampen) {
+            dampen = extras.dampen;
+        }
         if (radians < -clamp) {
             radians = -clamp;
         }
@@ -154,14 +161,14 @@
         let value = (range/2) + (radians/clamp) * range/2;
         let diff = last - value;
         // Dampen
-        diff *= 0.25;
+        diff *= dampen;
         value = last - diff
         return value;
     }
     self.last_clamped_y = screen.width;
     self.last_clamped_x = screen.height;
     self.cursor_up_down = function(angle, extras) {
-        var y = _clamp_angle(angle, Math.PI/4, screen.height, self.last_clamped_y);
+        var y = _clamp_angle(angle, Math.PI/4, screen.height, extras, self.last_clamped_y);
         self.last_clamped_y = y;
         var x = self.last_clamped_x;
         var cursor = document.getElementById('cursor');
@@ -174,7 +181,7 @@
     }
 
     self.cursor_left_right = function(angle, extras) {
-        x = _clamp_angle(angle, Math.PI/4, screen.width, self.last_clamped_x);
+        x = _clamp_angle(angle, Math.PI/4, screen.width, extras, self.last_clamped_x);
         self.last_clamped_x = x;
         var y = self.last_clamped_y;
         var cursor = document.getElementById('cursor');

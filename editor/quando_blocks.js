@@ -759,12 +759,18 @@
         let CURSOR_UP_DOWN = '\u21D5 Cursor';
         let UBIT_ROLL = 'micro:bit Roll';
         let UBIT_PITCH = 'micro:bit Pitch';
+        let CHECK_INVERTED = 'Inverted';
+        let DAMP_VALUE = 'Dampen';
         quando_editor.defineDevice({
             name: CHANGE_WITH_BLOCK, title: '',
             interface: [
                 { name: CHANGE_VALUE, menu: [CURSOR_LEFT_RIGHT, CURSOR_UP_DOWN, 'VR Zoom'], title: '' },
                 { name: CHANGE_VARIABLE, title: ' changes with ', menu: [UBIT_ROLL, UBIT_PITCH, 'Leap Height']}
             ],
+            extras: [
+                    {name: CHECK_INVERTED, check:false},
+                    {name: DAMP_VALUE, number:'0.25'},                    
+                ],
             javascript: function (block) {
                 let value = quando_editor.getMenu(block, CHANGE_VALUE);
                 switch (value) {
@@ -780,7 +786,16 @@
                     case UBIT_PITCH: variable = 'handleUbitPitch';
                         break;
                 }
-                var result = "quando." + variable + "(quando." + value + ", []"
+                var extras = {};
+                if (quando_editor.getCheck(block, CHECK_INVERTED)) {
+                    extras['inverted'] = true;
+                }
+                extras.dampen = quando_editor.getNumber(block, DAMP_VALUE);
+                if (!extras.dampen) {
+                    delete extras.dampen;
+                }
+                extras = JSON.stringify(extras);
+                var result = `quando.${variable}(quando.${value}, ${extras}`
                     + _getOnContained(block, [WHEN_VITRINE_BLOCK], "", ", false")
                     + ");\n";
                 return result;
