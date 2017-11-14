@@ -6,7 +6,7 @@ const find_microbit = (error, success) => {
     if (err) {
       error(err)
     } else {
-      var comName = null
+      let comName = null
       ports.forEach((port) => {
         if ((port.vendorId == '0D28') && (port.productId == '0204')) {
           comName = port.comName
@@ -23,7 +23,7 @@ const find_microbit = (error, success) => {
 
 exports.get_serial = (error, success) => {
   find_microbit(error, (comName) => {
-    var serial = new serialport(comName, {baudRate: 115200, parser: serialport.parsers.readline('\n')}, (err) => {
+    let serial = new serialport(comName, {baudRate: 115200, parser: serialport.parsers.readline('\n')}, (err) => {
       if (err) {
         error(err)
       } else {
@@ -36,7 +36,7 @@ exports.get_serial = (error, success) => {
 get_serial((err)=>{console.log("Error:" + err)},
     (serial)=>{
         serial.on('data', (data) => {
-            var ubit = JSON.parse(data)
+            let ubit = JSON.parse(data)
             if (ubit.button == 'a') {
                 console.log('Button A Pressed')
             }

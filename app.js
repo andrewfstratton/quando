@@ -18,9 +18,9 @@ const http = require('http').Server(app)
 const io = require('socket.io')(http)
 const ubit = require('./ubit')
 
-var server = http.listen(process.env.PORT || 80, () => {
-  var host = process.env.IP || server.address().address
-  var port = server.address().port
+let server = http.listen(process.env.PORT || 80, () => {
+  let host = process.env.IP || server.address().address
+  let port = server.address().port
   console.log('Quando Server listening at http://%s:%s', host, port)
 })
 
@@ -120,7 +120,7 @@ app.put('/script/deploy/:filename', (req, res) => {
   })
 })
 
-var reported = false
+let reported = false
 function ubit_error (err) {
   if (!reported && err) {
     console.log(err)
@@ -134,7 +134,7 @@ function ubit_success (serial) {
   let orientation = false
   serial.on('data', (data) => {
     try {
-      var ubit = JSON.parse(data)
+      let ubit = JSON.parse(data)
       if (ubit && io) {
         if (ubit.button_a) {
           io.emit('ubit', {button: 'a'})
