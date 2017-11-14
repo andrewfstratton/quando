@@ -430,7 +430,7 @@
     
     self.startVitrine = function(leap) {
         document.querySelector('#quando_title').addEventListener('contextmenu', // right click title to go to setup
-            (ev) => {
+            function (ev) {
                 ev.preventDefault();
                 window.location.href = "../../client/setup";
                 return false;

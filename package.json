@@ -1,11 +1,12 @@
 {
   "name": "quando",
-  "version": "0.3.0",
-  "description": "Quando Toolchain",
+  "version": "0.4.20171112",
+  "description": "Quando Toolset",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node app.js"
+    "start": "node app.js",
+    "standardize" : "standard"
   },
   "author": "",
   "license": "ISC",
@@ -20,5 +21,8 @@
     "morgan": "^1.7.0",
     "serialport": "^4.0.7",
     "socket.io": "^1.7.0"
+  },
+  "devDependencies": {
+    "standard": "^10.0.3"
   }
 }

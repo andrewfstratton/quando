@@ -137,12 +137,12 @@
     };
 
     self.setMenuText = function (block, name, text) {
-        let menudrop = block.getField(MENU_INPUT_PREFIX + name);
+        var menudrop = block.getField(MENU_INPUT_PREFIX + name);
         menudrop.setText(text);
     };
 
     self.resetMenu = function (block, name) {
-        let menudrop = block.getField(MENU_INPUT_PREFIX + name);
+        var menudrop = block.getField(MENU_INPUT_PREFIX + name);
         menudrop.setValue(0);
     };
 
@@ -297,7 +297,7 @@
                             var val = widget[key]; // val is the ?base? folder
                             var handle_file = this["index"].handle_file;
                             fileInput.showEditor_ = (function() {
-                                let block_id = this.sourceBlock_.id
+                                var block_id = this.sourceBlock_.id
                                 handle_file(val, block_id, widget_id) 
                             });
                             sofar.appendField(fileInput, widget_id);

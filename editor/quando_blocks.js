@@ -91,7 +91,7 @@
             }
         });
 
-        let SHOW_TITLE = "Show Title";
+        var SHOW_TITLE = "Show Title";
         quando_editor.defineMedia({
             name: 'Show Title "',
             interface: [{ name: SHOW_TITLE, title:'', text: '.type your title here..' }, { title: '"' }],
@@ -101,7 +101,7 @@
         });
 
         var _getOnContained = function(block, container, contained, otherwise) {
-            let result = otherwise;
+            var result = otherwise;
             if (quando_editor.getParent(block, container)) {
                 result = contained;
             }
@@ -111,15 +111,15 @@
             return 'set' + _getOnContained(block, container, "Display", "Default") + 'Style';
         }
 
-        let COLOUR = 'colour';
+        var COLOUR = 'colour';
         quando_editor.defineStyle({
             name: 'Background', title: 'Background Display Colour',
             interface: [
                 { name: COLOUR, title: '', colour: '#ff0000' }
             ],
             javascript: function (block) {
-                let method = _getStyleOnContained(block, [WHEN_VITRINE_BLOCK, WHEN_IDLE]);
-                let colour = quando_editor.getColour(block, COLOUR);
+                var method = _getStyleOnContained(block, [WHEN_VITRINE_BLOCK, WHEN_IDLE]);
+                var colour = quando_editor.getColour(block, COLOUR);
                 return `quando.${method}('#quando_image', 'background-color', '${colour}');\n`;
             }
         });
@@ -130,8 +130,8 @@
             name: 'Display', title: '\uD83D\uDCF7 Show Image',
             interface: [ FILE_IMAGE ],
             javascript: function (block) {
-                let method = _getStyleOnContained(block, [WHEN_VITRINE_BLOCK, WHEN_IDLE]);
-                let image = quando_editor.getFile(block, IMAGE);
+                var method = _getStyleOnContained(block, [WHEN_VITRINE_BLOCK, WHEN_IDLE]);
+                var image = quando_editor.getFile(block, IMAGE);
                 return `quando.image_update_video("/client/media/${image}");\n`
                     + `quando.${method}('#quando_image', 'background-image', 'url("/client/media/${image}")');\n`;
             }
@@ -247,9 +247,9 @@
         //     }
         // });
 
-        let DIG_COLOUR = 0;
-        let WHEN_VITRINE_BLOCK = 'When Display Case';
-        let WHEN_VITRINE_TEXT = 'title';
+        var DIG_COLOUR = 0;
+        var WHEN_VITRINE_BLOCK = 'When Display Case';
+        var WHEN_VITRINE_TEXT = 'title';
         quando_editor.defineDisplay({
             name: WHEN_VITRINE_BLOCK, title: 'When Display', next: false, previous: false,
             interface: [{
@@ -257,8 +257,8 @@
             },
             { statement: STATEMENT }
             ],
-            javascript: (block) => {
-                let title = quando_editor.getText(block, WHEN_VITRINE_TEXT);
+            javascript: function (block) {
+                var title = quando_editor.getText(block, WHEN_VITRINE_TEXT);
                 var statement = quando_editor.getStatement(block, STATEMENT);
                 var result = `quando.vitrine("${block.id}", function() {\n`
                     + `quando.title("${title}");\n`
@@ -268,12 +268,12 @@
         });
 
         function _update_menus(ev, block_id, text=false) {
-            let topBlocks = Blockly.mainWorkspace.getAllBlocks();
-            let matchBlock = [PREFIX + LABEL_TO_BLOCK, PREFIX + SHOW_DISPLAY];
+            var topBlocks = Blockly.mainWorkspace.getAllBlocks();
+            var matchBlock = [PREFIX + LABEL_TO_BLOCK, PREFIX + SHOW_DISPLAY];
             for (var checkblock of topBlocks) {
                 if (matchBlock.includes(checkblock.type)) {
 //console.log('change:'+checkblock.type)
-                    let menuid = quando_editor.getMenu(checkblock, LABEL_TO_MENU);
+                    var menuid = quando_editor.getMenu(checkblock, LABEL_TO_MENU);
                     if (menuid == block_id) {
                         if (text) {
                             quando_editor.setMenuText(checkblock, LABEL_TO_MENU, text);
@@ -286,8 +286,8 @@
         }
 
         Blockly.mainWorkspace.addChangeListener(function (ev) {
-            let workspace = Blockly.Workspace.getById(ev.workspaceId);
-            let block = workspace.getBlockById(ev.blockId);
+            var workspace = Blockly.Workspace.getById(ev.workspaceId);
+            var block = workspace.getBlockById(ev.blockId);
             if (ev.type == Blockly.Events.CHANGE) {
                 if (block.type == PREFIX + WHEN_VITRINE_BLOCK) {
                     _update_menus(ev, block.id, ev.newValue);
@@ -304,28 +304,28 @@
         });
 
         // Build the drop down list of Vitrines
-        let _label_menu = function () {
-            let topBlocks = Blockly.mainWorkspace.getAllBlocks();
-            let choices = [['-----', 0]];
+        var _label_menu = function () {
+            var topBlocks = Blockly.mainWorkspace.getAllBlocks();
+            var choices = [['-----', 0]];
             for (var block of topBlocks) {
                 if (block.type == PREFIX + WHEN_VITRINE_BLOCK) {
-                    let text = quando_editor.getText(block, 'title');
+                    var text = quando_editor.getText(block, 'title');
                     choices.push([text, block.id]);
                 }
             }
             return choices;
         }
-        let LABEL_TO_MENU = 'to';
-        let _label_javascript = function (block) {
-            let menuid = quando_editor.getMenu(block, LABEL_TO_MENU);
+        var LABEL_TO_MENU = 'to';
+        var _label_javascript = function (block) {
+            var menuid = quando_editor.getMenu(block, LABEL_TO_MENU);
             // find when block on id, then get it's title
-            let whenblock = Blockly.mainWorkspace.getBlockById(menuid);
-            let title = quando_editor.getText(whenblock, WHEN_VITRINE_TEXT);
+            var whenblock = Blockly.mainWorkspace.getBlockById(menuid);
+            var title = quando_editor.getText(whenblock, WHEN_VITRINE_TEXT);
             var result = `quando.addLabel("${menuid}", "${title}");\n`;
             return result;
         }
-        let LABEL_TO_BLOCK = 'Label to';
-        let LABEL_TEXT = 'text';
+        var LABEL_TO_BLOCK = 'Label to';
+        var LABEL_TEXT = 'text';
         quando_editor.defineDisplay({
             // TODO must be in a vitrine...?
             name: LABEL_TO_BLOCK, title: 'Label',
@@ -338,42 +338,42 @@
             javascript: _label_javascript,
         });
 
-        let SHOW_DISPLAY = 'Show Display';
-        let SHOW_DISPLAY_MENU = 'show display menu';
+        var SHOW_DISPLAY = 'Show Display';
+        var SHOW_DISPLAY_MENU = 'show display menu';
         quando_editor.defineDisplay({
             name: SHOW_DISPLAY,
             interface: [{
                     name: LABEL_TO_MENU, title:'',
                     menu: _label_menu
                 }],
-            javascript: (block) => {
-                let menuid = quando_editor.getMenu(block, LABEL_TO_MENU);
+            javascript: function (block) {
+                var menuid = quando_editor.getMenu(block, LABEL_TO_MENU);
                 // find when block on id, then get it's title
-                let whenblock = Blockly.mainWorkspace.getBlockById(menuid);
+                var whenblock = Blockly.mainWorkspace.getBlockById(menuid);
                 var result = `quando.showVitrine("${menuid}");\n`;
                 return result;                
             }
         });
 
-        let WHEN_LABEL_BLOCK = 'When Label';
-        let WHEN_LABEL_TEXT = 'When label text';
+        var WHEN_LABEL_BLOCK = 'When Label';
+        var WHEN_LABEL_TEXT = 'When label text';
         quando_editor.defineDisplay({
             name: WHEN_LABEL_BLOCK,
             interface: [
                 { name: WHEN_LABEL_TEXT, title:'', text:'**Put label text here**' },
                 { statement: STATEMENT }
             ],
-            javascript: (block) => {
-                let text = quando_editor.getText(block, WHEN_LABEL_TEXT);
-                let statement = quando_editor.getStatement(block, STATEMENT);
-                let result = `quando.addLabelStatement("${text}", function() {\n${statement}});\n`;
+            javascript: function (block) {
+                var text = quando_editor.getText(block, WHEN_LABEL_TEXT);
+                var statement = quando_editor.getStatement(block, STATEMENT);
+                var result = `quando.addLabelStatement("${text}", function() {\n${statement}});\n`;
                 return result;
             }
         });
 
-        let STYLE_BLOCK = 'Style';
-        let STYLE_MENU = 'style';
-        let DIV_MENU = 'div';
+        var STYLE_BLOCK = 'Style';
+        var STYLE_MENU = 'style';
+        var DIV_MENU = 'div';
         quando_editor.defineStyle({
             name: STYLE_BLOCK, title: '',
             interface: [
@@ -384,10 +384,10 @@
                 },
                 { name: COLOUR, title: '', colour: '#ff0000' },
             ],
-            javascript: (block) => {
-                let result ="";
-                let method = _getStyleOnContained(block, [WHEN_VITRINE_BLOCK, WHEN_IDLE]);
-                let div = quando_editor.getMenu(block, DIV_MENU);
+            javascript: function (block) {
+                var result ="";
+                var method = _getStyleOnContained(block, [WHEN_VITRINE_BLOCK, WHEN_IDLE]);
+                var div = quando_editor.getMenu(block, DIV_MENU);
                 switch (div) {
                     case 'Title': div = '#quando_title';
                         break;
@@ -396,17 +396,17 @@
                     case 'Labels': div = '.quando_label';
                         break;
                 }
-                let style = quando_editor.getMenu(block, STYLE_MENU);
-                let value = quando_editor.getColour(block, COLOUR);
+                var style = quando_editor.getMenu(block, STYLE_MENU);
+                var value = quando_editor.getColour(block, COLOUR);
                 if (style == 'Font Colour') {
                     style = 'color';
                 } else {
                     style = 'background-color '; // not actually javascript?!
                     // so backgroundColor won't work - has to be CSS interpreted...'
-                    let bigint = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(value);
-                    let r = parseInt(bigint[1], 16);
-                    let g = parseInt(bigint[2], 16);
-                    let b = parseInt(bigint[3], 16);
+                    var bigint = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(value);
+                    var r = parseInt(bigint[1], 16);
+                    var g = parseInt(bigint[2], 16);
+                    var b = parseInt(bigint[3], 16);
                     value = `rgba(${r}, ${g}, ${b}, 0.6)`;
                     if (div == '.quando_label') { // Need to put in the transition opacity - I think this is working now
                         result += `quando.${method}('${div}.focus', '${style}', 'rgba(${r}, ${g}, ${b}, 1)');\n`;
@@ -417,17 +417,17 @@
             },
         });
 
-        let FONT_SIZE_BLOCK = 'Font Size';
-        let FONT_SIZE = 'font size';
+        var FONT_SIZE_BLOCK = 'Font Size';
+        var FONT_SIZE = 'font size';
         quando_editor.defineStyle({
             name: FONT_SIZE_BLOCK,
             interface: [
                 { menu: ['Title', 'Text', 'Labels'], name: DIV_MENU, title: '' },
                 { name: FONT_SIZE, title: '', number: 100 }, {title: '+ characters across screen'}
             ],
-            javascript: (block) => {
-                let method = _getStyleOnContained(block, [WHEN_VITRINE_BLOCK, WHEN_IDLE]);
-                let div = quando_editor.getMenu(block, DIV_MENU);
+            javascript: function (block) {
+                var method = _getStyleOnContained(block, [WHEN_VITRINE_BLOCK, WHEN_IDLE]);
+                var div = quando_editor.getMenu(block, DIV_MENU);
                 switch (div) {
                     case 'Title': div = '#quando_title';
                         break;
@@ -436,14 +436,14 @@
                     case 'Labels': div = '.quando_label';
                         break;
                 }
-                let value = 100/quando_editor.getNumber(block, FONT_SIZE);
+                var value = 100/quando_editor.getNumber(block, FONT_SIZE);
                 result = `quando.${method}('${div}', 'font-size', '${value}vw');\n`;
                 return result;
             },
         });
 
-        let FONT_TYPE_BLOCK = 'Font';
-        let FONT_NAME_MENU = 'font name';
+        var FONT_TYPE_BLOCK = 'Font';
+        var FONT_NAME_MENU = 'font name';
         quando_editor.defineStyle({
             name: FONT_TYPE_BLOCK,
             interface: [
@@ -459,10 +459,10 @@
                     name: FONT_NAME_MENU, title: ''
                 }
             ],
-            javascript: (block) => {
-                let result ="";
-                let method = _getStyleOnContained(block, [WHEN_VITRINE_BLOCK, WHEN_IDLE]);
-                let div = quando_editor.getMenu(block, DIV_MENU);
+            javascript: function (block) {
+                var result ="";
+                var method = _getStyleOnContained(block, [WHEN_VITRINE_BLOCK, WHEN_IDLE]);
+                var div = quando_editor.getMenu(block, DIV_MENU);
                 switch (div) {
                     case 'Title': div = '#quando_title';
                         break;
@@ -471,13 +471,13 @@
                     case 'Labels': div = '.quando_label';
                         break;
                 }
-                let font_name = quando_editor.getMenu(block, FONT_NAME_MENU);
+                var font_name = quando_editor.getMenu(block, FONT_NAME_MENU);
                 result += `quando.${method}('${div}', 'font-family', '${font_name}', ',');\n`;
                 return result;
             },
         });
 
-        // let EXPLORATION_RULE = 'Exploration Rule';
+        // var EXPLORATION_RULE = 'Exploration Rule';
         // quando_editor.defineBlock({
         //     name: EXPLORATION_RULE, title:'When', category: 'extras', colour: '#55bb55',
         //     interface: [
@@ -491,7 +491,7 @@
         //     ]
         // });
 
-        // let EXPLORATION_ACTION = 'Exploration Action';
+        // var EXPLORATION_ACTION = 'Exploration Action';
         // quando_editor.defineBlock({
         //     name: EXPLORATION_ACTION, title:'Do', category: 'extras', colour: '#5555bb',
         //     interface: [
@@ -521,7 +521,7 @@
         //     }
         // });
         
-        let MICROBIT_GESTURE_MENU = "MicroBit Gesture";
+        var MICROBIT_GESTURE_MENU = "MicroBit Gesture";
         quando_editor.defineDevice({
             name: 'When micro:bit',
             interface: [
@@ -529,7 +529,7 @@
                 { statement: STATEMENT }
             ],
             javascript: function (block) {
-                let fn = '';
+                var fn = '';
                 switch (quando_editor.getMenu(block, MICROBIT_GESTURE_MENU)) {
                     case 'Up':
                         fn = "ubitUp";
@@ -567,8 +567,8 @@
             }
         });
 
-        let WHEN_ROLL_MIN = "Min";
-        let WHEN_ROLL_MAX = "Max";
+        var WHEN_ROLL_MIN = "Min";
+        var WHEN_ROLL_MAX = "Max";
         quando_editor.defineDevice({
             name: 'When Roll between ',
             interface: [
@@ -578,8 +578,8 @@
                 { statement: STATEMENT }
             ],
             javascript: function (block) {
-                let min = quando_editor.getNumber(block, WHEN_ROLL_MIN);
-                let max = quando_editor.getNumber(block, WHEN_ROLL_MAX);
+                var min = quando_editor.getNumber(block, WHEN_ROLL_MIN);
+                var max = quando_editor.getNumber(block, WHEN_ROLL_MAX);
                 var statement = quando_editor.getStatement(block, STATEMENT);
                 var result = "quando.ubitRoll(" + min + "," + max + ","
                     + "function() {\n"
@@ -591,8 +591,8 @@
             }
         });
 
-        let WHEN_HEADING_MIN = "Min";
-        let WHEN_HEADING_MAX = "Max";
+        var WHEN_HEADING_MIN = "Min";
+        var WHEN_HEADING_MAX = "Max";
         quando_editor.defineDevice({
             name: 'When heading between ',
             interface: [
@@ -602,8 +602,8 @@
                 { statement: STATEMENT }
             ],
             javascript: function (block) {
-                let min = quando_editor.getNumber(block, WHEN_HEADING_MIN);
-                let max = quando_editor.getNumber(block, WHEN_HEADING_MAX);
+                var min = quando_editor.getNumber(block, WHEN_HEADING_MIN);
+                var max = quando_editor.getNumber(block, WHEN_HEADING_MAX);
                 var statement = quando_editor.getStatement(block, STATEMENT);
                 var result = "quando.ubitHeading(" + min + "," + max + ","
                     + "function() {\n"
@@ -615,8 +615,8 @@
             }
         });
         
-        let WHEN_IDLE = 'When Idle for';
-        let ACTIVE_STATEMENT = 'ACTIVE_STATEMENT'
+        var WHEN_IDLE = 'When Idle for';
+        var ACTIVE_STATEMENT = 'ACTIVE_STATEMENT'
         quando_editor.defineTime({
             name: WHEN_IDLE, next: false, previous: false,
             interface: [
@@ -624,7 +624,7 @@
                 { statement: STATEMENT },
                 { row: 'Then When Active', statement: ACTIVE_STATEMENT }
             ],
-            javascript: (block) => {
+            javascript: function (block) {
                 var seconds = quando_editor.getNumber(block, DURATION) * 1;
                 if (quando_editor.getMenu(block, MENU_UNITS_MINS.name) === 'Minutes') {
                     seconds *= 60;
@@ -673,9 +673,9 @@
             }
         });
 
-        let CONTENT_POSITION = 'Position';
-        let DIRECTION_MENU = 'Direction';
-        let POSITION_SIZE = 'Position Size';
+        var CONTENT_POSITION = 'Position';
+        var DIRECTION_MENU = 'Direction';
+        var POSITION_SIZE = 'Position Size';
         quando_editor.defineClient({
             name: CONTENT_POSITION,
             interface: [
@@ -683,9 +683,9 @@
                 { name: POSITION_SIZE, title: '', number: 0 }, {title: '%'},
                 { menu: ['top', 'bottom', 'left', 'right'], name: DIRECTION_MENU, title: 'from' }
             ],
-            javascript: (block) => {
-                let method = _getStyleOnContained(block, [WHEN_VITRINE_BLOCK, WHEN_IDLE]);
-                let div = quando_editor.getMenu(block, DIV_MENU);
+            javascript: function (block) {
+                var method = _getStyleOnContained(block, [WHEN_VITRINE_BLOCK, WHEN_IDLE]);
+                var div = quando_editor.getMenu(block, DIV_MENU);
                 switch (div) {
                     case 'Title': div = '#quando_title';
                         break;
@@ -694,8 +694,8 @@
                     case 'Labels': div = '#quando_labels';
                         break;
                 }
-                let direction = quando_editor.getMenu(block, DIRECTION_MENU);
-                let value = quando_editor.getNumber(block, POSITION_SIZE);
+                var direction = quando_editor.getMenu(block, DIRECTION_MENU);
+                var value = quando_editor.getNumber(block, POSITION_SIZE);
                 result = `quando.${method}('${div}', '${direction}', '${value}%');\n`;
                 if (direction == 'bottom') {
                    result += `quando.${method}('${div}', 'top', 'unset');\n`; // override the set top 0px
@@ -706,8 +706,8 @@
             },
         });
 
-        let CONTENT_SIZE = 'Size';
-        let DIMENSION_MENU = 'Dimension';
+        var CONTENT_SIZE = 'Size';
+        var DIMENSION_MENU = 'Dimension';
         quando_editor.defineClient({
             name: CONTENT_SIZE,
             interface: [
@@ -715,9 +715,9 @@
                 { name: POSITION_SIZE, title: '', number: 100 }, {title: '%'},
                 { menu: ['height', 'width'], name: DIMENSION_MENU, title: 'of' },
             ],
-            javascript: (block) => {
-                let method = _getStyleOnContained(block, [WHEN_VITRINE_BLOCK, WHEN_IDLE]);
-                let div = quando_editor.getMenu(block, DIV_MENU);
+            javascript: function (block) {
+                var method = _getStyleOnContained(block, [WHEN_VITRINE_BLOCK, WHEN_IDLE]);
+                var div = quando_editor.getMenu(block, DIV_MENU);
                 switch (div) {
                     case 'Title': div = '#quando_title';
                         break;
@@ -726,24 +726,24 @@
                     case 'Labels': div = '#quando_labels';
                         break;
                 }
-                let dimension = quando_editor.getMenu(block, DIMENSION_MENU);
-                let value = quando_editor.getNumber(block, POSITION_SIZE);
+                var dimension = quando_editor.getMenu(block, DIMENSION_MENU);
+                var value = quando_editor.getNumber(block, POSITION_SIZE);
                 result = `quando.${method}('${div}', '${dimension}', '${value}%');\n`;
                 return result;
             },
         });
 
-        let PROJECTION_ACTION = 'Projection Action';
+        var PROJECTION_ACTION = 'Projection Action';
         quando_editor.defineDisplay({
             name: PROJECTION_ACTION, title:'',
             interface: [
                 { name: 'front_rear', menu: ['Normal', 'Rear'], title: '' },
                 { title:'Projection'}
             ],
-            javascript: (block) => {
-                let method = _getStyleOnContained(block, [WHEN_VITRINE_BLOCK, WHEN_IDLE]);
-                let front_rear = quando_editor.getMenu(block, 'front_rear');
-                let scale = '1,1';
+            javascript: function (block) {
+                var method = _getStyleOnContained(block, [WHEN_VITRINE_BLOCK, WHEN_IDLE]);
+                var front_rear = quando_editor.getMenu(block, 'front_rear');
+                var scale = '1,1';
                 if (front_rear == 'Rear') {
                     scale = '-1,1';
                 }
@@ -752,15 +752,15 @@
             },
         });
 
-        let CHANGE_WITH_BLOCK = 'When Change';
-        let CHANGE_VALUE = 'Value';
-        let CHANGE_VARIABLE = 'Variable';
-        let CURSOR_LEFT_RIGHT = '\u21D4 Cursor';
-        let CURSOR_UP_DOWN = '\u21D5 Cursor';
-        let UBIT_ROLL = 'micro:bit Roll';
-        let UBIT_PITCH = 'micro:bit Pitch';
-        let CHECK_INVERTED = 'Inverted';
-        let DAMP_VALUE = 'Dampen';
+        var CHANGE_WITH_BLOCK = 'When Change';
+        var CHANGE_VALUE = 'Value';
+        var CHANGE_VARIABLE = 'Variable';
+        var CURSOR_LEFT_RIGHT = '\u21D4 Cursor';
+        var CURSOR_UP_DOWN = '\u21D5 Cursor';
+        var UBIT_ROLL = 'micro:bit Roll';
+        var UBIT_PITCH = 'micro:bit Pitch';
+        var CHECK_INVERTED = 'Inverted';
+        var DAMP_VALUE = 'Dampen';
         quando_editor.defineDevice({
             name: CHANGE_WITH_BLOCK, title: '',
             interface: [
@@ -772,14 +772,14 @@
                     {name: DAMP_VALUE, number:'0.25'},                    
                 ],
             javascript: function (block) {
-                let value = quando_editor.getMenu(block, CHANGE_VALUE);
+                var value = quando_editor.getMenu(block, CHANGE_VALUE);
                 switch (value) {
                     case CURSOR_UP_DOWN: value = 'cursor_up_down';
                         break;
                     case CURSOR_LEFT_RIGHT: value = 'cursor_left_right';
                         break;
                 }
-                let variable = quando_editor.getMenu(block, CHANGE_VARIABLE);
+                var variable = quando_editor.getMenu(block, CHANGE_VARIABLE);
                 switch (variable) {
                     case UBIT_ROLL: variable = 'handleUbitRoll';
                         break;

@@ -378,7 +378,7 @@
     }
     function _loaded(obj, modal_id, name) {
         Blockly.mainWorkspace.clear(); // Note - this is deferred - so must force the load to be later
-        setTimeout(() => {
+        setTimeout(function () {
             _showXml(obj.xml);
             _content = obj.content;
             _deploy = obj.deploy;
