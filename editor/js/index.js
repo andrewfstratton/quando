@@ -1,15 +1,15 @@
-(function () {
-  var self = this['index'] = {}
-  var _userid = null
-  var _content = ''
-  var _deploy = ''
-  var _remote_list = []
-  var PREFIX = 'quando_'
+(() => {
+  let self = this['index'] = {}
+  let _userid = null
+  let _content = ''
+  let _deploy = ''
+  let _remote_list = []
+  let PREFIX = 'quando_'
 
-  window.onload = function () {
+  window.onload = () => {
     self.setup()
   }
-  window.onbeforeunload = function () {
+  window.onbeforeunload = () => {
     return 'Are you sure you want to leave the editor?' // Doesn't seem to show this message in Chrome?!
   }
   function _encodeXml (str) {
@@ -19,8 +19,8 @@
             .replace(/"/g, '&quot;')
             .replace(/'/g, '&apos;')
   }
-  self.setup = function () {
-    $('#login_modal').keypress(function (e) {
+  self.setup = () => {
+    $('#login_modal').keypress((e) => {
       if (e.which === 13) {
         self.handle_login()
       }
@@ -29,7 +29,7 @@
     $('#loading_modal').modal('toggle')
     $.ajax({
       url: '/login',
-      success: function (res) {
+      success: (res) => {
         if (res.success) {
           _success('Logged in')
           _userid = res.userid
@@ -40,23 +40,23 @@
         $('#loading_modal').modal('toggle')
         quando_editor.inject(Blockly)
       },
-      error: function () {
+      error: () => {
         _error('Failed to find server')
         $('#loading_modal').modal('toggle')
         quando_editor.inject(Blockly)
       }
     })
   }
-  self.handle_login = function () {
-    var userid = $('#userid').val()
-    var password = $('#password').val()
-    var message_elem = $('#login_modal_footer_message')
+  self.handle_login = () => {
+    let userid = $('#userid').val()
+    let password = $('#password').val()
+    let message_elem = $('#login_modal_footer_message')
     message_elem.html('Checking... ')
     $.ajax({
       url: '/login',
       type: 'POST',
       data: { 'userid': userid, 'password': password },
-      success: function (res, status, xhr) {
+      success: (res, status, xhr) => {
         if (res.success) {
           message_elem.html('')
           _success('Logged in')
@@ -67,12 +67,12 @@
           message_elem.html('Failed: ' + res.message)
         }
       },
-      error: function () {
+      error: () => {
         message_elem.html('Failed to find server ')
       }
     })
   }
-  self.handle_load = function () {
+  self.handle_load = () => {
     if (_userid) {
       _remote_load_list()
       $('#remote_load_modal').modal('toggle')
@@ -81,45 +81,45 @@
       $('#local_load_modal').modal('toggle')
     }
   }
-  self.handle_save = function () {
+  self.handle_save = () => {
     if (_userid) {
       $('#remote_save_modal').modal('toggle')
     } else {
       $('#local_save_modal').modal('toggle')
     }
   }
-  self.handle_clear = function () {
+  self.handle_clear = () => {
     _info('Cleared...')
     _content = ''
     _deploy = ''
     $('#file_name').html('[no file]')
     Blockly.mainWorkspace.clear()
   }
-  self.handle_logout = function () {
+  self.handle_logout = () => {
     $.ajax({
       url: '/login',
       type: 'DELETE',
-      success: function (res, status, xhr) {
+      success: (res, status, xhr) => {
         _info('Logged out')
         _userid = null
         _show_user_status()
       },
-      error: function () {
+      error: () => {
         $('#loading_modal_message').html('Failed to find server')
       }
     })
   }
-  self.handle_remote_to_local_load = function () {
+  self.handle_remote_to_local_load = () => {
     _local_load_list()
     $('#remote_load_modal').modal('toggle')
     $('#local_load_modal').modal('toggle')
   }
-  self.handle_remote_to_local_save = function () {
+  self.handle_remote_to_local_save = () => {
     $('#remote_save_modal').modal('toggle')
     $('#local_save_modal').modal('toggle')
   }
-  self.handle_local_save = function () {
-    var key = $('#local_save_key').val()
+  self.handle_local_save = () => {
+    let key = $('#local_save_key').val()
     localStorage.setItem(PREFIX + key, JSON.stringify({
       deploy: _deploy,
       xml: _getXml(),
@@ -128,14 +128,14 @@
     $('#local_save_modal').modal('toggle')
     _saved(key)
   }
-  self.handle_remote_save = function () {
-    var name = encodeURI($('#remote_save_key').val())
-    var obj = JSON.stringify({ deploy: _deploy, xml: _getXml(), content: _content })
+  self.handle_remote_save = () => {
+    let name = encodeURI($('#remote_save_key').val())
+    let obj = JSON.stringify({ deploy: _deploy, xml: _getXml(), content: _content })
     $.ajax({
       url: '/script',
       type: 'POST',
       data: { userid: _userid, name: name, script: obj },
-      success: function (res) {
+      success: (res) => {
         if (res.success) {
           $('#remote_save_modal').modal('toggle')
           _saved(decodeURI(name))
@@ -143,19 +143,19 @@
           alert('Failed to save')
         }
       },
-      error: function () {
+      error: () => {
         alert('Failed to find server')
       }
     })
   }
-  self.handle_show_xml = function () {
+  self.handle_show_xml = () => {
     $('#menu_dropdown').dropdown('toggle')
     $('#show_modal_title').html('Show Xml')
     $('#show_modal').modal('toggle')
     $('#show_modal_code').removeClass('language-javascript').addClass('language-xml')
     $('#show_modal_code').html(_encodeXml(_getXml()))
   }
-  self.handle_show_code = function () {
+  self.handle_show_code = () => {
     $('#menu_dropdown').dropdown('toggle')
     $('#show_modal_title').html('Show Code')
     $('#show_modal').modal('toggle')
@@ -177,10 +177,10 @@
   function _warning (message) {
     _notify(message, 'warn')
   }
-  self.handle_deploy = function () {
-    var code = quando_editor.getCode()
+  self.handle_deploy = () => {
+    let code = quando_editor.getCode()
     if (code) {
-      var filename = 'guest'
+      let filename = 'guest'
       if (_userid) {
         filename = prompt('Please enter the deployment filename \n(without a suffix)', _deploy)
       }
@@ -192,11 +192,11 @@
             url: '/script/deploy/' + encodeURI(filename),
             type: 'PUT',
             data: { javascript: code },
-            success: function () {
+            success: () => {
               _deploy = filename
               _success("Deployed as '" + filename + ".js'")
             },
-            error: function () {
+            error: () => {
               alert('Failed to find server')
             }
           })
@@ -206,21 +206,21 @@
       alert('Behaviour incomplete.')
     }
   }
-  self.handle_test = function () {
-    var code = quando_editor.getCode()
+  self.handle_test = () => {
+    let code = quando_editor.getCode()
     if (code) {
-      var filename = '_'
+      let filename = '_'
       $.ajax({
         url: '/script/deploy/' + encodeURI(filename),
         type: 'PUT',
         data: { javascript: code },
-        success: function () {
+        success: () => {
           _success('Opening Test...')
-          var deploy_window = window.open('/client/js/' + filename + '.js', 'quando_deployed_test',
+          let deploy_window = window.open('/client/js/' + filename + '.js', 'quando_deployed_test',
                         'left=0,top=0,width=9999,height=9999')
           deploy_window.focus() // moveTo(0,0);
         },
-        error: function () {
+        error: () => {
           alert('Failed to find server')
         }
       })
@@ -228,9 +228,9 @@
       alert('Behaviour incomplete.')
     }
   }
-  self.handle_file = function (media, block_id, widget_id, path = '') {
+  self.handle_file = (media, block_id, widget_id, path = '') => {
         // when media is 'UPLOAD', then we are uploading, note then that block_id and widget_id are null
-    var file_modal = $('#file_modal')
+    let file_modal = $('#file_modal')
     if (media == 'UPLOAD') {
       $('.file_modal_upload').show()
       $('.file_modal_select_file').hide()
@@ -243,27 +243,27 @@
     $('#file_list').html('Loading...')
     $.ajax({
       url: '/file/type' + path + '/' + media,
-      success: function (res) {
+      success: (res) => {
         if (res.success) {
           $('#file_modal_path').html(path)
           $('#file_list').html('')
           if (path != '') {
-            var parent_path = ''
-            var slash_loc = path.lastIndexOf('/')
+            let parent_path = ''
+            let slash_loc = path.lastIndexOf('/')
             if (slash_loc > 0) {
               parent_path = path.substring(0, slash_loc)
             }
             $('#file_list').append(_folder_list_add('..', media, parent_path,
                             block_id, widget_id))
           }
-          for (var i in res.folders) {
+          for (let i in res.folders) {
             $('#file_list').append(_folder_list_add(res.folders[i], media, path + '/' + res.folders[i],
                             block_id, widget_id))
           }
           if (path != '') {
             path = path.substring(1) + '/' // strip off the intial slash and put infront of the file
           }
-          for (var i in res.files) {
+          for (let i in res.files) {
             $('#file_list').append(_file_list_add(res.files[i], path,
                             'handle_file_selected', block_id, widget_id))
           }
@@ -272,34 +272,34 @@
           $('#file_modal').modal('toggle')
         }
       },
-      error: function () {
+      error: () => {
         alert('Failed to access server')
         $('#file_modal').modal('toggle')
       }
     })
   }
-  self.handle_folder_selected = function (media, block_id, widget_id, path) {
+  self.handle_folder_selected = (media, block_id, widget_id, path) => {
     self.handle_file(media, block_id, widget_id, path)
   }
-  self.handle_file_selected = function (filename, block_id, widget_id) {
+  self.handle_file_selected = (filename, block_id, widget_id) => {
         // When blocK-id is null, then this is an upload - so do nothing...
     if (block_id != null) {
-      var block = Blockly.mainWorkspace.getBlockById(block_id)
+      let block = Blockly.mainWorkspace.getBlockById(block_id)
       block.setFieldValue(filename, widget_id)
       $('#file_modal').modal('hide')
     }
         // TODO get/return/set filename
   }
-  self.handle_upload_media = function () {
+  self.handle_upload_media = () => {
     if ($('#upload_media').val()) {
       self.handle_file('UPLOAD', null, null, '')
     }
   }
-  self.handle_upload = function () {
-    var file_in = $('#upload_media').val()
-    var filename = encodeURI(file_in.substring(1 + file_in.lastIndexOf('\\')))
-    var remote_path = encodeURI($('#file_modal_path').html())
-    var form_data = new FormData()
+  self.handle_upload = () => {
+    let file_in = $('#upload_media').val()
+    let filename = encodeURI(file_in.substring(1 + file_in.lastIndexOf('\\')))
+    let remote_path = encodeURI($('#file_modal_path').html())
+    let form_data = new FormData()
     form_data.append('upload_data', $('#upload_media')[0].files[0]) // wierd jquery format...
     $.ajax({
             // url: '/upload', // was '/file/upload' + remote_path + '/' + filename,
@@ -308,7 +308,7 @@
       data: form_data,
       processData: false,
       contentType: false,
-      success: function (res) {
+      success: (res) => {
         if (res.success) {
           $('#file_modal').modal('toggle')
           _success('Uploaded...' + decodeURI(remote_path + filename))
@@ -317,52 +317,52 @@
           alert('Failed to save')
         }
       },
-      error: function () {
+      error: () => {
         alert('Failed to find server')
       }
     })
   }
-  self.local_load = function (key) {
-    var obj = JSON.parse(localStorage.getItem(key))
-    var name = key.slice(PREFIX.length)
+  self.local_load = (key) => {
+    let obj = JSON.parse(localStorage.getItem(key))
+    let name = key.slice(PREFIX.length)
     _loaded(obj, '#local_load_modal', name)
   }
-  self.remote_load = function (index) {
+  self.remote_load = (index) => {
         // debugger
     $.ajax({
       url: '/script/id/' + _remote_list[index].id,
-      success: function (res) {
+      success: (res) => {
         if (res.success) {
-          var xml = JSON.parse(res.doc.xml)
+          let xml = JSON.parse(res.doc.xml)
           _loaded(xml, '#remote_load_modal', res.doc.name)
         } else {
           alert('Failed to find script')
         }
       },
-      error: function () {
+      error: () => {
         alert('Failed to access server')
       }
     })
   }
-  self.local_delete = function (key) {
+  self.local_delete = (key) => {
     if (confirm("Delete forever '" + key + "'?")) {
       localStorage.removeItem(key)
       _local_load_list()
     }
   }
-  self.remote_delete = function (index) {
+  self.remote_delete = (index) => {
     if (confirm("Delete forever '" + _remote_list[index].name + "' saved " +
             _remote_list[index].date + ' ?')) {
       $.ajax({
         url: '/script/id/' + _remote_list[index].id,
         type: 'DELETE',
-        success: function (res) {
+        success: (res) => {
           if (!res.success) {
             alert(res.message) // V hard to fail - if possible at all
           }
           _remote_load_list()
         },
-        error: function () {
+        error: () => {
           alert('Failed to find server')
         }
       })
@@ -377,7 +377,7 @@
   }
   function _loaded (obj, modal_id, name) {
     Blockly.mainWorkspace.clear() // Note - this is deferred - so must force the load to be later
-    setTimeout(function () {
+    setTimeout(() => {
       _showXml(obj.xml)
       _content = obj.content
       _deploy = obj.deploy
@@ -397,15 +397,15 @@
   function _remote_load_list () {
     $.ajax({
       url: '/script/names/' + _userid,
-      success: function (res) {
+      success: (res) => {
         if (res.success) {
-          var list = res.list
+          let list = res.list
           _remote_list = list
           if (list.length === 0) {
             $('#remote_load_list').html('No saves available')
           } else {
             $('#remote_load_list').html('')
-            for (var i = 0; i < list.length; i++) {
+            for (let i = 0; i < list.length; i++) {
               $('#remote_load_list').append(_load_list_add(i,
                                 list[i].name, list[i].date, 'remote_load', 'remote_delete'))
             }
@@ -414,16 +414,16 @@
           alert(res.message)
         }
       },
-      error: function () {
+      error: () => {
         alert('Failed to find server')
       }
     })
   }
   function _local_load_list () {
     $('#local_load_list').html('')
-    for (var key in localStorage) {
+    for (let key in localStorage) {
       if (key.startsWith(PREFIX)) {
-        var name = key.slice(PREFIX.length)
+        let name = key.slice(PREFIX.length)
         $('#local_load_list').append(_load_list_add(key,
                     name, '', 'local_load', 'local_delete'))
       }
@@ -442,7 +442,7 @@
     }
   }
   function _load_list_add (id, name, date, fn_name, del_fn_name) {
-    var result = '<div class="row"><div class="col-sm-1"> </div>' +
+    let result = '<div class="row"><div class="col-sm-1"> </div>' +
             '<a class="list-group-item col-md-5" onclick="index.' +
             fn_name + '(\'' + id + '\')">' + name + '</a>' +
             '<div class="col-sm-4">' + date + '</div>' +
@@ -453,7 +453,7 @@
     return result
   }
   function _file_list_add (file_name, path, fn_name, block_id, widget_id) {
-    var result = '<div class="row"><div class="col-sm-1"> </div>' +
+    let result = '<div class="row"><div class="col-sm-1"> </div>' +
             '<a class="list-group-item col-md-5" onclick="index.' +
             `${fn_name}('${path}${file_name}', `
     if (block_id == null) {
@@ -466,7 +466,7 @@
     return result
   }
   function _folder_list_add (folder_name, media, path, block_id, widget_id) {
-    var result = '<div class="row"><div class="col-sm-1"> </div>' +
+    let result = '<div class="row"><div class="col-sm-1"> </div>' +
             '<a class="list-group-item col-md-5" onclick="index.' +
                 `handle_folder_selected('${media}', `
     if (block_id == null) {
@@ -479,7 +479,7 @@
     return result
   }
   function _getXml () {
-    var xmlDom = Blockly.Xml.workspaceToDom(Blockly.mainWorkspace)
+    let xmlDom = Blockly.Xml.workspaceToDom(Blockly.mainWorkspace)
     return Blockly.Xml.domToPrettyText(xmlDom)
   }
   ;
