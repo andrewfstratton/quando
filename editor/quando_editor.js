@@ -1,4 +1,4 @@
-(() => {
+(function () {
     let self = this['quando_editor'] = {}
     let quando_blocks = this['quando_blocks']
     let TEXT_INPUT_PREFIX = 'TEXT_INPUT_'
@@ -145,7 +145,7 @@
         menudrop.setValue(0)
     }
 
-    let _handleInterface = (interface, name, _this, sofar, visible=true) => {
+    let _handleInterface = function (interface, name, _this, sofar, visible=true) {
         // Should handle if not an array (object)
         if (typeof interface !== 'object') {
             _ERROR(`Failed to add interface widgets - json ${name} is of type '${typeof interface}'`)
@@ -156,7 +156,7 @@
             _ERROR(`Failed to add interface widgets - json ${name} is not an Array`)
             return
         } // Else ok so far...
-        interface.forEach((widget) => {
+        interface.forEach(function (widget) {
             if (typeof widget !== 'object') {
                 _WARNING(`Ignoring element in interface Block '${name}' - not an object`)
             } else {
@@ -217,47 +217,43 @@
                             } else {
                                 _WARNING("Image widget missing alternate text...setting to '*'")
                             }
-                            let field = new Blockly.FieldImage(url, width, height, alt)
-                            sofar.appendField(field)
-                            fields.push(field)
+                            let fieldImage = new Blockly.FieldImage(url, width, height, alt)
+                            sofar.appendField(fieldImage)
+                            fields.push(fieldImage)
                             break
                         case 'text':
-                            let widget_id = TEXT_INPUT_PREFIX + widget.name
+                            let widget_id_text = TEXT_INPUT_PREFIX + widget.name
                             if (typeof widget['change'] == 'function') {
                                 let field = new Blockly.FieldTextInput(widget[key], widget['change'])
-                                sofar.appendField(field, widget_id)
+                                sofar.appendField(field, widget_id_text)
                                 fields.push(field)
                                 //TODO add this for all changeable inputs
                             } else {
                                 let field = new Blockly.FieldTextInput(widget[key])
-                                sofar.appendField(field, widget_id)
+                                sofar.appendField(field, widget_id_text)
                                 fields.push(field)
                             }
                             break
                         case 'number':
-                            let widget_id = NUMBER_INPUT_PREFIX + widget.name
-                            let field = new Blockly.FieldNumber('' + widget[key])
-                            sofar.appendField(field, widget_id)
-                            fields.push(field)
+                            let fieldNumber = new Blockly.FieldNumber('' + widget[key])
+                            sofar.appendField(fieldNumber, NUMBER_INPUT_PREFIX + widget.name)
+                            fields.push(fieldNumber)
                             break
                         case 'check':
-                            let widget_id = CHECK_INPUT_PREFIX + widget.name
                             let blockly_boolean = 'FALSE'
                             if (widget[key] === true) {
                                 blockly_boolean = 'TRUE'
                             }
-                            let field = new Blockly.FieldCheckbox(blockly_boolean)
-                            sofar.appendField(field, widget_id)
-                            fields.push(field)
+                            let fieldCheck = new Blockly.FieldCheckbox(blockly_boolean)
+                            sofar.appendField(fieldCheck, CHECK_INPUT_PREFIX + widget.name)
+                            fields.push(fieldCheck)
                             break
                         case 'colour':
-                            let widget_id = COLOUR_INPUT_PREFIX + widget.name
-                            let field = new Blockly.FieldColour('' + widget[key])
-                            sofar.appendField(field, widget_id)
-                            fields.push(field)
+                            let fieldColour = new Blockly.FieldColour('' + widget[key])
+                            sofar.appendField(fieldColour, COLOUR_INPUT_PREFIX + widget.name)
+                            fields.push(fieldColour)
                             break
                         case 'menu':
-                            let widget_id = MENU_INPUT_PREFIX + widget.name
                             let list = widget[key]
                             if (typeof list != 'undefined') {
                                 if (typeof widget[key] != 'function') {
@@ -278,25 +274,25 @@
                                     list = menu_list
                                 }
                                 let field = new Blockly.FieldDropdown(list)
-                                sofar.appendField(field, widget_id)
+                                sofar.appendField(field, MENU_INPUT_PREFIX + widget.name)
                                 fields.push(field)
                             } else {
-                                console.log('No Menu List ' + widget_id)
+                                console.log('No Menu List ' + MENU_INPUT_PREFIX + widget.name)
                             }
                             break
                         case 'file':
-                            let widget_id = FILE_INPUT_PREFIX + widget.name
-                            let field = new Blockly.FieldLabel(String.fromCharCode(0x2023))
-                            sofar.appendField(field)
-                            fields.push(field)
+                            let widget_id_file = FILE_INPUT_PREFIX + widget.name
+                            let fieldLabel = new Blockly.FieldLabel(String.fromCharCode(0x2023))
+                            sofar.appendField(fieldLabel)
+                            fields.push(fieldLabel)
                             let fileInput = new Blockly.FieldTextInput('** CHOOSE A FILE **')
                             let val = widget[key] // val is the ?base? folder
                             let handle_file = this['index'].handle_file
                             fileInput.showEditor_ = (function() {
                                 let block_id = this.sourceBlock_.id
-                                handle_file(val, block_id, widget_id) 
+                                handle_file(val, block_id, widget_id_file) 
                             })
-                            sofar.appendField(fileInput, widget_id)
+                            sofar.appendField(fileInput, widget_id_file)
                             fields.push(fileInput)
                             break
                         case 'statement':
@@ -326,7 +322,7 @@
         console.log('  warning: ' + msg)
     }
 
-    let _addToBlockly = (blockly, json) => {
+    let _addToBlockly = function (blockly, json) {
         if (!_exists(json.name)) {
             _ERROR('Failed to create Block - missing name property')
             return
@@ -350,7 +346,7 @@
         category_list.appendChild(block)
         if (!_exists(json.block_init)) {
             blockly.Blocks[id] = {
-                init: () => {
+                init: function () {
                     let sofar = this.appendDummyInput()
                     if (_exists(json.title)) {
                         if (!_isFalse(json.title)) {
@@ -404,7 +400,7 @@
                 }
             }
             if (_exists(json.valid_in)) {
-                blockly.Blocks[id].onchange = () => {
+                blockly.Blocks[id].onchange = function () {
                     let valid_ids = []
                     json.valid_in.forEach((iter) => {
                         valid_ids.push('quando_' + iter)
@@ -430,8 +426,8 @@
         }
     }
 
-    self.inject = (blockly, editor, toolbox) => {
-        let blockly = _undefinedDefault(blockly, this['Blockly'])
+    self.inject = function (iblockly, editor, toolbox) {
+        let blockly = _undefinedDefault(iblockly, this['Blockly'])
         let blockly_editor_div = _fromDom(editor, 'blockly_editor')
         self.CONFIG = quando_blocks.CONFIG
         let CONFIG = quando_blocks.CONFIG
@@ -476,7 +472,7 @@
         }
         self.category = []
         quando_blocks.addBlocks(self)
-        self.category.forEach((json) => {
+        self.category.forEach(function (json) {
             console.log('Adding ' + json.name)
             _addToBlockly(blockly, json)
         })

@@ -1,4 +1,4 @@
-(() => {
+(function () {
   let self = this['quando_blocks'] = {}
   let PREFIX = 'quando_' // TODO share with quando_editor
   self.CONFIG = {
