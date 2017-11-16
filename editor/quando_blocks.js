@@ -579,24 +579,58 @@
       }
     })
 
+    let LEAP_GESTURE_MENU = 'Leap Gesture Menu'
+    quando_editor.defineDevice({
+      name: 'When Leap',
+      interface: [
+                { menu: ['Fist', 'Flat'], name: LEAP_GESTURE_MENU, title: '' },
+                { statement: STATEMENT }
+      ],
+      javascript: (block) => {
+        let fn = ''
+        switch (quando_editor.getMenu(block, LEAP_GESTURE_MENU)) {
+          case 'Fist':
+            fn = 'handClosed'
+            break
+          case 'Flat':
+            fn = 'handOpen'
+            break
+        }
+        let statement = quando_editor.getStatement(block, STATEMENT)
+        let result = 'quando_leap.' + fn + '(' +
+                    'function() {\n' +
+                    statement +
+                    '}' +
+                    _getOnContained(block, [WHEN_VITRINE_BLOCK], '', ', false') +
+                    ');\n'
+        return result
+      }
+    })
+
     let WHEN_ROLL_MIN = 'Min'
     let WHEN_ROLL_MAX = 'Max'
+    let MENU_ANGLE = 'Menu Angle'
     quando_editor.defineDevice({
-      name: 'When Roll between ',
+      name: 'When Roll between ', title: 'When',
       interface: [
-                { name: WHEN_ROLL_MIN, title: '', number: '-90' },
-                { name: WHEN_ROLL_MAX, title: ' and ', number: '90' },
-                {title: ' degrees'},
+                { menu:['Roll','Pitch'], name: MENU_ANGLE, title:''},
+                { name: WHEN_ROLL_MIN, title: 'angle between', number: '-90' },
+                { name: WHEN_ROLL_MAX, title: 'and', number: '90' },
+                {title: 'degrees'},
                 { statement: STATEMENT }
       ],
       javascript: (block) => {
         let min = quando_editor.getNumber(block, WHEN_ROLL_MIN)
         let max = quando_editor.getNumber(block, WHEN_ROLL_MAX)
         let statement = quando_editor.getStatement(block, STATEMENT)
-        let result = 'quando.ubitRoll(' + min + ',' + max + ',' +
-                    'function() {\n' +
-                    statement +
-                    '}' +
+        let fn =''
+        switch (quando_editor.getMenu(block, MENU_ANGLE)) {
+          case 'Roll' : fn = 'Roll'
+            break
+          case 'Pitch' : fn = 'Pitch'
+            break
+        }
+        let result = `quando.ubit${fn}(${min}, ${max}, function() {\n${statement}}` +
                     _getOnContained(block, [WHEN_VITRINE_BLOCK], '', ', false') +
                     ');\n'
         return result
@@ -775,17 +809,24 @@
     let CURSOR_UP_DOWN = '\u21D5 Cursor'
     let UBIT_ROLL = 'micro:bit Roll'
     let UBIT_PITCH = 'micro:bit Pitch'
+    let LEAP_HEIGHT = 'Leap Height'
+    let LEAP_LEFT_RIGHT = 'Leap Left-Right'
     let CHECK_INVERTED = 'Inverted'
     let DAMP_VALUE = 'Dampen'
+    let CHANGE_MIN = 'Min'
+    let CHANGE_MAX = 'Max'
     quando_editor.defineDevice({
       name: CHANGE_WITH_BLOCK,
       title: '',
       interface: [
                 { name: CHANGE_VALUE, menu: [CURSOR_LEFT_RIGHT, CURSOR_UP_DOWN, 'VR Zoom'], title: '' },
-                { name: CHANGE_VARIABLE, title: ' changes with ', menu: [UBIT_ROLL, UBIT_PITCH, 'Leap Height']}
+                { name: CHANGE_VARIABLE, title: ' changes with ',
+                  menu: [UBIT_ROLL, UBIT_PITCH, LEAP_HEIGHT, LEAP_LEFT_RIGHT]}
       ],
       extras: [
                     {name: CHECK_INVERTED, check: false},
+                    {name: CHANGE_MIN, number: '10'}, {title:'cm'},
+                    {name: CHANGE_MAX, number: '70'}, {title:'cm'},
                     {name: DAMP_VALUE, number: '0.25'}
       ],
       javascript: (block) => {
@@ -798,9 +839,13 @@
         }
         let variable = quando_editor.getMenu(block, CHANGE_VARIABLE)
         switch (variable) {
-          case UBIT_ROLL: variable = 'handleUbitRoll'
+          case UBIT_ROLL: variable = 'quando.handleUbitRoll'
             break
-          case UBIT_PITCH: variable = 'handleUbitPitch'
+          case UBIT_PITCH: variable = 'quando.handleUbitPitch'
+            break
+          case LEAP_HEIGHT: variable = 'quando_leap.handleY'
+            break
+          case LEAP_LEFT_RIGHT: variable = 'quando_leap.handleX'
             break
         }
         let extras = {}
@@ -811,8 +856,10 @@
         if (!extras.dampen) {
           delete extras.dampen
         }
+        extras.min = 10*quando_editor.getNumber(block, CHANGE_MIN) // converted to mm
+        extras.max = 10*quando_editor.getNumber(block, CHANGE_MAX)
         extras = JSON.stringify(extras)
-        let result = `quando.${variable}(quando.${value}, ${extras}` +
+        let result = `${variable}(quando.${value}, ${extras}` +
                     _getOnContained(block, [WHEN_VITRINE_BLOCK], '', ', false') +
                     ');\n'
         return result

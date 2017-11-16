@@ -24,7 +24,7 @@
         }
     });
 
-    function idle_reset() {
+    self.idle_reset = function() {
         if (self.idle_reset_secs > 0) {
             clearTimeout(self.idle_callback_id);
             self.idle_callback_id = setTimeout(self.idle_callback, self.idle_reset_secs);
@@ -35,14 +35,14 @@
         }
     }
 
-    document.onmousemove = idle_reset;
-    document.onclick = idle_reset;
-    document.onkeydown = idle_reset;
-    document.onkeyup = idle_reset;
+    document.onmousemove = self.idle_reset;
+    document.onclick = self.idle_reset;
+    document.onkeydown = self.idle_reset;
+    document.onkeyup = self.idle_reset;
 
     var last_gesture = "";
 
-    function _dispatch_event(event_name, data=false) {
+    self.dispatch_event = function(event_name, data=false) {
         if (data) {
             document.dispatchEvent(new CustomEvent(event_name, data));            
         } else {
@@ -53,11 +53,11 @@
     function _dispatch_gesture(gesture_name) {
         if (gesture_name != last_gesture) {
             last_gesture = gesture_name;
-            _dispatch_event(gesture_name);
+            self.dispatch_event(gesture_name);
         }
     }
 
-    var _ubit_handle = function(event, callback, destruct) {
+    self.add_handler = function(event, callback, destruct) {
         document.addEventListener(event, callback);
         if (destruct) {
             self.addDestructor(function() {
@@ -66,36 +66,67 @@
         }
     }
 
+    self.add_scaled_handler = function(min, max, event_name, callback, scaler = null, destruct=true) {
+        var handler = (ev) => {
+            var value = ev.detail
+            if ((value >= min) && (value <= max)) {
+                if (scaler) {
+                    value = scaler(value)
+                }
+                callback(value)
+            }
+        }
+        quando.add_handler(event_name, handler, destruct)
+    }
+ 
+    self.new_scaler = function (bottom, top, inverted=false) {
+        return (value) => {
+            var result = value
+            if (result < bottom) { // first clamp to top and bottom value
+                result = bottom
+            }
+            if (result > top) {
+                result = top
+            }
+            // convert to range 0 to 1
+            result = (result - bottom) / (top - bottom) // TODO check for negatives and other odd combinations
+            if (inverted) {
+                result = 1-result
+            }
+            return result
+        }
+    }
+
     self.ubitForward = function(callback, destruct=true) {
-        _ubit_handle("ubitForward", callback, destruct);
+        self.add_handler("ubitForward", callback, destruct);
     }
 
     self.ubitBackward = function(callback, destruct=true) {
-        _ubit_handle("ubitBackward", callback, destruct);
+        self.add_handler("ubitBackward", callback, destruct);
     }
 
     self.ubitUp = function(callback, destruct=true) {
-        _ubit_handle("ubitUp", callback, destruct);
+        self.add_handler("ubitUp", callback, destruct);
     }
 
     self.ubitDown = function(callback, destruct=true) {
-        _ubit_handle("ubitDown", callback, destruct);
+        self.add_handler("ubitDown", callback, destruct);
     }
 
     self.ubitLeft = function(callback, destruct=true) {
-        _ubit_handle("ubitLeft", callback, destruct);
+        self.add_handler("ubitLeft", callback, destruct);
     }
 
     self.ubitRight = function(callback, destruct=true) {
-        _ubit_handle("ubitRight", callback, destruct);
+        self.add_handler("ubitRight", callback, destruct);
     }
 
     self.ubitA = function(callback, destruct=true) {
-        _ubit_handle("ubitA", callback, destruct);
+        self.add_handler("ubitA", callback, destruct);
     }
 
     self.ubitB = function(callback, destruct=true) {
-        _ubit_handle("ubitB", callback, destruct);
+        self.add_handler("ubitB", callback, destruct);
     }
 
     self.angle = function(min, max, event, callback, destruct=true, extras={}) {
@@ -120,12 +151,7 @@
                 callback(ev.detail, extras); // the angle is passed as radians
             }
         };
-        document.addEventListener(event, handler);
-        if (destruct) {
-            self.addDestructor(function() {
-                document.removeEventListener(event, handler);
-            });
-        }
+        self.add_handler(event, handler, destruct)
     }
 
     self.ubitHeading = function(min, max, callback, destruct=true) {
@@ -134,6 +160,10 @@
 
     self.ubitRoll = function(min, max, callback, destruct=true) {
         self.angle(min, max, "ubitRoll", callback, destruct);
+    }
+
+    self.ubitPitch = function(min, max, callback, destruct=true) {
+        self.angle(min, max, "ubitPitch", callback, destruct);
     }
 
     self.handleUbitRoll = function(callback, extras={}, destruct=true) {
@@ -165,32 +195,29 @@
         value = last - diff
         return value;
     }
-    self.last_clamped_y = screen.width;
-    self.last_clamped_x = screen.height;
-    self.cursor_up_down = function(angle, extras) {
-        var y = _clamp_angle(angle, Math.PI/4, screen.height, extras, self.last_clamped_y);
-        self.last_clamped_y = y;
-        var x = self.last_clamped_x;
+    self.last_y = screen.height;
+    self.last_x = screen.width;
+
+    function _cursor_adjust() {
+        var x = self.last_x;
+        var y = self.last_y;
         var cursor = document.getElementById('cursor');
         cursor.style.top = y + 'px';
-        cursor.style.visibility = "hidden";
+        cursor.style.left = x + 'px';
+        cursor.style.visibility = "hidden"; // TODO this should only be done once - maybe an event (so the second one can be consumed/ignored?)
         var elem = document.elementFromPoint(x, y);
         cursor.style.visibility = "visible";
         self.hover(elem);
-        idle_reset();
+        self.idle_reset();
+    }
+    self.cursor_up_down = function(y) {
+        self.last_y = y * screen.height
+        _cursor_adjust()
     }
 
-    self.cursor_left_right = function(angle, extras) {
-        x = _clamp_angle(angle, Math.PI/4, screen.width, extras, self.last_clamped_x);
-        self.last_clamped_x = x;
-        var y = self.last_clamped_y;
-        var cursor = document.getElementById('cursor');
-        cursor.style.left = x + 'px';
-        cursor.style.visibility = "hidden";
-        var elem = document.elementFromPoint(x, y);
-        cursor.style.visibility = "visible";
-        self.hover(elem);
-        idle_reset();
+    self.cursor_left_right = function(x) {
+        self.last_x = x * screen.width
+        _cursor_adjust()
     }
     var Config = self.Config = {
     };
@@ -263,8 +290,8 @@
         clearTimeout(self.idle_callback_id);
         self.idle_reset_secs = time_secs * 1000;
         self.idle_callback = function() {
-            self.idle_reset_secs = 0; // why - surely I need to intercept idle_reset 
-            // actually - this will work to force idle_reset to call idle_active_callback instead
+            self.idle_reset_secs = 0; // why - surely I need to intercept self.idle_reset 
+            // actually - this will work to force self.idle_reset to call idle_active_callback instead
             idle_fn();
         };
         self.idle_active_callback = function() {
@@ -353,7 +380,7 @@
         var handler = function () {
             frame = self.leap.frame();
             if (frame.hands) {
-                idle_reset(); // any hand data means there is a visitor present...
+                self.idle_reset(); // any hand data means there is a visitor present...
                 if (frame.hands.length !== hands) {
                     //                var now = (new Date).getTime();
                     //                if (now > self.leap_start_check_time+1000) {
@@ -384,7 +411,7 @@
             var now_left = false;
             var now_right = false;
             if (frame.hands) {
-                idle_reset(); // any hand data means there is a visitor present...
+                self.idle_reset(); // any hand data means there is a visitor present...
                 if (frame.hands.length !== 0) {
                     var hands = frame.hands;
                     for (var i = 0; i < hands.length; i++) {
@@ -441,22 +468,6 @@
             // TODO Should this be deferred?
             (self.vitrines.values().next().value)(); // this runs the very first vitrine :)
             // can't use [0] because we don't know the id of the first entry
-            leap.loop(
-                {
-                    hand: function(hand) {
-                        idle_reset();
-                      var [x, y] = hand.screenPosition(hand.palmPosition);
-                        var cursor = document.getElementById('cursor');
-                        cursor.style.left = x + 'px';
-                        cursor.style.top = y + 'px';
-                        cursor.style.visibility = "hidden"; // must be hidden, or elem will be the cursor
-                        var elem = document.elementFromPoint(x, y);
-                        cursor.style.visibility = "visible";
-                        self.hover(elem);
-                    }
-                }).use('screenPosition', {
-                    scale: 0.7, verticalOffset: screen.height
-                });
         }
     }
 
@@ -595,9 +606,9 @@
 
     _socket.on('ubit', function(data) {
         if (data.ir) {
-            idle_reset();
+            self.idle_reset();
         } else if (data.orientation) {
-            idle_reset(); // this is only received when the orientation changes
+            self.idle_reset(); // this is only received when the orientation changes
             if (data.orientation == "forward") {
                 _dispatch_gesture("ubitForward");
             } else if (data.orientation == "backward") {
@@ -614,24 +625,24 @@
                 last_gesture = "";
             }
         } else if (data.button) {
-            idle_reset();
+            self.idle_reset();
             if (data.button == "a") {
-                _dispatch_event("ubitA");
+                self.dispatch_event("ubitA");
             }
             if (data.button == "b") {
-                _dispatch_event("ubitB");
+                self.dispatch_event("ubitB");
             }
         } else if (data.heading) {
-            _dispatch_event("ubitHeading", {'detail':data.heading});
-            idle_reset();
+            self.dispatch_event("ubitHeading", {'detail':data.heading});
+            self.idle_reset();
         } else if (data.roll || data.pitch) {
             if (data.roll) {
-                _dispatch_event("ubitRoll", {'detail':data.roll});
+                self.dispatch_event("ubitRoll", {'detail':data.roll});
             }
             if (data.pitch) {
-                _dispatch_event("ubitPitch", {'detail':data.pitch});
+                self.dispatch_event("ubitPitch", {'detail':data.pitch});
             }
-            idle_reset();
+            self.idle_reset();
         }
     });
 })();

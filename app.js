@@ -234,13 +234,14 @@ app.use('/client/setup', express.static(path.join(client_dir, 'setup.html')))
 app.use('/client/client.css', express.static(path.join(client_dir, 'client.css')))
 app.use('/client/setup.css', express.static(path.join(client_dir, 'setup.css')))
 app.use('/client/quando_browser.js', express.static(path.join(client_dir, 'quando_browser.js')))
+app.use('/client/quando_leap.js', express.static(path.join(client_dir, 'quando_leap.js')))
 app.use('/client/transparent.png', express.static(path.join(client_dir, 'transparent.png')))
 app.use('/client/favicon.ico', express.static(path.join(client_dir, 'favicon.ico')))
 app.use('/client/deployed_js', express.static(path.join(client_dir, 'deployed_js')))
 
 app.get('/client/js/:filename', (req, res) => {
   let filename = req.params.filename
-  fs.readFile('./client/leap_client.htm', 'utf8', (err, data) => {
+  fs.readFile('./client/client.htm', 'utf8', (err, data) => {
     if (err) {
       res.redirect('/client/setup')
     } else {
