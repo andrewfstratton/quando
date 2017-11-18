@@ -489,49 +489,52 @@
       }
     })
 
-        // let EXPLORATION_RULE = 'Exploration Rule';
-        // quando_editor.defineBlock({
-        //     name: EXPLORATION_RULE, title:'When', category: 'extras', colour: '#55bb55',
-        //     interface: [
-        //         { name: 'title', title:'', text: ''},
-        //         { name: 'text', title: '', text: ''}
-        //     ],
-        //     extras: [
-        //         { name: 'extra'},
-        //         { name: 'text3', title: '', text: 'default'},
-        //         { statement: STATEMENT }
-        //     ]
-        // });
+        let EXPLORATION_RULE = 'Exploration Rule';
+        quando_editor.defineBlock({
+            name: EXPLORATION_RULE, title:'When', category: 'experiment', colour: '#55bb55',
+            interface: [
+                { name: 'title', title:'', text: ''},
+                { name: 'text', title: '', text: ''}
+            ],
+            extras: [
+                { name: 'text3', title: '', text: ''},
+                { name: 'text4', title: '', text: ''},
+                { name: 'text5', title: '', text: ''},
+                { statement: STATEMENT }
+            ]
+        });
 
-        // let EXPLORATION_ACTION = 'Exploration Action';
-        // quando_editor.defineBlock({
-        //     name: EXPLORATION_ACTION, title:'Do', category: 'extras', colour: '#5555bb',
-        //     interface: [
-        //         { name: 'title', title:'', text: ''},
-        //         { name: 'text', title: '', text: ''}
-        //     ],
-        //     extras:[
-        //         {name: 'test'}
-        //         ],
-        // });
+        let EXPLORATION_ACTION = 'Exploration Action';
+        quando_editor.defineBlock({
+            name: EXPLORATION_ACTION, title:'Do', category: 'experiment', colour: '#5555bb',
+            interface: [
+                { name: 'title', title:'', text: ''},
+                { name: 'text', title: '', text: ''}
+            ],
+            extras:[
+                { name: 'text3', title: '', text: ''},
+                { name: 'text4', title: '', text: ''},
+                { name: 'text5', title: '', text: ''}
+                ]
+        });
 
-        // quando_editor.defineDevice({
-        //     name: 'When Device',
-        //     interface: [
-        //         { name: 'name', title: '', text: 'Box' },
-        //         { statement: STATEMENT }
-        //     ],
-        //     javascript: (block) => {
-        //         let statement = quando_editor.getStatement(block, STATEMENT);
-        //         let result = "quando." + fn + "("
-        //             + "function() {\n"
-        //             + statement
-        //             + "}"
-        //             + _getOnContained(block, [WHEN_VITRINE_BLOCK], "", ", false")
-        //             + ");\n";
-        //         return result;
-        //     }
-        // });
+        quando_editor.defineDevice({
+            name: 'When Device',
+            interface: [
+                { name: 'name', title: '', text: 'Box' },
+                { statement: STATEMENT }
+            ],
+            javascript: (block) => {
+                let statement = quando_editor.getStatement(block, STATEMENT);
+                let result = "quando." + fn + "("
+                    + "function() {\n"
+                    + statement
+                    + "}"
+                    + _getOnContained(block, [WHEN_VITRINE_BLOCK], "", ", false")
+                    + ");\n";
+                return result;
+            }
+        });
 
     let MICROBIT_GESTURE_MENU = 'MicroBit Gesture'
     quando_editor.defineDevice({
