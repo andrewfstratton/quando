@@ -47,6 +47,7 @@
                 var hand = frame.hands[0]
                 quando.idle_reset()
                 var [x, y, z] = hand.palmPosition
+                z = -z // make z increase as the hand moves away from the visitor
                 if (x != self.last_x) {
                     quando.dispatch_event("leapX", {'detail':x})
                     self.last_x = x

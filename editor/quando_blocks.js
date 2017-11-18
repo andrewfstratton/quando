@@ -569,7 +569,7 @@
             break
         };
         let statement = quando_editor.getStatement(block, STATEMENT)
-        let result = 'quando.' + fn + '(' +
+        let result = 'quando_ubit.' + fn + '(' +
                     'function() {\n' +
                     statement +
                     '}' +
@@ -809,8 +809,9 @@
     let CURSOR_UP_DOWN = '\u21D5 Cursor'
     let UBIT_ROLL = 'micro:bit Roll'
     let UBIT_PITCH = 'micro:bit Pitch'
-    let LEAP_HEIGHT = 'Leap Height'
+    let LEAP_HEIGHT = 'Leap Up-Down'
     let LEAP_LEFT_RIGHT = 'Leap Left-Right'
+    let LEAP_DEPTH = 'Leap In-Out'
     let CHECK_INVERTED = 'Inverted'
     let DAMP_VALUE = 'Dampen'
     let CHANGE_MIN = 'Min'
@@ -821,13 +822,13 @@
       interface: [
                 { name: CHANGE_VALUE, menu: [CURSOR_LEFT_RIGHT, CURSOR_UP_DOWN, 'VR Zoom'], title: '' },
                 { name: CHANGE_VARIABLE, title: ' changes with ',
-                  menu: [UBIT_ROLL, UBIT_PITCH, LEAP_HEIGHT, LEAP_LEFT_RIGHT]}
+                  menu: [UBIT_ROLL, UBIT_PITCH, LEAP_HEIGHT, LEAP_LEFT_RIGHT, LEAP_DEPTH]}
       ],
       extras: [
                     {name: CHECK_INVERTED, check: false},
                     {name: CHANGE_MIN, number: '10'}, {title:'cm'},
-                    {name: CHANGE_MAX, number: '70'}, {title:'cm'},
-                    {name: DAMP_VALUE, number: '0.25'}
+                    {name: CHANGE_MAX, number: '40'}, {title:'cm'}
+                    // {name: DAMP_VALUE, number: '0.25'}
       ],
       javascript: (block) => {
         let value = quando_editor.getMenu(block, CHANGE_VALUE)
@@ -847,15 +848,17 @@
             break
           case LEAP_LEFT_RIGHT: variable = 'quando_leap.handleX'
             break
+          case LEAP_DEPTH: variable = 'quando_leap.handleZ'
+            break
         }
         let extras = {}
         if (quando_editor.getCheck(block, CHECK_INVERTED)) {
           extras['inverted'] = true
         }
-        extras.dampen = quando_editor.getNumber(block, DAMP_VALUE)
-        if (!extras.dampen) {
-          delete extras.dampen
-        }
+        // extras.dampen = quando_editor.getNumber(block, DAMP_VALUE)
+        // if (!extras.dampen) {
+          // delete extras.dampen
+        // }
         extras.min = 10*quando_editor.getNumber(block, CHANGE_MIN) // converted to mm
         extras.max = 10*quando_editor.getNumber(block, CHANGE_MAX)
         extras = JSON.stringify(extras)
