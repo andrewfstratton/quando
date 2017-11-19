@@ -56,12 +56,13 @@
     }
 
     self.add_scaled_handler = function(min, max, event_name, callback, scaler = null, destruct=true) {
-        var handler = (ev) => {
+        var handler = function (ev) {
             var value = ev.detail
             if ((value >= min) && (value <= max)) {
                 if (scaler) {
                     value = scaler(value)
                 }
+// console.log(`value=${value}`)
                 callback(value)
             }
         }
@@ -69,7 +70,7 @@
     }
  
     self.new_scaler = function (bottom, top, inverted=false) {
-        return (value) => {
+        return function (value) {
             var result = value
             if (result < bottom) { // first clamp to top and bottom value
                 result = bottom
@@ -82,6 +83,22 @@
             if (inverted) {
                 result = 1-result
             }
+            return result
+        }
+    }
+
+    function mod (x, m) {
+        return ((x%m)+m)%m
+    }
+
+    self.new_angle_scaler = function (mid, plus_minus, inverted=false) {
+        return function (value) {
+            var result = ((value + plus_minus - mid) % 360) / (2 * plus_minus)
+            if (inverted) {
+                result = 1-result
+            }
+            result = Math.min(1, result)
+            result = Math.max(0, result)
             return result
         }
     }

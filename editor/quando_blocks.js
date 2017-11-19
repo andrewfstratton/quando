@@ -810,11 +810,11 @@
     let CHANGE_VARIABLE = 'Variable'
     let CURSOR_LEFT_RIGHT = '\u21D4 Cursor'
     let CURSOR_UP_DOWN = '\u21D5 Cursor'
-    let UBIT_ROLL = 'micro:bit Roll'
-    let UBIT_PITCH = 'micro:bit Pitch'
     let LEAP_HEIGHT = 'Leap Up-Down'
     let LEAP_LEFT_RIGHT = 'Leap Left-Right'
     let LEAP_DEPTH = 'Leap In-Out'
+    let UBIT_ROLL = 'micro:bit Roll'
+    let UBIT_PITCH = 'micro:bit Pitch'
     let CHECK_INVERTED = 'Inverted'
     let DAMP_VALUE = 'Dampen'
     let CHANGE_MIN = 'Min'
@@ -825,7 +825,7 @@
       interface: [
                 { name: CHANGE_VALUE, menu: [CURSOR_LEFT_RIGHT, CURSOR_UP_DOWN, 'VR Zoom'], title: '' },
                 { name: CHANGE_VARIABLE, title: ' changes with ',
-                  menu: [UBIT_ROLL, UBIT_PITCH, LEAP_HEIGHT, LEAP_LEFT_RIGHT, LEAP_DEPTH]}
+                  menu: [LEAP_HEIGHT, LEAP_LEFT_RIGHT, LEAP_DEPTH, UBIT_ROLL, UBIT_PITCH]}
       ],
       extras: [
                     {name: CHECK_INVERTED, check: false},
@@ -841,31 +841,92 @@
           case CURSOR_LEFT_RIGHT: value = 'cursor_left_right'
             break
         }
+        let cm = false
         let variable = quando_editor.getMenu(block, CHANGE_VARIABLE)
         switch (variable) {
-          case UBIT_ROLL: variable = 'quando.handleUbitRoll'
+          case UBIT_ROLL: variable = 'quando_ubit.handleRoll'
             break
-          case UBIT_PITCH: variable = 'quando.handleUbitPitch'
+          case UBIT_PITCH: variable = 'quando_ubit.handlePitch'
             break
           case LEAP_HEIGHT: variable = 'quando_leap.handleY'
+            cm = true
             break
           case LEAP_LEFT_RIGHT: variable = 'quando_leap.handleX'
+            cm = true
             break
           case LEAP_DEPTH: variable = 'quando_leap.handleZ'
+            cm = true
             break
         }
         let extras = {}
+        extras.min = quando_editor.getNumber(block, CHANGE_MIN) // converted to mm
+        extras.max = quando_editor.getNumber(block, CHANGE_MAX)
+        if (cm) {
+          extras.min *= 10
+          extras.max *= 10
+        }
         if (quando_editor.getCheck(block, CHECK_INVERTED)) {
           extras['inverted'] = true
         }
         // extras.dampen = quando_editor.getNumber(block, DAMP_VALUE)
         // if (!extras.dampen) {
           // delete extras.dampen
-        // }
-        extras.min = 10*quando_editor.getNumber(block, CHANGE_MIN) // converted to mm
-        extras.max = 10*quando_editor.getNumber(block, CHANGE_MAX)
+        // }j
         extras = JSON.stringify(extras)
         let result = `${variable}(quando.${value}, ${extras}` +
+                    _getOnContained(block, [WHEN_VITRINE_BLOCK], '', ', false') +
+                    ');\n'
+        return result
+      }
+    })
+
+    function _clamp_degrees(degrees) {
+        return degrees >= 0 ? degrees % 360 : (degrees % 360) + 360 // necessary since % of negatives don't work ?!
+    }
+
+    let CHANGE_WITH_LEAP_ANGLE = 'Leap (Angle)'
+    let LEAP_ROLL = 'Roll'
+    let LEAP_PITCH = 'Pitch'
+    let LEAP_YAW = 'Yaw'
+    let CHANGE_MID_ANGLE = 'Change Angle'
+    let CHANGE_PLUS_MINUS = 'plus minus'
+    quando_editor.defineDevice({
+      name: CHANGE_WITH_LEAP_ANGLE,
+      interface: [
+                { name: CHANGE_VARIABLE, title: '',
+                  menu: [LEAP_ROLL, LEAP_PITCH, LEAP_YAW]},
+                { name: CHANGE_VALUE, menu: [CURSOR_LEFT_RIGHT, CURSOR_UP_DOWN, 'VR Zoom'], title: 'changes' },
+      ],
+      extras: [
+                    {name: CHANGE_MID_ANGLE, title:'', number: 0}, {title:'degrees'},
+                    {name: CHANGE_PLUS_MINUS, title:'+/-', number: 25}, {title:'degrees'},
+                    {name: CHECK_INVERTED, check: false}
+      ],
+      javascript: (block) => {
+        let value = quando_editor.getMenu(block, CHANGE_VALUE)
+        switch (value) {
+          case CURSOR_UP_DOWN: value = 'cursor_up_down'
+            break
+          case CURSOR_LEFT_RIGHT: value = 'cursor_left_right'
+            break
+        }
+        let variable = quando_editor.getMenu(block, CHANGE_VARIABLE)
+        switch (variable) {
+          case LEAP_ROLL: variable = 'Roll'
+            break
+          case LEAP_PITCH: variable = 'Pitch'
+            break
+          case LEAP_YAW: variable = 'Yaw'
+            break
+        }
+        let extras = {}
+        extras.mid_angle = _clamp_degrees(quando_editor.getNumber(block, CHANGE_MID_ANGLE))
+        extras.plus_minus = quando_editor.getNumber(block, CHANGE_PLUS_MINUS)
+        if (quando_editor.getCheck(block, CHECK_INVERTED)) {
+          extras['inverted'] = true
+        }
+        extras = JSON.stringify(extras)
+        let result = `quando_leap.handle${variable}(quando.${value}, ${extras}` +
                     _getOnContained(block, [WHEN_VITRINE_BLOCK], '', ', false') +
                     ');\n'
         return result
