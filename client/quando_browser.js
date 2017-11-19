@@ -87,10 +87,6 @@
         }
     }
 
-    function mod (x, m) {
-        return ((x%m)+m)%m
-    }
-
     self.new_angle_scaler = function (mid, plus_minus, inverted=false) {
         return function (value) {
             var result = ((value + plus_minus - mid) % 360) / (2 * plus_minus)

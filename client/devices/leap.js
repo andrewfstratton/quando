@@ -19,16 +19,11 @@
 
     function _handleXYZ (event, callback, extras, destruct=true) {
         var scale = quando.new_scaler(extras.min, extras.max, extras.inverted)
-        quando.add_scaled_handler(extras.min, extras.max, event, callback, 
-            function(value) {
-                return scale(value)
-            }, destruct)
+        quando.add_scaled_handler(extras.min, extras.max, event, callback, scale, destruct)
     }
 
     function _handleAngle (event, callback, extras, destruct=true) {
-        var mid = extras.mid_angle
-        var plus_minus = extras.plus_minus
-        var scale = quando.new_angle_scaler(mid, plus_minus, extras.inverted)
+        var scale = quando.new_angle_scaler(extras.mid_angle, extras.plus_minus, extras.inverted)
         quando.add_scaled_handler(0, 360, event, callback, scale, destruct)
     }
 
