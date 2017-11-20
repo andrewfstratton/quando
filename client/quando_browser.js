@@ -62,7 +62,6 @@
         if (scaler) {
           value = scaler(value)
         }
-// console.log(`value=${value}`)
         callback(value)
       }
     }
@@ -99,72 +98,6 @@
     }
   }
 
-  self.angle = function (min, max, event, callback, destruct = true, extras = {}) {
-        // take min and max modulus 360, i.e in range 0..359
-    min = min >= 0 ? min % 360 : (min % 360) + 360 // necessary since % of negatives don't work ?!
-    max = max >= 0 ? max % 360 : (max % 360) + 360
-    var handler = function (ev) { // we need the function handler to allow destruction
-      var angle = ev.detail
-      angle = 180 * angle / Math.PI
-      angle = (angle + 360) % 360 // avoid negative remainder - % is not mod...
-      var match = false
-      if (min <= max) {
-        if ((angle >= min) && (angle <= max)) {
-          match = true
-        }
-      } else { // min > max, e.g min is 345 (or was -15) max is 15
-        if ((angle >= min) || (angle <= max)) {
-          match = true
-        }
-      }
-      if (match) {
-        callback(ev.detail, extras) // the angle is passed as radians
-      }
-    }
-    self.add_handler(event, handler, destruct)
-  }
-
-  self.ubitHeading = function (min, max, callback, destruct = true) {
-    self.angle(min, max, 'ubitHeading', callback, destruct)
-  }
-
-  self.ubitRoll = function (min, max, callback, destruct = true) {
-    self.angle(min, max, 'ubitRoll', callback, destruct)
-  }
-
-  self.ubitPitch = function (min, max, callback, destruct = true) {
-    self.angle(min, max, 'ubitPitch', callback, destruct)
-  }
-
-  self.handleUbitRoll = function (callback, extras = {}, destruct = true) {
-    self.angle(0, 359, 'ubitRoll', callback, destruct, extras)
-  }
-
-  self.handleUbitPitch = function (callback, extras = {}, destruct = true) {
-    self.angle(0, 359, 'ubitPitch', callback, destruct, extras)
-  }
-
-  function _clamp_angle (radians, clamp, range, extras, last) {
-    if (extras.inverted) {
-      radians = -radians
-    }
-    var dampen = 0.25
-    if (extras.dampen) {
-      dampen = extras.dampen
-    }
-    if (radians < -clamp) {
-      radians = -clamp
-    }
-    if (radians > clamp) {
-      radians = clamp
-    }
-    let value = (range / 2) + (radians / clamp) * range / 2
-    let diff = last - value
-        // Dampen
-    diff *= dampen
-    value = last - diff
-    return value
-  }
   self.last_y = screen.height
   self.last_x = screen.width
 
@@ -191,51 +124,6 @@
   }
   var Config = self.Config = {
   }
-
-    // var _properties = []
-
-    // var _newWhen = function (setup) {
-    //     var list = []
-    //     setup(list)
-    //     return function (lookup, callback) { // return when handler creator
-    //         var current = list[lookup] || []
-    //         current.push(callback)
-    //         list[lookup] = current
-    //     } // when handler creator
-    // } // newWhen
-
-    // var _whenCallback = function (key) {
-    //     // n.b. this is the list?!
-    //     var callbacks = this[key]
-    //     if (callbacks) {
-    //         var args = Array.prototype.slice.call(arguments).slice(1)
-    //         callbacks.forEach(function (update) {
-    //             update.apply(this, args) // i.e. any other arguments
-    //         })
-    //     }
-    //
-    // }
-
-//    self.whenUpdated = _newWhen(
-//            function (list) {
-//                Object.observe(
-//                        _properties,
-//                        function (updates) {
-//                            updates.forEach(function (update) {
-//                                _whenCallback.call(list, update.name)
-//                            })
-//                        },
-//                        ['update', 'add']) // add allows property creation to trigger callback
-//            }
-//        )
-
-    // self.setProperty = function (name, val) {
-    //     _properties[name] = val
-    // }
-
-    // self.getProperty = function (name) {
-    //     return _properties[name]
-    // }
 
   self.after = function (time_secs, callback, destruct = true) {
     var timeout = setTimeout(callback, time_secs * 1000)
@@ -264,7 +152,8 @@
             // actually - this will work to force self.idle_reset to call idle_active_callback instead
       idle_fn()
     }
-    self.idle_active_callback = function () {
+
+  self.idle_active_callback = function () {
       clearTimeout(self.idle_callback_id)
       self.idle_reset_secs = time_secs * 1000 // resets to idle detection
       self.idle_callback_id = setTimeout(self.idle_callback, self.idle_reset_secs)

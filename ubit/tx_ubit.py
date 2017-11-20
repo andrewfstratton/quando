@@ -125,7 +125,7 @@ def heading():
             compass.calibrate()
         heading = compass.heading()
         if (heading != last_heading) :
-            radio.send(COMMS.HEADING+str(heading)+'\n')
+            radio.send(COMMS.HEADING+':heading:'+str(heading)+'\n')
             last_heading = heading
             needle = ((15 - heading)//30)%12
             display.show(Image.ALL_CLOCKS[needle])
@@ -159,8 +159,8 @@ if button_a.is_pressed() and not button_b.is_pressed(): # a pressed
     config()
 elif not button_a.is_pressed() and button_b.is_pressed(): # b pressed
     roll_pitch()
-#elif button_a.is_pressed() and button_b.is_pressed(): # a and b pressed
-#    heading()
+elif button_a.is_pressed() and button_b.is_pressed(): # a and b pressed
+   heading()
 else: # nothing pressed
     gesture()
 

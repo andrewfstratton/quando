@@ -738,9 +738,9 @@
     quando_editor.defineClient({
       name: CONTENT_POSITION,
       interface: [
-                { menu: ['Title', 'Text', 'Labels'], name: DIV_MENU, title: '' },
-                { name: POSITION_SIZE, title: '', number: 0 }, {title: '%'},
-                { menu: ['top', 'bottom', 'left', 'right'], name: DIRECTION_MENU, title: 'from' }
+        { menu: ['Title', 'Text', 'Labels'], name: DIV_MENU, title: '' },
+        { name: POSITION_SIZE, title: '', number: 0 }, {title: '%'},
+        { menu: ['top', 'bottom', 'left', 'right'], name: DIRECTION_MENU, title: 'from' }
       ],
       javascript: (block) => {
         let method = _getStyleOnContained(block, [WHEN_VITRINE_BLOCK, WHEN_IDLE])
@@ -770,9 +770,9 @@
     quando_editor.defineClient({
       name: CONTENT_SIZE,
       interface: [
-                { menu: ['Title', 'Text', 'Labels'], name: DIV_MENU, title: '' },
-                { name: POSITION_SIZE, title: '', number: 100 }, {title: '%'},
-                { menu: ['height', 'width'], name: DIMENSION_MENU, title: 'of' }
+        { menu: ['Title', 'Text', 'Labels'], name: DIV_MENU, title: '' },
+        { name: POSITION_SIZE, title: '', number: 100 }, {title: '%'},
+        { menu: ['height', 'width'], name: DIMENSION_MENU, title: 'of' }
       ],
       javascript: (block) => {
         let method = _getStyleOnContained(block, [WHEN_VITRINE_BLOCK, WHEN_IDLE])
@@ -812,31 +812,30 @@
       }
     })
 
-    let CHANGE_WITH_BLOCK = 'When Change'
+    let CHANGE_WITH_MICROBIT_ANGLE = 'Microbit (angle)'
     let CHANGE_VALUE = 'Value'
-    let CHANGE_VARIABLE = 'Variable'
     let CURSOR_LEFT_RIGHT = '\u21D4 Cursor'
     let CURSOR_UP_DOWN = '\u21D5 Cursor'
-    let UBIT_ROLL = 'micro:bit Roll'
-    let UBIT_PITCH = 'micro:bit Pitch'
+    let CHANGE_MENU = { name: CHANGE_VALUE, menu: [CURSOR_LEFT_RIGHT, CURSOR_UP_DOWN], title: '' }
+    let CHANGE_VARIABLE = 'Variable'
+    let CHANGE_ROLL = 'Roll'
+    let CHANGE_PITCH = 'Pitch'
+    let CHANGE_HEADING = 'Heading'
+    let CHANGE_MID_ANGLE = 'Change Angle'
+    let CHANGE_PLUS_MINUS = 'plus minus'
     let CHECK_INVERTED = 'Inverted'
-    let DAMP_VALUE = 'Dampen'
-    let CHANGE_MIN = 'Min'
-    let CHANGE_MAX = 'Max'
     quando_editor.defineDevice({
-      name: CHANGE_WITH_BLOCK,
-      title: '',
+      name: CHANGE_WITH_MICROBIT_ANGLE,
       interface: [
-                { name: CHANGE_VALUE, menu: [CURSOR_LEFT_RIGHT, CURSOR_UP_DOWN, 'VR Zoom'], title: '' },
         { name: CHANGE_VARIABLE,
-          title: ' changes with ',
-          menu: [UBIT_ROLL, UBIT_PITCH]}
+          title: '',
+          menu: [CHANGE_ROLL, CHANGE_PITCH, CHANGE_HEADING]},
+        CHANGE_MENU,
       ],
       extras: [
-                    {name: CHECK_INVERTED, check: false},
-                    {name: CHANGE_MIN, number: '10'}, {title: 'cm'},
-                    {name: CHANGE_MAX, number: '40'}, {title: 'cm'}
-                    // {name: DAMP_VALUE, number: '0.25'}
+        {name: CHANGE_MID_ANGLE, title: '', number: 0}, {title: 'degrees'},
+        {name: CHANGE_PLUS_MINUS, title: '+/-', number: 25}, {title: 'degrees'},
+        {name: CHECK_INVERTED, check: false}
       ],
       javascript: (block) => {
         let value = quando_editor.getMenu(block, CHANGE_VALUE)
@@ -846,26 +845,21 @@
           case CURSOR_LEFT_RIGHT: value = 'cursor_left_right'
             break
         }
-        let cm = false
         let variable = quando_editor.getMenu(block, CHANGE_VARIABLE)
         switch (variable) {
-          case UBIT_ROLL: variable = 'quando_ubit.handleRoll'
+          case CHANGE_ROLL: variable = 'Roll'
             break
-          case UBIT_PITCH: variable = 'quando_ubit.handlePitch'
+          case CHANGE_PITCH: variable = 'Pitch'
             break
         }
         let extras = {}
-        extras.min = quando_editor.getNumber(block, CHANGE_MIN) // converted to mm
-        extras.max = quando_editor.getNumber(block, CHANGE_MAX)
+        extras.mid_angle = _clamp_degrees(quando_editor.getNumber(block, CHANGE_MID_ANGLE))
+        extras.plus_minus = quando_editor.getNumber(block, CHANGE_PLUS_MINUS)
         if (quando_editor.getCheck(block, CHECK_INVERTED)) {
           extras['inverted'] = true
         }
-        // extras.dampen = quando_editor.getNumber(block, DAMP_VALUE)
-        // if (!extras.dampen) {
-          // delete extras.dampen
-        // }j
         extras = JSON.stringify(extras)
-        let result = `${variable}(quando.${value}, ${extras}` +
+        let result = `quando_ubit.handle${variable}(quando.${value}, ${extras}` +
                     _getOnContained(block, [WHEN_VITRINE_BLOCK], '', ', false') +
                     ');\n'
         return result
@@ -880,18 +874,20 @@
     let LEAP_HEIGHT = 'Leap Up-Down'
     let LEAP_LEFT_RIGHT = 'Leap Left-Right'
     let LEAP_DEPTH = 'Leap In-Out'
+    let CHANGE_MIN = 'Min'
+    let CHANGE_MAX = 'Max'
     quando_editor.defineDevice({
       name: CHANGE_WITH_LEAP_DISTANCE,
       interface: [
         { name: CHANGE_VARIABLE,
           title: '',
           menu: [LEAP_LEFT_RIGHT, LEAP_HEIGHT, LEAP_DEPTH]},
-                { name: CHANGE_VALUE, menu: [CURSOR_LEFT_RIGHT, CURSOR_UP_DOWN, 'VR Zoom'], title: 'changes' }
+          CHANGE_MENU
       ],
       extras: [
-                    {name: CHANGE_MIN, number: '10'}, {title: 'cm'},
-                    {name: CHANGE_MAX, number: '40'}, {title: 'cm'},
-                    {name: CHECK_INVERTED, check: false}
+        {name: CHANGE_MIN, number: '10'}, {title: 'cm'},
+        {name: CHANGE_MAX, number: '40'}, {title: 'cm'},
+        {name: CHECK_INVERTED, check: false}
       ],
       javascript: (block) => {
         let value = quando_editor.getMenu(block, CHANGE_VALUE)
@@ -925,23 +921,19 @@
     })
 
     let CHANGE_WITH_LEAP_ANGLE = 'Leap (Angle)'
-    let LEAP_ROLL = 'Roll'
-    let LEAP_PITCH = 'Pitch'
-    let LEAP_YAW = 'Yaw'
-    let CHANGE_MID_ANGLE = 'Change Angle'
-    let CHANGE_PLUS_MINUS = 'plus minus'
+    let CHANGE_YAW = 'Yaw'
     quando_editor.defineDevice({
       name: CHANGE_WITH_LEAP_ANGLE,
       interface: [
         { name: CHANGE_VARIABLE,
           title: '',
-          menu: [LEAP_ROLL, LEAP_PITCH, LEAP_YAW]},
-                { name: CHANGE_VALUE, menu: [CURSOR_LEFT_RIGHT, CURSOR_UP_DOWN, 'VR Zoom'], title: 'changes' }
+          menu: [CHANGE_ROLL, CHANGE_PITCH, CHANGE_YAW]},
+          CHANGE_MENU
       ],
       extras: [
-                    {name: CHANGE_MID_ANGLE, title: '', number: 0}, {title: 'degrees'},
-                    {name: CHANGE_PLUS_MINUS, title: '+/-', number: 25}, {title: 'degrees'},
-                    {name: CHECK_INVERTED, check: false}
+        {name: CHANGE_MID_ANGLE, title: '', number: 0}, {title: 'degrees'},
+        {name: CHANGE_PLUS_MINUS, title: '+/-', number: 25}, {title: 'degrees'},
+        {name: CHECK_INVERTED, check: false}
       ],
       javascript: (block) => {
         let value = quando_editor.getMenu(block, CHANGE_VALUE)
@@ -953,11 +945,11 @@
         }
         let variable = quando_editor.getMenu(block, CHANGE_VARIABLE)
         switch (variable) {
-          case LEAP_ROLL: variable = 'Roll'
+          case CHANGE_ROLL: variable = 'Roll'
             break
-          case LEAP_PITCH: variable = 'Pitch'
+          case CHANGE_PITCH: variable = 'Pitch'
             break
-          case LEAP_YAW: variable = 'Yaw'
+          case CHANGE_YAW: variable = 'Yaw'
             break
         }
         let extras = {}

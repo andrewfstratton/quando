@@ -45,6 +45,35 @@
     quando.add_handler('ubitB', callback, destruct)
   }
 
+  function _handleAngle (event, callback, extras, destruct = true) {
+    var scale = quando.new_angle_scaler(extras.mid_angle, extras.plus_minus, extras.inverted)
+    quando.add_scaled_handler(0, 360, event, callback, scale, destruct)
+  }
+
+  self.ubitHeading = function (min, max, callback, destruct = true) {
+    quando.add_scaled_handler(min, max, 'ubitHeading', callback, null, destruct)
+  }
+
+  self.ubitRoll = function (min, max, callback, destruct = true) {
+    quando.add_scaled_handler(min, max, 'ubitRoll', callback, null, destruct)
+  }
+
+  self.ubitPitch = function (min, max, callback, destruct = true) {
+    quando.add_scaled_handler(min, max, 'ubitPitch', callback, null, destruct)
+  }
+
+  self.handleRoll = function (callback, extras = {}, destruct = true) {
+    _handleAngle('ubitRoll', callback, extras, destruct)
+  }
+
+  self.handlePitch = function (callback, extras = {}, destruct = true) {
+    _handleAngle('ubitPitch', callback, extras, destruct)
+  }
+
+  self.handleHeading = function (callback, extras = {}, destruct = true) {
+    _handleAngle('ubitHeading', callback, extras, destruct)
+  }
+
   quando.socket.on('ubit', function (data) {
     if (data.ir) {
       quando.idle_reset()
@@ -78,10 +107,18 @@
       quando.idle_reset()
     } else if (data.roll || data.pitch) {
       if (data.roll) {
-        quando.dispatch_event('ubitRoll', {'detail': data.roll})
+        var roll = data.roll * 180 / Math.PI
+        if (roll < 0) {
+          roll += 360
+        }
+        quando.dispatch_event('ubitRoll', {'detail': roll})
       }
       if (data.pitch) {
-        quando.dispatch_event('ubitPitch', {'detail': data.pitch})
+        var pitch = data.pitch * 180 / Math.PI
+        if (pitch < 0) {
+          pitch += 360
+        }
+        quando.dispatch_event('ubitPitch', {'detail': pitch})
       }
       quando.idle_reset()
     }
