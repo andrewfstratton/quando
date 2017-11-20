@@ -489,52 +489,58 @@
       }
     })
 
-        let EXPLORATION_RULE = 'Exploration Rule';
-        quando_editor.defineBlock({
-            name: EXPLORATION_RULE, title:'When', category: 'experiment', colour: '#55bb55',
-            interface: [
-                { name: 'title', title:'', text: ''},
+    let EXPLORATION_RULE = 'Exploration Rule'
+    quando_editor.defineBlock({
+      name: EXPLORATION_RULE,
+      title: 'When',
+      category: 'experiment',
+      colour: '#55bb55',
+      interface: [
+                { name: 'title', title: '', text: ''},
                 { name: 'text', title: '', text: ''}
-            ],
-            extras: [
+      ],
+      extras: [
                 { name: 'text3', title: '', text: ''},
                 { name: 'text4', title: '', text: ''},
                 { name: 'text5', title: '', text: ''},
                 { statement: STATEMENT }
-            ]
-        });
+      ]
+    })
 
-        let EXPLORATION_ACTION = 'Exploration Action';
-        quando_editor.defineBlock({
-            name: EXPLORATION_ACTION, title:'Do', category: 'experiment', colour: '#5555bb',
-            interface: [
-                { name: 'title', title:'', text: ''},
+    let EXPLORATION_ACTION = 'Exploration Action'
+    quando_editor.defineBlock({
+      name: EXPLORATION_ACTION,
+      title: 'Do',
+      category: 'experiment',
+      colour: '#5555bb',
+      interface: [
+                { name: 'title', title: '', text: ''},
                 { name: 'text', title: '', text: ''}
-            ],
-            extras:[
+      ],
+      extras: [
                 { name: 'text3', title: '', text: ''},
                 { name: 'text4', title: '', text: ''},
                 { name: 'text5', title: '', text: ''}
-                ]
-        });
+      ]
+    })
 
-        quando_editor.defineDevice({
-            name: 'When Device',
-            interface: [
+    quando_editor.defineDevice({
+      name: 'When Device',
+      interface: [
                 { name: 'name', title: '', text: 'Box' },
                 { statement: STATEMENT }
-            ],
-            javascript: (block) => {
-                let statement = quando_editor.getStatement(block, STATEMENT);
-                let result = "quando." + fn + "("
-                    + "function() {\n"
-                    + statement
-                    + "}"
-                    + _getOnContained(block, [WHEN_VITRINE_BLOCK], "", ", false")
-                    + ");\n";
-                return result;
-            }
-        });
+      ],
+      javascript: (block) => {
+        let statement = quando_editor.getStatement(block, STATEMENT)
+        let result = 'quando.' + fn + '(' +
+                    'function() {\n' +
+                    statement +
+                    '}' +
+                    _getOnContained(block, [WHEN_VITRINE_BLOCK], '', ', false') +
+                    ');\n'
+        return result
+      }
+    })
 
     let MICROBIT_GESTURE_MENU = 'MicroBit Gesture'
     quando_editor.defineDevice({
@@ -614,9 +620,10 @@
     let WHEN_ROLL_MAX = 'Max'
     let MENU_ANGLE = 'Menu Angle'
     quando_editor.defineDevice({
-      name: 'When Roll between ', title: 'When',
+      name: 'When Roll between ',
+      title: 'When',
       interface: [
-                { menu:['Roll','Pitch'], name: MENU_ANGLE, title:''},
+                { menu: ['Roll', 'Pitch'], name: MENU_ANGLE, title: ''},
                 { name: WHEN_ROLL_MIN, title: 'angle between', number: '-90' },
                 { name: WHEN_ROLL_MAX, title: 'and', number: '90' },
                 {title: 'degrees'},
@@ -626,7 +633,7 @@
         let min = quando_editor.getNumber(block, WHEN_ROLL_MIN)
         let max = quando_editor.getNumber(block, WHEN_ROLL_MAX)
         let statement = quando_editor.getStatement(block, STATEMENT)
-        let fn =''
+        let fn = ''
         switch (quando_editor.getMenu(block, MENU_ANGLE)) {
           case 'Roll' : fn = 'Roll'
             break
@@ -821,13 +828,14 @@
       title: '',
       interface: [
                 { name: CHANGE_VALUE, menu: [CURSOR_LEFT_RIGHT, CURSOR_UP_DOWN, 'VR Zoom'], title: '' },
-                { name: CHANGE_VARIABLE, title: ' changes with ',
-                  menu: [UBIT_ROLL, UBIT_PITCH]}
+        { name: CHANGE_VARIABLE,
+          title: ' changes with ',
+          menu: [UBIT_ROLL, UBIT_PITCH]}
       ],
       extras: [
                     {name: CHECK_INVERTED, check: false},
-                    {name: CHANGE_MIN, number: '10'}, {title:'cm'},
-                    {name: CHANGE_MAX, number: '40'}, {title:'cm'}
+                    {name: CHANGE_MIN, number: '10'}, {title: 'cm'},
+                    {name: CHANGE_MAX, number: '40'}, {title: 'cm'}
                     // {name: DAMP_VALUE, number: '0.25'}
       ],
       javascript: (block) => {
@@ -864,8 +872,8 @@
       }
     })
 
-    function _clamp_degrees(degrees) {
-        return degrees >= 0 ? degrees % 360 : (degrees % 360) + 360 // necessary since % of negatives don't work ?!
+    function _clamp_degrees (degrees) {
+      return degrees >= 0 ? degrees % 360 : (degrees % 360) + 360 // necessary since % of negatives don't work ?!
     }
 
     let CHANGE_WITH_LEAP_DISTANCE = 'Leap (move)'
@@ -875,13 +883,14 @@
     quando_editor.defineDevice({
       name: CHANGE_WITH_LEAP_DISTANCE,
       interface: [
-                { name: CHANGE_VARIABLE, title: '',
-                  menu: [LEAP_LEFT_RIGHT, LEAP_HEIGHT, LEAP_DEPTH]},
-                { name: CHANGE_VALUE, menu: [CURSOR_LEFT_RIGHT, CURSOR_UP_DOWN, 'VR Zoom'], title: 'changes' },
+        { name: CHANGE_VARIABLE,
+          title: '',
+          menu: [LEAP_LEFT_RIGHT, LEAP_HEIGHT, LEAP_DEPTH]},
+                { name: CHANGE_VALUE, menu: [CURSOR_LEFT_RIGHT, CURSOR_UP_DOWN, 'VR Zoom'], title: 'changes' }
       ],
       extras: [
-                    {name: CHANGE_MIN, number: '10'}, {title:'cm'},
-                    {name: CHANGE_MAX, number: '40'}, {title:'cm'},
+                    {name: CHANGE_MIN, number: '10'}, {title: 'cm'},
+                    {name: CHANGE_MAX, number: '40'}, {title: 'cm'},
                     {name: CHECK_INVERTED, check: false}
       ],
       javascript: (block) => {
@@ -924,13 +933,14 @@
     quando_editor.defineDevice({
       name: CHANGE_WITH_LEAP_ANGLE,
       interface: [
-                { name: CHANGE_VARIABLE, title: '',
-                  menu: [LEAP_ROLL, LEAP_PITCH, LEAP_YAW]},
-                { name: CHANGE_VALUE, menu: [CURSOR_LEFT_RIGHT, CURSOR_UP_DOWN, 'VR Zoom'], title: 'changes' },
+        { name: CHANGE_VARIABLE,
+          title: '',
+          menu: [LEAP_ROLL, LEAP_PITCH, LEAP_YAW]},
+                { name: CHANGE_VALUE, menu: [CURSOR_LEFT_RIGHT, CURSOR_UP_DOWN, 'VR Zoom'], title: 'changes' }
       ],
       extras: [
-                    {name: CHANGE_MID_ANGLE, title:'', number: 0}, {title:'degrees'},
-                    {name: CHANGE_PLUS_MINUS, title:'+/-', number: 25}, {title:'degrees'},
+                    {name: CHANGE_MID_ANGLE, title: '', number: 0}, {title: 'degrees'},
+                    {name: CHANGE_PLUS_MINUS, title: '+/-', number: 25}, {title: 'degrees'},
                     {name: CHECK_INVERTED, check: false}
       ],
       javascript: (block) => {
