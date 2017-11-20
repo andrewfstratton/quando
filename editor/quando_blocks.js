@@ -851,6 +851,8 @@
             break
           case CHANGE_PITCH: variable = 'Pitch'
             break
+          case CHANGE_HEADING: variable = 'Heading'
+            break
         }
         let extras = {}
         extras.mid_angle = _clamp_degrees(quando_editor.getNumber(block, CHANGE_MID_ANGLE))
