@@ -58,27 +58,18 @@
   self.add_scaled_handler = function (min, max, event_name, callback, scaler = null, destruct = true) {
     var handler = function (ev) {
       var value = ev.detail
-      if ((value >= min) && (value <= max)) {
-        if (scaler) {
-          value = scaler(value)
-        }
-        callback(value)
+      if (scaler) {
+        value = scaler(value)
       }
+      callback(value)
     }
     quando.add_handler(event_name, handler, destruct)
   }
 
   self.new_scaler = function (bottom, top, inverted = false) {
     return function (value) {
-      var result = value
-      if (result < bottom) { // first clamp to top and bottom value
-        result = bottom
-      }
-      if (result > top) {
-        result = top
-      }
-            // convert to range 0 to 1
-      result = (result - bottom) / (top - bottom) // TODO check for negatives and other odd combinations
+      // convert to range 0 to 1 for bottom to top and outside that range otherwise
+      var result = (value - bottom) / (top - bottom) // TODO check for negatives and other odd combinations
       if (inverted) {
         result = 1 - result
       }
@@ -98,30 +89,45 @@
     }
   }
 
-  self.last_y = screen.height
-  self.last_x = screen.width
+  // Start in the middle
+  self._y = screen.height
+  self._x = screen.width
 
   function _cursor_adjust () {
-    var x = self.last_x
-    var y = self.last_y
-    var cursor = document.getElementById('cursor')
-    cursor.style.top = (screen.height - y) + 'px'
-    cursor.style.left = x + 'px'
-    cursor.style.visibility = 'hidden' // TODO this should only be done once - maybe an event (so the second one can be consumed/ignored?)
+    var x = self._x
+    var y = self._y
+    var style = document.getElementById('cursor').style
+    var max_width = screen.width
+    var max_height = screen.height
+    if (x < 0) {
+      x = 0
+    } else if (x > max_width) {
+      x = max_width
+    }
+    if (y < 0) {
+      y = 0
+    } else if (y > max_height) {
+      y = max_height
+    }
+    style.top = y + 'px'
+    style.left = x + 'px'
+    style.visibility = 'hidden' // TODO this should only be done once - maybe an event (so the second one can be consumed/ignored?)
     var elem = document.elementFromPoint(x, y)
-    cursor.style.visibility = 'visible'
+    style.visibility = 'visible'
     self.hover(elem)
     self.idle_reset()
   }
+
   self.cursor_up_down = function (y) {
-    self.last_y = y * screen.height
+    self._y = (1 - y) * screen.height
     _cursor_adjust()
   }
 
   self.cursor_left_right = function (x) {
-    self.last_x = x * screen.width
+    self._x = x * screen.width
     _cursor_adjust()
   }
+
   var Config = self.Config = {
   }
 

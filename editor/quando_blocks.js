@@ -38,7 +38,7 @@
                 { statement: STATEMENT }
       ],
       javascript: (block) => {
-        let seconds = quando_editor.getNumber(block, DURATION) * 1
+        let seconds = quando_editor.getNumber(block, DURATION)
         if (quando_editor.getMenu(block, MENU_UNITS_HOURS.name) === 'Minutes') {
           seconds *= 60
         }
@@ -62,7 +62,7 @@
                 { statement: STATEMENT }
       ],
       javascript: (block) => {
-        let seconds = quando_editor.getNumber(block, DURATION) * 1
+        let seconds = quando_editor.getNumber(block, DURATION)
         if (quando_editor.getMenu(block, MENU_UNITS_HOURS.name) === 'Minutes') {
           seconds *= 60
         }
@@ -214,43 +214,6 @@
       }
     })
 
-        // let LEAP_BLOCK = 'When Hands';
-        // let HAND_COUNT = 'hand_count';
-        // quando_editor.defineLeapMotion({
-        //     name: LEAP_BLOCK, next: false, previous: false,
-        //     interface: [
-        //         { name: HAND_COUNT, title: ' = ', number: 1 },
-        //         { statement: STATEMENT }
-        //     ],
-        //     javascript: (block) => {
-        //         let statement = quando_editor.getStatement(block, STATEMENT);
-        //         let result = "quando.hands(" + quando_editor.getNumber(block, HAND_COUNT) + ",\n"
-        //             + " function() {\n"
-        //             + statement + "});";
-        //         return result;
-        //     }
-        // });
-        // let HANDED_BLOCK = 'When Hand ';
-        // let HAND_LEFT = 'Left';
-        // let HAND_RIGHT = 'Right';
-        // quando_editor.defineLeapMotion({
-        //     name: HANDED_BLOCK, next: false, previous: false,
-        //     interface: [
-        //         { name: HAND_LEFT, check: false },
-        //         { name: HAND_RIGHT, check: false },
-        //         { statement: STATEMENT }
-        //     ],
-        //     javascript: (block) => {
-        //         let statement = quando_editor.getStatement(block, STATEMENT);
-        //         let result = "quando.handed("
-        //             + quando_editor.getCheck(block, HAND_LEFT) + ",\n"
-        //             + quando_editor.getCheck(block, HAND_RIGHT) + ",\n"
-        //             + " function() {\n"
-        //             + statement + "});";
-        //         return result;
-        //     }
-        // });
-
     let DIG_COLOUR = 0
     let WHEN_VITRINE_BLOCK = 'When Display Case'
     let WHEN_VITRINE_TEXT = 'title'
@@ -387,7 +350,8 @@
       name: STYLE_BLOCK,
       title: '',
       interface: [
-                { menu: ['Title', 'Text', 'Labels'], name: DIV_MENU, title: '' },
+        { menu: [['Title', '#quando_title'], ['Text', '#quando_text'], ['Labels', '.quando_label']],
+          name: DIV_MENU, title: '' },
         {
           menu: ['Font Colour', 'Background Colour'],
           name: STYLE_MENU,
@@ -399,14 +363,6 @@
         let result = ''
         let method = _getStyleOnContained(block, [WHEN_VITRINE_BLOCK, WHEN_IDLE])
         let div = quando_editor.getMenu(block, DIV_MENU)
-        switch (div) {
-          case 'Title': div = '#quando_title'
-            break
-          case 'Text': div = '#quando_text'
-            break
-          case 'Labels': div = '.quando_label'
-            break
-        }
         let style = quando_editor.getMenu(block, STYLE_MENU)
         let value = quando_editor.getColour(block, COLOUR)
         if (style == 'Font Colour') {
@@ -433,20 +389,13 @@
     quando_editor.defineStyle({
       name: FONT_SIZE_BLOCK,
       interface: [
-                { menu: ['Title', 'Text', 'Labels'], name: DIV_MENU, title: '' },
+                { menu: [['Title', '#quando_title'], ['Text', '#quando_text'], ['Labels', '.quando_label']],
+                  name: DIV_MENU, title: '' },
                 { name: FONT_SIZE, title: '', number: 100 }, {title: '+ characters across screen'}
       ],
       javascript: (block) => {
         let method = _getStyleOnContained(block, [WHEN_VITRINE_BLOCK, WHEN_IDLE])
         let div = quando_editor.getMenu(block, DIV_MENU)
-        switch (div) {
-          case 'Title': div = '#quando_title'
-            break
-          case 'Text': div = '#quando_text'
-            break
-          case 'Labels': div = '.quando_label'
-            break
-        }
         let value = 100 / quando_editor.getNumber(block, FONT_SIZE)
         result = `quando.${method}('${div}', 'font-size', '${value}vw');\n`
         return result
@@ -458,7 +407,8 @@
     quando_editor.defineStyle({
       name: FONT_TYPE_BLOCK,
       interface: [
-                { menu: ['Title', 'Text', 'Labels'], name: DIV_MENU, title: '' },
+                { menu: [['Title', '#quando_title'], ['Text', '#quando_text'], ['Labels', '.quando_label']],
+                  name: DIV_MENU, title: '' },
         {
           menu: ['sans-serif', 'Arial', 'Helvetica', 'Arial Black', 'Gadget', 'Comic Sans MS', 'cursive',
             'Impact', 'Charcoal', 'Lucida Sans Unicode', 'Lucida Grande', 'Tahoma', 'Geneva',
@@ -466,7 +416,7 @@
             'serif', 'Georgia', 'Palatino Linotype', 'Book Antiqua', 'Palatino',
             'Times New Roman', 'Times',
             'monospace', 'Courier New', 'Courier',
-            'Lucida Console', 'Monaco', ['duMMy', 'XXX']],
+            'Lucida Console', 'Monaco'],
           name: FONT_NAME_MENU,
           title: ''
         }
@@ -475,14 +425,6 @@
         let result = ''
         let method = _getStyleOnContained(block, [WHEN_VITRINE_BLOCK, WHEN_IDLE])
         let div = quando_editor.getMenu(block, DIV_MENU)
-        switch (div) {
-          case 'Title': div = '#quando_title'
-            break
-          case 'Text': div = '#quando_text'
-            break
-          case 'Labels': div = '.quando_label'
-            break
-        }
         let font_name = quando_editor.getMenu(block, FONT_NAME_MENU)
         result += `quando.${method}('${div}', 'font-family', '${font_name}', ',');\n`
         return result
@@ -546,37 +488,14 @@
     quando_editor.defineDevice({
       name: 'When micro:bit',
       interface: [
-                { menu: ['Up', 'Down', 'Forward', 'Backward', 'Left', 'Right', 'A Button', 'B Button'], name: MICROBIT_GESTURE_MENU, title: '' },
+                { menu: [['Up', 'ubitUp'], ['Down', 'ubitDown'], ['Forward', 'ubitForward'],
+                  ['Backward', 'ubitBackward'], ['Left', 'ubitLeft'], ['Right', 'ubitRight'],
+                  ['A Button', 'ubitA'], ['B Button', 'ubitB']],
+                  name: MICROBIT_GESTURE_MENU, title: '' },
                 { statement: STATEMENT }
       ],
       javascript: (block) => {
-        let fn = ''
-        switch (quando_editor.getMenu(block, MICROBIT_GESTURE_MENU)) {
-          case 'Up':
-            fn = 'ubitUp'
-            break
-          case 'Down':
-            fn = 'ubitDown'
-            break
-          case 'Forward':
-            fn = 'ubitForward'
-            break
-          case 'Backward':
-            fn = 'ubitBackward'
-            break
-          case 'Left':
-            fn = 'ubitLeft'
-            break
-          case 'Right':
-            fn = 'ubitRight'
-            break
-          case 'A Button':
-            fn = 'ubitA'
-            break
-          case 'B Button':
-            fn = 'ubitB'
-            break
-        };
+        let fn = quando_editor.getMenu(block, MICROBIT_GESTURE_MENU)
         let statement = quando_editor.getStatement(block, STATEMENT)
         let result = 'quando_ubit.' + fn + '(' +
                     'function() {\n' +
@@ -592,77 +511,13 @@
     quando_editor.defineDevice({
       name: 'When Leap',
       interface: [
-                { menu: ['Fist', 'Flat'], name: LEAP_GESTURE_MENU, title: '' },
+                { menu: [['Fist', 'handClosed'], ['Flat', 'handOpen']], name: LEAP_GESTURE_MENU, title: '' },
                 { statement: STATEMENT }
       ],
       javascript: (block) => {
-        let fn = ''
-        switch (quando_editor.getMenu(block, LEAP_GESTURE_MENU)) {
-          case 'Fist':
-            fn = 'handClosed'
-            break
-          case 'Flat':
-            fn = 'handOpen'
-            break
-        }
+        let fn = quando_editor.getMenu(block, LEAP_GESTURE_MENU)
         let statement = quando_editor.getStatement(block, STATEMENT)
-        let result = 'quando_leap.' + fn + '(' +
-                    'function() {\n' +
-                    statement +
-                    '}' +
-                    _getOnContained(block, [WHEN_VITRINE_BLOCK], '', ', false') +
-                    ');\n'
-        return result
-      }
-    })
-
-    let WHEN_ROLL_MIN = 'Min'
-    let WHEN_ROLL_MAX = 'Max'
-    let MENU_ANGLE = 'Menu Angle'
-    quando_editor.defineDevice({
-      name: 'When Roll between ',
-      title: 'When',
-      interface: [
-                { menu: ['Roll', 'Pitch'], name: MENU_ANGLE, title: ''},
-                { name: WHEN_ROLL_MIN, title: 'angle between', number: '-90' },
-                { name: WHEN_ROLL_MAX, title: 'and', number: '90' },
-                {title: 'degrees'},
-                { statement: STATEMENT }
-      ],
-      javascript: (block) => {
-        let min = quando_editor.getNumber(block, WHEN_ROLL_MIN)
-        let max = quando_editor.getNumber(block, WHEN_ROLL_MAX)
-        let statement = quando_editor.getStatement(block, STATEMENT)
-        let fn = ''
-        switch (quando_editor.getMenu(block, MENU_ANGLE)) {
-          case 'Roll' : fn = 'Roll'
-            break
-          case 'Pitch' : fn = 'Pitch'
-            break
-        }
-        let result = `quando.ubit${fn}(${min}, ${max}, function() {\n${statement}}` +
-                    _getOnContained(block, [WHEN_VITRINE_BLOCK], '', ', false') +
-                    ');\n'
-        return result
-      }
-    })
-
-    let WHEN_HEADING_MIN = 'Min'
-    let WHEN_HEADING_MAX = 'Max'
-    quando_editor.defineDevice({
-      name: 'When heading between ',
-      interface: [
-                { name: WHEN_HEADING_MIN, title: '', number: '0' },
-                { name: WHEN_HEADING_MAX, title: ' and ', number: '359' },
-                {title: ' degrees'},
-                { statement: STATEMENT }
-      ],
-      javascript: (block) => {
-        let min = quando_editor.getNumber(block, WHEN_HEADING_MIN)
-        let max = quando_editor.getNumber(block, WHEN_HEADING_MAX)
-        let statement = quando_editor.getStatement(block, STATEMENT)
-        let result = 'quando.ubitHeading(' + min + ',' + max + ',' +
-                    'function() {\n' +
+        let result = `quando_leap.${fn}(\nfunction() {\n` +
                     statement +
                     '}' +
                     _getOnContained(block, [WHEN_VITRINE_BLOCK], '', ', false') +
@@ -683,7 +538,7 @@
                 { row: 'Then When Active', statement: ACTIVE_STATEMENT }
       ],
       javascript: (block) => {
-        let seconds = quando_editor.getNumber(block, DURATION) * 1
+        let seconds = quando_editor.getNumber(block, DURATION)
         if (quando_editor.getMenu(block, MENU_UNITS_MINS.name) === 'Minutes') {
           seconds *= 60
         }
@@ -738,21 +593,14 @@
     quando_editor.defineClient({
       name: CONTENT_POSITION,
       interface: [
-        { menu: ['Title', 'Text', 'Labels'], name: DIV_MENU, title: '' },
+        { menu: [['Title', '#quando_title'], ['Text', '#quando_text'], ['Labels', '#quando_labels']],
+          name: DIV_MENU, title: '' },
         { name: POSITION_SIZE, title: '', number: 0 }, {title: '%'},
         { menu: ['top', 'bottom', 'left', 'right'], name: DIRECTION_MENU, title: 'from' }
       ],
       javascript: (block) => {
         let method = _getStyleOnContained(block, [WHEN_VITRINE_BLOCK, WHEN_IDLE])
         let div = quando_editor.getMenu(block, DIV_MENU)
-        switch (div) {
-          case 'Title': div = '#quando_title'
-            break
-          case 'Text': div = '#quando_text'
-            break
-          case 'Labels': div = '#quando_labels'
-            break
-        }
         let direction = quando_editor.getMenu(block, DIRECTION_MENU)
         let value = quando_editor.getNumber(block, POSITION_SIZE)
         result = `quando.${method}('${div}', '${direction}', '${value}%');\n`
@@ -770,21 +618,14 @@
     quando_editor.defineClient({
       name: CONTENT_SIZE,
       interface: [
-        { menu: ['Title', 'Text', 'Labels'], name: DIV_MENU, title: '' },
+        { menu: [['Title', '#quando_title'], ['Text', '#quando_text'], ['Labels', '#quando_labels']],
+          name: DIV_MENU, title: '' },
         { name: POSITION_SIZE, title: '', number: 100 }, {title: '%'},
         { menu: ['height', 'width'], name: DIMENSION_MENU, title: 'of' }
       ],
       javascript: (block) => {
         let method = _getStyleOnContained(block, [WHEN_VITRINE_BLOCK, WHEN_IDLE])
         let div = quando_editor.getMenu(block, DIV_MENU)
-        switch (div) {
-          case 'Title': div = '#quando_title'
-            break
-          case 'Text': div = '#quando_text'
-            break
-          case 'Labels': div = '#quando_labels'
-            break
-        }
         let dimension = quando_editor.getMenu(block, DIMENSION_MENU)
         let value = quando_editor.getNumber(block, POSITION_SIZE)
         result = `quando.${method}('${div}', '${dimension}', '${value}%');\n`
@@ -812,11 +653,17 @@
       }
     })
 
-    let CHANGE_WITH_MICROBIT_ANGLE = 'Microbit (angle)'
-    let CHANGE_VALUE = 'Value'
+    function _clamp_degrees (degrees) {
+      return degrees >= 0 ? degrees % 360 : (degrees % 360) + 360 // necessary since % of negatives don't work ?!
+    }
+
     let CURSOR_LEFT_RIGHT = '\u21D4 Cursor'
     let CURSOR_UP_DOWN = '\u21D5 Cursor'
-    let CHANGE_MENU = { name: CHANGE_VALUE, menu: [CURSOR_LEFT_RIGHT, CURSOR_UP_DOWN], title: '' }
+    let CHANGE_VALUE = 'Value'
+    let CHANGE_MENU = { name: CHANGE_VALUE,
+      menu: [[CURSOR_LEFT_RIGHT, 'cursor_left_right'], [CURSOR_UP_DOWN, 'cursor_up_down']], title: '' }
+
+    let CHANGE_WITH_MICROBIT_ANGLE = 'Microbit (angle)'
     let CHANGE_VARIABLE = 'Variable'
     let CHANGE_ROLL = 'Roll'
     let CHANGE_PITCH = 'Pitch'
@@ -824,6 +671,7 @@
     let CHANGE_MID_ANGLE = 'Change Angle'
     let CHANGE_PLUS_MINUS = 'plus minus'
     let CHECK_INVERTED = 'Inverted'
+
     quando_editor.defineDevice({
       name: CHANGE_WITH_MICROBIT_ANGLE,
       interface: [
@@ -839,12 +687,6 @@
       ],
       javascript: (block) => {
         let value = quando_editor.getMenu(block, CHANGE_VALUE)
-        switch (value) {
-          case CURSOR_UP_DOWN: value = 'cursor_up_down'
-            break
-          case CURSOR_LEFT_RIGHT: value = 'cursor_left_right'
-            break
-        }
         let variable = quando_editor.getMenu(block, CHANGE_VARIABLE)
         switch (variable) {
           case CHANGE_ROLL: variable = 'Roll'
@@ -868,14 +710,10 @@
       }
     })
 
-    function _clamp_degrees (degrees) {
-      return degrees >= 0 ? degrees % 360 : (degrees % 360) + 360 // necessary since % of negatives don't work ?!
-    }
-
     let CHANGE_WITH_LEAP_DISTANCE = 'Leap (move)'
-    let LEAP_HEIGHT = 'Leap Up-Down'
-    let LEAP_LEFT_RIGHT = 'Leap Left-Right'
-    let LEAP_DEPTH = 'Leap In-Out'
+    let LEAP_LEFT_RIGHT = 'Left-Right'
+    let LEAP_HEIGHT = 'Up-Down'
+    let LEAP_DEPTH = 'In-Out'
     let CHANGE_MIN = 'Min'
     let CHANGE_MAX = 'Max'
     quando_editor.defineDevice({
@@ -893,12 +731,6 @@
       ],
       javascript: (block) => {
         let value = quando_editor.getMenu(block, CHANGE_VALUE)
-        switch (value) {
-          case CURSOR_UP_DOWN: value = 'cursor_up_down'
-            break
-          case CURSOR_LEFT_RIGHT: value = 'cursor_left_right'
-            break
-        }
         let variable = quando_editor.getMenu(block, CHANGE_VARIABLE)
         switch (variable) {
           case LEAP_LEFT_RIGHT: variable = 'X'
@@ -939,12 +771,6 @@
       ],
       javascript: (block) => {
         let value = quando_editor.getMenu(block, CHANGE_VALUE)
-        switch (value) {
-          case CURSOR_UP_DOWN: value = 'cursor_up_down'
-            break
-          case CURSOR_LEFT_RIGHT: value = 'cursor_left_right'
-            break
-        }
         let variable = quando_editor.getMenu(block, CHANGE_VARIABLE)
         switch (variable) {
           case CHANGE_ROLL: variable = 'Roll'

@@ -50,18 +50,6 @@
     quando.add_scaled_handler(0, 360, event, callback, scale, destruct)
   }
 
-  self.ubitHeading = function (min, max, callback, destruct = true) {
-    quando.add_scaled_handler(min, max, 'ubitHeading', callback, null, destruct)
-  }
-
-  self.ubitRoll = function (min, max, callback, destruct = true) {
-    quando.add_scaled_handler(min, max, 'ubitRoll', callback, null, destruct)
-  }
-
-  self.ubitPitch = function (min, max, callback, destruct = true) {
-    quando.add_scaled_handler(min, max, 'ubitPitch', callback, null, destruct)
-  }
-
   self.handleRoll = function (callback, extras = {}, destruct = true) {
     _handleAngle('ubitRoll', callback, extras, destruct)
   }
