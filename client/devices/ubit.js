@@ -3,7 +3,7 @@
   if (!quando) {
     alert('Fatal Error: ubit must be included after quando_browser')
   }
-  var self = this['quando_ubit'] = {}
+  var self = quando.ubit = {}
   self.last_gesture = ''
 
   function dispatch_gesture (gesture_name) {

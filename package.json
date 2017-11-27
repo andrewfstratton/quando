@@ -1,12 +1,12 @@
 {
   "name": "quando",
-  "version": "0.5.20171120",
+  "version": "0.5.20171122",
   "description": "Quando Toolset",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node app.js",
-    "standardize" : "standard"
+    "standardize": "standard"
   },
   "author": "",
   "license": "ISC",
@@ -17,6 +17,7 @@
     "express-session": "^1.14.2",
     "formidable": "^1.1.1",
     "fs": "0.0.1-security",
+    "leapjs": "^0.6.4",
     "mongodb": "^2.2.11",
     "morgan": "^1.7.0",
     "serialport": "^4.0.7",

@@ -497,7 +497,7 @@
       javascript: (block) => {
         let fn = quando_editor.getMenu(block, MICROBIT_GESTURE_MENU)
         let statement = quando_editor.getStatement(block, STATEMENT)
-        let result = 'quando_ubit.' + fn + '(' +
+        let result = 'quando.ubit.' + fn + '(' +
                     'function() {\n' +
                     statement +
                     '}' +
@@ -517,7 +517,7 @@
       javascript: (block) => {
         let fn = quando_editor.getMenu(block, LEAP_GESTURE_MENU)
         let statement = quando_editor.getStatement(block, STATEMENT)
-        let result = `quando_leap.${fn}(\nfunction() {\n` +
+        let result = `quando.leap.${fn}(\nfunction() {\n` +
                     statement +
                     '}' +
                     _getOnContained(block, [WHEN_VITRINE_BLOCK], '', ', false') +
@@ -703,7 +703,7 @@
           extras['inverted'] = true
         }
         extras = JSON.stringify(extras)
-        let result = `quando_ubit.handle${variable}(quando.${value}, ${extras}` +
+        let result = `quando.ubit.handle${variable}(quando.${value}, ${extras}` +
                     _getOnContained(block, [WHEN_VITRINE_BLOCK], '', ', false') +
                     ');\n'
         return result
@@ -747,7 +747,7 @@
           extras['inverted'] = true
         }
         extras = JSON.stringify(extras)
-        let result = `quando_leap.handle${variable}(quando.${value}, ${extras}` +
+        let result = `quando.leap.handle${variable}(quando.${value}, ${extras}` +
                     _getOnContained(block, [WHEN_VITRINE_BLOCK], '', ', false') +
                     ');\n'
         return result
@@ -787,7 +787,7 @@
           extras['inverted'] = true
         }
         extras = JSON.stringify(extras)
-        let result = `quando_leap.handle${variable}(quando.${value}, ${extras}` +
+        let result = `quando.leap.handle${variable}(quando.${value}, ${extras}` +
                     _getOnContained(block, [WHEN_VITRINE_BLOCK], '', ', false') +
                     ');\n'
         return result

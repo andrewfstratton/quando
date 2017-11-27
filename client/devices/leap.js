@@ -3,10 +3,10 @@
   if (!quando) {
     alert('Fatal Error: Leap Motion must be included after quando_browser')
   }
-  var self = this['quando_leap'] = {}
-  self.leap = new Leap.Controller()
-  self.leap.on('connect', function () {
-    self.leap.on('frame', self.handler)
+  var self = quando.leap = {}
+  self.controller = new Leap.Controller()
+  self.controller.on('connect', function () {
+    self.controller.on('frame', self.handler)
   })
 
   self.handOpen = function (callback, destruct = true) {
@@ -105,5 +105,5 @@
     }
   }
 
-  self.leap.connect()
+  self.controller.connect()
 })()

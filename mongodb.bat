@@ -1,1 +1,1 @@
-start /b c:\mongodb\bin\mongod --dbpath c:\mongodb\bin\data --logpath c:\mongodb\mongodb.log
+start /b c:\mongodb\bin\mongod --dbpath c:\mongodb\data\db --logpath c:\mongodb\mongodb.log
