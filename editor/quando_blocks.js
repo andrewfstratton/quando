@@ -714,8 +714,6 @@
     let LEAP_LEFT_RIGHT = 'Left-Right'
     let LEAP_HEIGHT = 'Up-Down'
     let LEAP_DEPTH = 'In-Out'
-    let CHANGE_MIN = 'Min'
-    let CHANGE_MAX = 'Max'
     quando_editor.defineDevice({
       name: CHANGE_WITH_LEAP_DISTANCE,
       interface: [
@@ -725,24 +723,27 @@
           CHANGE_MENU
       ],
       extras: [
-        {name: CHANGE_MIN, number: '10'}, {title: 'cm'},
-        {name: CHANGE_MAX, number: '40'}, {title: 'cm'},
+        {name: CHANGE_PLUS_MINUS, title: '+/-', number: 15}, {title: 'cm'},
         {name: CHECK_INVERTED, check: false}
       ],
       javascript: (block) => {
         let value = quando_editor.getMenu(block, CHANGE_VALUE)
+        let extras = {}
+        // convert to mm
+        var plus_minus = 10 * quando_editor.getNumber(block, CHANGE_PLUS_MINUS)
+        extras.min = -plus_minus
+        extras.max = plus_minus
         let variable = quando_editor.getMenu(block, CHANGE_VARIABLE)
         switch (variable) {
           case LEAP_LEFT_RIGHT: variable = 'X'
             break
           case LEAP_HEIGHT: variable = 'Y'
+            extras.min = 100 // 10 cm is minimum height set
+            extras.max = 2 * plus_minus + 100 // ste to the right height...
             break
           case LEAP_DEPTH: variable = 'Z'
             break
         }
-        let extras = {}
-        extras.min = 10 * quando_editor.getNumber(block, CHANGE_MIN) // converted to mm
-        extras.max = 10 * quando_editor.getNumber(block, CHANGE_MAX)
         if (quando_editor.getCheck(block, CHECK_INVERTED)) {
           extras['inverted'] = true
         }
