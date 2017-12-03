@@ -336,7 +336,7 @@
         block.setAttribute('type', id)
         let category_list = document.getElementById(json.category)
         if (!_exists(json.category)) {
-            _ERROR('Failed to create Block - missing category property')
+            _ERROR('Failed to create Block - category property missing')
             return
         } // Else ok so far...
         if (!_exists(category_list)) {
@@ -454,6 +454,7 @@
 
         // Change the menu colour
         let map = {
+            'quando_general': CONFIG.GENERAL_COLOUR,
             'quando_display': CONFIG.DISPLAY_COLOUR,
             'quando_media': CONFIG.MEDIA_COLOUR,
             'quando_style': CONFIG.STYLE_COLOUR,
@@ -493,6 +494,9 @@
         return self.defineBlock(json)
     }
 
+    self.defineGeneral = (json) => {
+        return _defineBlock(json, 'quando_general', self.CONFIG.GENERAL_COLOUR)
+    }
     self.defineDisplay = (json) => {
         return _defineBlock(json, 'quando_display', self.CONFIG.DISPLAY_COLOUR)
     }
