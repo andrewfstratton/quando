@@ -295,14 +295,16 @@
       self.handle_file('UPLOAD', null, null, '')
     }
   }
-  self.handle_upload = () => {
-    let file_in = $('#upload_media').val()
+
+  _upload_next_file = (files, remote_path) => {
+    file = files.shift()
+    let file_in = file.name
     let filename = encodeURI(file_in.substring(1 + file_in.lastIndexOf('\\')))
-    let remote_path = encodeURI($('#file_modal_path').html())
     let form_data = new FormData()
-    form_data.append('upload_data', $('#upload_media')[0].files[0]) // wierd jquery format...
+    form_data.append('upload_data', file)
+console.log(filename)
     $.ajax({
-            // url: '/upload', // was '/file/upload' + remote_path + '/' + filename,
+//            // url: '/upload', // was '/file/upload' + remote_path + '/' + filename,
       url: '/file/upload' + remote_path + '/' + filename,
       type: 'POST',
       data: form_data,
@@ -310,9 +312,13 @@
       contentType: false,
       success: (res) => {
         if (res.success) {
-          $('#file_modal').modal('toggle')
-          _success('Uploaded...' + decodeURI(remote_path + filename))
-          $('#upload_media').val(null) // clear once finished - forces a change event next time
+          _success('Uploaded...' + decodeURI(`${remote_path}/${filename}`))
+          if (files.length > 0) {
+            _upload_next_file(files, remote_path)
+          } else {
+            $('#file_modal').modal('toggle')
+            $('#upload_media').val(null) // clear once finished - forces a change event next time
+          }
         } else {
           alert('Failed to save')
         }
@@ -322,6 +328,15 @@
       }
     })
   }
+
+  self.handle_upload = () => {
+      let files = Array.from($('#upload_media')[0].files)
+      let remote_path = encodeURI($('#file_modal_path').html())
+      if (files.length > 0) {
+        _upload_next_file(files, remote_path)
+      }
+  }
+
   self.local_load = (key) => {
     let obj = JSON.parse(localStorage.getItem(key))
     let name = key.slice(PREFIX.length)
