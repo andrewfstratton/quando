@@ -138,6 +138,7 @@
                     `quando.${method}('#quando_image', 'background-image', 'url("/client/media/${image}")');\n`
       }
     })
+
     let VIDEO = 'Video'
     let MEDIA_LOOP_MENU = 'MEDIA_LOOP_MENU'
     let CHECK_STOP_WITH_DISPLAY = '   With display'
@@ -242,7 +243,6 @@
       let matchBlock = [PREFIX + LABEL_TO_BLOCK, PREFIX + SHOW_DISPLAY]
       for (let checkblock of topBlocks) {
         if (matchBlock.includes(checkblock.type)) {
-// console.log('change:'+checkblock.type)
           let menuid = quando_editor.getMenu(checkblock, LABEL_TO_MENU)
           if (menuid == block_id) {
             if (text) {
@@ -659,9 +659,23 @@
 
     let CURSOR_LEFT_RIGHT = '\u21D4 Cursor'
     let CURSOR_UP_DOWN = '\u21D5 Cursor'
+    let OBJECT3D_ZOOM = 'Zoom 3D Object'
+    let OBJECT3D_LEFT_RIGHT = '\u21D4 3D Object'
+    let OBJECT3D_UP_DOWN = '\u21D5 3D Object'
+    let OBJECT3D_ROLL = 'Roll 3D Object'
+    let OBJECT3D_YAW = 'Yaw 3D Object'
+    let OBJECT3D_PITCH = 'Pitch 3D Object'
     let CHANGE_VALUE = 'Value'
-    let CHANGE_MENU = { name: CHANGE_VALUE,
-      menu: [[CURSOR_LEFT_RIGHT, 'cursor_left_right'], [CURSOR_UP_DOWN, 'cursor_up_down']], title: '' }
+    let CHANGE_MENU = { name: CHANGE_VALUE, title: '',
+      menu: [[CURSOR_LEFT_RIGHT, 'cursor_left_right'],
+        [CURSOR_UP_DOWN, 'cursor_up_down'],
+        [OBJECT3D_ZOOM, 'object3d.in_out'],
+        [OBJECT3D_LEFT_RIGHT, 'object3d.left_right'],
+        [OBJECT3D_UP_DOWN, 'object3d.up_down'],
+        [OBJECT3D_ROLL, 'object3d.roll'],
+        [OBJECT3D_PITCH, 'object3d.pitch'],
+        [OBJECT3D_YAW, 'object3d.yaw']
+      ]}
 
     let CHANGE_WITH_MICROBIT_ANGLE = 'Microbit (angle)'
     let CHANGE_VARIABLE = 'Variable'
@@ -794,5 +808,19 @@
         return result
       }
     })
-  }
+
+    let SHOW_OBJECT3D = 'Object3D'
+    let FILE_OBJECT3D = '\uD83C\uDF81 Show 3D Object'
+    quando_editor.defineMedia({
+      name: SHOW_OBJECT3D,
+      title: '',
+      interface: [ {name: FILE_OBJECT3D, file: 'objects'} ],
+      javascript: (block) => {
+        let object3d = quando_editor.getFile(block, FILE_OBJECT3D)
+        // return `quando.object3d.loadOBJ('/client/media/', '${object3d}');\n`
+        return `quando.object3d.loadGLTF('/client/media/${object3d}');\n`
+      }
+    })
+
+  } // self.addBlocks
 })()

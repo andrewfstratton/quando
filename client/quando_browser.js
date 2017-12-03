@@ -73,6 +73,8 @@
       if (inverted) {
         result = 1 - result
       }
+      result = Math.min(1, result)
+      result = Math.max(0, result)
       return result
     }
   }
@@ -192,6 +194,7 @@
       elem.innerHTML = txt
     }
   }
+
   self.image_update_video = function (img) {
     var image = document.getElementById('quando_image')
     if (image.src != encodeURI(window.location.origin + img)) {
