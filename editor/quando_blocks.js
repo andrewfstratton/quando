@@ -667,7 +667,7 @@
     let OBJECT3D_YAW = 'Yaw 3D Object'
     let OBJECT3D_PITCH = 'Pitch 3D Object'
     let CHANGE_VALUE = 'Value'
-    let CHANGE_MENU = { name: CHANGE_VALUE, title: '',
+    let CHANGE_MENU = { name: CHANGE_VALUE, title: 'map to',
       menu: [[CURSOR_LEFT_RIGHT, 'cursor_left_right'],
         [CURSOR_UP_DOWN, 'cursor_up_down'],
         [OBJECT3D_ZOOM, 'object3d.in_out'],
@@ -678,11 +678,11 @@
         [OBJECT3D_YAW, 'object3d.yaw']
       ]}
 
-    let CHANGE_WITH_MICROBIT_ANGLE = 'Microbit (angle)'
+    let CHANGE_WITH_MICROBIT_ANGLE = 'When micro:bit angle '
     let CHANGE_VARIABLE = 'Variable'
-    let CHANGE_ROLL = 'Roll'
-    let CHANGE_PITCH = 'Pitch'
-    let CHANGE_HEADING = 'Heading'
+    let CHANGE_ROLL = '\u2939\u2938 Roll'
+    let CHANGE_PITCH = '\u21D5'
+    let CHANGE_HEADING = '\u21D4 Heading'
     let CHANGE_MID_ANGLE = 'Change Angle'
     let CHANGE_PLUS_MINUS = 'plus minus'
     let CHECK_INVERTED = 'Inverted'
@@ -725,10 +725,10 @@
       }
     })
 
-    let CHANGE_WITH_LEAP_DISTANCE = 'Leap (move)'
-    let LEAP_LEFT_RIGHT = 'Left-Right'
-    let LEAP_HEIGHT = 'Up-Down'
-    let LEAP_DEPTH = 'In-Out'
+    let CHANGE_WITH_LEAP_DISTANCE = 'When Leap move'
+    let LEAP_LEFT_RIGHT = '\u21D4'
+    let LEAP_HEIGHT = '\u21D5'
+    let LEAP_DEPTH = '\u2922 In-Out'
     quando_editor.defineDevice({
       name: CHANGE_WITH_LEAP_DISTANCE,
       interface: [
@@ -770,8 +770,8 @@
       }
     })
 
-    let CHANGE_WITH_LEAP_ANGLE = 'Leap (Angle)'
-    let CHANGE_YAW = 'Yaw'
+    let CHANGE_WITH_LEAP_ANGLE = 'When Leap angle'
+    let CHANGE_YAW = '\u21D4'
     quando_editor.defineDevice({
       name: CHANGE_WITH_LEAP_ANGLE,
       interface: [
