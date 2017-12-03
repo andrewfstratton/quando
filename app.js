@@ -29,7 +29,13 @@ const MEDIA_MAP = {
   'video': ['ogg', 'ogv', 'mp4', 'webm'],
   'audio': ['mp3'],
   'images': ['bmp', 'jpg', 'jpeg', 'png'],
-  'UPLOAD': ['ogg', 'ogv', 'mp4', 'webm', 'mp3', 'bmp', 'jpg', 'jpeg', 'png'] // HACK to work for now
+  'objects': ['gltf', 'glb'], 
+  // 'objects': ['obj', 'mtl'],
+}
+{
+  let upload = []
+  Object.keys(MEDIA_MAP).map((key)=>{upload = upload.concat(MEDIA_MAP[key])})
+  MEDIA_MAP['UPLOAD'] = upload
 }
 
 app.use(morgan('dev'))
