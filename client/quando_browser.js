@@ -58,10 +58,12 @@
   self.add_scaled_handler = function (min, max, event_name, callback, scaler = null, destruct = true) {
     var handler = function (ev) {
       var value = ev.detail
-      if (scaler) {
-        value = scaler(value)
+      if ((value >= min) && (value <= max)) {
+        if (scaler) {
+          value = scaler(value)
+        }
+        callback(value)
       }
-      callback(value)
     }
     quando.add_handler(event_name, handler, destruct)
   }
@@ -221,12 +223,9 @@
 
   self.clear_video = function () {
     var video = document.getElementById('quando_video')
-    if (video.src) {
-      video.pause()
-    }
     video.src = ''
     video.style.visibility = 'hidden'
-        // Remove all event listeners...
+    // Remove all event listeners...
     video.parentNode.replaceChild(video.cloneNode(true), video)
   }
 
@@ -246,10 +245,9 @@
   }
   self.clear_audio = function () {
     var audio = document.getElementById('quando_audio')
-    if (audio.src) {
-      audio.pause()
-    }
     audio.src = ''
+    // Remove all event listeners...
+    audio.parentNode.replaceChild(audio.cloneNode(true), audio)
   }
 
   self.hands = function (count, do_fn) {

@@ -666,8 +666,7 @@
     let OBJECT3D_ROLL = 'Roll 3D Object'
     let OBJECT3D_YAW = 'Yaw 3D Object'
     let OBJECT3D_PITCH = 'Pitch 3D Object'
-    let CHANGE_VALUE = 'Value'
-    let CHANGE_MENU = { name: CHANGE_VALUE, title: 'map to',
+/*    let CHANGE_MENU = { name: CHANGE_VALUE, title: 'map to',
       menu: [[CURSOR_LEFT_RIGHT, 'cursor_left_right'],
         [CURSOR_UP_DOWN, 'cursor_up_down'],
         [OBJECT3D_ZOOM, 'object3d.in_out'],
@@ -677,11 +676,12 @@
         [OBJECT3D_PITCH, 'object3d.pitch'],
         [OBJECT3D_YAW, 'object3d.yaw']
       ]}
+*/
 
     let CHANGE_WITH_MICROBIT_ANGLE = 'When micro:bit angle '
     let CHANGE_VARIABLE = 'Variable'
     let CHANGE_ROLL = '\u2939\u2938 Roll'
-    let CHANGE_PITCH = '\u21D5'
+    let CHANGE_PITCH = '\u21D5 Pitch'
     let CHANGE_HEADING = '\u21D4 Heading'
     let CHANGE_MID_ANGLE = 'Change Angle'
     let CHANGE_PLUS_MINUS = 'plus minus'
@@ -693,7 +693,7 @@
         { name: CHANGE_VARIABLE,
           title: '',
           menu: [CHANGE_ROLL, CHANGE_PITCH, CHANGE_HEADING]},
-        CHANGE_MENU,
+        { statement: STATEMENT }
       ],
       extras: [
         {name: CHANGE_MID_ANGLE, title: '', number: 0}, {title: 'degrees'},
@@ -701,7 +701,6 @@
         {name: CHECK_INVERTED, check: false}
       ],
       javascript: (block) => {
-        let value = quando_editor.getMenu(block, CHANGE_VALUE)
         let variable = quando_editor.getMenu(block, CHANGE_VARIABLE)
         switch (variable) {
           case CHANGE_ROLL: variable = 'Roll'
@@ -718,7 +717,8 @@
           extras['inverted'] = true
         }
         extras = JSON.stringify(extras)
-        let result = `quando.ubit.handle${variable}(quando.${value}, ${extras}` +
+        let statement = quando_editor.getStatement(block, STATEMENT)
+        let result = `quando.ubit.handle${variable}(function(val) {\n${statement}\n}, ${extras}` +
                     _getOnContained(block, [WHEN_VITRINE_BLOCK], '', ', false') +
                     ');\n'
         return result
@@ -735,14 +735,13 @@
         { name: CHANGE_VARIABLE,
           title: '',
           menu: [LEAP_LEFT_RIGHT, LEAP_HEIGHT, LEAP_DEPTH]},
-          CHANGE_MENU
+        { statement: STATEMENT }
       ],
       extras: [
         {name: CHANGE_PLUS_MINUS, title: '+/-', number: 15}, {title: 'cm'},
         {name: CHECK_INVERTED, check: false}
       ],
       javascript: (block) => {
-        let value = quando_editor.getMenu(block, CHANGE_VALUE)
         let extras = {}
         // convert to mm
         var plus_minus = 10 * quando_editor.getNumber(block, CHANGE_PLUS_MINUS)
@@ -763,7 +762,8 @@
           extras['inverted'] = true
         }
         extras = JSON.stringify(extras)
-        let result = `quando.leap.handle${variable}(quando.${value}, ${extras}` +
+        let statement = quando_editor.getStatement(block, STATEMENT)
+        let result = `quando.leap.handle${variable}(function(val) {\n${statement}\n}, ${extras}` +
                     _getOnContained(block, [WHEN_VITRINE_BLOCK], '', ', false') +
                     ');\n'
         return result
@@ -771,14 +771,14 @@
     })
 
     let CHANGE_WITH_LEAP_ANGLE = 'When Leap angle'
-    let CHANGE_YAW = '\u21D4'
+    let CHANGE_YAW = '\u21D4 Yaw'
     quando_editor.defineDevice({
       name: CHANGE_WITH_LEAP_ANGLE,
       interface: [
         { name: CHANGE_VARIABLE,
           title: '',
           menu: [CHANGE_ROLL, CHANGE_PITCH, CHANGE_YAW]},
-          CHANGE_MENU
+          { statement: STATEMENT }
       ],
       extras: [
         {name: CHANGE_MID_ANGLE, title: '', number: 0}, {title: 'degrees'},
@@ -786,7 +786,6 @@
         {name: CHECK_INVERTED, check: false}
       ],
       javascript: (block) => {
-        let value = quando_editor.getMenu(block, CHANGE_VALUE)
         let variable = quando_editor.getMenu(block, CHANGE_VARIABLE)
         switch (variable) {
           case CHANGE_ROLL: variable = 'Roll'
@@ -803,7 +802,8 @@
           extras['inverted'] = true
         }
         extras = JSON.stringify(extras)
-        let result = `quando.leap.handle${variable}(quando.${value}, ${extras}` +
+        let statement = quando_editor.getStatement(block, STATEMENT)
+        let result = `quando.leap.handle${variable}(function(val) {\n${statement}\n}, ${extras}` +
                     _getOnContained(block, [WHEN_VITRINE_BLOCK], '', ', false') +
                     ');\n'
         return result
