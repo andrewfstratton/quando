@@ -108,7 +108,7 @@
     }
 
     self.getNumber = (block, name) => {
-        return parseInt(block.getFieldValue(NUMBER_INPUT_PREFIX + name))
+        return parseFloat(block.getFieldValue(NUMBER_INPUT_PREFIX + name))
     }
 
     self.getColour = (block, name) => {
