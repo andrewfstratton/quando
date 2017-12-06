@@ -23,7 +23,8 @@ CONFIG_FILE = 'config.txt'
 # The radio won't work unless it's switched on.
 def radio_on():
     print('{"channel":' + str(_channel) + '}')
-    radio.config(channel=_channel, power=1, length=128) # set the channel
+    # set the channel
+    radio.config(channel=_channel, power=1, length=128, data_rate=radio.RATE_2MBIT)
     radio.on()
 
 def display_channel():
