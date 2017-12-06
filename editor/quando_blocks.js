@@ -658,25 +658,95 @@
       return degrees >= 0 ? degrees % 360 : (degrees % 360) + 360 // necessary since % of negatives don't work ?!
     }
 
-    let CURSOR_LEFT_RIGHT = '\u21D4 Cursor'
-    let CURSOR_UP_DOWN = '\u21D5 Cursor'
-    let OBJECT3D_ZOOM = 'Zoom 3D Object'
-    let OBJECT3D_LEFT_RIGHT = '\u21D4 3D Object'
-    let OBJECT3D_UP_DOWN = '\u21D5 3D Object'
-    let OBJECT3D_ROLL = 'Roll 3D Object'
-    let OBJECT3D_YAW = 'Yaw 3D Object'
-    let OBJECT3D_PITCH = 'Pitch 3D Object'
-/*    let CHANGE_MENU = { name: CHANGE_VALUE, title: 'map to',
-      menu: [[CURSOR_LEFT_RIGHT, 'cursor_left_right'],
-        [CURSOR_UP_DOWN, 'cursor_up_down'],
-        [OBJECT3D_ZOOM, 'object3d.in_out'],
-        [OBJECT3D_LEFT_RIGHT, 'object3d.left_right'],
-        [OBJECT3D_UP_DOWN, 'object3d.up_down'],
-        [OBJECT3D_ROLL, 'object3d.roll'],
-        [OBJECT3D_PITCH, 'object3d.pitch'],
-        [OBJECT3D_YAW, 'object3d.yaw']
-      ]}
-*/
+    let VALUE_CURSOR = 'Change Cursor'
+    let CHANGE_CURSOR_MENU = 'Cursor menu'
+    let DEVICE_LEFT_RIGHT = '\u21D4'
+    let DEVICE_UP_DOWN = '\u21D5'
+    let CHANGE_PLUS_MINUS = 'plus minus'
+    
+    quando_editor.defineDevice({
+      name: VALUE_CURSOR,
+      interface: [
+        { name: CHANGE_CURSOR_MENU,
+          title: '',
+          menu: [[DEVICE_LEFT_RIGHT, 'quando.cursor_left_right'],
+            [DEVICE_UP_DOWN, 'quando.cursor_up_down']]
+          }
+      ],
+      extras: [
+        {name: CHANGE_PLUS_MINUS, title: '+/-', number: 15}, {title: 'cm'}
+      ],
+      javascript: (block) => {
+        let value = quando_editor.getMenu(block, CHANGE_CURSOR_MENU)
+        let extras = {}
+        // convert to mm
+        var plus_minus = 10 * quando_editor.getNumber(block, CHANGE_PLUS_MINUS)
+        extras.min = -plus_minus
+        extras.max = plus_minus
+        extras = JSON.stringify(extras)
+        let result = `${value}(val);\n`
+        return result
+      }
+    })
+
+    let MOVE_3D_OBJECT = 'Change 3D Object'
+    let CHANGE_3D_OBJECT_MENU = '3D Object menu'
+    quando_editor.defineDevice({
+      name: MOVE_3D_OBJECT, title:'Move 3D Object',
+      interface: [
+        { name: CHANGE_3D_OBJECT_MENU,
+          title: '',
+          menu: [
+            [DEVICE_LEFT_RIGHT, 'quando.object3d.left_right'],
+            [DEVICE_UP_DOWN, 'quando.object3d.up_down'],
+            ['Zoom', 'quando.object3d.in_out']]
+          }
+      ],
+      extras: [
+        {name: CHANGE_PLUS_MINUS, title: '+/-', number: 15}, {title: 'cm'}
+      ],
+      javascript: (block) => {
+        let value = quando_editor.getMenu(block, CHANGE_3D_OBJECT_MENU)
+        let extras = {}
+        // convert to mm
+        var plus_minus = 10 * quando_editor.getNumber(block, CHANGE_PLUS_MINUS)
+        extras.min = -plus_minus
+        extras.max = plus_minus
+        extras = JSON.stringify(extras)
+        let result = `${value}(val);\n`
+        return result
+      }
+    })
+
+    let ROTATE_3D_OBJECT = 'Rotate 3D Object'
+    let ROTATE_3D_OBJECT_MENU = '3D Object menu'
+    quando_editor.defineDevice({
+      name: ROTATE_3D_OBJECT,
+      interface: [
+        { name: ROTATE_3D_OBJECT_MENU,
+          title: '',
+          menu: [
+            ['\u21D4 Yaw', 'quando.object3d.yaw'],
+            ['\u21D5 Pitch', 'quando.object3d.pitch'],
+            ['\u2939\u2938 Roll', 'quando.object3d.roll']]
+          }
+      ],
+      extras: [
+        {name: CHANGE_PLUS_MINUS, title: '+/-', number: 15}, {title: 'cm'}
+      ],
+      javascript: (block) => {
+        let value = quando_editor.getMenu(block, CHANGE_3D_OBJECT_MENU)
+        let extras = {}
+        // convert to mm
+        var plus_minus = 10 * quando_editor.getNumber(block, CHANGE_PLUS_MINUS)
+        extras.min = -plus_minus
+        extras.max = plus_minus
+        extras = JSON.stringify(extras)
+        let result = `${value}(val);\n`
+        return result
+      }
+    })
+
 
     let CHANGE_WITH_MICROBIT_ANGLE = 'When micro:bit angle '
     let CHANGE_VARIABLE = 'Variable'
@@ -684,7 +754,6 @@
     let CHANGE_PITCH = '\u21D5 Pitch'
     let CHANGE_HEADING = '\u21D4 Heading'
     let CHANGE_MID_ANGLE = 'Change Angle'
-    let CHANGE_PLUS_MINUS = 'plus minus'
     let CHECK_INVERTED = 'Inverted'
 
     quando_editor.defineDevice({
@@ -692,7 +761,7 @@
       interface: [
         { name: CHANGE_VARIABLE,
           title: '',
-          menu: [CHANGE_ROLL, CHANGE_PITCH, CHANGE_HEADING]},
+          menu: [CHANGE_HEADING, CHANGE_PITCH, CHANGE_ROLL]},
         { statement: STATEMENT }
       ],
       extras: [
@@ -718,7 +787,7 @@
         }
         extras = JSON.stringify(extras)
         let statement = quando_editor.getStatement(block, STATEMENT)
-        let result = `quando.ubit.handle${variable}(function(val) {\n${statement}\n}, ${extras}` +
+        let result = `quando.ubit.handle${variable}(function(val) {\n${statement}}, ${extras}` +
                     _getOnContained(block, [WHEN_VITRINE_BLOCK], '', ', false') +
                     ');\n'
         return result
@@ -763,7 +832,7 @@
         }
         extras = JSON.stringify(extras)
         let statement = quando_editor.getStatement(block, STATEMENT)
-        let result = `quando.leap.handle${variable}(function(val) {\n${statement}\n}, ${extras}` +
+        let result = `quando.leap.handle${variable}(function(val) {\n${statement}}, ${extras}` +
                     _getOnContained(block, [WHEN_VITRINE_BLOCK], '', ', false') +
                     ');\n'
         return result
@@ -777,7 +846,7 @@
       interface: [
         { name: CHANGE_VARIABLE,
           title: '',
-          menu: [CHANGE_ROLL, CHANGE_PITCH, CHANGE_YAW]},
+          menu: [CHANGE_YAW, CHANGE_PITCH, CHANGE_ROLL]},
           { statement: STATEMENT }
       ],
       extras: [
