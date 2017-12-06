@@ -19,14 +19,12 @@
 
   function _handleXYZ (event, callback, extras, destruct = true) {
     var scale = quando.new_scaler(extras.min, extras.max, extras.inverted)
-    quando.add_scaled_handler(extras.min, extras.max, event, callback, scale, destruct)
+    quando.add_scaled_handler(event, callback, scale, destruct)
   }
 
   function _handleAngle (event, callback, extras, destruct = true) {
     var scale = quando.new_angle_scaler(extras.mid_angle, extras.plus_minus, extras.inverted)
-    var min = extras.mid_angle - extras.plus_minus
-    var max = extras.mid_angle + extras.plus_minus
-    quando.add_scaled_handler(min, max, event, callback, scale, destruct)
+    quando.add_scaled_handler(event, callback, scale, destruct)
   }
 
   self.handleX = function (callback, extras, destruct = true) {
@@ -63,6 +61,7 @@
   self.last_roll = false
   self.last_pitch = false
   self.last_yaw = false
+  self.last_flat = false
   self.handler = function (frame) {
     if (frame.hands) {
       if (frame.hands.length >= 1) {
@@ -98,10 +97,13 @@
           self.last_yaw = yaw
         }
         var strength = hand.grabStrength
-        if (strength == 1) {
+        if (strength == 1 && self.last_flat) {
           quando.dispatch_event('leapHandClosed')
-        } else if (strength == 0) {
+          self.last_flat = false
+        }
+        if (strength <= 0.9 && !self.last_flat) {
           quando.dispatch_event('leapHandOpen')
+          self.last_flat = true
         }
       }
     }
