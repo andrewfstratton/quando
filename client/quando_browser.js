@@ -55,26 +55,40 @@
     }
   }
 
-  self.add_scaled_handler = function (min, max, event_name, callback, scaler = null, destruct = true) {
+  self.add_scaled_handler = function (event_name, callback, scaler, destruct = true) {
     var handler = function (ev) {
-      var value = ev.detail
-      if (scaler) {
-        value = scaler(value)
+      var value = scaler(ev.detail)
+      if (value !== null) {
+        callback(value)
       }
-      callback(value)
     }
     quando.add_handler(event_name, handler, destruct)
   }
 
-  self.new_scaler = function (bottom, top, inverted = false) {
+  self.new_scaler = function (min, max, inverted = false) {
+    var valid_last_result = false
     return function (value) {
-      // convert to range 0 to 1 for bottom to top and outside that range otherwise
-      var result = (value - bottom) / (top - bottom) // TODO check for negatives and other odd combinations
-      if (inverted) {
-        result = 1 - result
+      var result = null
+      if ((value >= min) && (value <= max)) {
+        // convert to range 0 to 1 for min to max
+        var result = (value - min) / (max - min)
+        // TODO check for negatives and other odd combinations
+        if (inverted) {
+          result = 1 - result
+        }
+        valid_last_result = true
+      } else if (valid_last_result) {
+        valid_last_result = false
+        // we have just gone out of bounds - so return the extreme value - once
+        if (value < min) {
+          result = 0
+        } else {
+          result = 1
+        }
+        if (inverted) {
+          result = 1 - result
+        }
       }
-      result = Math.min(1, result)
-      result = Math.max(0, result)
       return result
     }
   }
@@ -221,12 +235,9 @@
 
   self.clear_video = function () {
     var video = document.getElementById('quando_video')
-    if (video.src) {
-      video.pause()
-    }
     video.src = ''
     video.style.visibility = 'hidden'
-        // Remove all event listeners...
+    // Remove all event listeners...
     video.parentNode.replaceChild(video.cloneNode(true), video)
   }
 
@@ -246,10 +257,9 @@
   }
   self.clear_audio = function () {
     var audio = document.getElementById('quando_audio')
-    if (audio.src) {
-      audio.pause()
-    }
     audio.src = ''
+    // Remove all event listeners...
+    audio.parentNode.replaceChild(audio.cloneNode(true), audio)
   }
 
   self.hands = function (count, do_fn) {

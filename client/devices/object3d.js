@@ -32,6 +32,7 @@
             if (self._roll) { obj.rotation.z = self._roll; delete self._roll }
             if (self._pitch) { obj.rotation.x = self._pitch; delete self._pitch }
             if (self._yaw) { obj.rotation.y = self._yaw; delete self._yaw }
+            // camera.lookAt(obj.position)
             renderer.render(scene, camera)
             requestAnimationFrame(function() {
                 update(renderer, scene, camera)

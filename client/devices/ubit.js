@@ -47,7 +47,7 @@
 
   function _handleAngle (event, callback, extras, destruct = true) {
     var scale = quando.new_angle_scaler(extras.mid_angle, extras.plus_minus, extras.inverted)
-    quando.add_scaled_handler(0, 360, event, callback, scale, destruct)
+    quando.add_scaled_handler(event, callback, scale, destruct)
   }
 
   self.handleRoll = function (callback, extras = {}, destruct = true) {

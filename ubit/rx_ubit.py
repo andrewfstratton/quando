@@ -6,7 +6,8 @@ CONFIG_FILE = 'config.txt'
 
 # The radio won't work unless it's switched on.
 def radio_on():
-    radio.config(channel=_channel, power=0, length=128) # set the channel
+    # set the channel
+    radio.config(channel=_channel, power=1, length=128, data_rate=radio.RATE_2MBIT)
     radio.on()
 
 def display_channel():
@@ -63,10 +64,8 @@ def proxy():
         try:
             incoming = radio.receive()
             if incoming == None:
-                if sleeps == 50:
+                if sleeps == 500:
                     display.clear()
-                else:
-                    sleep(10)                        
                 sleeps += 1
             else:
                 messages = incoming.split('\n')
@@ -79,11 +78,10 @@ def proxy():
                 result = result[:-1] + '}' # replace the last , with }
                 print(result)
                 sleeps = 0
-            sleep(20)
         except:
             print('{"error":"packet"}')
             radio.off()
-            sleep(1000)
+#            sleep(1000)
             radio_on()
     return # never
 

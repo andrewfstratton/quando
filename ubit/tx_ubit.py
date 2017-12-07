@@ -23,7 +23,8 @@ CONFIG_FILE = 'config.txt'
 # The radio won't work unless it's switched on.
 def radio_on():
     print('{"channel":' + str(_channel) + '}')
-    radio.config(channel=_channel, power=1, length=128) # set the channel
+    # set the channel
+    radio.config(channel=_channel, power=1, length=128, data_rate=radio.RATE_2MBIT)
     radio.on()
 
 def display_channel():
@@ -113,13 +114,10 @@ def gesture():
 #            print(msg)
     return # never does
 
-def heading():
-    while button_a.is_pressed() and button_b.is_pressed():
-        display.show('-')
-        sleep(500)
-        display.show('+')
-        sleep(500)
-    last_heading = 180
+def roll_pitch_heading():
+    last_roll = False
+    last_pitch = False
+    last_heading = False
     while True:
         if button_a.is_pressed() and button_b.is_pressed():
             compass.calibrate()
@@ -131,12 +129,6 @@ def heading():
             display.show(Image.ALL_CLOCKS[needle])
         sleep(20)
         display.show(' ')
-    return # never does
-
-def roll_pitch():
-    last_roll = False
-    last_pitch = False
-    while True:
         x = accelerometer.get_x()/1024
         y = accelerometer.get_y()/1024
         z = accelerometer.get_z()/1024
@@ -155,13 +147,11 @@ def roll_pitch():
 print('{"started":true}')
 load()
 radio_on()
-if button_a.is_pressed() and not button_b.is_pressed(): # a pressed
+if button_a.is_pressed() and not button_b.is_pressed(): # only a pressed
     config()
-elif not button_a.is_pressed() and button_b.is_pressed(): # b pressed
-    roll_pitch()
-elif button_a.is_pressed() and button_b.is_pressed(): # a and b pressed
-   heading()
-else: # nothing pressed
+elif not button_a.is_pressed() and button_b.is_pressed(): # only b pressed
+    roll_pitch_heading()
+else: 
     gesture()
 
 
