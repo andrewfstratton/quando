@@ -753,6 +753,8 @@
     let CHANGE_ROLL = '\u2939\u2938 Roll'
     let CHANGE_PITCH = '\u21D5 Pitch'
     let CHANGE_HEADING = '\u21D4 Heading'
+    let CHANGE_MAG_X = 'Mag X'
+    let CHANGE_MAG_Y = 'Mag Y'
     let CHANGE_MID_ANGLE = 'Change Angle'
     let CHECK_INVERTED = 'Inverted'
 
@@ -761,7 +763,9 @@
       interface: [
         { name: CHANGE_VARIABLE,
           title: '',
-          menu: [CHANGE_HEADING, CHANGE_PITCH, CHANGE_ROLL]},
+          menu: [CHANGE_HEADING, CHANGE_PITCH, CHANGE_ROLL,
+            // CHANGE_MAG_X, CHANGE_MAG_Y
+          ]},
         { statement: STATEMENT }
       ],
       extras: [
@@ -772,11 +776,15 @@
       javascript: (block) => {
         let variable = quando_editor.getMenu(block, CHANGE_VARIABLE)
         switch (variable) {
-          case CHANGE_ROLL: variable = 'Roll'
+          case CHANGE_ROLL: variable = 'handleRoll'
             break
-          case CHANGE_PITCH: variable = 'Pitch'
+          case CHANGE_PITCH: variable = 'handlePitch'
             break
-          case CHANGE_HEADING: variable = 'Heading'
+          case CHANGE_HEADING: variable = 'handleHeading'
+            break
+          case CHANGE_MAG_X: variable = 'handleMagX'
+            break
+          case CHANGE_MAG_Y: variable = 'handleMagY'
             break
         }
         let extras = {}
@@ -787,7 +795,7 @@
         }
         extras = JSON.stringify(extras)
         let statement = quando_editor.getStatement(block, STATEMENT)
-        let result = `quando.ubit.handle${variable}(function(val) {\n${statement}}, ${extras}` +
+        let result = `quando.ubit.${variable}(function(val) {\n${statement}}, ${extras}` +
                     _getOnContained(block, [WHEN_VITRINE_BLOCK], '', ', false') +
                     ');\n'
         return result

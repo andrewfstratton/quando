@@ -62,6 +62,18 @@
     _handleAngle('ubitHeading', callback, extras, destruct)
   }
 
+  self.handleMagX = function(callback, extras={}, destruct=true) {
+    var scale = quando.new_scaler(extras.mid_angle - extras.plus_minus, extras.mid_angle + extras.plus_minus,
+      extras.inverted)
+    quando.add_scaled_handler("ubitMagX", callback, scale, destruct)
+  }
+
+  self.handleMagY = function(callback, extras={}, destruct=true) {
+    var scale = quando.new_scaler(extras.mid_angle - extras.plus_minus, extras.mid_angle + extras.plus_minus,
+      extras.inverted)
+    quando.add_scaled_handler("ubitMagY", callback, scale, destruct)
+  }
+
   quando.socket.on('ubit', function (data) {
     if (data.ir) {
       quando.idle_reset()
@@ -90,6 +102,10 @@
       if (data.button == 'b') {
         quando.dispatch_event('ubitB')
       }
+    } else if (data.mag_x || data.mag_y) {
+      quando.dispatch_event('ubitMagX', {'detail': data.mag_x})
+      quando.dispatch_event('ubitMagY', {'detail': data.mag_y})
+      quando.idle_reset()
     } else if (data.heading) {
       quando.dispatch_event('ubitHeading', {'detail': data.heading})
       quando.idle_reset()
