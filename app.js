@@ -151,6 +151,10 @@ function ubit_success (serial) {
         if (ubit.ir) {
           io.emit('ubit', {ir: true})
         }
+        if (ubit.mag_x) {
+          io.emit('ubit', {'mag_x': ubit.mag_x, 'mag_y': ubit.mag_y})
+// console.log(ubit.mag_x, ubit.mag_y)
+        }
         if (ubit.orientation) {
           io.emit('ubit', {'orientation': ubit.orientation})
         }
