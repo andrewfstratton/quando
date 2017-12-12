@@ -461,7 +461,8 @@
             'quando_client': CONFIG.CLIENT_COLOUR,
             'quando_time': CONFIG.TIME_COLOUR,
             'quando_leap_motion': CONFIG.LEAP_MOTION_COLOUR,
-            'quando_device': CONFIG.DEVICE_COLOUR
+            'quando_device': CONFIG.DEVICE_COLOUR,
+            'experiment': CONFIG.EXPERIMENT_COLOUR
         }
         for (let key in map) {
             let elem = _fromDom(key, null)
