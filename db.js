@@ -4,18 +4,18 @@ const mongodb = require('mongodb')
 const host = '127.0.0.1'
 const port = 27017
 const db_name = 'quando'
-const mongo_url = `mongodb://${host}:${port}/${db_name}`
+const mongo_uri = `mongodb://${host}:${port}`
 
 let cached_db = null
 
-let db = () => {
+function getDB() {
   return new Promise((success, fail) => {
     if (cached_db) {
       success(cached_db)
     } else {
-      mongodb.MongoClient.connect(mongo_url, (err, _db) => {
+      mongodb.MongoClient.connect(mongo_uri, (err, client) => {
         if (err == null) {
-          cached_db = _db
+          cached_db = client.db(db_name)
           success(cached_db)
         } else {
           fail(Error('Failed connection with error = ' + err))
@@ -25,10 +25,10 @@ let db = () => {
   })
 }
 
-let collection = (name) => {
+function collection(name) {
   return new Promise((success, fail) => {
-    db().then((_db) => {
-      success(_db.collection(name))
+    getDB().then((db) => {
+      success(db.collection(name))
     }, fail)
   })
 }
