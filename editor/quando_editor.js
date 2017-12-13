@@ -462,7 +462,7 @@
             'quando_time': CONFIG.TIME_COLOUR,
             'quando_leap_motion': CONFIG.LEAP_MOTION_COLOUR,
             'quando_device': CONFIG.DEVICE_COLOUR,
-            'experiment': CONFIG.EXPERIMENT_COLOUR
+            'quando_robot' : CONFIG.ROBOT_COLOUR
         }
         for (let key in map) {
             let elem = _fromDom(key, null)
@@ -518,6 +518,9 @@
     }
     self.defineLeapMotion = (json) => {
         return _defineBlock(json, 'quando_leap_motion', self.CONFIG.LEAP_MOTION_COLOUR)
+    }
+    self.defineRobot = (json) => {
+        return _defineBlock(json, 'quando_robot', self.CONFIG.ROBOT_COLOUR)
     }
 
     self.getParent = (block, ids) => {
