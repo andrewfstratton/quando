@@ -662,7 +662,6 @@
     let CHANGE_CURSOR_MENU = 'Cursor menu'
     let DEVICE_LEFT_RIGHT = '\u21D4'
     let DEVICE_UP_DOWN = '\u21D5'
-    let CHANGE_PLUS_MINUS = 'plus minus'
     
     quando_editor.defineDevice({
       name: VALUE_CURSOR,
@@ -673,17 +672,8 @@
             [DEVICE_UP_DOWN, 'quando.cursor_up_down']]
           }
       ],
-      extras: [
-        {name: CHANGE_PLUS_MINUS, title: '+/-', number: 15}, {title: 'cm'}
-      ],
       javascript: (block) => {
         let value = quando_editor.getMenu(block, CHANGE_CURSOR_MENU)
-        let extras = {}
-        // convert to mm
-        var plus_minus = 10 * quando_editor.getNumber(block, CHANGE_PLUS_MINUS)
-        extras.min = -plus_minus
-        extras.max = plus_minus
-        extras = JSON.stringify(extras)
         let result = `${value}(val);\n`
         return result
       }
@@ -691,6 +681,7 @@
 
     let MOVE_3D_OBJECT = 'Change 3D Object'
     let CHANGE_3D_OBJECT_MENU = '3D Object menu'
+    let CHANGE_PLUS_MINUS = 'plus minus'
     quando_editor.defineDevice({
       name: MOVE_3D_OBJECT, title:'Move 3D Object',
       interface: [
