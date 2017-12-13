@@ -1,16 +1,15 @@
 (function () {
     var quando = this['quando']
     if (!quando) {
-      alert('Fatal Error: ubit must be included after quando_browser')
+      alert('Fatal Error: Robot must be included after quando_browser')
     }
 
     var session = null;    
 
     var self = quando.robot = {}
-    self.say = function(text,extras) {
+    self.say = function(text, extras) {
         session.service("ALTextToSpeech").done(function (tts) {
             // tts is a proxy to the ALTextToSpeech service
-            debugger;
             if(extras.speed) {
                 tts.setParameter("speed", extras.speed)
             }
