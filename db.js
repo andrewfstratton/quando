@@ -50,7 +50,8 @@ exports.save = (collection_name, doc) => {
 exports.getArray = (collection_name, query, fields, options) => {
   return new Promise((success, fail) => {
     collection(collection_name).then((_collection) => {
-      _collection.find(query, fields, options).toArray((err, array) => {
+      options.projection = fields
+      _collection.find(query, options).toArray((err, array) => {
         if (err) {
           fail(err)
         } else {
