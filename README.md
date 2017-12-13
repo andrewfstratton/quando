@@ -7,13 +7,16 @@ Prerequisites: Chrome, Node JS, mongoDB (complete install in c:\mongodb), github
 
 1. Clone the repository in C: using git clone https://github.com/andrewfstratton/quando.git
 2. In the command line, in C:\quando, npm update - this will likely take a while
-3. Download blockly from github (most likely) and unzip into C:\quando\blockly
+3. you may need to rebuild the serial-port, if so, then:
+    1. (may need) npm install --global --production windows-build-tools
+    2. npm install serialport --build-from-source
+4. Download blockly from github (most likely) and unzip into C:\quando\blockly
 
 ### To add the automatic startup
 1. using Windows R, run gpedit.msc
 2. Choose Computer Configuration->Windows Settings->Scripts->Startup
     1. Then 'Add' C:\quando\mongodb.bat and c:\quando\quando.bat (second)
-3. mkdir c:\mongodb\bin\data
+3. mkdir c:\mongodb\data\db
     1. Run mongodb.bat from the command line (just this once) - you will need to use another command line
 - Note: you may need to edit mongodb.bat to change the location of data and logfile
 4. run c:\mongodb\bin\mongo
