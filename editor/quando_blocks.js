@@ -664,7 +664,7 @@
     let DEVICE_LEFT_RIGHT = '\u21D4'
     let DEVICE_UP_DOWN = '\u21D5'
     let CHANGE_PLUS_MINUS = 'plus minus'
-    
+        
     quando_editor.defineDevice({
       name: VALUE_CURSOR,
       interface: [
@@ -918,15 +918,34 @@
         return `{${infix}\n${statement}}\n`
       }
     })
+    
+    let ROBOT_IP = 'Robot IP'
+    let ROBOT_CONNECT = 'Connect'
+    quando_editor.defineRobot({
+      name: ROBOT_CONNECT,
+      interface: [{ name: ROBOT_IP, title: '', text: '#ROBOT IP#' }],
+      javascript: (block) => {
+        return 'quando.robot.connect("' + quando_editor.getText(block, ROBOT_IP) + '");\n'
+      }
+    })
 
+    let ROBOT_SAYS = 'Say'
     let ROBOT_TEXT_SAYS = 'Robot Text Says'
-    let ROBOT_SAYS = 'Robot Says'
+    let ROBOT_CHANGE_SPEED_SPEECH = 'Speech Speed'
     quando_editor.defineRobot({
       name: ROBOT_SAYS,
       interface: [{ name: ROBOT_TEXT_SAYS, title: '', text: 'Hello' }],
+      extras: [
+        {name: ROBOT_CHANGE_SPEED_SPEECH, title: 'Speed of speech', number: 100}
+      ],
       javascript: (block) => {
-        return 'quando.robot.say("' + quando_editor.getText(block, ID_SAYS) + '");\n'
+        let txt = quando_editor.getText(block, ROBOT_TEXT_SAYS)
+        let extras = {}
+        extras.speed = quando_editor.getNumber(block, ROBOT_CHANGE_SPEED_SPEECH)
+        extras = JSON.stringify(extras)
+        return `quando.robot.say("${txt}",${extras});\n`
       }
     })
+
   } // self.addBlocks
 })()
