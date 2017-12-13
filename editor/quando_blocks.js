@@ -2,7 +2,7 @@
   let self = this['quando_blocks'] = {}
   let PREFIX = 'quando_' // TODO share with quando_editor
   self.CONFIG = {
-    GENERAL_COLOUR: '#ddbb88',
+    ADVANCED_COLOUR: '#ff8888',
     DISPLAY_COLOUR: '#ffcc88',
     MEDIA_COLOUR: '#b3ffb3',
     STYLE_COLOUR: '#ffccff',
@@ -893,7 +893,7 @@
 
     let DESCRIPTION_BLOCK = 'Description'
     let DESCRIPTION_TEXT = 'description_text'
-    quando_editor.defineGeneral({
+    quando_editor.defineAdvanced({
       name: DESCRIPTION_BLOCK, title:' ',
       interface: [{name:DESCRIPTION_TEXT, title:' ', text:''},
         { statement: STATEMENT }
@@ -908,5 +908,18 @@
         return `{${infix}\n${statement}}\n`
       }
     })
+
+    let SCRIPT_BLOCK = 'Javascript: '
+    let SCRIPT_TEXT = 'script_text'
+    quando_editor.defineAdvanced({
+      name: SCRIPT_BLOCK,
+      interface: [{name:SCRIPT_TEXT, title:'', text:''}
+      ],
+      javascript : (block) => {
+        let script = quando_editor.getRawText(block, SCRIPT_TEXT)
+        return `${script};\n`
+      }
+    })
+
   } // self.addBlocks
 })()

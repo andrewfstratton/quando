@@ -101,10 +101,14 @@
         return string.indexOf(substring) === 0
     }
 
+    self.getRawText = (block, name) => {
+        return block.getFieldValue(TEXT_INPUT_PREFIX + name)
+    }
+
     self.getText = (block, name) => {
         // get the text input value using the block and the name of the input
         // field - also prefix double qoutes within the string...
-        return block.getFieldValue(TEXT_INPUT_PREFIX + name).replace(/"/g, '\\"')
+        return getRawText(block, name).replace(/"/g, '\\"')
     }
 
     self.getNumber = (block, name) => {
@@ -454,14 +458,14 @@
 
         // Change the menu colour
         let map = {
-            'quando_general': CONFIG.GENERAL_COLOUR,
             'quando_display': CONFIG.DISPLAY_COLOUR,
             'quando_media': CONFIG.MEDIA_COLOUR,
             'quando_style': CONFIG.STYLE_COLOUR,
             'quando_client': CONFIG.CLIENT_COLOUR,
             'quando_time': CONFIG.TIME_COLOUR,
             'quando_device': CONFIG.DEVICE_COLOUR,
-            'experiment': CONFIG.EXPERIMENT_COLOUR
+            'experiment': CONFIG.EXPERIMENT_COLOUR,
+            'quando_advanced': CONFIG.ADVANCED_COLOUR
         }
         for (let key in map) {
             let elem = _fromDom(key, null)
@@ -494,8 +498,8 @@
         return self.defineBlock(json)
     }
 
-    self.defineGeneral = (json) => {
-        return _defineBlock(json, 'quando_general', self.CONFIG.GENERAL_COLOUR)
+    self.defineAdvanced = (json) => {
+        return _defineBlock(json, 'quando_advanced', self.CONFIG.ADVANCED_COLOUR)
     }
     self.defineDisplay = (json) => {
         return _defineBlock(json, 'quando_display', self.CONFIG.DISPLAY_COLOUR)
