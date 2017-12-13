@@ -10,6 +10,7 @@
     TIME_COLOUR: '#ffb3b3',
     LEAP_MOTION_COLOUR: '#aaaaaa',
     DEVICE_COLOUR: '#e6ccff',
+    ROBOT_COLOUR: '#8888ff',
     BLOCKLY_SATURATION: 1, // default for hue only colour - probably not used anymore - see http://colorizer.org/
     BLOCKLY_VALUE: 1 // ditto
   }
@@ -960,5 +961,14 @@
       }
     })
 
+    let ROBOT_TEXT_SAYS = 'Robot Text Says'
+    let ROBOT_SAYS = 'Robot Says'
+    quando_editor.defineRobot({
+      name: ROBOT_SAYS,
+      interface: [{ name: ROBOT_TEXT_SAYS, title: '', text: 'Hello' }],
+      javascript: (block) => {
+        return 'quando.robot.say("' + quando_editor.getText(block, ID_SAYS) + '");\n'
+      }
+    })
   } // self.addBlocks
 })()
