@@ -486,7 +486,7 @@
     })
 
     let MICROBIT_GESTURE_MENU = 'MicroBit Gesture'
-    quando_editor.defineDevice({
+    quando_editor.defineMicrobit({
       name: 'When micro:bit',
       interface: [
                 { menu: [['Up', 'ubitUp'], ['Down', 'ubitDown'], ['Forward', 'ubitForward'],
@@ -509,7 +509,7 @@
     })
 
     let LEAP_GESTURE_MENU = 'Leap Gesture Menu'
-    quando_editor.defineDevice({
+    quando_editor.defineLeap({
       name: 'When Leap',
       interface: [
                 { menu: [['Fist', 'handClosed'], ['Flat', 'handOpen']], name: LEAP_GESTURE_MENU, title: '' },
@@ -663,7 +663,7 @@
     let DEVICE_LEFT_RIGHT = '\u21D4'
     let DEVICE_UP_DOWN = '\u21D5'
     
-    quando_editor.defineDevice({
+    quando_editor.defineCursor({
       name: VALUE_CURSOR,
       interface: [
         { name: CHANGE_CURSOR_MENU,
@@ -749,7 +749,7 @@
     let CHANGE_MID_ANGLE = 'Change Angle'
     let CHECK_INVERTED = 'Inverted'
 
-    quando_editor.defineDevice({
+    quando_editor.defineMicrobit({
       name: CHANGE_WITH_MICROBIT_ANGLE,
       interface: [
         { name: CHANGE_VARIABLE,
@@ -797,7 +797,7 @@
     let LEAP_LEFT_RIGHT = '\u21D4'
     let LEAP_HEIGHT = '\u21D5'
     let LEAP_DEPTH = '\u2922 In-Out'
-    quando_editor.defineDevice({
+    quando_editor.defineLeap({
       name: CHANGE_WITH_LEAP_DISTANCE,
       interface: [
         { name: CHANGE_VARIABLE,
@@ -840,7 +840,7 @@
 
     let CHANGE_WITH_LEAP_ANGLE = 'When Leap angle'
     let CHANGE_YAW = '\u21D4 Yaw'
-    quando_editor.defineDevice({
+    quando_editor.defineLeap({
       name: CHANGE_WITH_LEAP_ANGLE,
       interface: [
         { name: CHANGE_VARIABLE,

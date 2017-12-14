@@ -108,7 +108,7 @@
     self.getText = (block, name) => {
         // get the text input value using the block and the name of the input
         // field - also prefix double qoutes within the string...
-        return getRawText(block, name).replace(/"/g, '\\"')
+        return self.getRawText(block, name).replace(/"/g, '\\"')
     }
 
     self.getNumber = (block, name) => {
@@ -464,6 +464,10 @@
             'quando_client': CONFIG.CLIENT_COLOUR,
             'quando_time': CONFIG.TIME_COLOUR,
             'quando_device': CONFIG.DEVICE_COLOUR,
+                'quando_leap': CONFIG.DEVICE_COLOUR,
+                'quando_microbit': CONFIG.DEVICE_COLOUR,
+                'quando_robot': CONFIG.DEVICE_COLOUR,
+                'quando_cursor': CONFIG.DEVICE_COLOUR,
             'experiment': CONFIG.EXPERIMENT_COLOUR,
             'quando_advanced': CONFIG.ADVANCED_COLOUR
         }
@@ -516,11 +520,20 @@
     self.defineTime = (json) => {
         return _defineBlock(json, 'quando_time', self.CONFIG.TIME_COLOUR)
     }
+    self.defineLeap = (json) => {
+        return _defineBlock(json, 'quando_leap', self.CONFIG.DEVICE_COLOUR)
+    }
+    self.defineMicrobit = (json) => {
+        return _defineBlock(json, 'quando_microbit', self.CONFIG.DEVICE_COLOUR)
+    }
+    self.defineCursor = (json) => {
+        return _defineBlock(json, 'quando_cursor', self.CONFIG.DEVICE_COLOUR)
+    }
+    self.defineRobot = (json) => {
+        return _defineBlock(json, 'quando_robot', self.CONFIG.DEVICE_COLOUR)
+    }
     self.defineDevice = (json) => {
         return _defineBlock(json, 'quando_device', self.CONFIG.DEVICE_COLOUR)
-    }
-    self.defineLeapMotion = (json) => {
-        return _defineBlock(json, 'quando_leap_motion', self.CONFIG.LEAP_MOTION_COLOUR)
     }
 
     self.getParent = (block, ids) => {
