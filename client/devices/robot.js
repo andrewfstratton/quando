@@ -5,18 +5,6 @@
     }
 
     var self = quando.robot = {}
-    self.say = function(text, extras) {
-        session.service("ALTextToSpeech").done(function (tts) {
-            // tts is a proxy to the ALTextToSpeech service
-            if(extras.speed) {
-                tts.setParameter("speed", extras.speed)
-            }
-            tts.say(text);
-            tts.resetSpeed();
-          }).fail(function (error) {
-            console.log("An error occurred:", error);
-          });
-    }
 
     self.connect = function(robotIp) {
         session = new QiSession(robotIp);       
@@ -27,4 +15,55 @@
             console.log('QiSession disconnected!');
           });
     }
+<<<<<<< HEAD
 })
+=======
+
+    self.say = function(text, extras) {
+        session.service("ALAnimatedSpeech").done(function (as) {
+            // tts is a proxy to the ALTextToSpeech service
+            as.say(text);
+          }).fail(function (error) {
+            console.log("An error occurred:", error);
+          });
+    }
+
+    self.motion = function(joint, angle) {
+        session.service("ALMotion").done(function (motion) {
+            // tts is a proxy to the ALTextToSpeech service
+            motion.setAngles(joint, angle, 0.5);
+          }).fail(function (error) {
+            console.log("An error occurred:", error);
+          });
+    }
+
+    self.motionHand = function(hand, open) {
+        session.service("ALMotion").done(function (motion) {
+            // tts is a proxy to the ALTextToSpeech 
+            if(hand=='Left') {
+                hand = 'LHand';
+            } else {
+                hand = 'RHand';
+            }
+            if(open=='Open') {
+                motion.openHand(hand);
+            } else {
+                motion.closeHand(hand);
+            }
+          }).fail(function (error) {
+            console.log("An error occurred:", error);
+          });
+    }
+
+    self.personPerception = function(callback) {
+        session.service("ALMemory").done(function (ALMemory) {            
+            ALMemory.subscriber("ALBasicAwareness/HumanTracked").done(function (sub){
+                sub.signal.connect(function(state){
+                    console.log("Found You!");
+                    callback();
+                });
+            });     
+        });
+    }
+})()
+>>>>>>> Added Motion, tidy up
