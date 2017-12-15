@@ -935,17 +935,56 @@
     quando_editor.defineRobot({
       name: ROBOT_SAYS,
       interface: [{ name: ROBOT_TEXT_SAYS, title: '', text: 'Hello' }],
-      extras: [
-        {name: ROBOT_CHANGE_SPEED_SPEECH, title: 'Speed of speech', number: 100}
-      ],
       javascript: (block) => {
         let txt = quando_editor.getText(block, ROBOT_TEXT_SAYS)
-        let extras = {}
-        extras.speed = quando_editor.getNumber(block, ROBOT_CHANGE_SPEED_SPEECH)
-        extras = JSON.stringify(extras)
-        return `quando.robot.say("${txt}",${extras});\n`
+        return `quando.robot.say("${txt}");\n`
       }
     })
+
+    let ROBOT_MOTION = "Robot motion"
+    let ROBOT_JOINT = "Robot joint"
+    let ROBOT_RADIAN = "Robot radians"
+    quando_editor.defineRobot({
+      name: ROBOT_MOTION,
+      interface: [{ name: ROBOT_JOINT, title: '', text: 'Hello' }],
+      extras: [
+        {name: ROBOT_RADIAN, title: 'Angle', number: 1.0}
+      ],
+      javascript: (block) => {
+        let joint = quando_editor.getText(block, ROBOT_JOINT)
+        let angle = quando_editor.getNumber(block, ROBOT_RADIAN)
+        return `quando.robot.motion("${joint}",${angle});\n`
+      }
+    })
+
+    let ROBOT_MOTION_HAND = "Robot motion hand"
+    let ROBOT_MOTION_LEFT_RIGHT = "Robot motion left right"
+    let ROBOT_MOTION_OPEN_CLOSED = "Robot motion open closed"    
+    quando_editor.defineRobot({
+      name: ROBOT_MOTION_HAND,
+      interface: [{ name: ROBOT_MOTION_LEFT_RIGHT, menu: ['Left', 'Right'], title: '' }],
+      extras: [
+        {name: ROBOT_MOTION_OPEN_CLOSED, title: 'State', menu: ['Open', 'Close']}
+      ],
+      javascript: (block) => {
+        let hand = quando_editor.getMenu(block, ROBOT_MOTION_LEFT_RIGHT)
+        let open = quando_editor.getMenu(block, ROBOT_MOTION_OPEN_CLOSED)
+        return `quando.robot.motionHand("${hand}","${open}");\n`
+      }
+    })
+
+    let ROBOT_PERSON_PERCEPTION = "When the robot sees someone"
+    quando_editor.defineRobot({
+      name: ROBOT_PERSON_PERCEPTION,
+      interface: [{ name: 'person_perception',  title: '' }, { statement: STATEMENT } ],
+      javascript: (block) => {
+        let statement = quando_editor.getStatement(block, STATEMENT)
+        return 'quando.robot.personPerception(function() {\n' +
+                                              statement +
+                                              '});\n'
+      }
+    })
+
 
   } // self.addBlocks
 })()
