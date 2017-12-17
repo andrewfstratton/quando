@@ -921,5 +921,44 @@
       }
     })
 
+    let CURSOR_COLOUR_BLOCK = 'Cursor Opacity'
+    let OPACITY = 'Opacity'
+    quando_editor.defineCursor({
+      name: CURSOR_COLOUR_BLOCK, title: 'Cursor',
+      interface: [
+        { name: COLOUR, title: '', colour: '#ffcc00' },
+        { name: OPACITY, title: 'Opacity', number: 70 }, {title: '%'}
+      ],
+      javascript: (block) => {
+        let method = _getStyleOnContained(block, [WHEN_VITRINE_BLOCK, WHEN_IDLE])
+        let opacity = quando_editor.getNumber(block, OPACITY) / 100
+        let colour = quando_editor.getColour(block, COLOUR)
+        let bigint = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(colour)
+        let r = parseInt(bigint[1], 16)
+        let g = parseInt(bigint[2], 16)
+        let b = parseInt(bigint[3], 16)
+        colour = `rgba(${r}, ${g}, ${b}, ${opacity})`
+        result = `quando.${method}('#cursor', 'background-color', '${colour}');\n`
+        return result
+      }
+    })
+
+    let CURSOR_SIZE_BLOCK = 'Cursor'
+    let SIZE = 'Size'
+    quando_editor.defineCursor({
+      name: CURSOR_SIZE_BLOCK,
+      interface: [
+        { name: SIZE, title: 'Size', number: 4.4 }, {title: '% of width'},
+      ],
+      javascript: (block) => {
+        let method = _getStyleOnContained(block, [WHEN_VITRINE_BLOCK, WHEN_IDLE])
+        let size = quando_editor.getNumber(block, SIZE)
+        let margin = -size/2
+        result = `quando.${method}('#cursor', ['width','height'], '${size}vw');\n`
+        result += `quando.${method}('#cursor', ['margin-left', 'margin-top'], '${margin}vw');\n`
+        return result
+      }
+    })
+
   } // self.addBlocks
 })()

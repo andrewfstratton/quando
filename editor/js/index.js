@@ -302,7 +302,6 @@
     let filename = encodeURI(file_in.substring(1 + file_in.lastIndexOf('\\')))
     let form_data = new FormData()
     form_data.append('upload_data', file)
-console.log(filename)
     $.ajax({
 //            // url: '/upload', // was '/file/upload' + remote_path + '/' + filename,
       url: '/file/upload' + remote_path + '/' + filename,

@@ -343,6 +343,9 @@
   }
 
   self.startVitrine = function (leap) {
+    self.setDisplayStyle('#cursor', 'background-color', 'rgba(255, 255, 102, 0.7)');
+    self.setDisplayStyle('#cursor', ['width','height'], '4.4vw');
+    self.setDisplayStyle('#cursor', ['margin-left','margin-top'], '-2.2vw');    
     document.querySelector('#quando_title').addEventListener('contextmenu', // right click title to go to setup
             function (ev) {
               ev.preventDefault()
@@ -350,7 +353,6 @@
               return false
             }, false)
     self.pinching = false
-    self.setDefaultStyle('#cursor', 'opacity', 0.6)
     if (self.vitrines.size != 0) {
             // TODO Should this be deferred?
       (self.vitrines.values().next().value)() // this runs the very first vitrine :)
@@ -435,8 +437,16 @@
         }
       }
     }
-    var rule = `${id} \{${property}: ${value};\}\n`
-    style.appendChild(document.createTextNode(rule))
+    var rule
+    if (property instanceof Array) {
+      for (i in property) {
+        rule = id + '{' + property[i] + ': ' + value + ';}\n'
+        style.appendChild(document.createTextNode(rule))
+      }
+    } else {
+      rule = id + '{' + property + ': ' + value + ';}\n'
+      style.appendChild(document.createTextNode(rule))
+    }
   }
 
   self.setDisplayStyle = function (id, property, value, separator = null) {
