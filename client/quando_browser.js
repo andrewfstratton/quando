@@ -343,9 +343,9 @@
   }
 
   self.startVitrine = function (leap) {
-    self.setDisplayStyle('#cursor', 'background-color', 'rgba(255, 255, 102, 0.7)');
-    self.setDisplayStyle('#cursor', ['width','height'], '4.4vw');
-    self.setDisplayStyle('#cursor', ['margin-left','margin-top'], '-2.2vw');    
+    self.setDefaultStyle('#cursor', 'background-color', 'rgba(255, 255, 102, 0.7)');
+    self.setDefaultStyle('#cursor', ['width','height'], '4.4vw');
+    self.setDefaultStyle('#cursor', ['margin-left','margin-top'], '-2.2vw');    
     document.querySelector('#quando_title').addEventListener('contextmenu', // right click title to go to setup
             function (ev) {
               ev.preventDefault()
