@@ -985,18 +985,29 @@
     })
 
     let ROBOT_MOTION = "Robot motion"
-    let ROBOT_JOINT = "Robot joint"
     let ROBOT_RADIAN = "Robot radians"
+    let ROBOT_MOTORS = "Robot motors"
     quando_editor.defineRobot({
       name: ROBOT_MOTION,
-      interface: [{ name: ROBOT_JOINT, title: '', text: 'Hello' }],
+      interface: [{ name: ROBOT_MOTORS, title: '', menu: [['Look Up/Down', 'HeadPitch'],
+      ['Look Left/Right','HeadYaw'],
+      ['Left Shoulder In/Out', 'LShoulderRoll'],
+      ['Left Shoulder Forward/Backwards', 'LShoulderPitch'],
+      ['Left Elbow In/Out', 'LElbowRoll'],
+      ['Left Elbow Twist', 'LElbowYaw'],
+      ['Left Wrist Twist', 'LWristYaw'],
+      ['Right Shoulder In/Out', 'RShoulderRoll'],
+      ['Right Shoulder Forward/Backwards', 'RShoulderPitch'],
+      ['Right Elbow In/Out', 'RElbowRoll'],
+      ['Right Elbow Twist', 'RElbowYaw'],
+      ['Right Wrist Twist', 'RWristYaw']] }],
       extras: [
         {name: ROBOT_RADIAN, title: 'Angle', number: 1.0}
       ],
       javascript: (block) => {
-        let joint = quando_editor.getText(block, ROBOT_JOINT)
+        let motor = quando_editor.getMenu(block, ROBOT_MOTORS)
         let angle = quando_editor.getNumber(block, ROBOT_RADIAN)
-        return `quando.robot.motion("${joint}",${angle});\n`
+        return `quando.robot.motion("${motor}",${angle});\n`
       }
     })
 
