@@ -15,9 +15,6 @@
             console.log('QiSession disconnected!');
           });
     }
-<<<<<<< HEAD
-})
-=======
 
     self.say = function(text, extras) {
         session.service("ALAnimatedSpeech").done(function (as) {
@@ -66,4 +63,3 @@
         });
     }
 })()
->>>>>>> Added Motion, tidy up

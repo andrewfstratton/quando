@@ -683,7 +683,6 @@
 
     let MOVE_3D_OBJECT = 'Change 3D Object'
     let CHANGE_3D_OBJECT_MENU = '3D Object menu'
-    let CHANGE_PLUS_MINUS = 'plus minus'
     quando_editor.defineDevice({
       name: MOVE_3D_OBJECT, title:'Move 3D Object',
       interface: [

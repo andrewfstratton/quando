@@ -464,16 +464,12 @@
             'quando_client': CONFIG.CLIENT_COLOUR,
             'quando_time': CONFIG.TIME_COLOUR,
             'quando_device': CONFIG.DEVICE_COLOUR,
-<<<<<<< HEAD
                 'quando_leap': CONFIG.DEVICE_COLOUR,
                 'quando_microbit': CONFIG.DEVICE_COLOUR,
                 'quando_robot': CONFIG.DEVICE_COLOUR,
                 'quando_cursor': CONFIG.DEVICE_COLOUR,
             'experiment': CONFIG.EXPERIMENT_COLOUR,
             'quando_advanced': CONFIG.ADVANCED_COLOUR
-=======
-            'quando_robot' : CONFIG.ROBOT_COLOUR
->>>>>>> Adding 1 'useless' block, adds a robot section, adds files to html files
         }
         for (let key in map) {
             let elem = _fromDom(key, null)
@@ -542,10 +538,6 @@
     self.defineLeapMotion = (json) => {
         return _defineBlock(json, 'quando_leap_motion', self.CONFIG.LEAP_MOTION_COLOUR)
     }
-    self.defineRobot = (json) => {
-        return _defineBlock(json, 'quando_robot', self.CONFIG.ROBOT_COLOUR)
-    }
-
     self.getParent = (block, ids) => {
         let valid_ids = []
         ids.forEach((iter) => {
