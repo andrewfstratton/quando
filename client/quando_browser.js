@@ -94,13 +94,30 @@
   }
 
   self.new_angle_scaler = function (mid, plus_minus, inverted = false) {
+    var mod = function(x, n) {
+        return ((x%n)+n)%n
+    }
+    var last_result = 0
+    var crossover = mod(mid+180, 360)
+    // i.e. 25% of the non used range
+    var crossover_range = (180 - Math.abs(plus_minus)) / 4
     return function (value) {
-      var result = ((value + plus_minus - mid) % 360) / (2 * plus_minus)
+      var x = mod(value - mid, 360)
+      if (x > 180) { x -= 360}
+      var result = (x + plus_minus) / (2 * plus_minus)
       if (inverted) {
         result = 1 - result
       }
+      if ((result < 0) || (result > 1)) { // i.e. result is out of range
+            // identify if result should be used
+            var diff = Math.abs(crossover - mod(value, 360))
+            if (diff <= crossover_range) { // inside crossover range, so use the last result 
+                result = last_result
+            }
+      }
       result = Math.min(1, result)
       result = Math.max(0, result)
+      last_result = result
       return result
     }
   }
