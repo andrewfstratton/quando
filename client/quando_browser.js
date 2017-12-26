@@ -66,28 +66,14 @@
   }
 
   self.new_scaler = function (min, max, inverted = false) {
-    var valid_last_result = false
     return function (value) {
       var result = null
-      if ((value >= min) && (value <= max)) {
-        // convert to range 0 to 1 for min to max
-        var result = (value - min) / (max - min)
-        // TODO check for negatives and other odd combinations
-        if (inverted) {
-          result = 1 - result
-        }
-        valid_last_result = true
-      } else if (valid_last_result) {
-        valid_last_result = false
-        // we have just gone out of bounds - so return the extreme value - once
-        if (value < min) {
-          result = 0
-        } else {
-          result = 1
-        }
-        if (inverted) {
-          result = 1 - result
-        }
+      // convert to range 0 to 1 for min to max
+      result = (value - min) / (max - min)
+      result = Math.min(1, result)
+      result = Math.max(0, result)
+      if (inverted) {
+        result = 1 - result
       }
       return result
     }
