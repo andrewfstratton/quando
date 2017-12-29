@@ -123,6 +123,10 @@
         return Blockly.JavaScript.statementToCode(block, name)
     }
 
+    self.getIndividualBlockCode = (block) => {
+        return Blockly.JavaScript[block.type].call(block, block)
+    }
+
     self.getCheck = (block, name) => {
         let result = false
         if (block.getFieldValue(CHECK_INPUT_PREFIX + name) === 'TRUE') {

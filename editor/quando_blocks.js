@@ -1002,5 +1002,44 @@
       }
     })
 
+    let PICK_RANDOM_BLOCK = 'Random one'
+    self.defineAdvanced({
+      name: PICK_RANDOM_BLOCK,
+      interface: [
+        { statement: STATEMENT }
+      ],
+      javascript : (block) => {
+      }
+    })
+
+    let PICK_ONE_BLOCK = 'Pick one'
+    self.defineAdvanced({
+      name: PICK_ONE_BLOCK,
+      interface: [
+        { statement: STATEMENT }
+      ],
+      javascript : (block) => {
+        let arr = ''
+        let children = block.getChildren() 
+        let i = 0
+        while ((children != null) && (i < children.length)) {
+          let child = children[i]
+          if (child.getSurroundParent().id == block.id) {
+            let code = quando_editor.getIndividualBlockCode(child)
+            if (arr != '') {
+              arr += ',\n'
+            }
+            arr += `function(){\n${code}}`
+            i = 0
+            children = child.getChildren()
+          } else {
+            i++
+          }
+        }
+        arr = 'var a=[' + arr + ']'
+        return `${arr}\nvar i = Math.floor(val * a.length)\nif (i == a.length) { i-- }\na[i]()\n`
+      }
+    })
+
   } // self.addBlocks
 })()
