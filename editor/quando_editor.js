@@ -124,7 +124,16 @@
     }
 
     self.getIndividualBlockCode = (block) => {
-        return Blockly.JavaScript[block.type].call(block, block)
+        let result = ''
+        if (block && !block.disabled) {
+            let javascript = Blockly.JavaScript[block.type]
+            if (javascript) {
+                result = javascript.call(block, block)
+            } else {
+                result = `Javascript missing for ${block.type}`
+            }
+        }
+        return result
     }
 
     self.getCheck = (block, name) => {

@@ -1002,13 +1002,30 @@
       }
     })
 
-    let PICK_RANDOM_BLOCK = 'Random one'
+    function _getIndividualChildCode(start, prefix, postfix, separator) {
+      let result = ''
+      let child = start
+      while (child != null) {
+        let code = quando_editor.getIndividualBlockCode(child)
+        if (result != '') {
+          result += separator
+        }
+        result += prefix + code + postfix
+        child = child.getNextBlock()
+      }
+      return result
+    }
+
+    let PICK_RANDOM_BLOCK = 'Pick one at Random'
     self.defineAdvanced({
-      name: PICK_RANDOM_BLOCK,
+      name: PICK_RANDOM_BLOCK, title:'\uD83C\uDFB2 Pick Random',
       interface: [
         { statement: STATEMENT }
       ],
       javascript : (block) => {
+        let stateBlock = block.getInputTargetBlock(STATEMENT)
+        let arr = 'var a=[' + _getIndividualChildCode(stateBlock, 'function(){\n', '}', ',\n') + ']'
+        return `${arr}\nvar i = Math.floor(Math.random() * a.length)\nif (i == a.length) { i-- }\na[i]()\n`
       }
     })
 
@@ -1019,24 +1036,8 @@
         { statement: STATEMENT }
       ],
       javascript : (block) => {
-        let arr = ''
-        let children = block.getChildren() 
-        let i = 0
-        while ((children != null) && (i < children.length)) {
-          let child = children[i]
-          if (child.getSurroundParent().id == block.id) {
-            let code = quando_editor.getIndividualBlockCode(child)
-            if (arr != '') {
-              arr += ',\n'
-            }
-            arr += `function(){\n${code}}`
-            i = 0
-            children = child.getChildren()
-          } else {
-            i++
-          }
-        }
-        arr = 'var a=[' + arr + ']'
+        let stateBlock = block.getInputTargetBlock(STATEMENT)
+        let arr = 'var a=[' + _getIndividualChildCode(stateBlock, 'function(){\n', '}', ',\n') + ']'
         return `${arr}\nvar i = Math.floor(val * a.length)\nif (i == a.length) { i-- }\na[i]()\n`
       }
     })
