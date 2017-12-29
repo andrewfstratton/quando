@@ -1024,8 +1024,8 @@
       ],
       javascript : (block) => {
         let stateBlock = block.getInputTargetBlock(STATEMENT)
-        let arr = 'var a=[' + _getIndividualChildCode(stateBlock, 'function(){\n', '}', ',\n') + ']'
-        return `${arr}\nvar i = Math.floor(Math.random() * a.length)\nif (i == a.length) { i-- }\na[i]()\n`
+        let arr = _getIndividualChildCode(stateBlock, 'function(){\n', '}', ',\n')
+        return `quando.pick_random([\n${arr}\n])\n`
       }
     })
 
@@ -1037,8 +1037,8 @@
       ],
       javascript : (block) => {
         let stateBlock = block.getInputTargetBlock(STATEMENT)
-        let arr = 'var a=[' + _getIndividualChildCode(stateBlock, 'function(){\n', '}', ',\n') + ']'
-        return `${arr}\nvar i = Math.floor(val * a.length)\nif (i == a.length) { i-- }\na[i]()\n`
+        let arr = _getIndividualChildCode(stateBlock, 'function(){\n', '}', ',\n')
+        return `quando.pick(val, [\n${arr}\n])\n`
       }
     })
 

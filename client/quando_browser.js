@@ -472,4 +472,18 @@
   self.addDestructor = function (fn) {
     self._vitrine_destructors.push(fn)
   }
+
+  self.pick = function(val, arr) {
+    var i = Math.floor(val * arr.length)
+    if (i == arr.length) {
+      i--
+    }
+    arr[i]()
+  }
+
+  self.pick_random = function(arr) {
+    var i = Math.floor(Math.random() * arr.length)
+    self.pick(i, arr)
+  }
+
 })()
