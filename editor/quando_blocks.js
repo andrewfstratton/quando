@@ -11,8 +11,9 @@
     LEAP_MOTION_COLOUR: '#aaaaaa',
     DEVICE_COLOUR: '#e6ccff',
     BLOCKLY_SATURATION: 1, // default for hue only colour - probably not used anymore - see http://colorizer.org/
-    BLOCKLY_VALUE: 1 // ditto
+    BLOCKLY_VALUE: 1, // ditto
   }
+  const ICON_VALUE_PARAMETER = '\uD83D\uDD02'
 
   let ajax_get = (url, callback) => {
     let xhr = new XMLHttpRequest()
@@ -706,7 +707,7 @@
     let DEVICE_UP_DOWN = '\u21D5'
     
     self.defineCursor({
-      name: VALUE_CURSOR,
+      name: VALUE_CURSOR, title: ICON_VALUE_PARAMETER + ' Change Cursor',
       interface: [
         { name: CHANGE_CURSOR_MENU,
           title: '',
@@ -725,7 +726,7 @@
     let CHANGE_3D_OBJECT_MENU = '3D Object menu'
     let CHANGE_PLUS_MINUS = 'plus minus'
     self.defineDevice({
-      name: MOVE_3D_OBJECT, title:'Move 3D Object',
+      name: MOVE_3D_OBJECT, title: ICON_VALUE_PARAMETER + ' Move 3D Object',
       interface: [
         { name: CHANGE_3D_OBJECT_MENU,
           title: '',
@@ -754,7 +755,7 @@
     let ROTATE_3D_OBJECT = 'Rotate 3D Object'
     let ROTATE_3D_OBJECT_MENU = '3D Object menu'
     self.defineDevice({
-      name: ROTATE_3D_OBJECT,
+      name: ROTATE_3D_OBJECT, title: ICON_VALUE_PARAMETER + ' Rotate 3D Object',
       interface: [
         { name: ROTATE_3D_OBJECT_MENU,
           title: '',
@@ -792,13 +793,13 @@
     let CHECK_INVERTED = 'Inverted'
 
     self.defineMicrobit({
-      name: CHANGE_WITH_MICROBIT_ANGLE,
+      name: CHANGE_WITH_MICROBIT_ANGLE, title: 'When micro:bit angle',
       interface: [
-        { name: CHANGE_VARIABLE,
-          title: '',
+        { name: CHANGE_VARIABLE, title: '',
           menu: [CHANGE_HEADING, CHANGE_PITCH, CHANGE_ROLL,
             // CHANGE_MAG_X, CHANGE_MAG_Y
           ]},
+        { title: ICON_VALUE_PARAMETER},
         { statement: STATEMENT }
       ],
       extras: [
@@ -845,6 +846,7 @@
         { name: CHANGE_VARIABLE,
           title: '',
           menu: [LEAP_LEFT_RIGHT, LEAP_HEIGHT, LEAP_DEPTH]},
+        { title: ICON_VALUE_PARAMETER},
         { statement: STATEMENT }
       ],
       extras: [
@@ -888,6 +890,7 @@
         { name: CHANGE_VARIABLE,
           title: '',
           menu: [CHANGE_YAW, CHANGE_PITCH, CHANGE_ROLL]},
+        { title: ICON_VALUE_PARAMETER},
           { statement: STATEMENT }
       ],
       extras: [
@@ -1031,7 +1034,7 @@
 
     let PICK_ONE_BLOCK = 'Pick one'
     self.defineAdvanced({
-      name: PICK_ONE_BLOCK,
+      name: PICK_ONE_BLOCK, title: ICON_VALUE_PARAMETER + ' Pick one',
       interface: [
         { statement: STATEMENT }
       ],
