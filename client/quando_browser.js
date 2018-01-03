@@ -482,8 +482,8 @@
   }
 
   self.pick_random = function(arr) {
-    var i = Math.floor(Math.random() * arr.length)
-    self.pick(i, arr)
+    var r = Math.random()
+    self.pick(r, arr)
   }
 
 })()
