@@ -275,7 +275,7 @@
       audio.autoplay = true
       audio.addEventListener('ended', self.clear_audio)
       audio.load()
-      audio.play()
+      // audio.play()
     }
   }
   self.clear_audio = function () {
