@@ -466,7 +466,7 @@
             'quando_device': CONFIG.DEVICE_COLOUR,
                 'quando_leap': CONFIG.DEVICE_COLOUR,
                 'quando_microbit': CONFIG.DEVICE_COLOUR,
-                'quando_robot': CONFIG.DEVICE_COLOUR,
+                'quando_robot': CONFIG.ROBOT_COLOUR,
                 'quando_cursor': CONFIG.DEVICE_COLOUR,
             'experiment': CONFIG.EXPERIMENT_COLOUR,
             'quando_advanced': CONFIG.ADVANCED_COLOUR
@@ -530,7 +530,7 @@
         return _defineBlock(json, 'quando_cursor', self.CONFIG.DEVICE_COLOUR)
     }
     self.defineRobot = (json) => {
-        return _defineBlock(json, 'quando_robot', self.CONFIG.DEVICE_COLOUR)
+        return _defineBlock(json, 'quando_robot', self.CONFIG.ROBOT_COLOUR)
     }
     self.defineDevice = (json) => {
         return _defineBlock(json, 'quando_device', self.CONFIG.DEVICE_COLOUR)

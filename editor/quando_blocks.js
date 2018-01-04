@@ -10,7 +10,7 @@
     TIME_COLOUR: '#ffb3b3',
     LEAP_MOTION_COLOUR: '#aaaaaa',
     DEVICE_COLOUR: '#e6ccff',
-    ROBOT_COLOUR: '#8888ff',
+    ROBOT_COLOUR: '#aaaaff',
     BLOCKLY_SATURATION: 1, // default for hue only colour - probably not used anymore - see http://colorizer.org/
     BLOCKLY_VALUE: 1 // ditto
   }
@@ -973,7 +973,6 @@
 
     let ROBOT_SAYS = 'Say'
     let ROBOT_TEXT_SAYS = 'Robot Text Says'
-    let ROBOT_CHANGE_SPEED_SPEECH = 'Speech Speed'
     quando_editor.defineRobot({
       name: ROBOT_SAYS,
       interface: [{ name: ROBOT_TEXT_SAYS, title: '', text: 'Hello' }],
@@ -983,50 +982,54 @@
       }
     })
 
-    let ROBOT_MOTION = "Robot motion"
-    let ROBOT_RADIAN = "Robot radians"
-    let ROBOT_MOTORS = "Robot motors"
+    let ROBOT_MOVE_HEAD = "Robot head move"
+    let ROBOT_HEAD = "Robot head"
+    let ROBOT_HEAD_ANGLE = "Robot head angle"
     quando_editor.defineRobot({
-      name: ROBOT_MOTION,
-      interface: [{ name: ROBOT_MOTORS, title: '', menu: [['Look Up/Down', 'HeadPitch'],
-      ['Look Left/Right','HeadYaw'],
-      ['Left Shoulder In/Out', 'LShoulderRoll'],
-      ['Left Shoulder Forward/Backwards', 'LShoulderPitch'],
-      ['Left Elbow In/Out', 'LElbowRoll'],
-      ['Left Elbow Twist', 'LElbowYaw'],
-      ['Left Wrist Twist', 'LWristYaw'],
-      ['Right Shoulder In/Out', 'RShoulderRoll'],
-      ['Right Shoulder Forward/Backwards', 'RShoulderPitch'],
-      ['Right Elbow In/Out', 'RElbowRoll'],
-      ['Right Elbow Twist', 'RElbowYaw'],
-      ['Right Wrist Twist', 'RWristYaw']] }],
-      extras: [
-        {name: ROBOT_RADIAN, title: 'Angle', number: 1.0}
-      ],
+      name: ROBOT_MOVE_HEAD, title: "\uD83D\uDC40 Robot Look",
+      interface: [{ name: ROBOT_HEAD, title: '', menu: ['Up','Down','Left','Right']},
+                   {name: ROBOT_HEAD_ANGLE, number: 0, title: ''}, { title: 'degrees'}],
       javascript: (block) => {
-        let motor = quando_editor.getMenu(block, ROBOT_MOTORS)
-        let angle = quando_editor.getNumber(block, ROBOT_RADIAN)
-        return `quando.robot.motion("${motor}",${angle});\n`
+        let direction = quando_editor.getMenu(block, ROBOT_HEAD)
+        let angle = quando_editor.getNumber(block, ROBOT_HEAD_ANGLE)        
+        return `quando.robot.moveHead("${direction}", "${angle}");\n`
+      }
+    })
+    
+    let ROBOT_MOVE_ARM = "Robot arm move"
+    let ROBOT_ARM_LEFT_RIGHT = "Robot arm left right"
+    let ROBOT_ARM_DIRECTION = "Robot arm direction"
+    let ROBOT_ARM_ANGLE = "Robot arm angle"
+    quando_editor.defineRobot({
+      name: ROBOT_MOVE_ARM, title: "\uD83D\uDCAA Move",
+      interface: [{ name: ROBOT_ARM_LEFT_RIGHT, title: '', menu: ['Left','Right'] },
+                  { name: ROBOT_ARM_DIRECTION, title: 'arm', menu: ['Up','Down','Left','Right'] },
+                  { name: ROBOT_ARM_ANGLE, title: 'to', menu: ['Halfway','Maximum']}],
+      javascript: (block) => {
+        let arm = quando_editor.getMenu(block, ROBOT_ARM_LEFT_RIGHT)        
+        let direction = quando_editor.getMenu(block, ROBOT_ARM_DIRECTION)
+        let angle = quando_editor.getMenu(block, ROBOT_ARM_ANGLE)        
+        return `quando.robot.moveArm("${arm}","${direction}","${angle}");\n`
       }
     })
 
-    let ROBOT_MOTION_HAND = "Robot motion hand"
-    let ROBOT_MOTION_LEFT_RIGHT = "Robot motion left right"
-    let ROBOT_MOTION_OPEN_CLOSED = "Robot motion open closed"    
+    let ROBOT_HAND = 'Robot hand'
+    let ROBOT_HAND_LEFT_RIGHT = 'Robot left right'
+    let ROBOT_HAND_OPEN_CLOSED = 'Robot open closed'  
     quando_editor.defineRobot({
-      name: ROBOT_MOTION_HAND,
-      interface: [{ name: ROBOT_MOTION_LEFT_RIGHT, menu: ['Left', 'Right'], title: '' }],
-      extras: [
-        {name: ROBOT_MOTION_OPEN_CLOSED, title: 'State', menu: ['Open', 'Close']}
-      ],
+      name: ROBOT_HAND, title: "\u270b Robot",
+      interface: [{ name: ROBOT_HAND_OPEN_CLOSED, title: '', menu: ['Open', 'Close'] }, 
+                  { name: ROBOT_HAND_LEFT_RIGHT, title: '', menu: [['Left', 'LHand'], ['Right', 'RHand']]},
+                  { title: 'hand'}],
       javascript: (block) => {
-        let hand = quando_editor.getMenu(block, ROBOT_MOTION_LEFT_RIGHT)
-        let open = quando_editor.getMenu(block, ROBOT_MOTION_OPEN_CLOSED)
+    debugger    
+        let hand = quando_editor.getMenu(block, ROBOT_HAND_LEFT_RIGHT)
+        let open = quando_editor.getMenu(block, ROBOT_HAND_OPEN_CLOSED)
         return `quando.robot.motionHand("${hand}","${open}");\n`
       }
     })
 
-    let ROBOT_PERSON_PERCEPTION = "When the robot sees someone"
+    let ROBOT_PERSON_PERCEPTION = 'When the robot sees someone'
     quando_editor.defineRobot({
       name: ROBOT_PERSON_PERCEPTION,
       interface: [{ name: 'person_perception',  title: '' }, { statement: STATEMENT } ],
@@ -1038,6 +1041,57 @@
       }
     })
 
+    let ROBOT_AUTONOMOUS_LIFE = 'Autonomous Life State'
+    let ROBOT_LIFE_MENU = 'On/Off Menu'
+    quando_editor.defineRobot({
+      name: ROBOT_AUTONOMOUS_LIFE,
+      interface: [{ name: ROBOT_LIFE_MENU, title: '', menu: [['On', 'solitary'], ['Off', 'safeguard']] }],
+      javascript: (block) => {
+        let state = quando_editor.getMenu(block, ROBOT_LIFE_MENU)
+        return `quando.robot.changeAutonomousLife("${state}");\n`
+      }
+    })
 
+    let ROBOT_VOCAB_BLOCK = 'Set vocabulary'
+    let ROBOT_VOCABULARY = 'Words to learn'
+    quando_editor.defineRobot({
+      name: ROBOT_VOCAB_BLOCK,
+      interface: [{ name: ROBOT_VOCABULARY, title: '', text: '.list of words/phrases to learn.' }],
+      javascript: (block) => {
+        let vocab = quando_editor.getText(block, ROBOT_VOCABULARY)
+        return `quando.robot.setVocabulary("${vocab}");\n`
+      }
+    })
+
+    let ROBOT_LISTEN_BLOCK = 'Listen for'
+    let ROBOT_LISTEN_TIMEOUT = 'Listen timeout'
+    let ROBOT_ON_LISTEN_TIMEOUT = 'Upon timeout'
+    let STATEMENT_TIMEOUT = 'Listening timed out'
+    quando_editor.defineRobot({
+      name: ROBOT_LISTEN_BLOCK,
+      interface: [{ name: ROBOT_LISTEN_TIMEOUT, title: '', number: 60}, {title: 'seconds'},
+       { statement: STATEMENT } ,
+       { row: ROBOT_ON_LISTEN_TIMEOUT, statement: STATEMENT_TIMEOUT }],
+      javascript: (block) => {
+        debugger
+        let statement = quando_editor.getStatement(block, STATEMENT)
+        let statementTimeout = quando_editor.getStatement(block, STATEMENT_TIMEOUT) 
+        let timeout = quando_editor.getNumber(block, ROBOT_LISTEN_TIMEOUT)        
+        return `quando.robot.listenForWords(function() {\n` +
+                                              statement +
+                                              `}, function() {\n` +
+                                              statementTimeout +
+                                              `}, ${timeout});\n`
+      }
+    })
+
+    let ROBOT_STOP_LISTEN = 'Stop listening now'
+    quando_editor.defineRobot({
+      name: ROBOT_STOP_LISTEN,
+      interface: [{ name: '' }],
+      javascript: (block) => {
+        return `quando.robot.stopListening();\n`
+      }
+    })
   } // self.addBlocks
 })()
