@@ -705,7 +705,8 @@
     let CHANGE_CURSOR_MENU = 'Cursor menu'
     let DEVICE_LEFT_RIGHT = '\u21D4'
     let DEVICE_UP_DOWN = '\u21D5'
-    
+    let CHANGE_MID_VALUE = 'Middle'
+    let CHANGE_PLUS_MINUS = 'plus minus'
     self.defineCursor({
       name: VALUE_CURSOR, title: ICON_VALUE_PARAMETER + ' Change Cursor',
       interface: [
@@ -713,18 +714,28 @@
           title: '',
           menu: [[DEVICE_LEFT_RIGHT, 'quando.cursor_left_right'],
             [DEVICE_UP_DOWN, 'quando.cursor_up_down']]
-          }
+        }
+      ],
+      extras: [
+        {name: CHANGE_MID_VALUE, number: 50}, {title: '%'},
+        {name: CHANGE_PLUS_MINUS, title: '+/-', number: 50}, {title: '%'}
       ],
       javascript: (block) => {
-        let value = quando_editor.getMenu(block, CHANGE_CURSOR_MENU)
-        let result = `${value}(val);\n`
+        let fn = quando_editor.getMenu(block, CHANGE_CURSOR_MENU)
+        let extras = {}
+        var mid = quando_editor.getNumber(block, CHANGE_MID_VALUE) / 100
+        var plus_minus = quando_editor.getNumber(block, CHANGE_PLUS_MINUS) / 100
+        // converted to 0..1 format
+        extras.min = mid-plus_minus
+        extras.max = mid+plus_minus
+        extras = JSON.stringify(extras)
+        let result = `${fn}(val, ${extras});\n`
         return result
       }
     })
 
     let MOVE_3D_OBJECT = 'Change 3D Object'
     let CHANGE_3D_OBJECT_MENU = '3D Object menu'
-    let CHANGE_PLUS_MINUS = 'plus minus'
     self.defineDevice({
       name: MOVE_3D_OBJECT, title: ICON_VALUE_PARAMETER + ' Move 3D Object',
       interface: [
@@ -737,23 +748,26 @@
           }
       ],
       extras: [
-        {name: CHANGE_PLUS_MINUS, title: '+/-', number: 15}, {title: 'cm'}
+        {name: CHANGE_MID_VALUE, number: 0}, {title: 'cm'},
+        {name: CHANGE_PLUS_MINUS, title: '+/-', number: 5}, {title: 'cm'}
       ],
       javascript: (block) => {
-        let value = quando_editor.getMenu(block, CHANGE_3D_OBJECT_MENU)
+        let fn = quando_editor.getMenu(block, CHANGE_3D_OBJECT_MENU)
         let extras = {}
         // convert to mm
+        var mid = 10 * quando_editor.getNumber(block, CHANGE_MID_VALUE)
         var plus_minus = 10 * quando_editor.getNumber(block, CHANGE_PLUS_MINUS)
-        extras.min = -plus_minus
-        extras.max = plus_minus
+        extras.min = mid-plus_minus
+        extras.max = mid+plus_minus
         extras = JSON.stringify(extras)
-        let result = `${value}(val);\n`
+        let result = `${fn}(val, ${extras});\n`
         return result
       }
     })
 
     let ROTATE_3D_OBJECT = 'Rotate 3D Object'
     let ROTATE_3D_OBJECT_MENU = '3D Object menu'
+    let CHANGE_MID_ANGLE = 'Change Angle'
     self.defineDevice({
       name: ROTATE_3D_OBJECT, title: ICON_VALUE_PARAMETER + ' Rotate 3D Object',
       interface: [
@@ -766,17 +780,18 @@
           }
       ],
       extras: [
-        {name: CHANGE_PLUS_MINUS, title: '+/-', number: 15}, {title: 'cm'}
+        {name: CHANGE_MID_ANGLE, title: '', number: 0}, {title: 'degrees'},
+        {name: CHANGE_PLUS_MINUS, title: '+/-', number: 180}, {title: 'degrees'}
       ],
       javascript: (block) => {
-        let value = quando_editor.getMenu(block, CHANGE_3D_OBJECT_MENU)
+        let fn = quando_editor.getMenu(block, CHANGE_3D_OBJECT_MENU)
         let extras = {}
-        // convert to mm
-        var plus_minus = 10 * quando_editor.getNumber(block, CHANGE_PLUS_MINUS)
-        extras.min = -plus_minus
-        extras.max = plus_minus
+        var mid = quando_editor.getNumber(block, CHANGE_MID_ANGLE)
+        var plus_minus = quando_editor.getNumber(block, CHANGE_PLUS_MINUS)
+        extras.min = mid-plus_minus
+        extras.max = mid+plus_minus
         extras = JSON.stringify(extras)
-        let result = `${value}(val);\n`
+        let result = `${fn}(val, ${extras});\n`
         return result
       }
     })
@@ -789,7 +804,6 @@
     let CHANGE_HEADING = '\u21D4 Heading'
     let CHANGE_MAG_X = 'Mag X'
     let CHANGE_MAG_Y = 'Mag Y'
-    let CHANGE_MID_ANGLE = 'Change Angle'
     let CHECK_INVERTED = 'Inverted'
 
     self.defineMicrobit({
@@ -1039,9 +1053,11 @@
         { statement: STATEMENT }
       ],
       javascript : (block) => {
+        let id = block.id
         let stateBlock = block.getInputTargetBlock(STATEMENT)
         let arr = _getIndividualChildCode(stateBlock, 'function(){\n', '}', ',\n')
-        return `quando.pick(val, [\n${arr}\n])\n`
+        quando_editor.pushToSetup(`quando.setOnId('${id}', [${arr}])\n`)
+        return `quando.pick(val, quando.getOnId('${id}'))\n`
       }
     })
 

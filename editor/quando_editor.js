@@ -10,6 +10,7 @@
     let EXTRAS_ID = '_EXTRAS'
     let EXTRAS_UP = '\u25b2'
     let EXTRAS_DOWN = '...'
+    let _setup_code = []
 
     let encodeXml = (str) => {
         return str.replace(/&/g, '&amp;')
@@ -53,11 +54,21 @@
     self.getCode = () => {
         let result = 'Unknown failure to generate Code'
         try {
-            result = Blockly.JavaScript.workspaceToCode(Blockly.mainWorkspace)
+            _setup_code = []
+            let main = Blockly.JavaScript.workspaceToCode(Blockly.mainWorkspace)
+            result = ''
+            for (let i=0; i<_setup_code.length; i++) {
+                result += _setup_code[i]
+            }
+            result += main
         } catch (e) {
             result += '\n' + e
         }
         return result
+    }
+
+    self.pushToSetup = (code) => {
+        _setup_code.push(code)
     }
 
     self.getXml = () => {

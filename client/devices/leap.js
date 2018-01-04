@@ -55,6 +55,7 @@
     var degrees = 180 * radians / Math.PI
     return (degrees + 360) % 360 // avoid negative remainder - % is not mod...
   }
+
   self.last_x = false
   self.last_y = false
   self.last_z = false

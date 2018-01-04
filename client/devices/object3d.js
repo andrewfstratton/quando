@@ -41,34 +41,45 @@
         update(renderer, scene, camera)
     }
 
-    self.in_out = function (value) {
-        var max=150, min= -150
-        self.z = min + (value * (max-min))
+    function _degrees_to_radians (degrees) {
+        var radians = Math.PI * degrees / 180
+        return radians
     }
 
-    self.left_right = function (value) {
-        var max=50, min= -50
-        self.x = min + (value * (max-min))
+    function _convert_linear(val, extras) {
+        if (val === false) { val = 0.5 }
+        return extras.min + (val * (extras.max-extras.min))
     }
 
-    self.up_down = function (value) {
-        var max=50, min= -50
-        self.y = min + (value * (max-min))
+    self.in_out = function (val, extras) {
+        self.z = _convert_linear(val, extras)
     }
 
-    self.roll = function (value) {
-        var max=Math.PI, min= -Math.PI
-        self._roll = min + (value * (max-min))
+    self.left_right = function (val, extras) {
+        self.x = _convert_linear(val, extras)
     }
 
-    self.pitch = function (value) {
-        var max=Math.PI, min= -Math.PI
-        self._pitch = min + (value * (max-min))
+    self.up_down = function (val, extras) {
+        self.y = _convert_linear(val, extras)
     }
 
-    self.yaw = function (value) {
-        var max=Math.PI, min= -Math.PI
-        self._yaw = min + (value * (max-min))
+    function _convert_angle(val, extras) {
+        if (val === false) { val = 0.5 }
+        var min = _degrees_to_radians(extras.min)
+        var max = _degrees_to_radians(extras.max)
+        return min + (val * (max-min))
+    }
+
+    self.roll = function (val, extras) {
+        self._roll = _convert_angle(val, extras)
+    }
+
+    self.pitch = function (val, extras) {
+        self._pitch = _convert_angle(val, extras)
+    }
+
+    self.yaw = function (val, extras) {
+        self._yaw = _convert_angle(val, extras)
     }
 
     function _load_obj(loader, path, obj) {

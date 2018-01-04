@@ -7,8 +7,17 @@
   self.pinching = false
   self._vitrine_destructors = []
   self.DEFAULT_STYLE = 'quando_css'
+  let _lookup = {} // holds run time arrays
 
   self.socket = io.connect('http://' + window.location.hostname)
+
+  function _displayWidth() {
+    return window.innerWidth
+  }
+
+  function _displayHeight() {
+    return window.innerHeight
+  }
 
   function endSame (longer, shorter) {
     var loc = longer.indexOf(shorter, longer.length - shorter.length)
@@ -109,15 +118,15 @@
   }
 
   // Start in the middle
-  self._y = screen.height
-  self._x = screen.width
+  self._y = _displayHeight()
+  self._x = _displayWidth()
 
   function _cursor_adjust () {
     var x = self._x
     var y = self._y
     var style = document.getElementById('cursor').style
-    var max_width = screen.width
-    var max_height = screen.height
+    var max_width = _displayWidth()
+    var max_height = _displayHeight()
     if (x < 0) {
       x = 0
     } else if (x > max_width) {
@@ -137,13 +146,24 @@
     self.idle_reset()
   }
 
-  self.cursor_up_down = function (y) {
-    self._y = (1 - y) * screen.height
+  self.cursor_up_down = function (y, extras) {
+    if (y === false) {
+      y = (extras.min + extras.max)/2
+    }
+    y = 1 - y // invert
+    var scr_min = extras.min * _displayHeight()
+    var scr_max = extras.max * _displayHeight()
+    self._y = scr_min + (y * (scr_max-scr_min))
     _cursor_adjust()
   }
 
-  self.cursor_left_right = function (x) {
-    self._x = x * screen.width
+  self.cursor_left_right = function (x, extras) {
+    if (x === false) {
+      x = (extras.min + extras.max)/2
+    }
+    var scr_min = extras.min * _displayWidth()
+    var scr_max = extras.max * _displayWidth()
+    self._x = scr_min + (x * (scr_max-scr_min))
     _cursor_adjust()
   }
 
@@ -474,6 +494,9 @@
   }
 
   self.pick = function(val, arr) {
+    if (val === false) {
+      val = 0.5
+    }
     var i = Math.floor(val * arr.length)
     if (i == arr.length) {
       i--
@@ -486,4 +509,14 @@
     self.pick(r, arr)
   }
 
+  self.setOnId = (id, val) => {
+    _lookup[id] = val
+  }
+
+  self.getOnId = (id) => {
+    return _lookup[id]
+  }
+
 })()
+
+let val = false // force handler to manage when not embedded
