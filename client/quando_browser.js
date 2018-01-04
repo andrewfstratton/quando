@@ -509,6 +509,19 @@
     self.pick(r, arr)
   }
 
+  self.pick_one_each_time = function(arr) {
+    if (arr.length > 0) {
+      if (!arr.hasOwnProperty('index')) {
+        arr.index = 0
+      }
+      var fn = arr[arr.index]
+      if (++arr.index >= arr.length) {
+        arr.index = 0
+      }
+      if (typeof fn === 'function') { fn() }
+    }
+  }
+
   self.setOnId = (id, val) => {
     _lookup[id] = val
   }

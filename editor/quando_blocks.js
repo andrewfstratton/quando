@@ -1061,5 +1061,20 @@
       }
     })
 
+    let PICK_ONE_EACH_BLOCK = 'Pick one each time'
+    self.defineAdvanced({
+      name: PICK_ONE_EACH_BLOCK, title: ICON_VALUE_PARAMETER + ' Pick one each time',
+      interface: [
+        { statement: STATEMENT }
+      ],
+      javascript : (block) => {
+        let id = block.id
+        let stateBlock = block.getInputTargetBlock(STATEMENT)
+        let arr = _getIndividualChildCode(stateBlock, 'function(){\n', '}', ',\n')
+        quando_editor.pushToSetup(`quando.setOnId('${id}', [${arr}])\n`)
+        return `quando.pick_one_each_time(quando.getOnId('${id}'))\n`
+      }
+    })
+
   } // self.addBlocks
 })()
