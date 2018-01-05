@@ -10,6 +10,7 @@
     TIME_COLOUR: '#ffb3b3',
     LEAP_MOTION_COLOUR: '#aaaaaa',
     DEVICE_COLOUR: '#e6ccff',
+    EXPERIMENT_COLOUR: '#bbbbbb',
     BLOCKLY_SATURATION: 1, // default for hue only colour - probably not used anymore - see http://colorizer.org/
     BLOCKLY_VALUE: 1, // ditto
   }
@@ -64,6 +65,9 @@
   }
   self.defineDevice = (json) => {
       return _defineBlock(json, 'quando_device', self.CONFIG.DEVICE_COLOUR)
+  }
+  self.defineExperiment = (json) => {
+      return _defineBlock(json, 'quando_experiment', self.CONFIG.EXPERIMENT_COLOUR)
   }
 
   self.addBlocks = (quando_editor) => {
@@ -476,11 +480,9 @@
     })
 
     let EXPLORATION_RULE = 'Exploration Rule'
-    quando_editor.defineBlock({
+    self.defineExperiment({
       name: EXPLORATION_RULE,
       title: 'When',
-      category: 'experiment',
-      colour: '#55bb55',
       interface: [
                 { name: 'title', title: '', text: ''},
                 { name: 'text', title: '', text: ''}
@@ -494,11 +496,9 @@
     })
 
     let EXPLORATION_ACTION = 'Exploration Action'
-    quando_editor.defineBlock({
+    self.defineExperiment({
       name: EXPLORATION_ACTION,
       title: 'Do',
-      category: 'experiment',
-      colour: '#5555bb',
       interface: [
                 { name: 'title', title: '', text: ''},
                 { name: 'text', title: '', text: ''}
