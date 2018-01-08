@@ -10,6 +10,7 @@
     let EXTRAS_ID = '_EXTRAS'
     let EXTRAS_UP = '\u25b2'
     let EXTRAS_DOWN = '...'
+    let _setup_code = []
 
     let encodeXml = (str) => {
         return str.replace(/&/g, '&amp;')
@@ -53,11 +54,21 @@
     self.getCode = () => {
         let result = 'Unknown failure to generate Code'
         try {
-            result = Blockly.JavaScript.workspaceToCode(Blockly.mainWorkspace)
+            _setup_code = []
+            let main = Blockly.JavaScript.workspaceToCode(Blockly.mainWorkspace)
+            result = ''
+            for (let i=0; i<_setup_code.length; i++) {
+                result += _setup_code[i]
+            }
+            result += main
         } catch (e) {
             result += '\n' + e
         }
         return result
+    }
+
+    self.pushToSetup = (code) => {
+        _setup_code.push(code)
     }
 
     self.getXml = () => {
@@ -67,7 +78,7 @@
     }
 
     let _undefinedDefault = (val, alt) => {
-        if (!_exists(val)) {
+        if (!self.exists(val)) {
             val = alt
         }
         return val
@@ -77,13 +88,9 @@
         return document.getElementById(_undefinedDefault(val, alt))
     }
 
-    let _exists = (val) => {
-        return !(typeof val === 'undefined')
-    }
-
     let _isEqual = (constant, val) => {
         let result = false
-        if (_exists(val)) {
+        if (self.exists(val)) {
             result = (val === constant)
         }
         return result
@@ -99,6 +106,10 @@
 
     let _startsWith = (string, substring) => {
         return string.indexOf(substring) === 0
+    }
+
+    self.exists = (val) => {
+        return !(typeof val === 'undefined')
     }
 
     self.getRawText = (block, name) => {
@@ -121,6 +132,19 @@
 
     self.getStatement = (block, name) => {
         return Blockly.JavaScript.statementToCode(block, name)
+    }
+
+    self.getIndividualBlockCode = (block) => {
+        let result = ''
+        if (block && !block.disabled) {
+            let javascript = Blockly.JavaScript[block.type]
+            if (javascript) {
+                result = javascript.call(block, block)
+            } else {
+                result = `Javascript missing for ${block.type}`
+            }
+        }
+        return result
     }
 
     self.getCheck = (block, name) => {
@@ -167,14 +191,14 @@
                 // TODO handle title and name out of order?!
                 let fields = []
                 let title = widget.name // by default
-                if (_exists(widget.title)) { // replace default
+                if (self.exists(widget.title)) { // replace default
                     if (typeof widget.title == 'function') {
 
                     } else {
                         title = widget.title
                     }
                 }
-                if (_exists(title)) { // assuming it exists
+                if (self.exists(title)) { // assuming it exists
                     if (title !== '') { // and it's not empty
                         let field = new Blockly.FieldLabel(title)
                         sofar.appendField(field) // then show the title
@@ -203,20 +227,20 @@
                             // TODO set width and height from source file...
                             // This isn't simple - and relies on dom loading
                             // of image with callback.
-                            if (_exists(widget.width)) {
+                            if (self.exists(widget.width)) {
                                 width = widget.width
                             } else {
                                 _WARNING(`Image widget width missing...assuming ${width} pixels wide...`)
                             }
                             let height = 32
-                            if (_exists(widget.height)) {
+                            if (self.exists(widget.height)) {
                                 height = widget.height
                             } else {
                                 _WARNING(`Image widget height missing...assuming ${height} pixels wide...`)
                             }
                             // TODO FIX alt text doesn't work - neither does the title?...
                             let alt = '*'
-                            if (_exists(widget.alt)) {
+                            if (self.exists(widget.alt)) {
                                 alt = widget.alt
                             } else {
                                 _WARNING("Image widget missing alternate text...setting to '*'")
@@ -327,42 +351,42 @@
     }
 
     let _addToBlockly = function (blockly, json) {
-        if (!_exists(json.name)) {
+        if (!self.exists(json.name)) {
             _ERROR('Failed to create Block - missing name property')
             return
         } // Else ok so far...
         let block = document.createElement('block')
         let id = self.PREFIX + json.name
-        if (_exists(blockly.Blocks[id])) {
+        if (self.exists(blockly.Blocks[id])) {
             _ERROR(`Failed to add block with id '${id}', already exists...`)
             return
         } // Else ok so far...
         block.setAttribute('type', id)
         let category_list = document.getElementById(json.category)
-        if (!_exists(json.category)) {
+        if (!self.exists(json.category)) {
             _ERROR('Failed to create Block - category property missing')
             return
         } // Else ok so far...
-        if (!_exists(category_list)) {
+        if (!self.exists(category_list)) {
             _ERROR(`Failed to find category list '${json.category}' in html document`)
             return
         } // Else ok so far...
         category_list.appendChild(block)
-        if (!_exists(json.block_init)) {
+        if (!self.exists(json.block_init)) {
             blockly.Blocks[id] = {
                 init: function () {
                     let sofar = this.appendDummyInput()
-                    if (_exists(json.title)) {
+                    if (self.exists(json.title)) {
                         if (!_isFalse(json.title)) {
                             sofar = sofar.appendField(json.title)
                         }
                     } else {
                         sofar = sofar.appendField(json.name)
                     }
-                    if (_exists(json.tooltip)) {
+                    if (self.exists(json.tooltip)) {
                         this.setTooltip(json.tooltip)
                     }
-                    if (_exists(json.help)) {
+                    if (self.exists(json.help)) {
                         this.setHelpUrl(json.help)
                     }
                     if (!_isFalse(json.next)) {
@@ -371,15 +395,15 @@
                     if (!_isFalse(json.previous)) {
                         this.setPreviousStatement(true)
                     }
-                    if (_exists(json.colour)) {
+                    if (self.exists(json.colour)) {
                         // Note: otherwise black...which will be the same colour as overriden text
                         // N.B. Can use rgb format, i.e. '#bbbbbb' is grey
                         this.setColour(json.colour)
                     }
-                    if (_exists(json.interface)) {
+                    if (self.exists(json.interface)) {
                         sofar = _handleInterface(json.interface, json.interface.name, this, sofar)
                     }
-                    if (_exists(json.extras)) {
+                    if (self.exists(json.extras)) {
                         let extras_selector = new Blockly.FieldTextInput(EXTRAS_DOWN)
                         sofar.appendField(extras_selector, 'EXTRAS_OPEN') // need id for persistence and loading render
                         let extras_dummy = this.appendDummyInput(EXTRAS_ID)
@@ -398,12 +422,12 @@
                         sofar = _handleInterface(json.extras, json.extras.name, this, sofar, false)
                         // i.e hides all the children
                     }
-                    if (_exists(json.javascript)) {
+                    if (self.exists(json.javascript)) {
                         blockly.JavaScript[id] = json.javascript
                     }
                 }
             }
-            if (_exists(json.valid_in)) {
+            if (self.exists(json.valid_in)) {
                 blockly.Blocks[id].onchange = function () {
                     let valid_ids = []
                     json.valid_in.forEach((iter) => {
@@ -433,7 +457,6 @@
     self.inject = function (iblockly, editor, toolbox) {
         let blockly = _undefinedDefault(iblockly, this['Blockly'])
         let blockly_editor_div = _fromDom(editor, 'blockly_editor')
-        self.CONFIG = quando_blocks.CONFIG
         let CONFIG = quando_blocks.CONFIG
         blockly.HSV_SATURATION = CONFIG.BLOCKLY_SATURATION
         blockly.HSV_VALUE = CONFIG.BLOCKLY_VALUE

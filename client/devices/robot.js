@@ -8,53 +8,6 @@
 
     var list = null;
 
-    var ARM_LOOKUP = {
-        "left": {
-          "up": {
-            "joint": "LShoulderPitch",
-            "halfway": "0",
-            "maximum": "-90"
-          },
-          "down": {
-            "joint": "LShoulderPitch",
-            "halfway": "0",
-            "maximum": "90"
-          },
-          "out": {
-            "joint": "LShoulderRoll",
-            "halfway": "30",
-            "maximum": "60"
-          },
-          "in": {
-            "joint": "LShoulderRoll",
-            "halfway": "0",
-            "maximum": "-18"
-          }
-        },
-        "right": {
-          "up": {
-            "joint": "RShoulderPitch",
-            "halfway": "0",
-            "maximum": "-90"
-          },
-          "down": {
-            "joint": "RShoulderPitch",
-            "halfway": "0",
-            "maximum": "90"
-          },
-          "in": {
-            "joint": "RShoulderRoll",
-            "halfway": "0",
-            "maximum": "18"
-          },
-          "out": {
-            "joint": "RShoulderRoll",
-            "halfway": "-30",
-            "maximum": "-60"
-          }
-        }
-      };
-
     function helper_ConvertAngle(angle) {
         return angle * (Math.PI / 180)
     }
@@ -144,22 +97,109 @@
     }
 
     self.moveArm = function(arm, direction, angle) {
-        var json = ARM_LOOKUP;
-        var data = json[arm][direction];
-        var armJoint = data["joint"];
-        var finalAngle = data[angle];
+        var armJoint;
+        var finalAngle;
+        switch (arm) {
+            case 'Left':
+                switch (direction) {
+                    case 'Up':
+                        armJoint = 'LShoulderPitch';
+                        switch (angle) {
+                            case 'Halfway':
+                                finalAngle = 0;
+                                break;
+                            case 'Maximum':
+                                finalAngle = -90;
+                                break;
+                        };
+                        break;
+                    case 'Down':
+                        armJoint = 'LShoulderPitch'
+                        switch (angle) {
+                            case 'Halfway':
+                                finalAngle = 0;
+                                break;
+                            case 'Maximum':
+                                finalAngle = 90;
+                                break;
+                        };
+                        break; 
+                    case 'Left':
+                        armJoint = 'LShoulderRoll'
+                        switch (angle) {
+                            case 'Halfway':
+                                finalAngle = 30;
+                                break;
+                            case 'Maximum':
+                                finalAngle = 60;
+                                break;
+                        };
+                        break;
+                    case 'Right':
+                        armJoint = 'LShoulderRoll'
+                        switch (angle) {
+                            case 'Halfway':
+                                finalAngle = 0;
+                                break;
+                            case 'Maximum':
+                                finalAngle = -18;
+                                break;
+                            };              
+                        break;  
+                }
+                break;
+            case 'Right':
+            switch (direction) {
+                case 'Up':
+                    armJoint = 'RShoulderPitch';
+                    switch (angle) {
+                        case 'Halfway':
+                            finalAngle = 0;
+                            break;
+                        case 'Maximum':
+                            finalAngle = -90;
+                            break;
+                    };
+                    break;
+                case 'Down':
+                    armJoint = 'RShoulderPitch'
+                    switch (angle) {
+                        case 'Halfway':
+                            finalAngle = 0;
+                            break;
+                        case 'Maximum':
+                            finalAngle = 90;
+                            break;
+                    };
+                    break; 
+                case 'Left':
+                    armJoint = 'RShoulderRoll'
+                    switch (angle) {
+                        case 'Halfway':
+                            finalAngle = 0;
+                            break;
+                        case 'Maximum':
+                            finalAngle = 18;
+                            break;
+                    };
+                    break;
+                case 'Right':
+                armJoint = 'RShoulderRoll'
+                    switch (angle) {
+                        case 'Halfway':
+                            finalAngle = -30;
+                            break;
+                        case 'Maximum':
+                            finalAngle = -60;
+                            break;
+                        };              
+                    break;  
+                }
+                break;                  
+            }
         session.service("ALMotion").done(function (motion) {
             newAngle = helper_ConvertAngle(finalAngle);
             motion.setAngles(armJoint, newAngle, 0.5);
-          }).fail(function (error) {
-            console.log("An error occurred:", error);
-          });
-    }
-
-    self.moveLeapArm = function(val, extras) {
-        console.log(val);
-        session.service("ALMotion").done(function (motion) {
-            motion.setAngles('LShoulderPitch', val, 0.5);
           }).fail(function (error) {
             console.log("An error occurred:", error);
           });

@@ -7,8 +7,17 @@
   self.pinching = false
   self._vitrine_destructors = []
   self.DEFAULT_STYLE = 'quando_css'
+  let _lookup = {} // holds run time arrays
 
   self.socket = io.connect('http://' + window.location.hostname)
+
+  function _displayWidth() {
+    return window.innerWidth
+  }
+
+  function _displayHeight() {
+    return window.innerHeight
+  }
 
   function endSame (longer, shorter) {
     var loc = longer.indexOf(shorter, longer.length - shorter.length)
@@ -66,55 +75,58 @@
   }
 
   self.new_scaler = function (min, max, inverted = false) {
-    var valid_last_result = false
     return function (value) {
       var result = null
-      if ((value >= min) && (value <= max)) {
-        // convert to range 0 to 1 for min to max
-        var result = (value - min) / (max - min)
-        // TODO check for negatives and other odd combinations
-        if (inverted) {
-          result = 1 - result
-        }
-        valid_last_result = true
-      } else if (valid_last_result) {
-        valid_last_result = false
-        // we have just gone out of bounds - so return the extreme value - once
-        if (value < min) {
-          result = 0
-        } else {
-          result = 1
-        }
-        if (inverted) {
-          result = 1 - result
-        }
+      // convert to range 0 to 1 for min to max
+      result = (value - min) / (max - min)
+      result = Math.min(1, result)
+      result = Math.max(0, result)
+      if (inverted) {
+        result = 1 - result
       }
       return result
     }
   }
 
   self.new_angle_scaler = function (mid, plus_minus, inverted = false) {
+    var mod = function(x, n) {
+        return ((x%n)+n)%n
+    }
+    var last_result = 0
+    var crossover = mod(mid+180, 360)
+    // i.e. 25% of the non used range
+    var crossover_range = (180 - Math.abs(plus_minus)) / 4
     return function (value) {
-      var result = ((value + plus_minus - mid) % 360) / (2 * plus_minus)
+      var x = mod(value - mid, 360)
+      if (x > 180) { x -= 360}
+      var result = (x + plus_minus) / (2 * plus_minus)
       if (inverted) {
         result = 1 - result
       }
+      if ((result < 0) || (result > 1)) { // i.e. result is out of range
+            // identify if result should be used
+            var diff = Math.abs(crossover - mod(value, 360))
+            if (diff <= crossover_range) { // inside crossover range, so use the last result 
+                result = last_result
+            }
+      }
       result = Math.min(1, result)
       result = Math.max(0, result)
+      last_result = result
       return result
     }
   }
 
   // Start in the middle
-  self._y = screen.height
-  self._x = screen.width
+  self._y = _displayHeight()
+  self._x = _displayWidth()
 
   function _cursor_adjust () {
     var x = self._x
     var y = self._y
     var style = document.getElementById('cursor').style
-    var max_width = screen.width
-    var max_height = screen.height
+    var max_width = _displayWidth()
+    var max_height = _displayHeight()
     if (x < 0) {
       x = 0
     } else if (x > max_width) {
@@ -134,13 +146,24 @@
     self.idle_reset()
   }
 
-  self.cursor_up_down = function (y) {
-    self._y = (1 - y) * screen.height
+  self.cursor_up_down = function (y, extras) {
+    if (y === false) {
+      y = (extras.min + extras.max)/2
+    }
+    y = 1 - y // invert
+    var scr_min = extras.min * _displayHeight()
+    var scr_max = extras.max * _displayHeight()
+    self._y = scr_min + (y * (scr_max-scr_min))
     _cursor_adjust()
   }
 
-  self.cursor_left_right = function (x) {
-    self._x = x * screen.width
+  self.cursor_left_right = function (x, extras) {
+    if (x === false) {
+      x = (extras.min + extras.max)/2
+    }
+    var scr_min = extras.min * _displayWidth()
+    var scr_max = extras.max * _displayWidth()
+    self._x = scr_min + (x * (scr_max-scr_min))
     _cursor_adjust()
   }
 
@@ -252,7 +275,7 @@
       audio.autoplay = true
       audio.addEventListener('ended', self.clear_audio)
       audio.load()
-      audio.play()
+      // audio.play()
     }
   }
   self.clear_audio = function () {
@@ -343,9 +366,9 @@
   }
 
   self.startVitrine = function (leap) {
-    self.setDisplayStyle('#cursor', 'background-color', 'rgba(255, 255, 102, 0.7)');
-    self.setDisplayStyle('#cursor', ['width','height'], '4.4vw');
-    self.setDisplayStyle('#cursor', ['margin-left','margin-top'], '-2.2vw');    
+    self.setDefaultStyle('#cursor', 'background-color', 'rgba(255, 255, 102, 0.7)');
+    self.setDefaultStyle('#cursor', ['width','height'], '4.4vw');
+    self.setDefaultStyle('#cursor', ['margin-left','margin-top'], '-2.2vw');    
     document.querySelector('#quando_title').addEventListener('contextmenu', // right click title to go to setup
             function (ev) {
               ev.preventDefault()
@@ -469,4 +492,44 @@
   self.addDestructor = function (fn) {
     self._vitrine_destructors.push(fn)
   }
+
+  self.pick = function(val, arr) {
+    if (val === false) {
+      val = 0.5
+    }
+    var i = Math.floor(val * arr.length)
+    if (i == arr.length) {
+      i--
+    }
+    arr[i]()
+  }
+
+  self.pick_random = function(arr) {
+    var r = Math.random()
+    self.pick(r, arr)
+  }
+
+  self.pick_one_each_time = function(arr) {
+    if (arr.length > 0) {
+      if (!arr.hasOwnProperty('index')) {
+        arr.index = 0
+      }
+      var fn = arr[arr.index]
+      if (++arr.index >= arr.length) {
+        arr.index = 0
+      }
+      if (typeof fn === 'function') { fn() }
+    }
+  }
+
+  self.setOnId = (id, val) => {
+    _lookup[id] = val
+  }
+
+  self.getOnId = (id) => {
+    return _lookup[id]
+  }
+
 })()
+
+let val = false // force handler to manage when not embedded
