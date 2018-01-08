@@ -72,7 +72,37 @@
         <category name="Client" id="quando_client"></category>
         <category name="Time" id="quando_time"></category>
         <category name="Devices..." id="quando_device">
-            <category name="Leap" id="quando_leap"></category>
+            <category name="Leap" id="quando_leap">
+                <block type="quando_Description" collapsed="true">
+                    <field name="TEXT_INPUT_description_text">Leap Cursor ⇔⇕</field>
+                    <statement name="STATEMENT">
+                      <block type="quando_When Leap move">
+                        <field name="MENU_INPUT_Variable">⇔</field>
+                        <field name="EXTRAS_OPEN">...</field>
+                        <field name="NUMBER_INPUT_plus minus">15</field>
+                        <field name="CHECK_INPUT_Inverted">FALSE</field>
+                        <statement name="STATEMENT">
+                          <block type="quando_Change Cursor">
+                            <field name="MENU_INPUT_Cursor menu">quando.cursor_left_right</field>
+                          </block>
+                        </statement>
+                        <next>
+                          <block type="quando_When Leap move">
+                            <field name="MENU_INPUT_Variable">⇕</field>
+                            <field name="EXTRAS_OPEN">...</field>
+                            <field name="NUMBER_INPUT_plus minus">15</field>
+                            <field name="CHECK_INPUT_Inverted">FALSE</field>
+                            <statement name="STATEMENT">
+                              <block type="quando_Change Cursor">
+                                <field name="MENU_INPUT_Cursor menu">quando.cursor_up_down</field>
+                              </block>
+                            </statement>
+                          </block>
+                        </next>
+                      </block>
+                    </statement>
+                  </block>
+            </category>
             <category name="micro:bit" id="quando_microbit"></category>
             <category name="Robot" id="quando_robot"></category>
             <category name="Cursor" id="quando_cursor"></category>
