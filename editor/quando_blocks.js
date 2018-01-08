@@ -1002,9 +1002,9 @@
     let ROBOT_ARM_ANGLE = "Robot arm angle"
     quando_editor.defineRobot({
       name: ROBOT_MOVE_ARM, title: "\uD83D\uDCAA Move",
-      interface: [{ name: ROBOT_ARM_LEFT_RIGHT, title: '', menu: ['Left','Right'] },
-                  { name: ROBOT_ARM_DIRECTION, title: 'arm', menu: ['Up','Down','Left','Right'] },
-                  { name: ROBOT_ARM_ANGLE, title: 'to', menu: ['Halfway','Maximum']}],
+      interface: [{ name: ROBOT_ARM_LEFT_RIGHT, title: '', menu: ['left','right'] },
+                  { name: ROBOT_ARM_DIRECTION, title: 'arm', menu: ['up','down','in','out'] },
+                  { name: ROBOT_ARM_ANGLE, title: 'to', menu: ['halfway','maximum']}],
       javascript: (block) => {
         let arm = quando_editor.getMenu(block, ROBOT_ARM_LEFT_RIGHT)        
         let direction = quando_editor.getMenu(block, ROBOT_ARM_DIRECTION)
@@ -1082,6 +1082,22 @@
                                               `}, function() {\n` +
                                               statementTimeout +
                                               `}, ${timeout});\n`
+      }
+    })
+
+    let ROBOT_LEAP_MOTION_ARM = 'Move arm'
+    let ROBOT_BOUNDARY = 'Move Boundary'
+    quando_editor.defineRobot({
+      name: ROBOT_LEAP_MOTION_ARM,
+      interface: [{ name: '' }],
+      extras: [{name: ROBOT_BOUNDARY, number: 50}],
+      javascript: (block) => {
+        let extras = {}
+        let plus_minus = quando_editor.getNumber(block, ROBOT_BOUNDARY)
+        extras.min = -plus_minus
+        extras.max = plus_minus
+        extras = JSON.stringify(extras)
+        return `quando.robot.moveLeapArm(val, ${extras});\n`
       }
     })
 
