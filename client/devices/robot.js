@@ -157,7 +157,9 @@
     }
 
     self.moveLeapArm = function(val, extras) {
-        console.log(val);
+        console.log("Value from leap: " + val);
+        var output = -2 + ((2 - -2) / (0 - 1)) * (val - 0);
+        console.log("Angle calculated: " + output);
         session.service("ALMotion").done(function (motion) {
             motion.setAngles('LShoulderPitch', val, 0.5);
           }).fail(function (error) {

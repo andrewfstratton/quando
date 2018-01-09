@@ -1061,14 +1061,27 @@
     let ROBOT_ARM_ANGLE = "Robot arm angle"
     self.defineRobot({
       name: ROBOT_MOVE_ARM, title: "\uD83D\uDCAA Move",
-      interface: [{ name: ROBOT_ARM_LEFT_RIGHT, title: '', menu: ['Left','Right'] },
-                  { name: ROBOT_ARM_DIRECTION, title: 'arm', menu: ['Up','Down','Left','Right'] },
-                  { name: ROBOT_ARM_ANGLE, title: 'to', menu: ['Halfway','Maximum']}],
+      interface: [{ name: ROBOT_ARM_LEFT_RIGHT, title: '', menu: ['left','right'] },
+                  { name: ROBOT_ARM_DIRECTION, title: 'arm', menu: ['up','down','left','right'] },
+                  { name: ROBOT_ARM_ANGLE, title: 'to', menu: ['halfway','maximum']}],
       javascript: (block) => {
         let arm = quando_editor.getMenu(block, ROBOT_ARM_LEFT_RIGHT)        
         let direction = quando_editor.getMenu(block, ROBOT_ARM_DIRECTION)
         let angle = quando_editor.getMenu(block, ROBOT_ARM_ANGLE)        
         return `quando.robot.moveArm("${arm}","${direction}","${angle}");\n`
+      }
+    })
+
+    let ROBOT_LEAP_MOVE_ARM = "Robot arm move 2"
+    self.defineRobot({
+      name: ROBOT_LEAP_MOVE_ARM, title: "\uD83D\uDCAA Move",
+      interface: [{ name: 'Leap move'}],
+      extras: [ 
+        {name: CHANGE_MID_VALUE, number: 50}, {title: '%'},
+        {name: CHANGE_PLUS_MINUS, title: '+/-', number: 50}, {title: '%'}],
+      javascript: (block) => {          
+        let extras = {}    
+        return `quando.robot.moveLeapArm(val);\n`
       }
     })
 
@@ -1144,14 +1157,15 @@
       }
     })
 
-    let ROBOT_STOP_LISTEN = 'Stop listening now'
+    let ROBOT_FAKE_BLOCK = 'I\'m a fake block'
     self.defineRobot({
-      name: ROBOT_STOP_LISTEN,
+      name: ROBOT_FAKE_BLOCK,
       interface: [{ name: '' }],
       javascript: (block) => {
         return `quando.robot.stopListening();\n`
       }
     })
+
     function _getIndividualChildCode(start, prefix, postfix, separator) {
       let result = ''
       let child = start
