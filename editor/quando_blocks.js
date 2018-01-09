@@ -971,7 +971,7 @@
     
     let ROBOT_IP = 'Robot IP'
     let ROBOT_CONNECT = 'Connect'
-    quando_editor.defineRobot({
+    self.defineRobot({
       name: ROBOT_CONNECT,
       interface: [{ name: ROBOT_IP, title: '', text: '#ROBOT IP#' }],
       javascript: (block) => {
@@ -1032,7 +1032,7 @@
 
     let ROBOT_SAYS = 'Say'
     let ROBOT_TEXT_SAYS = 'Robot Text Says'
-    quando_editor.defineRobot({
+    self.defineRobot({
       name: ROBOT_SAYS,
       interface: [{ name: ROBOT_TEXT_SAYS, title: '', text: 'Hello' }],
       javascript: (block) => {
@@ -1044,7 +1044,7 @@
     let ROBOT_MOVE_HEAD = "Robot head move"
     let ROBOT_HEAD = "Robot head"
     let ROBOT_HEAD_ANGLE = "Robot head angle"
-    quando_editor.defineRobot({
+    self.defineRobot({
       name: ROBOT_MOVE_HEAD, title: "\uD83D\uDC40 Robot Look",
       interface: [{ name: ROBOT_HEAD, title: '', menu: ['Up','Down','Left','Right']},
                    {name: ROBOT_HEAD_ANGLE, number: 0, title: ''}, { title: 'degrees'}],
@@ -1059,7 +1059,7 @@
     let ROBOT_ARM_LEFT_RIGHT = "Robot arm left right"
     let ROBOT_ARM_DIRECTION = "Robot arm direction"
     let ROBOT_ARM_ANGLE = "Robot arm angle"
-    quando_editor.defineRobot({
+    self.defineRobot({
       name: ROBOT_MOVE_ARM, title: "\uD83D\uDCAA Move",
       interface: [{ name: ROBOT_ARM_LEFT_RIGHT, title: '', menu: ['Left','Right'] },
                   { name: ROBOT_ARM_DIRECTION, title: 'arm', menu: ['Up','Down','Left','Right'] },
@@ -1075,7 +1075,7 @@
     let ROBOT_HAND = 'Robot hand'
     let ROBOT_HAND_LEFT_RIGHT = 'Robot left right'
     let ROBOT_HAND_OPEN_CLOSED = 'Robot open closed'  
-    quando_editor.defineRobot({
+    self.defineRobot({
       name: ROBOT_HAND, title: "\u270b Robot",
       interface: [{ name: ROBOT_HAND_OPEN_CLOSED, title: '', menu: ['Open', 'Close'] }, 
                   { name: ROBOT_HAND_LEFT_RIGHT, title: '', menu: [['Left', 'LHand'], ['Right', 'RHand']]},
@@ -1089,7 +1089,7 @@
     })
 
     let ROBOT_PERSON_PERCEPTION = 'When the robot sees someone'
-    quando_editor.defineRobot({
+    self.defineRobot({
       name: ROBOT_PERSON_PERCEPTION,
       interface: [{ name: 'person_perception',  title: '' }, { statement: STATEMENT } ],
       javascript: (block) => {
@@ -1102,7 +1102,7 @@
 
     let ROBOT_AUTONOMOUS_LIFE = 'Autonomous Life State'
     let ROBOT_LIFE_MENU = 'On/Off Menu'
-    quando_editor.defineRobot({
+    self.defineRobot({
       name: ROBOT_AUTONOMOUS_LIFE,
       interface: [{ name: ROBOT_LIFE_MENU, title: '', menu: [['On', 'solitary'], ['Off', 'safeguard']] }],
       javascript: (block) => {
@@ -1113,7 +1113,7 @@
 
     let ROBOT_VOCAB_BLOCK = 'Set vocabulary'
     let ROBOT_VOCABULARY = 'Words to learn'
-    quando_editor.defineRobot({
+    self.defineRobot({
       name: ROBOT_VOCAB_BLOCK,
       interface: [{ name: ROBOT_VOCABULARY, title: '', text: '.list of words/phrases to learn.' }],
       javascript: (block) => {
@@ -1126,7 +1126,7 @@
     let ROBOT_LISTEN_TIMEOUT = 'Listen timeout'
     let ROBOT_ON_LISTEN_TIMEOUT = 'Upon timeout'
     let STATEMENT_TIMEOUT = 'Listening timed out'
-    quando_editor.defineRobot({
+    self.defineRobot({
       name: ROBOT_LISTEN_BLOCK,
       interface: [{ name: ROBOT_LISTEN_TIMEOUT, title: '', number: 60}, {title: 'seconds'},
        { statement: STATEMENT } ,
@@ -1145,7 +1145,7 @@
     })
 
     let ROBOT_STOP_LISTEN = 'Stop listening now'
-    quando_editor.defineRobot({
+    self.defineRobot({
       name: ROBOT_STOP_LISTEN,
       interface: [{ name: '' }],
       javascript: (block) => {

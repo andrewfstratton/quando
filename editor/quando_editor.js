@@ -525,42 +525,6 @@
         return self.defineBlock(json)
     }
 
-    self.defineAdvanced = (json) => {
-        return _defineBlock(json, 'quando_advanced', self.CONFIG.ADVANCED_COLOUR)
-    }
-    self.defineDisplay = (json) => {
-        return _defineBlock(json, 'quando_display', self.CONFIG.DISPLAY_COLOUR)
-    }
-    self.defineMedia = (json) => {
-        return _defineBlock(json, 'quando_media', self.CONFIG.MEDIA_COLOUR)
-    }
-    self.defineStyle = (json) => {
-        return _defineBlock(json, 'quando_style', self.CONFIG.STYLE_COLOUR)
-    }
-    self.defineClient = (json) => {
-        return _defineBlock(json, 'quando_client', self.CONFIG.CLIENT_COLOUR)
-    }
-    self.defineTime = (json) => {
-        return _defineBlock(json, 'quando_time', self.CONFIG.TIME_COLOUR)
-    }
-    self.defineLeap = (json) => {
-        return _defineBlock(json, 'quando_leap', self.CONFIG.DEVICE_COLOUR)
-    }
-    self.defineMicrobit = (json) => {
-        return _defineBlock(json, 'quando_microbit', self.CONFIG.DEVICE_COLOUR)
-    }
-    self.defineCursor = (json) => {
-        return _defineBlock(json, 'quando_cursor', self.CONFIG.DEVICE_COLOUR)
-    }
-    self.defineRobot = (json) => {
-        return _defineBlock(json, 'quando_robot', self.CONFIG.ROBOT_COLOUR)
-    }
-    self.defineDevice = (json) => {
-        return _defineBlock(json, 'quando_device', self.CONFIG.DEVICE_COLOUR)
-    }
-    self.defineLeapMotion = (json) => {
-        return _defineBlock(json, 'quando_leap_motion', self.CONFIG.LEAP_MOTION_COLOUR)
-    }
     self.getParent = (block, ids) => {
         let valid_ids = []
         ids.forEach((iter) => {
