@@ -485,13 +485,13 @@
       title: 'When',
       interface: [
                 { name: 'title', title: '', text: ''},
-                { name: 'text', title: '', text: ''}
+                { name: 'text', title: '', text: ''},
+                { statement: STATEMENT }
       ],
       extras: [
                 { name: 'text3', title: '', text: ''},
                 { name: 'text4', title: '', text: ''},
-                { name: 'text5', title: '', text: ''},
-                { statement: STATEMENT }
+                { name: 'text5', title: '', text: ''}
       ]
     })
 
@@ -723,8 +723,8 @@
       javascript: (block) => {
         let fn = quando_editor.getMenu(block, CHANGE_CURSOR_MENU)
         let extras = {}
-        var mid = quando_editor.getNumber(block, CHANGE_MID_VALUE) / 100
-        var plus_minus = quando_editor.getNumber(block, CHANGE_PLUS_MINUS) / 100
+        let mid = quando_editor.getNumber(block, CHANGE_MID_VALUE) / 100
+        let plus_minus = quando_editor.getNumber(block, CHANGE_PLUS_MINUS) / 100
         // converted to 0..1 format
         extras.min = mid-plus_minus
         extras.max = mid+plus_minus
@@ -755,8 +755,8 @@
         let fn = quando_editor.getMenu(block, CHANGE_3D_OBJECT_MENU)
         let extras = {}
         // convert to mm
-        var mid = 10 * quando_editor.getNumber(block, CHANGE_MID_VALUE)
-        var plus_minus = 10 * quando_editor.getNumber(block, CHANGE_PLUS_MINUS)
+        let mid = 10 * quando_editor.getNumber(block, CHANGE_MID_VALUE)
+        let plus_minus = 10 * quando_editor.getNumber(block, CHANGE_PLUS_MINUS)
         extras.min = mid-plus_minus
         extras.max = mid+plus_minus
         extras = JSON.stringify(extras)
@@ -786,8 +786,8 @@
       javascript: (block) => {
         let fn = quando_editor.getMenu(block, CHANGE_3D_OBJECT_MENU)
         let extras = {}
-        var mid = quando_editor.getNumber(block, CHANGE_MID_ANGLE)
-        var plus_minus = quando_editor.getNumber(block, CHANGE_PLUS_MINUS)
+        let mid = quando_editor.getNumber(block, CHANGE_MID_ANGLE)
+        let plus_minus = quando_editor.getNumber(block, CHANGE_PLUS_MINUS)
         extras.min = mid-plus_minus
         extras.max = mid+plus_minus
         extras = JSON.stringify(extras)
@@ -870,7 +870,7 @@
       javascript: (block) => {
         let extras = {}
         // convert to mm
-        var plus_minus = 10 * quando_editor.getNumber(block, CHANGE_PLUS_MINUS)
+        let plus_minus = 10 * quando_editor.getNumber(block, CHANGE_PLUS_MINUS)
         extras.min = -plus_minus
         extras.max = plus_minus
         let variable = quando_editor.getMenu(block, CHANGE_VARIABLE)
@@ -879,7 +879,7 @@
             break
           case LEAP_HEIGHT: variable = 'Y'
             extras.min = 100 // 10 cm is minimum height set
-            extras.max = 2 * plus_minus + 100 // ste to the right height...
+            extras.max = 2 * plus_minus + 100 // set to the right height...
             break
           case LEAP_DEPTH: variable = 'Z'
             break
@@ -905,7 +905,7 @@
           title: '',
           menu: [CHANGE_YAW, CHANGE_PITCH, CHANGE_ROLL]},
         { title: ICON_VALUE_PARAMETER},
-          { statement: STATEMENT }
+        { statement: STATEMENT }
       ],
       extras: [
         {name: CHANGE_MID_ANGLE, title: '', number: 0}, {title: 'degrees'},
