@@ -14,7 +14,8 @@
     BLOCKLY_SATURATION: 1, // default for hue only colour - probably not used anymore - see http://colorizer.org/
     BLOCKLY_VALUE: 1, // ditto
   }
-  const ICON_VALUE_PARAMETER = '\uD83D\uDD02'
+  const ICON_PRODUCE_VALUE = '\u26A1' // \uD83D\uDD33'
+  const ICON_CONSUME_VALUE = '\u26A1' // \uD83D\uDD32'
 
   let ajax_get = (url, callback) => {
     let xhr = new XMLHttpRequest()
@@ -708,7 +709,7 @@
     let CHANGE_MID_VALUE = 'Middle'
     let CHANGE_PLUS_MINUS = 'plus minus'
     self.defineCursor({
-      name: VALUE_CURSOR, title: ICON_VALUE_PARAMETER + ' Change Cursor',
+      name: VALUE_CURSOR, title: ICON_CONSUME_VALUE + ' Change Cursor',
       interface: [
         { name: CHANGE_CURSOR_MENU,
           title: '',
@@ -737,7 +738,7 @@
     let MOVE_3D_OBJECT = 'Change 3D Object'
     let CHANGE_3D_OBJECT_MENU = '3D Object menu'
     self.defineDevice({
-      name: MOVE_3D_OBJECT, title: ICON_VALUE_PARAMETER + ' Move 3D Object',
+      name: MOVE_3D_OBJECT, title: ICON_CONSUME_VALUE + ' Move 3D Object',
       interface: [
         { name: CHANGE_3D_OBJECT_MENU,
           title: '',
@@ -769,7 +770,7 @@
     let ROTATE_3D_OBJECT_MENU = '3D Object menu'
     let CHANGE_MID_ANGLE = 'Change Angle'
     self.defineDevice({
-      name: ROTATE_3D_OBJECT, title: ICON_VALUE_PARAMETER + ' Rotate 3D Object',
+      name: ROTATE_3D_OBJECT, title: ICON_CONSUME_VALUE + ' Rotate 3D Object',
       interface: [
         { name: ROTATE_3D_OBJECT_MENU,
           title: '',
@@ -813,7 +814,7 @@
           menu: [CHANGE_HEADING, CHANGE_PITCH, CHANGE_ROLL,
             // CHANGE_MAG_X, CHANGE_MAG_Y
           ]},
-        { title: ICON_VALUE_PARAMETER},
+        { title: ICON_PRODUCE_VALUE},
         { statement: STATEMENT }
       ],
       extras: [
@@ -860,7 +861,7 @@
         { name: CHANGE_VARIABLE,
           title: '',
           menu: [LEAP_LEFT_RIGHT, LEAP_HEIGHT, LEAP_DEPTH]},
-        { title: ICON_VALUE_PARAMETER},
+        { title: ICON_PRODUCE_VALUE},
         { statement: STATEMENT }
       ],
       extras: [
@@ -904,7 +905,7 @@
         { name: CHANGE_VARIABLE,
           title: '',
           menu: [CHANGE_YAW, CHANGE_PITCH, CHANGE_ROLL]},
-        { title: ICON_VALUE_PARAMETER},
+        { title: ICON_PRODUCE_VALUE},
         { statement: STATEMENT }
       ],
       extras: [
@@ -1048,7 +1049,7 @@
 
     let PICK_ONE_BLOCK = 'Pick one'
     self.defineAdvanced({
-      name: PICK_ONE_BLOCK, title: ICON_VALUE_PARAMETER + ' Pick one',
+      name: PICK_ONE_BLOCK, title: ICON_CONSUME_VALUE + PICK_ONE_BLOCK,
       interface: [
         { statement: STATEMENT }
       ],
@@ -1063,7 +1064,7 @@
 
     let PICK_ONE_EACH_BLOCK = 'Pick one each time'
     self.defineAdvanced({
-      name: PICK_ONE_EACH_BLOCK, title: ICON_VALUE_PARAMETER + ' Pick one each time',
+      name: PICK_ONE_EACH_BLOCK,
       interface: [
         { statement: STATEMENT }
       ],
