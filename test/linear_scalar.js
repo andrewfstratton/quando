@@ -1,8 +1,6 @@
 const assert = require('chai').assert
 
-// let angle_scaler = quando.new_angle_scaler(mid, plus_minus, inverted = false)
-console.log('hello')
-
+// let linear_scaler = quando.linear_scaler(mid, plus_minus, inverted = false)
 
 var new_scaler = function (min, max, inverted = false) {
     return function (value) {
@@ -46,56 +44,3 @@ suite("Linear Tests - Around Zero scaler", () => {
         assert.equal(scaler(20), 1, "Above Range")
     })
 })
-
-/*
-suite("Angle Tests - Above Zero Scalar", () => {
-    let angle_scaler = new_angle_scaler(90, 30)
-    test("normal", () => {
-        assert.equal(angle_scaler(60), 0, "-Range")
-        assert.equal(angle_scaler(120), 1, "+Range")
-    }),
-    test("inverted", () => {
-        let angle_scaler = new_angle_scaler(90, 30, true)
-        assert.equal(angle_scaler(60), 1, "-Range")
-        assert.equal(angle_scaler(120), 0, "+Range")
-    }),
-    test("in the middle", () => {
-        assert.equal(angle_scaler(90), 0.5, "90")
-    }),
-    test("Around zero - in-between", () => {
-        assert.equal(angle_scaler(75), 0.25, "-5")
-        assert.equal(angle_scaler(105), 0.75, "+5")
-    })
-})
-
-
-suite("Angle Tests - Zero middle - Outside range flip", () => {
-    let angle_scaler = new_angle_scaler(0, 90)
-    test("Outside range", () => {
-        assert.equal(angle_scaler(-100), 0, "--Range")
-        assert.equal(angle_scaler(100), 1, "++Range")
-    }),
-    test("Crossover", () => {
-        assert.equal(angle_scaler(179), 1, "++Range")
-        assert.equal(angle_scaler(170), 1, "+Range")
-        assert.equal(angle_scaler(-100), 0, "-Range")
-        assert.equal(angle_scaler(181), 0, "--Range")
-    })
-})
-
-suite("Angle tests - Outside range - Checking buffer", () => {
-    let angle_scaler = new_angle_scaler(0, 45)
-    test("Inside buffer", () => {
-        angle_scaler(100)
-        assert.equal(angle_scaler(170), 1, "+Range")
-        assert.equal(angle_scaler(-170), 1, "-Range")
-    }),
-    test("Cross Buffer then inside", () => {
-        angle_scaler(-100)
-        assert.equal(angle_scaler(170), 0, "+Range")
-        assert.equal(angle_scaler(-170), 0, "-Range")
-    })
-})
-*/
-// suite - outside range positive/negative middle
-// crossback not triggering
