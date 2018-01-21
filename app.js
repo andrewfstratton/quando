@@ -18,8 +18,6 @@ const http = require('http').Server(app)
 const io = require('socket.io')(http)
 const ubit = require('./ubit')
 
-let connected = false
-
 let server = http.listen(process.env.PORT || 80, () => {
   let host = process.env.IP || server.address().address
   let port = server.address().port
@@ -133,30 +131,17 @@ function ubit_error (err) {
   if (!reported && err) {
     console.log(err)
     reported = true
-    console.log("Micro:Bit disconnected")
-    io.emit('ubit', {Disconnected: 'true'})
-    connected = false
-  } 
+  }
   setTimeout(() => { ubit.get_serial(ubit_error, ubit_success) }, 1000)
     // Checks every second for plugged in micro:bit
-  //  console.log("checking for microbit")
 }
-
 function ubit_success (serial) {
   reported = false
-  connected = true
   let orientation = false
-  let proximity = false;
-  io.emit('ubit', {Connected: 'true'})
   serial.on('data', (data) => {
     try {
       let ubit = JSON.parse(data)
       if (ubit && io) {
-        console.log(data)
-        if (ubit.Paired) {
-         console.log("Micro:Bit Paired") 
-        io.emit('ubit', {'proximity': ubit.Paired})
-        } 
         if (ubit.button_a) {
           io.emit('ubit', {button: 'a'})
         }
@@ -168,7 +153,7 @@ function ubit_success (serial) {
         }
         if (ubit.mag_x) {
           io.emit('ubit', {'mag_x': ubit.mag_x, 'mag_y': ubit.mag_y})
-          // console.log(ubit.mag_x, ubit.mag_y)
+// console.log(ubit.mag_x, ubit.mag_y)
         }
         if (ubit.orientation) {
           io.emit('ubit', {'orientation': ubit.orientation})
@@ -181,14 +166,9 @@ function ubit_success (serial) {
           let pitch = ubit.roll_pitch[1]
           io.emit('ubit', {'roll': roll, 'pitch': pitch})
         }
-        if (ubit.proximity){
-          io.emit('ubit', {'proximity': ubit.proximity})
-        }
-      } 
-
+      }
     } catch (err) {
       console.log(err + ':' + data)
-      connected = false 
     }
   })
   serial.on('disconnect', ubit_error)

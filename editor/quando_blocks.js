@@ -11,7 +11,6 @@
     LEAP_MOTION_COLOUR: '#aaaaaa',
     DEVICE_COLOUR: '#e6ccff',
     EXPERIMENT_COLOUR: '#bbbbbb',
-    VISITOR_COLOUR: '#FFE000',
     BLOCKLY_SATURATION: 1, // default for hue only colour - probably not used anymore - see http://colorizer.org/
     BLOCKLY_VALUE: 1, // ditto
   }
@@ -536,9 +535,7 @@
       interface: [
                 { menu: [['Up', 'ubitUp'], ['Down', 'ubitDown'], ['Forward', 'ubitForward'],
                   ['Backward', 'ubitBackward'], ['Left', 'ubitLeft'], ['Right', 'ubitRight'],
-                  ['A Button', 'ubitA'], ['B Button', 'ubitB'], ['Paired', 'ubitPaired'], 
-                  ['Connected', 'ubitConnected'], 
-                  ['Disconnected', 'ubitDisconnected']],
+                  ['A Button', 'ubitA'], ['B Button', 'ubitB']],
                   name: MICROBIT_GESTURE_MENU, title: '' },
                 { statement: STATEMENT }
       ],
@@ -554,30 +551,6 @@
         return result
       }
     })
-
-
-    let VISITOR_PROXIMITY_MENU = 'Visitor proximity'
-    quando_editor.defineVisitor({
-      name: 'When visitor',
-      interface: [
-                { menu: [['is close to the exhibit', 'ubitClose'],
-                  ['is far away from the exhbit', 'ubitFar']],
-                  name: VISITOR_PROXIMITY_MENU, title: '' },
-                { statement: STATEMENT }
-      ],
-      javascript: (block) => {
-        let fn = quando_editor.getMenu(block, VISITOR_PROXIMITY_MENU)
-        let statement = quando_editor.getStatement(block, STATEMENT)
-        let result = 'quando.ubit.' + fn + '(' +
-                    'function() {\n' +
-                    statement +
-                    '}' +
-                    _getOnContained(block, [WHEN_VITRINE_BLOCK], '', ', false') +
-                    ');\n'
-        return result
-      }
-    })
-
 
     let LEAP_GESTURE_MENU = 'Leap Gesture Menu'
     self.defineLeap({
