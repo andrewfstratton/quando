@@ -469,7 +469,8 @@
                 'quando_robot': CONFIG.DEVICE_COLOUR,
                 'quando_cursor': CONFIG.DEVICE_COLOUR,
             'experiment': CONFIG.EXPERIMENT_COLOUR,
-            'quando_advanced': CONFIG.ADVANCED_COLOUR
+            'quando_advanced': CONFIG.ADVANCED_COLOUR,
+            'quando_visitor': CONFIG.VISITOR_COLOUR
         }
         for (let key in map) {
             let elem = _fromDom(key, null)
@@ -502,6 +503,9 @@
         return self.defineBlock(json)
     }
 
+    self.defineVisitor = (json) => {
+        return _defineBlock(json, 'quando_visitor', self.CONFIG.VISITOR_COLOUR)
+    }
     self.defineAdvanced = (json) => {
         return _defineBlock(json, 'quando_advanced', self.CONFIG.ADVANCED_COLOUR)
     }

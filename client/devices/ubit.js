@@ -5,7 +5,8 @@
   }
   var self = quando.ubit = {}
   self.last_gesture = ''
-
+  var lastProximity = ''
+ 
   function dispatch_gesture (gesture_name) {
     if (gesture_name != self.last_gesture) {
       self.last_gesture = gesture_name
@@ -45,6 +46,26 @@
     quando.add_handler('ubitB', callback, destruct)
   }
 
+  self.ubitPaired = function (callback, destruct = true) {
+    quando.add_handler('ubitPaired', callback, destruct)
+  }
+
+  self.ubitConnected = function (callback, destruct = true) {
+    quando.add_handler('ubitConnected', callback, destruct)
+  }
+
+  self.ubitDisconnected = function (callback, destruct = true) {
+    quando.add_handler('ubitDisconnected', callback, destruct)
+  }
+
+  self.ubitClose = function (callback, destruct = true) {
+    quando.add_handler('ubitClose', callback, destruct)
+  }
+
+  self.ubitFar = function (callback, destruct = true) {
+    quando.add_handler('ubitFar', callback, destruct)
+  }
+
   function _handleAngle (event, callback, extras, destruct = true) {
     var scale = quando.new_angle_scaler(extras.mid_angle, extras.plus_minus, extras.inverted)
     quando.add_scaled_handler(event, callback, scale, destruct)
@@ -74,7 +95,15 @@
     quando.add_scaled_handler("ubitMagY", callback, scale, destruct)
   }
 
+
   quando.socket.on('ubit', function (data) {
+    console.log(data)
+    dispatch_gesture('ubitPaired')
+    if (data.Connected == 'true'){
+      dispatch_gesture('ubitConnected')
+    } else if (data.Disconnected == 'true'){
+      dispatch_gesture('ubitDisconnected')
+    }
     if (data.ir) {
       quando.idle_reset()
     } else if (data.orientation) {
@@ -94,7 +123,7 @@
       } else if (data.orientation == '') { // this is the micro bit started
           last_gesture = ''
         }
-    } else if (data.button) {
+      } else if (data.button) {
       quando.idle_reset()
       if (data.button == 'a') {
         quando.dispatch_event('ubitA')
@@ -125,6 +154,16 @@
         quando.dispatch_event('ubitPitch', {'detail': pitch})
       }
       quando.idle_reset()
-    }
+    } if (data.proximity) {
+      if (data.proximity != lastProximity) {
+        if (data.proximity == 'close'){
+         dispatch_gesture('ubitClose')
+         lastProximity = 'close'
+        }else if (data.proximity == 'far'){
+         dispatch_gesture('ubitFar')
+         lastProximity = 'far'
+      }
+    } 
+  }
   })
 })()
