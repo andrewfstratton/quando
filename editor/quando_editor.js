@@ -493,6 +493,9 @@
                 'quando_cursor': CONFIG.DEVICE_COLOUR,
             'quando_experiment': CONFIG.EXPERIMENT_COLOUR,
             'quando_advanced': CONFIG.ADVANCED_COLOUR
+            'experiment': CONFIG.EXPERIMENT_COLOUR,
+            'quando_advanced': CONFIG.ADVANCED_COLOUR,
+            'quando_visitor': CONFIG.VISITOR_COLOUR
         }
         for (let key in map) {
             let elem = _fromDom(key, null)
@@ -515,6 +518,51 @@
         self.category.push(json)
         let id = self.PREFIX + json.name
         return id
+    }
+    
+    function _defineBlock(json, category, colour) {
+        json.category = category
+        if (!_exists(json.colour)) {
+            json.colour = colour
+        }
+        return self.defineBlock(json)
+    }
+
+    self.defineVisitor = (json) => {
+        return _defineBlock(json, 'quando_visitor', self.CONFIG.VISITOR_COLOUR)
+    }
+    self.defineAdvanced = (json) => {
+        return _defineBlock(json, 'quando_advanced', self.CONFIG.ADVANCED_COLOUR)
+    }
+    self.defineDisplay = (json) => {
+        return _defineBlock(json, 'quando_display', self.CONFIG.DISPLAY_COLOUR)
+    }
+    self.defineMedia = (json) => {
+        return _defineBlock(json, 'quando_media', self.CONFIG.MEDIA_COLOUR)
+    }
+    self.defineStyle = (json) => {
+        return _defineBlock(json, 'quando_style', self.CONFIG.STYLE_COLOUR)
+    }
+    self.defineClient = (json) => {
+        return _defineBlock(json, 'quando_client', self.CONFIG.CLIENT_COLOUR)
+    }
+    self.defineTime = (json) => {
+        return _defineBlock(json, 'quando_time', self.CONFIG.TIME_COLOUR)
+    }
+    self.defineLeap = (json) => {
+        return _defineBlock(json, 'quando_leap', self.CONFIG.DEVICE_COLOUR)
+    }
+    self.defineMicrobit = (json) => {
+        return _defineBlock(json, 'quando_microbit', self.CONFIG.DEVICE_COLOUR)
+    }
+    self.defineCursor = (json) => {
+        return _defineBlock(json, 'quando_cursor', self.CONFIG.DEVICE_COLOUR)
+    }
+    self.defineRobot = (json) => {
+        return _defineBlock(json, 'quando_robot', self.CONFIG.DEVICE_COLOUR)
+    }
+    self.defineDevice = (json) => {
+        return _defineBlock(json, 'quando_device', self.CONFIG.DEVICE_COLOUR)
     }
 
     self.getParent = (block, ids) => {

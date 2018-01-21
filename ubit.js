@@ -14,6 +14,7 @@ const find_microbit = (error, success) => {
       })
       if (comName != null) {
         success(comName)
+        console.log("Micro:Bit connected.")
       } else {
         error('Could not find micro:bit.')
       }
