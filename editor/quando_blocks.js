@@ -285,7 +285,7 @@
 
     function _update_menus (ev, block_id, text = false) {
       let topBlocks = Blockly.mainWorkspace.getAllBlocks()
-      let matchBlock = [PREFIX + LABEL_TO_BLOCK, PREFIX + SHOW_DISPLAY]
+      let matchBlock = [PREFIX + LABEL_TO_BLOCK, PREFIX + SHOW_DISPLAY, PREFIX + ROBOT_LISTEN_BLOCK, PREFIX + ROBOT_ADD_LIST]
       for (let checkblock of topBlocks) {
         if (matchBlock.includes(checkblock.type)) {
           let menuid = quando_editor.getMenu(checkblock, LABEL_TO_MENU)
@@ -303,13 +303,15 @@
     Blockly.mainWorkspace.addChangeListener((ev) => {
       let workspace = Blockly.Workspace.getById(ev.workspaceId)
       let block = workspace.getBlockById(ev.blockId)
+      let matchBlock = [PREFIX + WHEN_VITRINE_BLOCK, PREFIX + ROBOT_CREATE_LIST]
       if (ev.type == Blockly.Events.CHANGE) {
-        if (block.type == PREFIX + WHEN_VITRINE_BLOCK) {
+        if (matchBlock.includes(block.type)) {
+          debugger
           _update_menus(ev, block.id, ev.newValue)
         }
         quando_editor.updateExtras(block) // Any Extras menu will be updated
       } else if (ev.type == Blockly.Events.CREATE) {
-        if (block.type == PREFIX + WHEN_VITRINE_BLOCK) {
+        if (matchBlock.includes(block.type)) {
           _update_menus(ev, block.id, quando_editor.getText(block, WHEN_VITRINE_TEXT))
         }
         quando_editor.updateExtras(block) // Any Extras menu will be updated
@@ -339,6 +341,7 @@
       let result = `quando.addLabel("${menuid}", "${title}");\n`
       return result
     }
+
     let LABEL_TO_BLOCK = 'Label to'
     let LABEL_TEXT = 'text'
     self.defineDisplay({
@@ -1041,11 +1044,11 @@
       }
     })
 
-    let ROBOT_MOVE_HEAD = "Robot head move"
-    let ROBOT_HEAD = "Robot head"
-    let ROBOT_HEAD_ANGLE = "Robot head angle"
+    let ROBOT_MOVE_HEAD = 'Robot head move'
+    let ROBOT_HEAD = 'Robot head'
+    let ROBOT_HEAD_ANGLE = 'Robot head angle'
     self.defineRobot({
-      name: ROBOT_MOVE_HEAD, title: "\uD83D\uDC40 Robot Look",
+      name: ROBOT_MOVE_HEAD, title: '\uD83D\uDC40 Robot Look',
       interface: [{ name: ROBOT_HEAD, title: '', menu: ['Up','Down','Left','Right']},
                    {name: ROBOT_HEAD_ANGLE, number: 0, title: ''}, { title: 'degrees'}],
       javascript: (block) => {
@@ -1055,14 +1058,14 @@
       }
     })
     
-    let ROBOT_MOVE_ARM = "Robot arm move"
-    let ROBOT_ARM_LEFT_RIGHT = "Robot arm left right"
-    let ROBOT_ARM_DIRECTION = "Robot arm direction"
-    let ROBOT_ARM_ANGLE = "Robot arm angle"
+    let ROBOT_MOVE_ARM = 'Robot arm move'
+    let ROBOT_ARM_LEFT_RIGHT = 'Robot arm left right'
+    let ROBOT_ARM_DIRECTION = 'Robot arm direction'
+    let ROBOT_ARM_ANGLE = 'Robot arm angle'
     self.defineRobot({
-      name: ROBOT_MOVE_ARM, title: "\uD83D\uDCAA Move",
+      name: ROBOT_MOVE_ARM, title: '\uD83D\uDCAA Move',
       interface: [{ name: ROBOT_ARM_LEFT_RIGHT, title: '', menu: ['left','right'] },
-                  { name: ROBOT_ARM_DIRECTION, title: 'arm', menu: ['up','down','left','right'] },
+                  { name: ROBOT_ARM_DIRECTION, title: 'arm', menu: ['up','down','in','out'] },
                   { name: ROBOT_ARM_ANGLE, title: 'to', menu: ['halfway','maximum']}],
       javascript: (block) => {
         let arm = quando_editor.getMenu(block, ROBOT_ARM_LEFT_RIGHT)        
@@ -1072,9 +1075,9 @@
       }
     })
 
-    let ROBOT_LEAP_MOVE_ARM = "Robot arm move 2"
+    let ROBOT_LEAP_MOVE_ARM = 'Robot arm move 2'
     self.defineRobot({
-      name: ROBOT_LEAP_MOVE_ARM, title: "\uD83D\uDCAA Move",
+      name: ROBOT_LEAP_MOVE_ARM, title: '\uD83D\uDCAA Move',
       interface: [{ name: 'Leap move'}],
       extras: [ 
         {name: CHANGE_MID_VALUE, number: 50}, {title: '%'},
@@ -1123,46 +1126,61 @@
         return `quando.robot.changeAutonomousLife("${state}");\n`
       }
     })
-
-    let ROBOT_VOCAB_BLOCK = 'Set vocabulary'
-    let ROBOT_VOCABULARY = 'Words to learn'
-    self.defineRobot({
-      name: ROBOT_VOCAB_BLOCK,
-      interface: [{ name: ROBOT_VOCABULARY, title: '', text: '.list of words/phrases to learn.' }],
-      javascript: (block) => {
-        let vocab = quando_editor.getText(block, ROBOT_VOCABULARY)
-        return `quando.robot.setVocabulary("${vocab}");\n`
+    
+    let _list_menu = () => {
+      let topBlocks = Blockly.mainWorkspace.getAllBlocks()
+      let choices = [['-----', 0]]
+      for (let block of topBlocks) {
+        if (block.type == PREFIX + ROBOT_CREATE_LIST) {
+          let text = quando_editor.getText(block, ROBOT_LIST)
+          choices.push([text, block.id])
+        }
       }
-    })
+      return choices
+    }
 
-    let ROBOT_LISTEN_BLOCK = 'Listen for'
-    let ROBOT_LISTEN_TIMEOUT = 'Listen timeout'
-    let ROBOT_ON_LISTEN_TIMEOUT = 'Upon timeout'
-    let STATEMENT_TIMEOUT = 'Listening timed out'
+    let ROBOT_LISTEN_BLOCK = 'When robot hears'
+    let ROBOT_LISTEN = 'Listen'
     self.defineRobot({
       name: ROBOT_LISTEN_BLOCK,
-      interface: [{ name: ROBOT_LISTEN_TIMEOUT, title: '', number: 60}, {title: 'seconds'},
-       { statement: STATEMENT } ,
-       { row: ROBOT_ON_LISTEN_TIMEOUT, statement: STATEMENT_TIMEOUT }],
+      interface: [{ name: LABEL_TO_MENU, title: '', menu: _list_menu}, { statement: STATEMENT } ],
       javascript: (block) => {
-        debugger
+        let list = quando_editor.getMenu(block, LABEL_TO_MENU)
         let statement = quando_editor.getStatement(block, STATEMENT)
-        let statementTimeout = quando_editor.getStatement(block, STATEMENT_TIMEOUT) 
-        let timeout = quando_editor.getNumber(block, ROBOT_LISTEN_TIMEOUT)        
-        return `quando.robot.listenForWords(function() {\n` +
-                                              statement +
-                                              `}, function() {\n` +
-                                              statementTimeout +
-                                              `}, ${timeout});\n`
+        let method = _getStyleOnContained(block, [WHEN_VITRINE_BLOCK])        
+        return `quando.robot.listenForWords("${list}", "${method}", function() {\n` +
+        statement +
+        '}' 
+        + _getOnContained(block, [WHEN_VITRINE_BLOCK], '', ', false') + `);\n`
       }
     })
 
-    let ROBOT_FAKE_BLOCK = 'I\'m a fake block'
+    let ROBOT_CREATE_LIST = 'Create word list'
+    let ROBOT_LIST = 'The word list'   
+    let ROBOT_VOCABULARY = 'Words to learn'
     self.defineRobot({
-      name: ROBOT_FAKE_BLOCK,
-      interface: [{ name: '' }],
+      name: ROBOT_CREATE_LIST, title: 'Create',
+      interface: [{ name: ROBOT_LIST, title: '', text: '.list name.' },
+                  {name: ROBOT_VOCABULARY, title: '', text: '.words to learn.'}],
       javascript: (block) => {
-        return `quando.robot.stopListening();\n`
+        let list = quando_editor.getText(block, ROBOT_LIST)        
+        let vocab = quando_editor.getText(block, ROBOT_VOCABULARY)
+        return `quando.robot.setWordList("${block.id}","${vocab}");\n`
+      }
+    })
+
+    
+    let ROBOT_ADD_LIST = 'Add to current list'
+    let ROBOT_VOCABULARY_ADD = 'New words to learn'
+    self.defineRobot({
+      name: ROBOT_ADD_LIST, title: 'Add to',
+      interface: [{ name: LABEL_TO_MENU, title: '', menu: _list_menu },
+                  {name: ROBOT_VOCABULARY_ADD, title: '', text: '.words to learn.'}],
+      javascript: (block) => {
+        let list = quando_editor.getMenu(block, LABEL_TO_MENU)        
+        let vocab = quando_editor.getText(block, ROBOT_VOCABULARY_ADD)
+        let method = _getStyleOnContained(block, [WHEN_VITRINE_BLOCK])                
+        return `quando.robot.addToWordList("${list}","${vocab}","${method}");\n`
       }
     })
 

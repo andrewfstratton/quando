@@ -179,6 +179,40 @@
     }
   }
 
+  self.robotListen = function (session, list, callback, destruct = true) {
+    session.service("ALSpeechRecognition").done(function (sr) {
+      debugger
+      sr.setVocabulary(list.vocab, false);
+      sr.pause(false);
+      sr.subscribe("NAO_USER");
+      session.service("ALMemory").done(function (ALMemory) {            
+          ALMemory.subscriber("WordRecognized").done(function (sub){
+              sub.signal.connect(function(value){
+                console.log("I recognise that word!");
+                console.log(value); 
+                if(value[1] >= 0.4) {  
+                  for(var i = 0; i < list.vocab.length; i++) {
+                    debugger                    
+                    if(callback && list.vocab[i] == value[0]) callback();
+                  } 
+                }
+              });
+          });
+      });
+    }).fail(function (error) {
+      console.log("An error occurred:", error);
+    });
+    if (destruct) {
+      self.addDestructor(function () {
+        session.service("ALSpeechRecognition").done(function (sr) {
+          sr.unsubscribe("NAO_USER");
+        }).fail(function (error) {
+          console.log("An error occurred:", error);
+        }); 
+      })
+    }
+  }
+
   self.every = function (time_secs, callback, destruct = true) {
     callback() // do it straight away
     var id = setInterval(callback, time_secs * 1000)

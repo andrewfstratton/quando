@@ -3,10 +3,19 @@
     if (!quando) {
       alert('Fatal Error: Robot must be included after quando_browser')
     }
-
     var self = quando.robot = {}
 
-    var list = null;
+    class vocabList  {
+        constructor(listName, vocab) {
+          this.listName = listName;
+          this.vocab = vocab;
+        }
+    }
+
+    self._list = [];
+    self._displayList = [];
+
+    var lastHeight = -2;
 
     var ARM_LOOKUP = {
         "left": {
@@ -59,9 +68,12 @@
         return angle * (Math.PI / 180)
     }
 
-    function helper_TimeoutListening(callback, sr) {
-        sr.unsubscribe("NAO_USER");
-        callback();
+    function armJointMovement(joint, angle, speed = 0.5) {
+        session.service("ALMotion").done(function (motion) {
+            motion.setAngles(joint, angle, speed);            
+        }).fail(function (error) {
+            console.log("An error occurred:", error);
+        });
     }
 
     function conditional(value) {   
@@ -77,7 +89,7 @@
                 Promise.resolve(al.getState()).then(conditional).then(function (value){
                     if(!value) {
                         session.service("ALTextToSpeech").done(function (tts) {
-                            tts.say("Please wait whilst I set up. I only do this once after being turned on, or if you have changed my autonomous life state.");
+                            //tts.say("Please wait whilst I set up. I only do this once after being turned on, or if you have changed my autonomous life state.");
                           }).fail(function (error) {
                             console.log("An error occurred:", error);
                           });
@@ -144,9 +156,11 @@
     }
 
     self.moveArm = function(arm, direction, angle) {
+        console.log("Arm: " + arm + "\nDirection: " + direction + "\nAngle: " + angle);
         var json = ARM_LOOKUP;
         var data = json[arm][direction];
         var armJoint = data["joint"];
+        console.log(armJoint);
         var finalAngle = data[angle];
         session.service("ALMotion").done(function (motion) {
             newAngle = helper_ConvertAngle(finalAngle);
@@ -158,13 +172,14 @@
 
     self.moveLeapArm = function(val, extras) {
         console.log("Value from leap: " + val);
-        var output = -2 + ((2 - -2) / (0 - 1)) * (val - 0);
+        var output = Math.round((2 + ((val - 0) * (-2 - 2))/(1 - 0)) * 10) / 10;
         console.log("Angle calculated: " + output);
-        session.service("ALMotion").done(function (motion) {
-            motion.setAngles('LShoulderPitch', val, 0.5);
-          }).fail(function (error) {
-            console.log("An error occurred:", error);
-          });
+
+        if(output != lastHeight) {
+            lastHeight = output;
+        }
+        display = "setDisplayStyle"
+        setInterval(armJointMovement('LShoulderPitch', lastHeight, 0.5), 100);            
     }
 
     self.motionHand = function(hand, open) {
@@ -198,33 +213,82 @@
           });
     }
 
-    self.setVocabulary = function(vocab) {
-        list = vocab.split(",");
+    self.setWordList = function(listName, vocab) {
+        debugger
+        var v = new vocabList(listName, vocab.split(","));
+        self._list.push(v);
     }
 
-    self.listenForWords = function(callback, callback2, timeout) {
-        session.service("ALSpeechRecognition").done(function (sr) {
-            sr.setVocabulary(list, true);
-            sr.pause(false);
-            if (sr != null && list != null) {
-                sr.subscribe("NAO_USER");
-            } else {
-                alert("You haven't set any vocabulary!");
-            } 
+    self.addToWordList = function(listName, vocab, display) {
+        var existed = false;
+        if (display == "setDefaultStyle") {
+            debugger
+            for (var i = 0; i < self._list.length; i++) {
+                if(self._list[i].listName == listName) {
+                    self._list[i].vocab = self._list[i].vocab.concat(vocab.split(","));
+                }
+            }       
+        } else {
+            if(self._displayList.length != 0) {
+                for (var i = 0; i < self._displayList.length; i++) {
+                    if(self._displayList[i].listName == listName) {
+                        self._displayList[i].vocab = self._displayList[i].vocab.concat(vocab.split(","));
+                        existed = true;
+                    }
+                }
+            }
 
-            session.service("ALMemory").done(function (ALMemory) {            
-                ALMemory.subscriber("WordRecognized").done(function (sub){
-                    sub.signal.connect(function(value){
-                        console.log("I recognise that word!");
-                        console.log(value);  
-                        callback();                  
-                    });
-                });
-            });
-            setTimeout(function() { helper_TimeoutListening(callback2, sr); }, timeout*1000);                    
-          }).fail(function (error) {
-            console.log("An error occurred:", error);
-          }); 
+            if(!existed) {
+                debugger
+                var v = new vocabList(listName, vocab.split(","));
+                self._displayList.push(v);
+            }
+        }
+    }
+
+    self.listenForWords = function (listName, display, callback, destruct = true) {
+        var list;
+        for (var i = 0; i < self._list.length; i++) {
+            var element = self._list[i];
+            if(element.listName == listName) {
+                list = element;
+            }
+        }
+
+        if(display = "setDisplayStyle" && self._displayList.length != 0) {
+            debugger
+            for (var i = 0; i < self._displayList.length; i++) {
+                if(self._displayList[i].listName == listName) {
+                    list.vocab = list.vocab.concat(self._displayList[i].vocab)
+                }
+            }
+        }
+        debugger
+        quando.robotListen(session, list, callback, destruct);
+        // session.service("ALSpeechRecognition").done(function (sr) {
+        //     for (var i = 0; i < self._list.length(); i++) {
+        //         var element = self._list[i];
+        //         if(element.listName == list) {
+        //             sr.setVocabulary(element, false);
+        //         }
+        //     }
+        //     sr.pause(false);
+        //     sr.subscribe("NAO_USER");
+
+        //     session.service("ALMemory").done(function (ALMemory) {            
+        //         ALMemory.subscriber("WordRecognized").done(function (sub){
+        //             sub.signal.connect(function(value){
+        //                 if(value[1] > 0.3) {
+        //                     console.log("I recognise that word!");
+        //                     console.log(value);  
+        //                     callback();   
+        //                 }               
+        //             });
+        //         });
+        //     });
+        //   }).fail(function (error) {
+        //     console.log("An error occurred:", error);
+        //   }); 
     }
 
     self.stopListening = function(callback) {
