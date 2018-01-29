@@ -10,11 +10,8 @@
     TIME_COLOUR: '#ffb3b3',
     LEAP_MOTION_COLOUR: '#aaaaaa',
     DEVICE_COLOUR: '#e6ccff',
-<<<<<<< HEAD
     ROBOT_COLOUR: '#7fdee0',
-=======
     EXPERIMENT_COLOUR: '#bbbbbb',
->>>>>>> master
     BLOCKLY_SATURATION: 1, // default for hue only colour - probably not used anymore - see http://colorizer.org/
     BLOCKLY_VALUE: 1, // ditto
   }
