@@ -10,7 +10,7 @@
     TIME_COLOUR: '#ffb3b3',
     LEAP_MOTION_COLOUR: '#aaaaaa',
     DEVICE_COLOUR: '#e6ccff',
-    ROBOT_COLOUR: '#aaaaff',
+    ROBOT_COLOUR: '#7fdee0',
     BLOCKLY_SATURATION: 1, // default for hue only colour - probably not used anymore - see http://colorizer.org/
     BLOCKLY_VALUE: 1, // ditto
   }
@@ -61,7 +61,7 @@
       return _defineBlock(json, 'quando_cursor', self.CONFIG.DEVICE_COLOUR)
   }
   self.defineRobot = (json) => {
-      return _defineBlock(json, 'quando_robot', self.CONFIG.DEVICE_COLOUR)
+      return _defineBlock(json, 'quando_robot', self.CONFIG.ROBOT_COLOUR)
   }
   self.defineDevice = (json) => {
       return _defineBlock(json, 'quando_device', self.CONFIG.DEVICE_COLOUR)
@@ -1037,7 +1037,7 @@
     let ROBOT_TEXT_SAYS = 'Robot Text Says'
     self.defineRobot({
       name: ROBOT_SAYS,
-      interface: [{ name: ROBOT_TEXT_SAYS, title: '', text: 'Hello' }],
+      interface: [{ name: ROBOT_TEXT_SAYS, title: '', text: '.text to say.' }],
       javascript: (block) => {
         let txt = quando_editor.getText(block, ROBOT_TEXT_SAYS)
         return `quando.robot.say("${txt}");\n`
