@@ -10,11 +10,16 @@
     TIME_COLOUR: '#ffb3b3',
     LEAP_MOTION_COLOUR: '#aaaaaa',
     DEVICE_COLOUR: '#e6ccff',
+<<<<<<< HEAD
     ROBOT_COLOUR: '#7fdee0',
+=======
+    EXPERIMENT_COLOUR: '#bbbbbb',
+>>>>>>> master
     BLOCKLY_SATURATION: 1, // default for hue only colour - probably not used anymore - see http://colorizer.org/
     BLOCKLY_VALUE: 1, // ditto
   }
-  const ICON_VALUE_PARAMETER = '\uD83D\uDD02'
+  const ICON_PRODUCE_VALUE = '\u26A1' // \uD83D\uDD33'
+  const ICON_CONSUME_VALUE = '\u26A1' // \uD83D\uDD32'
 
   let ajax_get = (url, callback) => {
     let xhr = new XMLHttpRequest()
@@ -65,6 +70,9 @@
   }
   self.defineDevice = (json) => {
       return _defineBlock(json, 'quando_device', self.CONFIG.DEVICE_COLOUR)
+  }
+  self.defineExperiment = (json) => {
+      return _defineBlock(json, 'quando_experiment', self.CONFIG.EXPERIMENT_COLOUR)
   }
 
   self.addBlocks = (quando_editor) => {
@@ -480,29 +488,25 @@
     })
 
     let EXPLORATION_RULE = 'Exploration Rule'
-    quando_editor.defineBlock({
+    self.defineExperiment({
       name: EXPLORATION_RULE,
       title: 'When',
-      category: 'experiment',
-      colour: '#55bb55',
       interface: [
                 { name: 'title', title: '', text: ''},
-                { name: 'text', title: '', text: ''}
+                { name: 'text', title: '', text: ''},
+                { statement: STATEMENT }
       ],
       extras: [
                 { name: 'text3', title: '', text: ''},
                 { name: 'text4', title: '', text: ''},
-                { name: 'text5', title: '', text: ''},
-                { statement: STATEMENT }
+                { name: 'text5', title: '', text: ''}
       ]
     })
 
     let EXPLORATION_ACTION = 'Exploration Action'
-    quando_editor.defineBlock({
+    self.defineExperiment({
       name: EXPLORATION_ACTION,
       title: 'Do',
-      category: 'experiment',
-      colour: '#5555bb',
       interface: [
                 { name: 'title', title: '', text: ''},
                 { name: 'text', title: '', text: ''}
@@ -712,7 +716,7 @@
     let CHANGE_MID_VALUE = 'Middle'
     let CHANGE_PLUS_MINUS = 'plus minus'
     self.defineCursor({
-      name: VALUE_CURSOR, title: ICON_VALUE_PARAMETER + ' Change Cursor',
+      name: VALUE_CURSOR, title: ICON_CONSUME_VALUE + ' Change Cursor',
       interface: [
         { name: CHANGE_CURSOR_MENU,
           title: '',
@@ -727,8 +731,8 @@
       javascript: (block) => {
         let fn = quando_editor.getMenu(block, CHANGE_CURSOR_MENU)
         let extras = {}
-        var mid = quando_editor.getNumber(block, CHANGE_MID_VALUE) / 100
-        var plus_minus = quando_editor.getNumber(block, CHANGE_PLUS_MINUS) / 100
+        let mid = quando_editor.getNumber(block, CHANGE_MID_VALUE) / 100
+        let plus_minus = quando_editor.getNumber(block, CHANGE_PLUS_MINUS) / 100
         // converted to 0..1 format
         extras.min = mid-plus_minus
         extras.max = mid+plus_minus
@@ -741,7 +745,7 @@
     let MOVE_3D_OBJECT = 'Change 3D Object'
     let CHANGE_3D_OBJECT_MENU = '3D Object menu'
     self.defineDevice({
-      name: MOVE_3D_OBJECT, title: ICON_VALUE_PARAMETER + ' Move 3D Object',
+      name: MOVE_3D_OBJECT, title: ICON_CONSUME_VALUE + ' Move 3D Object',
       interface: [
         { name: CHANGE_3D_OBJECT_MENU,
           title: '',
@@ -759,8 +763,8 @@
         let fn = quando_editor.getMenu(block, CHANGE_3D_OBJECT_MENU)
         let extras = {}
         // convert to mm
-        var mid = 10 * quando_editor.getNumber(block, CHANGE_MID_VALUE)
-        var plus_minus = 10 * quando_editor.getNumber(block, CHANGE_PLUS_MINUS)
+        let mid = 10 * quando_editor.getNumber(block, CHANGE_MID_VALUE)
+        let plus_minus = 10 * quando_editor.getNumber(block, CHANGE_PLUS_MINUS)
         extras.min = mid-plus_minus
         extras.max = mid+plus_minus
         extras = JSON.stringify(extras)
@@ -773,7 +777,7 @@
     let ROTATE_3D_OBJECT_MENU = '3D Object menu'
     let CHANGE_MID_ANGLE = 'Change Angle'
     self.defineDevice({
-      name: ROTATE_3D_OBJECT, title: ICON_VALUE_PARAMETER + ' Rotate 3D Object',
+      name: ROTATE_3D_OBJECT, title: ICON_CONSUME_VALUE + ' Rotate 3D Object',
       interface: [
         { name: ROTATE_3D_OBJECT_MENU,
           title: '',
@@ -790,8 +794,8 @@
       javascript: (block) => {
         let fn = quando_editor.getMenu(block, CHANGE_3D_OBJECT_MENU)
         let extras = {}
-        var mid = quando_editor.getNumber(block, CHANGE_MID_ANGLE)
-        var plus_minus = quando_editor.getNumber(block, CHANGE_PLUS_MINUS)
+        let mid = quando_editor.getNumber(block, CHANGE_MID_ANGLE)
+        let plus_minus = quando_editor.getNumber(block, CHANGE_PLUS_MINUS)
         extras.min = mid-plus_minus
         extras.max = mid+plus_minus
         extras = JSON.stringify(extras)
@@ -817,7 +821,7 @@
           menu: [CHANGE_HEADING, CHANGE_PITCH, CHANGE_ROLL,
             // CHANGE_MAG_X, CHANGE_MAG_Y
           ]},
-        { title: ICON_VALUE_PARAMETER},
+        { title: ICON_PRODUCE_VALUE},
         { statement: STATEMENT }
       ],
       extras: [
@@ -864,7 +868,7 @@
         { name: CHANGE_VARIABLE,
           title: '',
           menu: [LEAP_LEFT_RIGHT, LEAP_HEIGHT, LEAP_DEPTH]},
-        { title: ICON_VALUE_PARAMETER},
+        { title: ICON_PRODUCE_VALUE},
         { statement: STATEMENT }
       ],
       extras: [
@@ -874,7 +878,7 @@
       javascript: (block) => {
         let extras = {}
         // convert to mm
-        var plus_minus = 10 * quando_editor.getNumber(block, CHANGE_PLUS_MINUS)
+        let plus_minus = 10 * quando_editor.getNumber(block, CHANGE_PLUS_MINUS)
         extras.min = -plus_minus
         extras.max = plus_minus
         let variable = quando_editor.getMenu(block, CHANGE_VARIABLE)
@@ -883,7 +887,7 @@
             break
           case LEAP_HEIGHT: variable = 'Y'
             extras.min = 100 // 10 cm is minimum height set
-            extras.max = 2 * plus_minus + 100 // ste to the right height...
+            extras.max = 2 * plus_minus + 100 // set to the right height...
             break
           case LEAP_DEPTH: variable = 'Z'
             break
@@ -908,8 +912,8 @@
         { name: CHANGE_VARIABLE,
           title: '',
           menu: [CHANGE_YAW, CHANGE_PITCH, CHANGE_ROLL]},
-        { title: ICON_VALUE_PARAMETER},
-          { statement: STATEMENT }
+        { title: ICON_PRODUCE_VALUE},
+        { statement: STATEMENT }
       ],
       extras: [
         {name: CHANGE_MID_ANGLE, title: '', number: 0}, {title: 'degrees'},
@@ -1213,7 +1217,7 @@
 
     let PICK_ONE_BLOCK = 'Pick one'
     self.defineAdvanced({
-      name: PICK_ONE_BLOCK, title: ICON_VALUE_PARAMETER + ' Pick one',
+      name: PICK_ONE_BLOCK, title: ICON_CONSUME_VALUE + PICK_ONE_BLOCK,
       interface: [
         { statement: STATEMENT }
       ],
@@ -1228,7 +1232,7 @@
 
     let PICK_ONE_EACH_BLOCK = 'Pick one each time'
     self.defineAdvanced({
-      name: PICK_ONE_EACH_BLOCK, title: ICON_VALUE_PARAMETER + ' Pick one each time',
+      name: PICK_ONE_EACH_BLOCK,
       interface: [
         { statement: STATEMENT }
       ],
