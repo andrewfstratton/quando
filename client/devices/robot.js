@@ -116,7 +116,7 @@
         session.service("ALMemory").then(function (ALMemory) {            
             ALMemory.subscriber("ALTextToSpeech/CurrentWord").then(function (sub){
                 sub.signal.connect(function(value){
-                  console.log(value);                       
+                  robot.TextToSpeech.CurrentWord = value;                      
                 });
             });
         });
@@ -124,7 +124,7 @@
         session.service("ALMemory").then(function (ALMemory) {            
             ALMemory.subscriber("ALTextToSpeech/Status").then(function (sub){
                 sub.signal.connect(function(value){
-                  console.log(value);                       
+                  robot.TextToSpeech.Status = value[1];                 
                 });
             });
         });
@@ -132,7 +132,7 @@
         session.service("ALMemory").then(function (ALMemory) {            
             ALMemory.subscriber("ALTextToSpeech/TextDone").then(function (sub){
                 sub.signal.connect(function(value){
-                  console.log(value);                       
+                  robot.TextToSpeech.TextDone = value;                   
                 });
             });
         });
