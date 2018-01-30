@@ -180,7 +180,7 @@
   }
 
   function _destroy_robot_listen (session) {
-    session.service("ALSpeechRecognition").done(function (sr) {
+    session.service("ALSpeechRecognition").then(function (sr) {
       sr.unsubscribe("NAO_USER");
     }).fail(function (error) {
       console.log("An error occurred:", error);
@@ -188,8 +188,8 @@
   }
 
   function _start_word_recognition(session, list, confidence, callback, sr) {
-    session.service("ALMemory").done(function (ALMemory) {            
-      ALMemory.subscriber("WordRecognized").done(function (sub){
+    session.service("ALMemory").then(function (ALMemory) {            
+      ALMemory.subscriber("WordRecognized").then(function (sub){
           sub.signal.connect(function(value){
             console.log(value);
             sr.pause(true);                        
@@ -207,7 +207,7 @@
   }
 
   self.robotListen = function (session, list, confidence, callback, destruct = true) {
-    session.service("ALSpeechRecognition").done(function (sr) {
+    session.service("ALSpeechRecognition").then(function (sr) {
       sr.setVocabulary(list.vocab, false);
       sr.subscribe("NAO_USER");
       

@@ -12,6 +12,14 @@
         }
     }
 
+    var robot = {
+        TextToSpeech: {
+            CurrentWord: null,
+            Status: null,
+            TextDone: null
+        }
+    }
+
     self._list = [];
 
     var lastHeight = -2;
@@ -67,8 +75,71 @@
         return angle * (Math.PI / 180)
     }
 
+    function set_up() {
+        session.service("ALAutonomousLife").then(function (al) {
+            Promise.resolve(al.getState()).then(conditional).then(function (value){
+                if(!value) {
+                    session.service("ALTextToSpeech").then(function (tts) {
+                        //tts.say("Please wait whilst I set up. I only do this once after being turned on, or if you have changed my autonomous life state.");
+                      }).fail(function (error) {
+                        console.log("An error occurred:", error);
+                      });
+                    al.setState("disabled");
+                }
+            })
+
+            session.service("ALMemory").then(function (ALMemory) {            
+                ALMemory.subscriber("AutonomousLife/State").then(function (sub){
+                    sub.signal.connect(function(state){
+                        session.service("ALRobotPosture").then(function (rp) {
+                            Promise.resolve(rp.getPosture()).then(conditional).then(function (value){
+                                if(!value && state == "disabled") {
+                                    rp.goToPosture("Stand", 1.0);
+                                }
+                            })                    
+                        }).fail(function (error) {
+                            console.log("An error occurred:", error);
+                        });
+                    });
+                });     
+            });
+        }).fail(function (error) {
+            console.log("An error occurred:", error);
+        });
+    }
+
+    function nao_disconnect(robotIp) {
+        setTimeout(() => { self.connect(robotIp) }, 1000);
+    }
+
+    function execute_event_listeners() {
+        session.service("ALMemory").then(function (ALMemory) {            
+            ALMemory.subscriber("ALTextToSpeech/CurrentWord").then(function (sub){
+                sub.signal.connect(function(value){
+                  console.log(value);                       
+                });
+            });
+        });
+
+        session.service("ALMemory").then(function (ALMemory) {            
+            ALMemory.subscriber("ALTextToSpeech/Status").then(function (sub){
+                sub.signal.connect(function(value){
+                  console.log(value);                       
+                });
+            });
+        });
+
+        session.service("ALMemory").then(function (ALMemory) {            
+            ALMemory.subscriber("ALTextToSpeech/TextDone").then(function (sub){
+                sub.signal.connect(function(value){
+                  console.log(value);                       
+                });
+            });
+        });
+    }
+
     function armJointMovement(joint, angle, speed = 0.5) {
-        session.service("ALMotion").done(function (motion) {
+        session.service("ALMotion").then(function (motion) {
             motion.setAngles(joint, angle, speed);            
         }).fail(function (error) {
             console.log("An error occurred:", error);
@@ -84,45 +155,17 @@
         session = new QiSession(robotIp);       
         session.socket().on('connect', function () {
             console.log('QiSession connected!');
-            session.service("ALAutonomousLife").done(function (al) {
-                Promise.resolve(al.getState()).then(conditional).then(function (value){
-                    if(!value) {
-                        session.service("ALTextToSpeech").done(function (tts) {
-                            //tts.say("Please wait whilst I set up. I only do this once after being turned on, or if you have changed my autonomous life state.");
-                          }).fail(function (error) {
-                            console.log("An error occurred:", error);
-                          });
-                        al.setState("disabled");
-                    }
-                })
-
-                session.service("ALMemory").done(function (ALMemory) {            
-                    ALMemory.subscriber("AutonomousLife/State").done(function (sub){
-                        sub.signal.connect(function(state){
-                            session.service("ALRobotPosture").done(function (rp) {
-                                Promise.resolve(rp.getPosture()).then(conditional).then(function (value){
-                                    if(!value && state == "disabled") {
-                                        rp.goToPosture("Stand", 1.0);
-                                    }
-                                })                    
-                            }).fail(function (error) {
-                                console.log("An error occurred:", error);
-                            });
-                        });
-                    });     
-                });
-            }).fail(function (error) {
-                console.log("An error occurred:", error);
-            });
-            // now you can start using your QiSession
+            set_up();
+            execute_event_listeners();
           }).on('disconnect', function () {
             console.log('QiSession disconnected!');
+            nao_disconnect(robotIp);
           });
     }
 
     self.say = function(text, extras) {
-        session.service("ALAnimatedSpeech").done(function (as) {
-            as.say(text);
+        session.service("ALTextToSpeech").then(function (tts) {
+            tts.say(text);
           }).fail(function (error) {
             console.log("An error occurred:", error);
           });
@@ -146,7 +189,7 @@
                 angle = -angle;            
                 break;
         }
-        session.service("ALMotion").done(function (motion) {
+        session.service("ALMotion").then(function (motion) {
             newAngle = helper_ConvertAngle(angle);
             motion.setAngles(head, newAngle, 0.5);
           }).fail(function (error) {
@@ -161,7 +204,7 @@
         var armJoint = data["joint"];
         console.log(armJoint);
         var finalAngle = data[angle];
-        session.service("ALMotion").done(function (motion) {
+        session.service("ALMotion").then(function (motion) {
             newAngle = helper_ConvertAngle(finalAngle);
             motion.setAngles(armJoint, newAngle, 0.5);
           }).fail(function (error) {
@@ -182,7 +225,7 @@
     }
 
     self.motionHand = function(hand, open) {
-        session.service("ALMotion").done(function (motion) {
+        session.service("ALMotion").then(function (motion) {
             if(open=='Open') {
                 motion.openHand(hand);
             } else {
@@ -194,8 +237,8 @@
     }
 
     self.personPerception = function(callback) {
-        session.service("ALMemory").done(function (ALMemory) {            
-            ALMemory.subscriber("ALBasicAwareness/HumanTracked").done(function (sub){
+        session.service("ALMemory").then(function (ALMemory) {            
+            ALMemory.subscriber("ALBasicAwareness/HumanTracked").then(function (sub){
                 sub.signal.connect(function(state){
                     console.log("Found You!");
                     callback();
@@ -205,7 +248,7 @@
     }
 
     self.changeAutonomousLife = function(state) {
-        session.service("ALAutonomousLife").done(function (al) {
+        session.service("ALAutonomousLife").then(function (al) {
             al.setState(state);
           }).fail(function (error) {
             console.log("An error occurred:", error);
@@ -237,7 +280,7 @@
         }
         debugger
         quando.robotListen(session, list, confidence, callback, destruct);
-        // session.service("ALSpeechRecognition").done(function (sr) {
+        // session.service("ALSpeechRecognition").then(function (sr) {
         //     for (var i = 0; i < self._list.length(); i++) {
         //         var element = self._list[i];
         //         if(element.listName == list) {
@@ -247,8 +290,8 @@
         //     sr.pause(false);
         //     sr.subscribe("NAO_USER");
 
-        //     session.service("ALMemory").done(function (ALMemory) {            
-        //         ALMemory.subscriber("WordRecognized").done(function (sub){
+        //     session.service("ALMemory").then(function (ALMemory) {            
+        //         ALMemory.subscriber("WordRecognized").then(function (sub){
         //             sub.signal.connect(function(value){
         //                 if(value[1] > 0.3) {
         //                     console.log("I recognise that word!");
@@ -264,7 +307,7 @@
     }
 
     self.stopListening = function(callback) {
-        session.service("ALSpeechRecognition").done(function (sr) {
+        session.service("ALSpeechRecognition").then(function (sr) {
             sr.unsubscribe("NAO_USER");
         });
     }
