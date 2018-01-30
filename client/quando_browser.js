@@ -179,36 +179,46 @@
     }
   }
 
-  self.robotListen = function (session, list, callback, destruct = true) {
+  function _destroy_robot_listen (session) {
     session.service("ALSpeechRecognition").done(function (sr) {
-      debugger
-      sr.setVocabulary(list.vocab, false);
-      sr.pause(false);
-      sr.subscribe("NAO_USER");
-      session.service("ALMemory").done(function (ALMemory) {            
-          ALMemory.subscriber("WordRecognized").done(function (sub){
-              sub.signal.connect(function(value){
-                console.log("I recognise that word!");
-                console.log(value); 
-                if(value[1] >= 0.4) {  
-                  for(var i = 0; i < list.vocab.length; i++) {
-                    debugger                    
-                    if(callback && list.vocab[i] == value[0]) callback();
-                  } 
+      sr.unsubscribe("NAO_USER");
+    }).fail(function (error) {
+      console.log("An error occurred:", error);
+    });
+  }
+
+  function _start_word_recognition(session, list, confidence, callback, sr) {
+    session.service("ALMemory").done(function (ALMemory) {            
+      ALMemory.subscriber("WordRecognized").done(function (sub){
+          sub.signal.connect(function(value){
+            console.log(value);
+            sr.pause(true);                        
+            if(value[1] >= confidence) {  
+              for(var i = 0; i < list.vocab.length; i++) {
+                if(callback && list.vocab[i] == value[0]) {
+                   callback(); 
                 }
-              });
+              } 
+            }
+            sr.pause(false);                        
           });
       });
+    });
+  }
+
+  self.robotListen = function (session, list, confidence, callback, destruct = true) {
+    session.service("ALSpeechRecognition").done(function (sr) {
+      sr.setVocabulary(list.vocab, false);
+      sr.subscribe("NAO_USER");
+      
+      _start_word_recognition(session, list, confidence, callback, sr);
+      
     }).fail(function (error) {
       console.log("An error occurred:", error);
     });
     if (destruct) {
       self.addDestructor(function () {
-        session.service("ALSpeechRecognition").done(function (sr) {
-          sr.unsubscribe("NAO_USER");
-        }).fail(function (error) {
-          console.log("An error occurred:", error);
-        }); 
+        _destroy_robot_listen(session)
       })
     }
   }

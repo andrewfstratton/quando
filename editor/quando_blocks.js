@@ -150,6 +150,11 @@
       }
     })
 
+    let _getContainedBlockID = (block) => {
+      var block = quando_editor.getGetParent(block)
+      return block.id
+    }
+
     let _getOnContained = (block, container, contained, otherwise) => {
       let result = otherwise
       if (quando_editor.getParent(block, container)) {
@@ -157,6 +162,7 @@
       }
       return result
     }
+
     let _getStyleOnContained = (block, container) => {
       return 'set' + _getOnContained(block, container, 'Display', 'Default') + 'Style'
     }
@@ -290,7 +296,7 @@
 
     function _update_menus (ev, block_id, text = false) {
       let topBlocks = Blockly.mainWorkspace.getAllBlocks()
-      let matchBlock = [PREFIX + LABEL_TO_BLOCK, PREFIX + SHOW_DISPLAY, PREFIX + ROBOT_LISTEN_BLOCK, PREFIX + ROBOT_ADD_LIST]
+      let matchBlock = [PREFIX + LABEL_TO_BLOCK, PREFIX + SHOW_DISPLAY, PREFIX + WHEN_ROBOT_LISTEN, PREFIX + ROBOT_ADD_LIST]
       for (let checkblock of topBlocks) {
         if (matchBlock.includes(checkblock.type)) {
           let menuid = quando_editor.getMenu(checkblock, LABEL_TO_MENU)
@@ -1140,16 +1146,19 @@
       return choices
     }
 
-    let ROBOT_LISTEN_BLOCK = 'When robot hears'
+    let WHEN_ROBOT_LISTEN = 'When robot hears'
     let ROBOT_LISTEN = 'Listen'
+    let ROBOT_CONFIDENCE = 'Reply when confidence is atleast'
     self.defineRobot({
-      name: ROBOT_LISTEN_BLOCK,
+      name: WHEN_ROBOT_LISTEN,
       interface: [{ name: LABEL_TO_MENU, title: '', menu: _list_menu}, { statement: STATEMENT } ],
+      extras: [ 
+        {name: ROBOT_CONFIDENCE, number: 40}, {title: '%'}],
       javascript: (block) => {
         let list = quando_editor.getMenu(block, LABEL_TO_MENU)
-        let statement = quando_editor.getStatement(block, STATEMENT)
-        let method = _getStyleOnContained(block, [WHEN_VITRINE_BLOCK])        
-        return `quando.robot.listenForWords("${list}", "${method}", function() {\n` +
+        let conf = quando_editor.getNumber(block, ROBOT_CONFIDENCE) / 100
+        let statement = quando_editor.getStatement(block, STATEMENT)       
+        return `quando.robot.listenForWords("${list}", "${conf}", function() {\n` +
         statement +
         '}' 
         + _getOnContained(block, [WHEN_VITRINE_BLOCK], '', ', false') + `);\n`
@@ -1158,30 +1167,26 @@
 
     let ROBOT_CREATE_LIST = 'Create word list'
     let ROBOT_LIST = 'The word list'   
-    let ROBOT_VOCABULARY = 'Words to learn'
     self.defineRobot({
       name: ROBOT_CREATE_LIST, title: 'Create',
-      interface: [{ name: ROBOT_LIST, title: '', text: '.list name.' },
-                  {name: ROBOT_VOCABULARY, title: '', text: '.words to learn.'}],
+      previous: false,
+      interface: [{ name: ROBOT_LIST, title: '', text: '.list name.' }, {statement: STATEMENT}],
       javascript: (block) => {
-        let list = quando_editor.getText(block, ROBOT_LIST)        
-        let vocab = quando_editor.getText(block, ROBOT_VOCABULARY)
-        return `quando.robot.setWordList("${block.id}","${vocab}");\n`
+        let statement = quando_editor.getStatement(block, STATEMENT)        
+        return `quando.robot.createWordList("${block.id}");\n` + statement
       }
     })
 
     
     let ROBOT_ADD_LIST = 'Add to current list'
-    let ROBOT_VOCABULARY_ADD = 'New words to learn'
+    let ROBOT_VOCABULARY_ADD = 'New word to learn'
     self.defineRobot({
-      name: ROBOT_ADD_LIST, title: 'Add to',
-      interface: [{ name: LABEL_TO_MENU, title: '', menu: _list_menu },
-                  {name: ROBOT_VOCABULARY_ADD, title: '', text: '.words to learn.'}],
+      name: ROBOT_ADD_LIST, title: 'Add',
+      interface: [{name: ROBOT_VOCABULARY_ADD, title: '', text: '.word(s) to learn.'}],
       javascript: (block) => {
-        let list = quando_editor.getMenu(block, LABEL_TO_MENU)        
+        let list = _getContainedBlockID(block)       
         let vocab = quando_editor.getText(block, ROBOT_VOCABULARY_ADD)
-        let method = _getStyleOnContained(block, [WHEN_VITRINE_BLOCK])                
-        return `quando.robot.addToWordList("${list}","${vocab}","${method}");\n`
+        return `quando.robot.addToWordList("${list}","${vocab}");\n`
       }
     })
 

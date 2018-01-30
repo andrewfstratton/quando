@@ -13,7 +13,6 @@
     }
 
     self._list = [];
-    self._displayList = [];
 
     var lastHeight = -2;
 
@@ -213,40 +212,22 @@
           });
     }
 
-    self.setWordList = function(listName, vocab) {
+    self.createWordList = function(listName) {
         debugger
-        var v = new vocabList(listName, vocab.split(","));
+        var v = new vocabList(listName, []);
         self._list.push(v);
     }
 
-    self.addToWordList = function(listName, vocab, display) {
-        var existed = false;
-        if (display == "setDefaultStyle") {
-            debugger
-            for (var i = 0; i < self._list.length; i++) {
-                if(self._list[i].listName == listName) {
-                    self._list[i].vocab = self._list[i].vocab.concat(vocab.split(","));
-                }
-            }       
-        } else {
-            if(self._displayList.length != 0) {
-                for (var i = 0; i < self._displayList.length; i++) {
-                    if(self._displayList[i].listName == listName) {
-                        self._displayList[i].vocab = self._displayList[i].vocab.concat(vocab.split(","));
-                        existed = true;
-                    }
-                }
+    self.addToWordList = function(listName, vocab) {
+        for (var i = 0; i < self._list.length; i++) {
+            if(self._list[i].listName == listName) {
+                self._list[i].vocab = self._list[i].vocab.concat(vocab.split(","));
             }
-
-            if(!existed) {
-                debugger
-                var v = new vocabList(listName, vocab.split(","));
-                self._displayList.push(v);
-            }
-        }
+        }       
     }
+    
 
-    self.listenForWords = function (listName, display, callback, destruct = true) {
+    self.listenForWords = function (listName, confidence, callback, destruct = true) {
         var list;
         for (var i = 0; i < self._list.length; i++) {
             var element = self._list[i];
@@ -254,17 +235,8 @@
                 list = element;
             }
         }
-
-        if(display = "setDisplayStyle" && self._displayList.length != 0) {
-            debugger
-            for (var i = 0; i < self._displayList.length; i++) {
-                if(self._displayList[i].listName == listName) {
-                    list.vocab = list.vocab.concat(self._displayList[i].vocab)
-                }
-            }
-        }
         debugger
-        quando.robotListen(session, list, callback, destruct);
+        quando.robotListen(session, list, confidence, callback, destruct);
         // session.service("ALSpeechRecognition").done(function (sr) {
         //     for (var i = 0; i < self._list.length(); i++) {
         //         var element = self._list[i];

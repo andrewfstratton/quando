@@ -525,6 +525,10 @@
         return self.defineBlock(json)
     }
 
+    self.getGetParent = (block) => {
+        return block.getSurroundParent()
+    }
+
     self.getParent = (block, ids) => {
         let valid_ids = []
         ids.forEach((iter) => {
