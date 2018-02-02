@@ -150,8 +150,8 @@
       }
     })
 
-    let _getContainedBlockID = (block) => {
-      var block = quando_editor.getGetParent(block)
+    let _getContainedBlockID = (block, container) => {
+      var block = quando_editor.getParent(block, container)
       return block.id
     }
 
@@ -1184,7 +1184,7 @@
       name: ROBOT_ADD_LIST, title: 'Add',
       interface: [{name: ROBOT_VOCABULARY_ADD, title: '', text: '.word(s) to learn.'}],
       javascript: (block) => {
-        let list = _getContainedBlockID(block)       
+        let list = _getContainedBlockID(block, [ROBOT_CREATE_LIST])       
         let vocab = quando_editor.getText(block, ROBOT_VOCABULARY_ADD)
         return `quando.robot.addToWordList("${list}","${vocab}");\n`
       }

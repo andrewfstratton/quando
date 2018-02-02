@@ -15,6 +15,7 @@
     var robot = {
         TextToSpeech: {
             CurrentWord: null,
+            CurrentSentence: null,
             Status: null,
             TextDone: null
         }
@@ -116,7 +117,16 @@
         session.service("ALMemory").then(function (ALMemory) {            
             ALMemory.subscriber("ALTextToSpeech/CurrentWord").then(function (sub){
                 sub.signal.connect(function(value){
-                  robot.TextToSpeech.CurrentWord = value;                      
+                    robot.TextToSpeech.CurrentWord = value;                      
+                });
+            });
+        });
+
+        session.service("ALMemory").then(function (ALMemory) {            
+            ALMemory.subscriber("ALTextToSpeech/CurrentSentence").then(function (sub){
+                sub.signal.connect(function(value){
+                    console.log(value);
+                    robot.TextToSpeech.CurrentSentence = value;                      
                 });
             });
         });
@@ -124,7 +134,7 @@
         session.service("ALMemory").then(function (ALMemory) {            
             ALMemory.subscriber("ALTextToSpeech/Status").then(function (sub){
                 sub.signal.connect(function(value){
-                  robot.TextToSpeech.Status = value[1];                 
+                    robot.TextToSpeech.Status = value[1];                 
                 });
             });
         });
@@ -132,7 +142,7 @@
         session.service("ALMemory").then(function (ALMemory) {            
             ALMemory.subscriber("ALTextToSpeech/TextDone").then(function (sub){
                 sub.signal.connect(function(value){
-                  robot.TextToSpeech.TextDone = value;                   
+                    robot.TextToSpeech.TextDone = value;                   
                 });
             });
         });
@@ -165,7 +175,10 @@
 
     self.say = function(text, extras) {
         session.service("ALTextToSpeech").then(function (tts) {
-            tts.say(text);
+            if (robot.TextToSpeech.CurrentSentence != text) {
+                tts.stopAll();
+                tts.say(text);
+            }
           }).fail(function (error) {
             console.log("An error occurred:", error);
           });
@@ -280,30 +293,6 @@
         }
         debugger
         quando.robotListen(session, list, confidence, callback, destruct);
-        // session.service("ALSpeechRecognition").then(function (sr) {
-        //     for (var i = 0; i < self._list.length(); i++) {
-        //         var element = self._list[i];
-        //         if(element.listName == list) {
-        //             sr.setVocabulary(element, false);
-        //         }
-        //     }
-        //     sr.pause(false);
-        //     sr.subscribe("NAO_USER");
-
-        //     session.service("ALMemory").then(function (ALMemory) {            
-        //         ALMemory.subscriber("WordRecognized").then(function (sub){
-        //             sub.signal.connect(function(value){
-        //                 if(value[1] > 0.3) {
-        //                     console.log("I recognise that word!");
-        //                     console.log(value);  
-        //                     callback();   
-        //                 }               
-        //             });
-        //         });
-        //     });
-        //   }).fail(function (error) {
-        //     console.log("An error occurred:", error);
-        //   }); 
     }
 
     self.stopListening = function(callback) {
