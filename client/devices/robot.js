@@ -113,6 +113,13 @@
         setTimeout(() => { self.connect(robotIp) }, 1000);
     }
 
+    function waitForSayFinish() {
+        if (robot.TextDone == 0) {
+            setTimeout(waitForSayFinish(), 50);
+            return;
+        }
+    }
+
     function execute_event_listeners() {
         session.service("ALMemory").then(function (ALMemory) {            
             ALMemory.subscriber("ALTextToSpeech/CurrentWord").then(function (sub){
@@ -269,7 +276,6 @@
     }
 
     self.createWordList = function(listName) {
-        debugger
         var v = new vocabList(listName, []);
         self._list.push(v);
     }
@@ -283,7 +289,8 @@
     }
     
 
-    self.listenForWords = function (listName, confidence, callback, destruct = true) {
+    self.listenForWords = function (listName, confidence, blockID, callback, destruct = true) {
+        waitForSayFinish();
         var list;
         for (var i = 0; i < self._list.length; i++) {
             var element = self._list[i];
@@ -291,8 +298,7 @@
                 list = element;
             }
         }
-        debugger
-        quando.robotListen(session, list, confidence, callback, destruct);
+        quando.robotListen(session, list, confidence, blockID, callback, destruct);
     }
 
     self.stopListening = function(callback) {

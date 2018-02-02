@@ -179,9 +179,9 @@
     }
   }
 
-  function _destroy_robot_listen (session) {
+  function _destroy_robot_listen (session, blockID) {
     session.service("ALSpeechRecognition").then(function (sr) {
-      sr.unsubscribe("NAO_USER");
+      sr.unsubscribe(blockID);
     }).fail(function (error) {
       console.log("An error occurred:", error);
     });
@@ -206,10 +206,12 @@
     });
   }
 
-  self.robotListen = function (session, list, confidence, callback, destruct = true) {
+  self.robotListen = function (session, list, confidence, blockID, callback, destruct = true) {
     session.service("ALSpeechRecognition").then(function (sr) {
       sr.setVocabulary(list.vocab, false);
-      sr.subscribe("NAO_USER");
+      sr.setAudioExpression(false);
+      console.log(blockID);
+      sr.subscribe(blockID);
       
       _start_word_recognition(session, list, confidence, callback, sr);
       
@@ -218,7 +220,7 @@
     });
     if (destruct) {
       self.addDestructor(function () {
-        _destroy_robot_listen(session)
+        _destroy_robot_listen(session, blockID)
       })
     }
   }

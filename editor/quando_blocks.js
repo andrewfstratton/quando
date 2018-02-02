@@ -1151,14 +1151,14 @@
     let ROBOT_CONFIDENCE = 'Reply when confidence is atleast'
     self.defineRobot({
       name: WHEN_ROBOT_LISTEN,
-      interface: [{ name: LABEL_TO_MENU, title: '', menu: _list_menu}, { statement: STATEMENT } ],
+      interface: [{ name: LABEL_TO_MENU, title: '', menu: _list_menu}, { statement: STATEMENT }],
       extras: [ 
         {name: ROBOT_CONFIDENCE, number: 40}, {title: '%'}],
       javascript: (block) => {
         let list = quando_editor.getMenu(block, LABEL_TO_MENU)
         let conf = quando_editor.getNumber(block, ROBOT_CONFIDENCE) / 100
         let statement = quando_editor.getStatement(block, STATEMENT)       
-        return `quando.robot.listenForWords("${list}", "${conf}", function() {\n` +
+        return `quando.robot.listenForWords("${list}", "${conf}", "${block.id}", function() {\n` +
         statement +
         '}' 
         + _getOnContained(block, [WHEN_VITRINE_BLOCK], '', ', false') + `);\n`
