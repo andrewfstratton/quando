@@ -4,9 +4,8 @@ const assert = require('chai').assert
 
 var new_scaler = function (min, max, inverted = false) {
     return function (value) {
-      var result = null
       // convert to range 0 to 1 for min to max
-      result = (value - min) / (max - min)
+      var result = (value - min) / (max - min)
       result = Math.min(1, result)
       result = Math.max(0, result)
       if (inverted) {
