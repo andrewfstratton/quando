@@ -553,7 +553,7 @@
         return found
     }
 
-    self.updateExtras = (block, deep=false) => {
+    self.updateExtras = (block, deep=false) => { // set deep to true to update all contained and following blocks
         let field = block.getField('EXTRAS_OPEN')
         if (field) {
             let visible = (field.getValue() == EXTRAS_UP)
@@ -567,10 +567,6 @@
             })
         }
         if (deep) {
-            // let next = block.getNextBlock()
-            // if (next != null) {
-            //     self.updateExtras(next, deep)
-            // }
             let children = block.getChildren()
             if (children != null) {
                 children.forEach(function(child){
@@ -582,6 +578,4 @@
             block.render()
         }
     }
-
-    // self.updateAllExtras = function() {}
 })()
