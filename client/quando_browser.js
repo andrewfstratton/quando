@@ -7,7 +7,7 @@
   self.pinching = false
   self._vitrine_destructors = []
   self.DEFAULT_STYLE = 'quando_css'
-  let _lookup = {} // holds run time arrays
+  var _lookup = {} // holds run time arrays
 
   self.socket = io.connect('http://' + window.location.hostname)
 
@@ -76,9 +76,8 @@
 
   self.new_scaler = function (min, max, inverted = false) {
     return function (value) {
-      var result = null
       // convert to range 0 to 1 for min to max
-      result = (value - min) / (max - min)
+      var result = (value - min) / (max - min)
       result = Math.min(1, result)
       result = Math.max(0, result)
       if (inverted) {
@@ -532,4 +531,4 @@
 
 })()
 
-let val = false // force handler to manage when not embedded
+var val = false // force handler to manage when not embedded

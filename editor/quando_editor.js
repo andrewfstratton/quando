@@ -46,7 +46,7 @@
         let import_xml = document.getElementById('import_xml').value
         Blockly.mainWorkspace.clear()
         xmlDom = Blockly.Xml.textToDom(import_xml)
-        setTimeout( function() { // this may stop the reload problem - not proven...
+        setTimeout( () => { // this may stop the reload problem - not proven...
             Blockly.Xml.domToWorkspace(xmlDom, Blockly.mainWorkspace)
         }, 0)
     }
@@ -173,7 +173,7 @@
         menudrop.setValue(0)
     }
 
-    let _handleInterface = function (interface, name, _this, sofar, visible=true) {
+    let _handleInterface = (interface, name, _this, sofar, visible=true) => {
         // Should handle if not an array (object)
         if (typeof interface !== 'object') {
             _ERROR(`Failed to add interface widgets - json ${name} is of type '${typeof interface}'`)
@@ -184,7 +184,7 @@
             _ERROR(`Failed to add interface widgets - json ${name} is not an Array`)
             return
         } // Else ok so far...
-        interface.forEach(function (widget) {
+        interface.forEach((widget) => {
             if (typeof widget !== 'object') {
                 _WARNING(`Ignoring element in interface Block '${name}' - not an object`)
             } else {
@@ -316,12 +316,29 @@
                             let fileInput = new Blockly.FieldTextInput('** CHOOSE A FILE **')
                             let val = widget[key] // val is the ?base? folder
                             let handle_file = this['index'].handle_file
-                            fileInput.showEditor_ = (function() {
+                            fileInput.showEditor_ = (() => {
                                 let block_id = this.sourceBlock_.id
                                 handle_file(val, block_id, widget_id_file) 
                             })
                             sofar.appendField(fileInput, widget_id_file)
                             fields.push(fileInput)
+                            break
+                        case 'extras':
+                            let extras_selector = new Blockly.FieldTextInput(EXTRAS_DOWN)
+                            extras_selector.showEditor_ = (() => { // toggle the dropdown
+                                if (extras_selector.getValue() == EXTRAS_DOWN) {
+                                    // i.e. now show everything...
+                                    extras_selector.setValue(EXTRAS_UP)
+                                } else {
+                                    extras_selector.setValue(EXTRAS_DOWN)
+                                } // Note - the CHANGE event will trigger updateExtras()
+                            })
+                            sofar.appendField(extras_selector, 'EXTRAS_OPEN') // need id for persistence and loading render
+                            sofar = _this.appendDummyInput(EXTRAS_ID) // Note - only one extras per block
+                            // i.e hides all the children
+                            sofar.setVisible(false)
+                            let widget_extras = widget[key]
+                            sofar = _handleInterface(widget_extras, widget_extras.name, _this, sofar, false)
                             break
                         case 'statement':
                             sofar = _this.appendStatementInput(widget[key])
@@ -332,7 +349,7 @@
                         //                            case 'height': break // Yes, this is correct
                     } // switch key
                     if (visible == false) {
-                        fields.forEach(function(field) {
+                        fields.forEach((field) => {
                             field.setVisible(false)
                         })
                     }
@@ -350,7 +367,7 @@
         console.log('  warning: ' + msg)
     }
 
-    let _addToBlockly = function (blockly, json) {
+    let _addToBlockly = (blockly, json) => {
         if (!self.exists(json.name)) {
             _ERROR('Failed to create Block - missing name property')
             return
@@ -374,7 +391,7 @@
         category_list.appendChild(block)
         if (!self.exists(json.block_init)) {
             blockly.Blocks[id] = {
-                init: function () {
+                init: function() {
                     let sofar = this.appendDummyInput()
                     if (self.exists(json.title)) {
                         if (!_isFalse(json.title)) {
@@ -409,7 +426,7 @@
                         let extras_dummy = this.appendDummyInput(EXTRAS_ID)
                         sofar = extras_dummy
                         extras_dummy.setVisible(false)
-                        extras_selector.showEditor_ = (function() { // toggle the dropdown
+                        extras_selector.showEditor_ = (() => { // toggle the dropdown
                             let extras_visible = false
                             if (extras_selector.getValue() == EXTRAS_DOWN) {
                                 // i.e. now show everything...
@@ -504,7 +521,7 @@
         }
         self.category = []
         quando_blocks.addBlocks(self)
-        self.category.forEach(function (json) {
+        self.category.forEach((json) => {
             console.log('Adding ' + json.name)
             _addToBlockly(blockly, json)
         })
@@ -536,7 +553,7 @@
         return found
     }
 
-    self.updateExtras = function(block) {
+    self.updateExtras = (block, deep=false) => { // set deep to true to update all contained and following blocks
         let field = block.getField('EXTRAS_OPEN')
         if (field) {
             let visible = (field.getValue() == EXTRAS_UP)
@@ -548,6 +565,16 @@
                     })
                 }
             })
+        }
+        if (deep) {
+            let children = block.getChildren()
+            if (children != null) {
+                children.forEach(function(child){
+                    self.updateExtras(child, deep)
+                })
+            }
+        }
+        if (field) {
             block.render()
         }
     }
