@@ -316,7 +316,7 @@
                             let fileInput = new Blockly.FieldTextInput('** CHOOSE A FILE **')
                             let val = widget[key] // val is the ?base? folder
                             let handle_file = this['index'].handle_file
-                            fileInput.showEditor_ = (() => {
+                            fileInput.showEditor_ = (function() {
                                 let block_id = this.sourceBlock_.id
                                 handle_file(val, block_id, widget_id_file) 
                             })
