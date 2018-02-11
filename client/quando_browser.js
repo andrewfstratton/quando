@@ -26,7 +26,7 @@
 
   self.socket.on('deploy', function (data) {
     var locStr = decodeURIComponent(window.location.href)
-    if (locStr.endsWith(data.script)) {
+    if (locStr.endsWith('/'+data.script)) {
       window.location.reload(true) // nocache reload - probably not necessary
     }
   })
