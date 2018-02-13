@@ -23,7 +23,8 @@
 
     self._list = [];
 
-    var lastHeight = -2;
+    var lastHeight = null;
+    var leapActionStarted = false;
 
     var ARM_LOOKUP = {
         "left": {
@@ -120,6 +121,12 @@
         }
     }
 
+    function execute_leap_executor(motor) {
+        console.log("Arm Listener Started");
+        leapActionStarted = true;
+        var run = setInterval(function() {leapJointMovement(motor, 0.5)}, 0.1 * 1000);        
+    }
+
     function execute_event_listeners() {
         session.service("ALMemory").then(function (ALMemory) {            
             ALMemory.subscriber("ALTextToSpeech/CurrentWord").then(function (sub){
@@ -158,6 +165,14 @@
     function armJointMovement(joint, angle, speed = 0.5) {
         session.service("ALMotion").then(function (motion) {
             motion.setAngles(joint, angle, speed);            
+        }).fail(function (error) {
+            console.log("An error occurred:", error);
+        });
+    }
+
+    function leapJointMovement(joint, speed = 0.5) {
+        session.service("ALMotion").then(function (motion) {
+            motion.setAngles(joint, lastHeight, speed);            
         }).fail(function (error) {
             console.log("An error occurred:", error);
         });
@@ -232,16 +247,19 @@
           });
     }
 
-    self.moveLeapArm = function(val, extras) {
-        console.log("Value from leap: " + val);
-        var output = Math.round((2 + ((val - 0) * (-2 - 2))/(1 - 0)) * 10) / 10;
-        console.log("Angle calculated: " + output);
-
+    self.moveMotor = function(val, motor, direction) {
+        if(!leapActionStarted) {
+            var json = ARM_LOOKUP;
+            var data = json[motor][direction];
+            var joint = data["joint"];
+            console.log(joint);
+            execute_leap_executor(joint);            
+        }
+        var output = (2 + ((val - 0) * (-2 - 2))/(1 - 0));
         if(output != lastHeight) {
+            console.log(output);
             lastHeight = output;
         }
-        display = "setDisplayStyle"
-        setInterval(armJointMovement('LShoulderPitch', lastHeight, 0.5), 100);            
     }
 
     self.motionHand = function(hand, open) {

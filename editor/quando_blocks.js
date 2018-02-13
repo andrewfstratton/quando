@@ -1082,16 +1082,18 @@
       }
     })
 
-    let ROBOT_LEAP_MOVE_ARM = 'Robot arm move 2'
+    let ROBOT_LEAP_MOVE = 'Leap Movement'
+    let ROBOT_LEAP_MOTOR = 'Robot motor'
+    let ROBOT_LEAP_DIRECTION = 'Robot leap direction'
     self.defineRobot({
-      name: ROBOT_LEAP_MOVE_ARM, title: '\uD83D\uDCAA Move',
-      interface: [{ name: 'Leap move'}],
-      extras: [ 
-        {name: CHANGE_MID_VALUE, number: 50}, {title: '%'},
-        {name: CHANGE_PLUS_MINUS, title: '+/-', number: 50}, {title: '%'}],
+      name: ROBOT_LEAP_MOVE, title: ICON_PRODUCE_VALUE + ' Move',
+      interface: [{ name: ROBOT_LEAP_MOTOR, title: '', menu: ['left', 'right']},
+                  { name: ROBOT_LEAP_DIRECTION, title: '', menu: [['\u21D5', 'up'],['\u21D4', 'out']] }],
       javascript: (block) => {          
-        let extras = {}    
-        return `quando.robot.moveLeapArm(val);\n`
+        let extras = {}        
+        let motor = quando_editor.getMenu(block, ROBOT_LEAP_MOTOR)
+        let dir = quando_editor.getMenu(block, ROBOT_LEAP_DIRECTION)
+        return `quando.robot.moveMotor(val,"${motor}","${dir}");\n`
       }
     })
 
