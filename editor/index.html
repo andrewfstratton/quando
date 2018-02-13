@@ -10,7 +10,7 @@
     <link href="css/bootstrap-theme.min.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="bootstrap.css" rel="stylesheet">
+    <link href="bootstrap.css" rel="stylesheet" type="text/css"/>
     <link href="css/index.css" rel="stylesheet" type="text/css"/>
 
     <script src="js/jquery-2.2.0.js"></script>
@@ -204,18 +204,27 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">Load</h4>
+                    <h4 class="modal-title">Load from Server</h4>
                 </div>
                 <div class="modal-body">
-                    <div class="form-group">
-                        <label>Remote files</label>
+                    <div class="form-group row">
+                        <div class="col-xs-3" align="right">
+                            <label for="remote_load_show_versions">Show Versions:</label>
+                        </div>
+                        <div class="col-xs-3">
+                            <select class="form-control" id="remote_load_show_versions"
+                                    onchange='index.handle_show_version()'>
+                                <option value='false'>Latest</option>
+                                <option value='true'>All</option>
+                            </select>
+                        </div>
                     </div>
                     <div class="form-group">
                         <div class="list-group" id="remote_load_list">
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
+                <div class="modal-footer" data-position="fixed">
                     <button type="button" class="btn btn-primary" onclick='index.handle_remote_to_local_load()'>Browser Files</button>
                     <button type="button" class="btn" data-dismiss="modal">Cancel</button>
                 </div>
@@ -230,9 +239,6 @@
                     <h4 class="modal-title">Load from Browser</h4>
                 </div>
                 <div class="modal-body">
-                    <div class="form-group">
-                        <label>Local files</label>
-                    </div>
                     <div class="form-group">
                         <div class="list-group" id="local_load_list">
                         </div>

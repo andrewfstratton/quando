@@ -26,7 +26,7 @@
       }
     })
     $('#loading_modal_message').html('Checking for user session...')
-    $('#loading_modal').modal('toggle')
+    $('#loading_modal').modal('show')
     $.ajax({
       url: '/login',
       success: (res) => {
@@ -37,12 +37,12 @@
         } else {
           _warning(res.message)
         }
-        $('#loading_modal').modal('toggle')
+        $('#loading_modal').modal('hide')
         quando_editor.inject(Blockly)
       },
       error: () => {
         _error('Failed to find server')
-        $('#loading_modal').modal('toggle')
+        $('#loading_modal').modal('hide')
         quando_editor.inject(Blockly)
       }
     })
@@ -60,7 +60,7 @@
         if (res.success) {
           message_elem.html('')
           _success('Logged in')
-          $('#login_modal').modal('toggle')
+          $('#login_modal').modal('hide')
           _userid = userid
           _show_user_status()
         } else {
@@ -74,18 +74,18 @@
   }
   self.handle_load = () => {
     if (_userid) {
+      $('#remote_load_modal').modal('show')
       _remote_load_list()
-      $('#remote_load_modal').modal('toggle')
     } else {
       _local_load_list()
-      $('#local_load_modal').modal('toggle')
+      $('#local_load_modal').modal('show')
     }
   }
   self.handle_save = () => {
     if (_userid) {
-      $('#remote_save_modal').modal('toggle')
+      $('#remote_save_modal').modal('show')
     } else {
-      $('#local_save_modal').modal('toggle')
+      $('#local_save_modal').modal('show')
     }
   }
   self.handle_clear = () => {
@@ -111,12 +111,12 @@
   }
   self.handle_remote_to_local_load = () => {
     _local_load_list()
-    $('#remote_load_modal').modal('toggle')
-    $('#local_load_modal').modal('toggle')
+    $('#remote_load_modal').modal('hide')
+    $('#local_load_modal').modal('show')
   }
   self.handle_remote_to_local_save = () => {
-    $('#remote_save_modal').modal('toggle')
-    $('#local_save_modal').modal('toggle')
+    $('#remote_save_modal').modal('hide')
+    $('#local_save_modal').modal('show')
   }
   self.handle_local_save = () => {
     let key = $('#local_save_key').val()
@@ -125,7 +125,7 @@
       xml: _getXml(),
       content: _content
     }))
-    $('#local_save_modal').modal('toggle')
+    $('#local_save_modal').modal('hide')
     _saved(key)
   }
   self.handle_remote_save = () => {
@@ -137,7 +137,7 @@
       data: { userid: _userid, name: name, script: obj },
       success: (res) => {
         if (res.success) {
-          $('#remote_save_modal').modal('toggle')
+          $('#remote_save_modal').modal('hide')
           _saved(decodeURI(name))
         } else {
           alert('Failed to save')
@@ -149,16 +149,16 @@
     })
   }
   self.handle_show_xml = () => {
-    $('#menu_dropdown').dropdown('toggle')
+    $('#menu_dropdown').dropdown('hide')
     $('#show_modal_title').html('Show Xml')
-    $('#show_modal').modal('toggle')
+    $('#show_modal').modal('show')
     $('#show_modal_code').removeClass('language-javascript').addClass('language-xml')
     $('#show_modal_code').html(_encodeXml(_getXml()))
   }
   self.handle_show_code = () => {
-    $('#menu_dropdown').dropdown('toggle')
+    $('#menu_dropdown').dropdown('hide')
     $('#show_modal_title').html('Show Code')
-    $('#show_modal').modal('toggle')
+    $('#show_modal').modal('show')
     $('#show_modal_code').removeClass('language-xml').addClass('language-javascript')
     $('#show_modal_code').html(quando_editor.getCode())
   }
@@ -269,12 +269,12 @@
           }
         } else {
           alert('Failed to find server files')
-          $('#file_modal').modal('toggle')
+          $('#file_modal').modal('hide')
         }
       },
       error: () => {
         alert('Failed to access server')
-        $('#file_modal').modal('toggle')
+        $('#file_modal').modal('hide')
       }
     })
   }
@@ -315,7 +315,7 @@
           if (files.length > 0) {
             _upload_next_file(files, remote_path)
           } else {
-            $('#file_modal').modal('toggle')
+            $('#file_modal').modal('hide')
             $('#upload_media').val(null) // clear once finished - forces a change event next time
           }
         } else {
@@ -382,6 +382,11 @@
       })
     }
   }
+  // self.remote_delete_or_purge = (index) => {
+  // }
+  self.handle_show_version = () => {
+    _update_remote_list()
+  }
   function _show_user_status () {
     if (_userid) {
       $('#top_status').html(' ' + _userid)
@@ -395,7 +400,7 @@
       _showXml(obj.xml)
       _content = obj.content
       _deploy = obj.deploy
-      $(modal_id).modal('toggle')
+      $(modal_id).modal('hide')
       _success('Loaded...')
       $('#local_save_key').val(name)
       $('#remote_save_key').val(name)
@@ -408,6 +413,30 @@
     $('#remote_save_key').val(name)
     $('#file_name').html(name)
   }
+  function _update_remote_list() {
+    $('#remote_load_list').html('')
+    let ignore = $('#remote_load_show_versions').val() == 'false'
+    let ignore_names = []
+    let op = {fn:'remote_delete'}
+    if (ignore) {
+      op.fn = 'remote_delete_or_purge'
+    }
+    for (let i = 0; i < _remote_list.length; i++) {
+      let name = _remote_list[i].name
+      let add = true
+      if (ignore && ignore_names.includes(name)) {
+        add = false
+      }
+      if (add) {
+        let main = {name:name, fn:'remote_load'}
+        let data = {name:_remote_list[i].date}
+        $('#remote_load_list').append(_load_list_add(i, main, data, op))
+        if (ignore) { // add the just found name to the ignore list...
+          ignore_names.push(name)
+        }
+      }
+    }
+  }
   function _remote_load_list () {
     $.ajax({
       url: '/script/names/' + _userid,
@@ -418,11 +447,7 @@
           if (list.length === 0) {
             $('#remote_load_list').html('No saves available')
           } else {
-            $('#remote_load_list').html('')
-            for (let i = 0; i < list.length; i++) {
-              $('#remote_load_list').append(_load_list_add(i,
-                                list[i].name, list[i].date, 'remote_load', 'remote_delete'))
-            }
+            _update_remote_list()
           }
         } else {
           alert(res.message)
@@ -435,11 +460,13 @@
   }
   function _local_load_list () {
     $('#local_load_list').html('')
+    let op = {fn:'local_delete'}
+    let data = {name:''}
     for (let key in localStorage) {
       if (key.startsWith(PREFIX)) {
         let name = key.slice(PREFIX.length)
-        $('#local_load_list').append(_load_list_add(key,
-                    name, '', 'local_load', 'local_delete'))
+        let main = {name:name, fn:'local_load'}
+        $('#local_load_list').append(_load_list_add(key, main, data, op))
       }
     }
     if ($('#local_load_list').html() === '') {
@@ -455,13 +482,20 @@
       alert('Corrupted file\n' + xmlText)
     }
   }
-  function _load_list_add (id, name, date, fn_name, del_fn_name) {
+  function _load_list_add_fn(id, obj) {
+    let result = ''
+    if (obj.fn) {
+      result = 'onclick="index.' + obj.fn + '(\'' + id + '\')"'
+    }
+    return result
+  }
+  function _load_list_add (id, main, data, op) {
     let result = '<div class="row"><div class="col-sm-1"> </div>' +
-            '<a class="list-group-item col-md-5" onclick="index.' +
-            fn_name + '(\'' + id + '\')">' + name + '</a>' +
-            '<div class="col-sm-4">' + date + '</div>' +
-            '<a class="list-group-item col-sm-1 glyphicon glyphicon-remove-sign" onclick="index.' +
-            del_fn_name + '(\'' + id + '\')"></a>' +
+            '<a class="list-group-item col-md-5"' + _load_list_add_fn(id, main)
+            + '>' + main.name + '</a>' +
+            '<div class="col-sm-4">' + data.name + '</div>' +
+            '<a class="list-group-item col-sm-1 glyphicon glyphicon-remove-sign"'
+            + _load_list_add_fn(id, op) + '></a>'
             '<div class="col-sm-1"> </div>' +
             '</div>\n'
     return result
