@@ -121,6 +121,10 @@ def roll_pitch_heading():
     while True:
         if button_a.is_pressed() and button_b.is_pressed():
             compass.calibrate()
+        elif button_a.was_pressed():
+            radio.send(COMMS.BUTTON_A[0]+':'+COMMS.BUTTON_A[1])
+        elif button_b.was_pressed():
+            radio.send(COMMS.BUTTON_B[0]+':'+COMMS.BUTTON_B[1])
         heading = compass.heading()
         if (heading != last_heading) :
             radio.send(COMMS.HEADING+':heading:'+str(heading)+'\n')
