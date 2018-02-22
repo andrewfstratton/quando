@@ -818,7 +818,7 @@
         { title: ICON_PRODUCE_VALUE},
         { extras: [
           {name: CHANGE_MID_ANGLE, title: '', number: 0}, {title: 'degrees'},
-          {name: CHANGE_PLUS_MINUS, title: '+/-', number: 25}, {title: 'degrees'},
+          {name: CHANGE_PLUS_MINUS, title: '+/-', number: 180}, {title: 'degrees'},
           {name: CHECK_INVERTED, check: false}
         ] },
         { statement: STATEMENT }
@@ -909,7 +909,7 @@
         { title: ICON_PRODUCE_VALUE},
         { extras: [
           {name: CHANGE_MID_ANGLE, title: '', number: 0}, {title: 'degrees'},
-          {name: CHANGE_PLUS_MINUS, title: '+/-', number: 25}, {title: 'degrees'},
+          {name: CHANGE_PLUS_MINUS, title: '+/-', number: 180}, {title: 'degrees'},
           {name: CHECK_INVERTED, check: false}
         ] },
         { statement: STATEMENT }
