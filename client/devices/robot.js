@@ -22,6 +22,7 @@
     }
 
     self._list = [];
+    self._armActionsList = {};
 
     var lastHeight = null;
     var leapActionStarted = false;
@@ -31,7 +32,7 @@
           "up": {
             "joint": "LShoulderPitch",
             "halfway": "0",
-            "maximum": "-90"
+            "maximum": "-80"
           },
           "down": {
             "joint": "LShoulderPitch",
@@ -53,7 +54,7 @@
           "up": {
             "joint": "RShoulderPitch",
             "halfway": "0",
-            "maximum": "-90"
+            "maximum": "-80"
           },
           "down": {
             "joint": "RShoulderPitch",
@@ -116,14 +117,11 @@
 
     function waitForSayFinish() {
         if (robot.TextDone == 0) {
-            setTimeout(waitForSayFinish(), 50);
-            return;
+            setTimeout(function() { waitForSayFinish() }, 50);
         }
     }
 
     function execute_leap_executor(motor) {
-        console.log("Arm Listener Started");
-        leapActionStarted = true;
         var run = setInterval(function() {leapJointMovement(motor, 0.5)}, 0.1 * 1000);        
     }
 
@@ -170,7 +168,7 @@
         });
     }
 
-    function leapJointMovement(joint, speed = 0.5) {
+    function leapJointMovement(speed = 0.5) {
         session.service("ALMotion").then(function (motion) {
             motion.setAngles(joint, lastHeight, speed);            
         }).fail(function (error) {
@@ -184,21 +182,32 @@
     }
 
     self.connect = function(robotIp) {
-        session = new QiSession(robotIp);       
+        session = new QiSession(robotIp);
+        globalIP = robotIp;       
         session.socket().on('connect', function () {
             console.log('QiSession connected!');
             set_up();
             execute_event_listeners();
           }).on('disconnect', function () {
             console.log('QiSession disconnected!');
-            nao_disconnect(robotIp);
+            nao_disconnect(globalIP);
+          });
+    }
+
+    self.sayInterrupt = function(text, extras) {
+        session.service("ALTextToSpeech").then(function (tts) {
+            if (robot.TextToSpeech.CurrentSentence != text) {
+                tts.stopAll();
+                tts.say(text);
+            }
+          }).fail(function (error) {
+            console.log("An error occurred:", error);
           });
     }
 
     self.say = function(text, extras) {
         session.service("ALTextToSpeech").then(function (tts) {
             if (robot.TextToSpeech.CurrentSentence != text) {
-                tts.stopAll();
                 tts.say(text);
             }
           }).fail(function (error) {
@@ -247,14 +256,27 @@
           });
     }
 
-    self.moveMotor = function(val, motor, direction) {
-        if(!leapActionStarted) {
-            var json = ARM_LOOKUP;
-            var data = json[motor][direction];
-            var joint = data["joint"];
+    self.moveMotor = function(val, motor, direction, blockID) {
+        console.log(self._armActionsList.blockID)
+        console.log(blockID)
+        if(!self._armActionsList.blockID) {
+            if (direction == "out") {
+                joint = motor.charAt(0).toUpperCase() + "ShoulderRoll"
+                self._armActionsList.blockID = true
+            } else if (direction == "up") {
+                joint = motor.charAt(0).toUpperCase() + "ShoulderPitch"
+                self._armActionsList.blockID = true             
+            }
             console.log(joint);
             execute_leap_executor(joint);            
         }
+
+        if (direction == "out") {
+            (1.3 + ((val - 0) * (-1.3 - 1.3))/(1 - 0));                        
+        } else if (direction == "up") {
+            (2 + ((val - 0) * (-2 - 2))/(1 - 0));            
+        }
+
         var output = (2 + ((val - 0) * (-2 - 2))/(1 - 0));
         if(output != lastHeight) {
             console.log(output);
@@ -274,15 +296,8 @@
           });
     }
 
-    self.personPerception = function(callback) {
-        session.service("ALMemory").then(function (ALMemory) {            
-            ALMemory.subscriber("ALBasicAwareness/HumanTracked").then(function (sub){
-                sub.signal.connect(function(state){
-                    console.log("Found You!");
-                    callback();
-                });
-            });     
-        });
+    self.personPerception = function(callback, destruct = true) {
+        quando.lookForPerson(session, callback, destruct)
     }
 
     self.changeAutonomousLife = function(state) {
@@ -316,7 +331,13 @@
                 list = element;
             }
         }
+        console.log(callback);
         quando.robotListen(session, list, confidence, blockID, callback, destruct);
+    }
+
+    
+    self.touchSensor = function (sensor, blockID, callback, destruct = true) {
+        quando.touchEvent(session, sensor, blockID, callback, destruct);
     }
 
     self.stopListening = function(callback) {

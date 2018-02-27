@@ -1043,12 +1043,19 @@
 
     let ROBOT_SAYS = 'Say'
     let ROBOT_TEXT_SAYS = 'Robot Text Says'
+    let ROBOT_INTERUPT_SPEECH = ''
     self.defineRobot({
       name: ROBOT_SAYS,
       interface: [{ name: ROBOT_TEXT_SAYS, title: '', text: '.text to say.' }],
+      extras: [{ name: ROBOT_INTERUPT_SPEECH, menu: ['Say this after','Interrupt current speech'] }],      
       javascript: (block) => {
         let txt = quando_editor.getText(block, ROBOT_TEXT_SAYS)
-        return `quando.robot.say("${txt}");\n`
+        let interrupt  = quando_editor.getMenu(block, ROBOT_INTERUPT_SPEECH)
+        if (interrupt == 'Interrupt current speech')  {
+          return `quando.robot.sayInterrupt("${txt}");\n`
+        } else {
+          return `quando.robot.say("${txt}");\n`          
+        }
       }
     })
 
@@ -1089,12 +1096,13 @@
     self.defineRobot({
       name: ROBOT_LEAP_MOVE, title: ICON_PRODUCE_VALUE + ' Move',
       interface: [{ name: ROBOT_LEAP_MOTOR, title: '', menu: ['left', 'right']},
+                  { name: '', title: 'arm' },                  
                   { name: ROBOT_LEAP_DIRECTION, title: '', menu: [['\u21D5', 'up'],['\u21D4', 'out']] }],
       javascript: (block) => {          
         let extras = {}        
         let motor = quando_editor.getMenu(block, ROBOT_LEAP_MOTOR)
         let dir = quando_editor.getMenu(block, ROBOT_LEAP_DIRECTION)
-        return `quando.robot.moveMotor(val,"${motor}","${dir}");\n`
+        return `quando.robot.moveMotor(val,"${motor}","${dir}","${block.id}");\n`
       }
     })
 
@@ -1120,9 +1128,33 @@
       interface: [{ name: 'person_perception',  title: '' }, { statement: STATEMENT } ],
       javascript: (block) => {
         let statement = quando_editor.getStatement(block, STATEMENT)
-        return 'quando.robot.personPerception(function() {\n' +
-                                              statement +
-                                              '});\n'
+        return `quando.robot.personPerception(function() {\n` +
+        statement +
+        '}' 
+        + _getOnContained(block, [WHEN_VITRINE_BLOCK], '', ', false') + `);\n`
+      }
+    })
+
+    let ROBOT_TOUCH_SENSORS = 'When touched'
+    let ROBOT_TOUCH_SENSORS_NAMES = 'When name sensor touched'
+    self.defineRobot({
+      name: ROBOT_TOUCH_SENSORS, title: 'When ',
+      interface: [{ name: ROBOT_TOUCH_SENSORS_NAMES, menu: [['Front of head', 'FrontTactilTouched'],
+        ['On top of head','MiddleTactilTouched'],
+        ['Read of head','RearTactilTouched'],
+        ['Blue plate of right hand','HandRightBackTouched'],
+        ['Front of right hand','HandRightLeftTouched'],
+        ['Back of right hand','HandRightRightTouched'],
+        ['Blue plate of left hand','HandLeftBackTouched'],
+        ['Back of left hand','HandLeftLeftTouched'],
+        ['Front of left hand','HandLeftRightTouched']],  title: '' }, {name: '', title: 'touched'}, { statement: STATEMENT } ],
+      javascript: (block) => {
+        let statement = quando_editor.getStatement(block, STATEMENT)
+        let sensor = quando_editor.getMenu(block, ROBOT_TOUCH_SENSORS_NAMES)
+        return `quando.robot.touchSensor("${sensor}","${block.id}",function() {\n` +
+        statement +
+        '}' 
+        + _getOnContained(block, [WHEN_VITRINE_BLOCK], '', ', false') + `);\n`
       }
     })
 
