@@ -408,7 +408,7 @@
     let id = _remote_list[index].id
     let name = _remote_list[index].name
     $.ajax({
-      url: '/script/tidy/' + JSON.stringify({name:name, id:id}),
+      url: '/script/tidy/' + encodeURI(name) + '/id/' + id,
       type: 'DELETE',
       success: (res) => {
         if (!res.success) {

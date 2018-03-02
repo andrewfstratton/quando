@@ -122,10 +122,11 @@ app.delete('/script/name/:name', (req, res) => {
         (err) => { res.json({ 'success': false, 'message': err }) })
 })
 
-app.delete('/script/tidy/:tidy', (req, res) => {
-  let tidy = JSON.parse(req.params.tidy)
+app.delete('/script/tidy/:name/id/:id', (req, res) => {
+  let id = req.params.id
+  let name = decodeURI(req.params.name)
   let userid = req.session.user.id
-  script.tidyOnIdName(userid, tidy.id, tidy.name).then(
+  script.tidyOnIdName(userid, id, name).then(
         (doc) => { res.json({ 'success': true }) },
         (err) => { res.json({ 'success': false, 'message': err }) })
 })
@@ -170,7 +171,6 @@ function ubit_success (serial) {
         }
         if (ubit.mag_x) {
           io.emit('ubit', {'mag_x': ubit.mag_x, 'mag_y': ubit.mag_y})
-// console.log(ubit.mag_x, ubit.mag_y)
         }
         if (ubit.orientation) {
           io.emit('ubit', {'orientation': ubit.orientation})
