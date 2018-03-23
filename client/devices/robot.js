@@ -328,6 +328,14 @@
         quando.touchEvent(session, sensor, blockID, callback, destruct);
     }
 
+    self.changePosture = function(p) {
+        session.service("ALRobotPosture").then(function(posture) {
+            posture.goToPosture(p, 1.0)
+        }).fail(function(error) {
+            console.log("An error occurred:", error)
+        })
+    }
+
     self.stopListening = function(callback) {
         session.service("ALSpeechRecognition").then(function (sr) {
             sr.unsubscribe("NAO_USER");

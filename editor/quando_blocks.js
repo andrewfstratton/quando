@@ -1114,10 +1114,29 @@
                   { name: ROBOT_HAND_LEFT_RIGHT, title: '', menu: [['Left', 'LHand'], ['Right', 'RHand']]},
                   { title: 'hand'}],
       javascript: (block) => {
-    debugger    
         let hand = quando_editor.getMenu(block, ROBOT_HAND_LEFT_RIGHT)
         let open = quando_editor.getMenu(block, ROBOT_HAND_OPEN_CLOSED)
         return `quando.robot.motionHand("${hand}","${open}");\n`
+      }
+    })
+
+    let ROBOT_POSTURE = 'Robot posture'
+    self.defineRobot({
+      name: ROBOT_HAND, title: "Change posture to ",
+      interface: [{ name: ROBOT_POSTURE, title: '', menu: ['Standing',
+      'Sitting',
+      'SittingOnChair',
+      'LyingBelly',
+      'LyingBack',	
+      'LyingLeft',	
+      'LyingRight',	
+      'Belly',	
+      'Back',	
+      'Left',	
+      'Right']}], 
+      javascript: (block) => {
+        let posture = quando_editor.getMenu(block, ROBOT_POSTURE)
+        return `quando.robot.changePosture("${posture}");\n`
       }
     })
 
