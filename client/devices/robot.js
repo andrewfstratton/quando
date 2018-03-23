@@ -32,45 +32,54 @@
           "up": {
             "joint": "LShoulderPitch",
             "halfway": "0",
-            "maximum": "-80"
+            "maximum": "-80",
+            "value": 1.5,                               
           },
           "down": {
             "joint": "LShoulderPitch",
             "halfway": "0",
-            "maximum": "90"
+            "maximum": "90",           
           },
           "out": {
             "joint": "LShoulderRoll",
             "halfway": "30",
-            "maximum": "60"
+            "maximum": "60",        
           },
           "in": {
             "joint": "LShoulderRoll",
             "halfway": "0",
-            "maximum": "-18"
+            "maximum": "-18",         
           }
         },
         "right": {
           "up": {
             "joint": "RShoulderPitch",
             "halfway": "0",
-            "maximum": "-80"
+            "maximum": "-80",
           },
           "down": {
             "joint": "RShoulderPitch",
             "halfway": "0",
-            "maximum": "90"
+            "maximum": "90",        
           },
           "in": {
             "joint": "RShoulderRoll",
             "halfway": "0",
-            "maximum": "18"
+            "maximum": "18",        
           },
           "out": {
             "joint": "RShoulderRoll",
             "halfway": "-30",
-            "maximum": "-60"
+            "maximum": "-60",         
           }
+        },
+        "head": {
+            "up": {
+                "joint": "HeadPitch",               
+            },
+            "out": {
+                "joint": "HeadYaw",
+            }
         }
       };
 
@@ -121,8 +130,8 @@
         }
     }
 
-    function execute_leap_executor(motor) {
-        var run = setInterval(function() {leapJointMovement(motor, 0.5)}, 0.1 * 1000);        
+    function execute_leap_executor() {
+        var run = setInterval(function() {  leapJointMovement(0.5) }, 0.1 * 1000);        
     }
 
     function execute_event_listeners() {
@@ -168,14 +177,6 @@
         });
     }
 
-    function leapJointMovement(speed = 0.5) {
-        session.service("ALMotion").then(function (motion) {
-            motion.setAngles(joint, lastHeight, speed);            
-        }).fail(function (error) {
-            console.log("An error occurred:", error);
-        });
-    }
-
     function conditional(value) {   
         if(value == "disabled" || value == "Stand") 
             return true;
@@ -187,7 +188,7 @@
         session.socket().on('connect', function () {
             console.log('QiSession connected!');
             set_up();
-            execute_event_listeners();
+            execute_event_listeners();                     
           }).on('disconnect', function () {
             console.log('QiSession disconnected!');
             nao_disconnect(globalIP);
@@ -218,17 +219,17 @@
     self.moveHead = function(direction, angle) {
         var head;
         switch (direction) {
-            case 'Down':
+            case 'down':
                 head = 'HeadPitch';
                 break;
-            case 'Up':
+            case 'up':
                 head = 'HeadPitch';
                 angle = -angle;
                 break;  
-            case 'Left':
+            case 'left':
                 head = 'HeadYaw';
                 break;
-            case 'Right':
+            case 'right':
                 head = 'HeadYaw';            
                 angle = -angle;            
                 break;
@@ -254,34 +255,17 @@
           }).fail(function (error) {
             console.log("An error occurred:", error);
           });
+        // ARM_LOOKUP[arm]["up"]["value"] = helper_ConvertAngle(ARM_LOOKUP[arm][direction][angle]);
+        // ARM_LOOKUP[arm]["down"]["value"] = helper_ConvertAngle(ARM_LOOKUP[arm][direction][angle]);        
     }
 
-    self.moveMotor = function(val, motor, direction, blockID) {
-        console.log(self._armActionsList.blockID)
-        console.log(blockID)
-        if(!self._armActionsList.blockID) {
-            if (direction == "out") {
-                joint = motor.charAt(0).toUpperCase() + "ShoulderRoll"
-                self._armActionsList.blockID = true
-            } else if (direction == "up") {
-                joint = motor.charAt(0).toUpperCase() + "ShoulderPitch"
-                self._armActionsList.blockID = true             
-            }
-            console.log(joint);
-            execute_leap_executor(joint);            
-        }
-
-        if (direction == "out") {
-            (1.3 + ((val - 0) * (-1.3 - 1.3))/(1 - 0));                        
-        } else if (direction == "up") {
-            (2 + ((val - 0) * (-2 - 2))/(1 - 0));            
-        }
-
-        var output = (2 + ((val - 0) * (-2 - 2))/(1 - 0));
-        if(output != lastHeight) {
-            console.log(output);
-            lastHeight = output;
-        }
+    self.moveMotor = function(val, motor, direction) {
+        session.service("ALMotion").then(function (motion) {
+            newAngle = helper_ConvertAngle(finalAngle);
+            motion.setAngles(armJoint, (2 + ((val - 0) * (-2 - 2))/(1 - 0)), 0.5);
+          }).fail(function (error) {
+            console.log("An error occurred:", error);
+          });
     }
 
     self.motionHand = function(hand, open) {
@@ -325,14 +309,18 @@
     self.listenForWords = function (listName, confidence, blockID, callback, destruct = true) {
         waitForSayFinish();
         var list;
+        var fullList = [];
         for (var i = 0; i < self._list.length; i++) {
             var element = self._list[i];
+            self._list[i].vocab.forEach(function(word){
+                fullList.push(word);
+            });
             if(element.listName == listName) {
                 list = element;
             }
         }
-        console.log(callback);
-        quando.robotListen(session, list, confidence, blockID, callback, destruct);
+        console.log(fullList);
+        quando.robotListen(session, list, fullList, confidence, blockID, callback, destruct);
     }
 
     

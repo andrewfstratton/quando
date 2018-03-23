@@ -1064,7 +1064,7 @@
     let ROBOT_HEAD_ANGLE = 'Robot head angle'
     self.defineRobot({
       name: ROBOT_MOVE_HEAD, title: '\uD83D\uDC40 Robot Look',
-      interface: [{ name: ROBOT_HEAD, title: '', menu: ['Up','Down','Left','Right']},
+      interface: [{ name: ROBOT_HEAD, title: '', menu: ['up','down','left','right']},
                    {name: ROBOT_HEAD_ANGLE, number: 0, title: ''}, { title: 'degrees'}],
       javascript: (block) => {
         let direction = quando_editor.getMenu(block, ROBOT_HEAD)
@@ -1095,8 +1095,7 @@
     let ROBOT_LEAP_DIRECTION = 'Robot leap direction'
     self.defineRobot({
       name: ROBOT_LEAP_MOVE, title: ICON_PRODUCE_VALUE + ' Move',
-      interface: [{ name: ROBOT_LEAP_MOTOR, title: '', menu: ['left', 'right']},
-                  { name: '', title: 'arm' },                  
+      interface: [{ name: ROBOT_LEAP_MOTOR, title: '', menu: [['left arm', 'left'], ['right arm', 'right'], 'head']},
                   { name: ROBOT_LEAP_DIRECTION, title: '', menu: [['\u21D5', 'up'],['\u21D4', 'out']] }],
       javascript: (block) => {          
         let extras = {}        
