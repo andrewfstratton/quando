@@ -4,6 +4,7 @@
   let _content = ''
   let _deploy = ''
   let _remote_list = []
+  let _remote_list_index = false
   let PREFIX = 'quando_'
 
   window.onload = () => {
@@ -20,6 +21,24 @@
             .replace(/'/g, '&apos;')
   }
   self.setup = () => {
+    toastr.options = {
+      closeButton: false,
+      debug: false,
+      newestOnTop: true,
+      progressBar: false,
+      positionClass: 'toast-top-center',
+      preventDuplicates: false,
+      onclick: null,
+      showDuration: 300,
+      hideDuration: 300,
+      timeOut: 5000,
+      extendedTimeOut: 0,
+      showEasing: 'swing',
+      hideEasing: 'linear',
+      showMethod: 'fadeIn',
+      hideMethod: 'fadeOut'
+    }
+
     $('#login_modal').keypress((e) => {
       if (e.which === 13) {
         self.handle_login()
@@ -162,20 +181,21 @@
     $('#show_modal_code').removeClass('language-xml').addClass('language-javascript')
     $('#show_modal_code').html(quando_editor.getCode())
   }
-  function _notify (message, style) {
-    $('#top_status').notify(message, { position: 'bottom', className: style, style: 'bootstrap' })
-  }
   function _success (message) {
-    _notify(message, 'success')
+    toastr.options.timeOut = 1500,
+    toastr.success(message)
   }
   function _info (message) {
-    _notify(message, 'info')
+    toastr.options.timeOut = 1500,
+    toastr.info(message)
   }
   function _error (message) {
-    _notify(message, 'error')
+    toastr.options.timeOut = 5000,
+    toastr.error(message)
   }
   function _warning (message) {
-    _notify(message, 'warn')
+    toastr.options.timeOut = 2500,
+    toastr.warning(message)
   }
   self.handle_deploy = () => {
     let code = quando_editor.getCode()
@@ -374,6 +394,7 @@
           if (!res.success) {
             alert(res.message) // V hard to fail - if possible at all
           }
+          _success('Deleted...')
           _remote_load_list()
         },
         error: () => {
@@ -382,8 +403,46 @@
       })
     }
   }
-  // self.remote_delete_or_purge = (index) => {
-  // }
+
+  self.remote_tidy = (index) => {
+    let id = _remote_list[index].id
+    let name = _remote_list[index].name
+    $.ajax({
+      url: '/script/tidy/' + encodeURI(name) + '/id/' + id,
+      type: 'DELETE',
+      success: (res) => {
+        if (!res.success) {
+          alert(res.message) // V hard to fail - if possible at all
+        }
+        _success('Tidied...')
+        _remote_load_list()
+      },
+      error: () => {
+        alert('Failed to find server')
+      }
+    })
+  }
+
+  self.remote_delete_all = (index) => {
+    let name = _remote_list[index].name
+    if (confirm("Delete ALL '" + name + "' ?")) {
+      $.ajax({
+        url: '/script/name/' + name,
+        type: 'DELETE',
+        success: (res) => {
+          if (!res.success) {
+            alert(res.message) // V hard to fail - if possible at all
+          }
+          _success('Deleted ALL...')
+          _remote_load_list()
+        },
+        error: () => {
+          alert('Failed to find server')
+        }
+      })
+    }
+  }
+
   self.handle_show_version = () => {
     _update_remote_list()
   }
@@ -417,9 +476,9 @@
     $('#remote_load_list').html('')
     let ignore = $('#remote_load_show_versions').val() == 'false'
     let ignore_names = []
-    let op = {fn:'remote_delete'}
+    let op = {fn:['remote_delete']}
     if (ignore) {
-      op.fn = 'remote_delete_or_purge'
+      op = {fn:['remote_delete', 'remote_tidy', 'remote_delete_all']}
     }
     for (let i = 0; i < _remote_list.length; i++) {
       let name = _remote_list[i].name
@@ -430,7 +489,7 @@
       if (add) {
         let main = {name:name, fn:'remote_load'}
         let data = {name:_remote_list[i].date}
-        $('#remote_load_list').append(_load_list_add(i, main, data, op))
+        $('#remote_load_list').append(_remote_load_list_add(i, main, data, op))
         if (ignore) { // add the just found name to the ignore list...
           ignore_names.push(name)
         }
@@ -490,14 +549,40 @@
     return result
   }
   function _load_list_add (id, main, data, op) {
-    let result = '<div class="row"><div class="col-sm-1"> </div>' +
-            '<a class="list-group-item col-md-5"' + _load_list_add_fn(id, main)
-            + '>' + main.name + '</a>' +
-            '<div class="col-sm-4">' + data.name + '</div>' +
-            '<a class="list-group-item col-sm-1 glyphicon glyphicon-remove-sign"'
-            + _load_list_add_fn(id, op) + '></a>'
-            '<div class="col-sm-1"> </div>' +
-            '</div>\n'
+    let result = '<div class="row">' +
+        '<a class="list-group-item col-md-5"' + _load_list_add_fn(id, main)
+        + '>' + main.name + '</a>' +
+        '<div class="col-sm-4 dropdown">' + data.name + '</div>' +
+        '<div class="list-group-item col-sm-1 glyphicon glyphicon-remove"' +
+        _load_list_add_fn(id, op) + '></div>' +
+        '<div class="col-sm-2"></div>' +
+      '</div>\n'
+    return result
+  }
+  function _remote_load_list_add_fn(index, id, obj, icon, infix) {
+    let result = ''
+    if (obj.fn.length > index) {
+        result += ' glyphicon ' + icon
+    }
+    result += '"'
+    if (obj.fn.length > index) {
+        result += 'onclick="index.' + obj.fn[index] + '(' + id + ')"'
+    }
+    result += '>'
+    if (obj.fn.length > index) {
+        result += `<sub>\n${infix}</sub>`
+    }
+    return result
+  }
+  function _remote_load_list_add (id, main, data, obj) {
+    let result = '<div class="row">' +
+      '<a class="list-group-item col-md-5"' + _load_list_add_fn(id, main)
+      + '>' + main.name + '</a>' +
+        '<div class="col-sm-4 dropdown">' + data.name + '</div>' +
+        '<div class="col-sm-1' + _remote_load_list_add_fn(0, id, obj, 'glyphicon-remove', 'latest') + '</div>' + 
+        '<div class="col-sm-1' + _remote_load_list_add_fn(1, id, obj, 'glyphicon-erase', 'oldest') + '</div>' + 
+        '<div class="col-sm-1' + _remote_load_list_add_fn(2, id, obj, 'glyphicon-remove-sign', 'ALL') + '</div>' + 
+      '</div>\n'
     return result
   }
   function _file_list_add (file_name, path, fn_name, block_id, widget_id) {

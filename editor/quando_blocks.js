@@ -233,6 +233,7 @@
     let CHECK_IMAGE = ' Image'
     let CHECK_VIDEO = ' Video'
     let CHECK_AUDIO = ' Audio'
+    let CHECK_OBJECT3D = ' Object3D'
     let CLEAR = 'Clear'
     self.defineMedia({
       name: CLEAR,
@@ -241,7 +242,8 @@
                 { name: CHECK_TITLE, check: false },
                 { name: CHECK_IMAGE, check: false },
                 { name: CHECK_VIDEO, check: false },
-                { name: CHECK_AUDIO, check: false }
+                { name: CHECK_AUDIO, check: false },
+                { name: CHECK_OBJECT3D, check: false }
       ],
       javascript: (block) => {
         result = ''
@@ -259,6 +261,9 @@
         }
         if (quando_editor.getCheck(block, CHECK_AUDIO)) {
           result += 'quando.clear_audio();\n'
+        }
+        if (quando_editor.getCheck(block, CHECK_OBJECT3D)) {
+          result += 'quando.object3d.clear();\n'
         }
         return result
       }
@@ -510,24 +515,6 @@
                   { name: 'text5', title: '', text: ''}
                 ] }
       ]
-    })
-
-    self.defineDevice({
-      name: 'When Device',
-      interface: [
-                { name: 'name', title: '', text: 'Box' },
-                { statement: STATEMENT }
-      ],
-      javascript: (block) => {
-        let statement = quando_editor.getStatement(block, STATEMENT)
-        let result = 'quando.' + fn + '(' +
-                    'function() {\n' +
-                    statement +
-                    '}' +
-                    _getOnContained(block, [WHEN_VITRINE_BLOCK], '', ', false') +
-                    ');\n'
-        return result
-      }
     })
 
     let MICROBIT_GESTURE_MENU = 'MicroBit Gesture'
@@ -804,21 +791,18 @@
     let CHANGE_ROLL = '\u2939\u2938 Roll'
     let CHANGE_PITCH = '\u21D5 Pitch'
     let CHANGE_HEADING = '\u21D4 Heading'
-    let CHANGE_MAG_X = 'Mag X'
-    let CHANGE_MAG_Y = 'Mag Y'
     let CHECK_INVERTED = 'Inverted'
 
     self.defineMicrobit({
       name: CHANGE_WITH_MICROBIT_ANGLE, title: 'When micro:bit angle',
       interface: [
         { name: CHANGE_VARIABLE, title: '',
-          menu: [CHANGE_HEADING, CHANGE_PITCH, CHANGE_ROLL,
-            // CHANGE_MAG_X, CHANGE_MAG_Y
+          menu: [CHANGE_HEADING, CHANGE_PITCH, CHANGE_ROLL
           ]},
         { title: ICON_PRODUCE_VALUE},
         { extras: [
           {name: CHANGE_MID_ANGLE, title: '', number: 0}, {title: 'degrees'},
-          {name: CHANGE_PLUS_MINUS, title: '+/-', number: 25}, {title: 'degrees'},
+          {name: CHANGE_PLUS_MINUS, title: '+/-', number: 180}, {title: 'degrees'},
           {name: CHECK_INVERTED, check: false}
         ] },
         { statement: STATEMENT }
@@ -831,10 +815,6 @@
           case CHANGE_PITCH: variable = 'handlePitch'
             break
           case CHANGE_HEADING: variable = 'handleHeading'
-            break
-          case CHANGE_MAG_X: variable = 'handleMagX'
-            break
-          case CHANGE_MAG_Y: variable = 'handleMagY'
             break
         }
         let extras = {}
@@ -909,7 +889,7 @@
         { title: ICON_PRODUCE_VALUE},
         { extras: [
           {name: CHANGE_MID_ANGLE, title: '', number: 0}, {title: 'degrees'},
-          {name: CHANGE_PLUS_MINUS, title: '+/-', number: 25}, {title: 'degrees'},
+          {name: CHANGE_PLUS_MINUS, title: '+/-', number: 180}, {title: 'degrees'},
           {name: CHECK_INVERTED, check: false}
         ] },
         { statement: STATEMENT }

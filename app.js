@@ -109,7 +109,25 @@ try {
 
   app.delete('/script/id/:id', (req, res) => {
     let id = req.params.id
-    script.deleteOnId(id).then(
+    let userid = req.session.user.id
+    script.deleteOnId(userid, id).then(
+          (doc) => { res.json({ 'success': true }) },
+          (err) => { res.json({ 'success': false, 'message': err }) })
+  })
+
+  app.delete('/script/name/:name', (req, res) => {
+    let name = encodeURI(req.params.name)
+    let userid = req.session.user.id
+    script.deleteAllOnName(userid, name).then(
+          (doc) => { res.json({ 'success': true }) },
+          (err) => { res.json({ 'success': false, 'message': err }) })
+  })
+
+  app.delete('/script/tidy/:name/id/:id', (req, res) => {
+    let id = req.params.id
+    let name = decodeURI(req.params.name)
+    let userid = req.session.user.id
+    script.tidyOnIdName(userid, id, name).then(
           (doc) => { res.json({ 'success': true }) },
           (err) => { res.json({ 'success': false, 'message': err }) })
   })
@@ -136,40 +154,35 @@ try {
     setTimeout(() => { ubit.get_serial(ubit_error, ubit_success) }, 1000)
       // Checks every second for plugged in micro:bit
   }
+  setTimeout(() => { ubit.get_serial(ubit_error, ubit_success) }, 1000)
+    // Checks every second for plugged in micro:bit
+
   function ubit_success (serial) {
     reported = false
     let orientation = false
     serial.on('data', (data) => {
-      try {
-        let ubit = JSON.parse(data)
-        if (ubit && io) {
-          if (ubit.button_a) {
-            io.emit('ubit', {button: 'a'})
-          }
-          if (ubit.button_b) {
-            io.emit('ubit', {button: 'b'})
-          }
-          if (ubit.ir) {
-            io.emit('ubit', {ir: true})
-          }
-          if (ubit.mag_x) {
-            io.emit('ubit', {'mag_x': ubit.mag_x, 'mag_y': ubit.mag_y})
-  // console.log(ubit.mag_x, ubit.mag_y)
-          }
-          if (ubit.orientation) {
-            io.emit('ubit', {'orientation': ubit.orientation})
-          }
-          if (ubit.heading) {
-            io.emit('ubit', {'heading': ubit.heading})
-          }
-          if (ubit.roll_pitch) {
-            let roll = ubit.roll_pitch[0]
-            let pitch = ubit.roll_pitch[1]
-            io.emit('ubit', {'roll': roll, 'pitch': pitch})
-          }
+      let ubit = JSON.parse(data)
+      if (ubit && io) {
+        if (ubit.button_a) {
+          io.emit('ubit', {button: 'a'})
         }
-      } catch (err) {
-        console.log(err + ':' + data)
+        if (ubit.button_b) {
+          io.emit('ubit', {button: 'b'})
+        }
+        if (ubit.ir) {
+          io.emit('ubit', {ir: true})
+        }
+        if (ubit.orientation) {
+          io.emit('ubit', {'orientation': ubit.orientation})
+        }
+        if (ubit.heading) {
+          io.emit('ubit', {'heading': ubit.heading})
+        }
+        if (ubit.roll_pitch) {
+          let roll = ubit.roll_pitch[0]
+          let pitch = ubit.roll_pitch[1]
+          io.emit('ubit', {'roll': roll, 'pitch': pitch})
+        }
       }
     })
     serial.on('disconnect', ubit_error)

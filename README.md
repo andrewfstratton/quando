@@ -3,7 +3,7 @@
 
 ### To Deploy in Windows - tested with Windows Server 2016 (and 10 Pro)
 
-Prerequisites: Chrome, Node JS, mongoDB (complete install in c:\mongodb), github windows install
+Prerequisites: Chrome, Node JS, mongoDB (complete install in c:\mongodb), git for windows install (https://gitforwindows.org/)
 
 1. Clone the repository in C: using git clone https://github.com/andrewfstratton/quando.git
 2. In the command line, in C:\quando, npm update - this will likely take a while
