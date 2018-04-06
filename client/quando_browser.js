@@ -178,146 +178,6 @@
     }
   }
 
-  var disEvent = class {
-    constructor(disconnect) { this.disconnect = disconnect }
-  }
-
-  speechRecognitionEvents = []  
-  let disconnectSpeechRecognition = false
-  function _start_word_recognition(session, list, confidence, callback, sr) {
-    session.service("ALMemory").then(function (ALMemory) {        
-      ALMemory.subscriber("WordRecognized").then(function (sub){
-        sub.signal.connect(function(value){
-          console.log(value)
-          sr.pause(true)                     
-          if(value[1] >= confidence) {  
-            for(var i = 0; i < list.vocab.length; i++) {
-              if(callback && list.vocab[i] == value[0]) {
-                  callback()
-              }
-            } 
-          }
-          sr.pause(false)                       
-        }).then(function(processID) {
-          disconnectSpeechRecognition = () => {
-            sub.signal.disconnect(processID)
-          }
-          SRE = new disEvent(disconnectSpeechRecognition)
-          speechRecognitionEvents.push(SRE)
-        })
-      })   
-    })
-  }
-
-  function _destroy_robot_listen (session, blockID) {
-    session.service("ALSpeechRecognition").then(function (sr) {
-      sr.unsubscribe(blockID)                  
-    }).fail(function (error) {
-      console.log("An error occurred:", error)
-    })
-    speechRecognitionEvents.forEach(function (SRE){
-      SRE.disconnect()
-    })
-  }
-
-  perceptionEvents = []  
-  let disconnectPerception = false
-  function _start_perception(session, callback, ba) {
-    session.service("ALMemory").then(function (ALMemory) {            
-      ALMemory.subscriber("ALBasicAwareness/HumanTracked").then(function (sub){
-        sub.signal.connect(function(state){
-          callback()
-        }).then(function(processID) {
-          disconnectPerception = () => {
-            sub.signal.disconnect(processID)
-          }
-          PE = new disEvent(disconnectPerception)
-          perceptionEvents.push(PE)
-        })
-      })     
-    })
-  }
-
-  function _destroy_perception() {
-    perceptionEvents.forEach(function (PE){
-      PE.disconnect()
-    })
-    session.service("ALBasicAwareness").then(function (ba) {
-      ba.stopAwareness()
-      _start_perception(session, callback, ba)
-    }).fail(function (error) {
-      console.log("An error occurred:", error)
-    })  
-  }
-
-  touchEvents = []
-  let disconnectTouch = false
-  function _start_touchEvents(session, sensor, callback, blockID) {
-    session.service("ALMemory").then(function (ALMemory) {
-      ALMemory.subscriber(sensor).then(function (sub){
-        console.log(sub.signal);        
-        sub.signal.connect(function(state){
-          if(state == 1) {
-            callback()
-          }
-        }).then(function(processID) {
-            disconnectTouch = () => {
-              sub.signal.disconnect(processID)
-            }
-            TE = new disEvent(disconnectTouch)
-            touchEvents.push(TE)
-        })
-      })     
-    })
-  }
-
-  function _destroy_touchEvents() {
-    touchEvents.forEach(function (TE){
-      TE.disconnect()
-    })
-  }
-
-  self.robotListen = function (session, list, fullList, confidence, blockID, callback, destruct = true) {
-    session.service("ALSpeechRecognition").then(function (sr) {
-      sr.setVocabulary(fullList, false)
-      sr.setAudioExpression(false)
-      sr.subscribe(blockID)
-      
-      _start_word_recognition(session, list, confidence, callback, sr)
-      
-    }).fail(function (error) {
-      console.log("An error occurred:", error);
-    });
-    if (destruct) {
-      self.addDestructor(function () {
-        _destroy_robot_listen(session, blockID)
-      })
-    }
-  }
-
-  self.lookForPerson = function (session, callback, destruct = true) {
-    session.service("ALBasicAwareness").then(function (ba) {
-      ba.startAwareness()
-      _start_perception(session, callback, ba)
-    }).fail(function (error) {
-      console.log("An error occurred:", error)
-    })
-    if (destruct) {
-      self.addDestructor(function () {
-        _destroy_perception(session)
-      })
-    }
-  }
-
-  self.touchEvent = function (session, sensor, blockID, callback, destruct = true) {
-    _start_touchEvents(session, sensor, callback, blockID)    
-    if (destruct) {
-      self.addDestructor(function () {
-        _destroy_touchEvents()
-      })
-    }
-  }
-
   self.every = function (time_secs, callback, destruct = true) {
     callback() // do it straight away
     var id = setInterval(callback, time_secs * 1000)
@@ -667,6 +527,146 @@
 
   self.getOnId = (id) => {
     return _lookup[id]
+  }
+
+  var disEvent = class {
+    constructor(disconnect) { this.disconnect = disconnect }
+  }
+
+  speechRecognitionEvents = []  
+  let disconnectSpeechRecognition = false
+  function _start_word_recognition(session, list, confidence, callback, sr) {
+    session.service("ALMemory").then(function (ALMemory) {        
+      ALMemory.subscriber("WordRecognized").then(function (sub){
+        sub.signal.connect(function(value){
+          console.log(value)
+          sr.pause(true)                     
+          if(value[1] >= confidence) {  
+            for(var i = 0; i < list.vocab.length; i++) {
+              if(callback && list.vocab[i] == value[0]) {
+                  callback()
+              }
+            } 
+          }
+          sr.pause(false)                       
+        }).then(function(processID) {
+          disconnectSpeechRecognition = () => {
+            sub.signal.disconnect(processID)
+          }
+          SRE = new disEvent(disconnectSpeechRecognition)
+          speechRecognitionEvents.push(SRE)
+        })
+      })   
+    })
+  }
+
+  function _destroy_robot_listen (session, blockID) {
+    session.service("ALSpeechRecognition").then(function (sr) {
+      sr.unsubscribe(blockID)                  
+    }).fail(function (error) {
+      console.log("An error occurred:", error)
+    })
+    speechRecognitionEvents.forEach(function (SRE){
+      SRE.disconnect()
+    })
+  }
+
+  perceptionEvents = []  
+  let disconnectPerception = false
+  function _start_perception(session, callback, ba) {
+    session.service("ALMemory").then(function (ALMemory) {            
+      ALMemory.subscriber("ALBasicAwareness/HumanTracked").then(function (sub){
+        sub.signal.connect(function(state){
+          callback()
+        }).then(function(processID) {
+          disconnectPerception = () => {
+            sub.signal.disconnect(processID)
+          }
+          PE = new disEvent(disconnectPerception)
+          perceptionEvents.push(PE)
+        })
+      })     
+    })
+  }
+
+  function _destroy_perception() {
+    perceptionEvents.forEach(function (PE){
+      PE.disconnect()
+    })
+    session.service("ALBasicAwareness").then(function (ba) {
+      ba.stopAwareness()
+      _start_perception(session, callback, ba)
+    }).fail(function (error) {
+      console.log("An error occurred:", error)
+    })  
+  }
+
+  touchEvents = []
+  let disconnectTouch = false
+  function _start_touchEvents(session, sensor, callback, blockID) {
+    session.service("ALMemory").then(function (ALMemory) {
+      ALMemory.subscriber(sensor).then(function (sub){
+        console.log(sub.signal);        
+        sub.signal.connect(function(state){
+          if(state == 1) {
+            callback()
+          }
+        }).then(function(processID) {
+            disconnectTouch = () => {
+              sub.signal.disconnect(processID)
+            }
+            TE = new disEvent(disconnectTouch)
+            touchEvents.push(TE)
+        })
+      })     
+    })
+  }
+
+  function _destroy_touchEvents() {
+    touchEvents.forEach(function (TE){
+      TE.disconnect()
+    })
+  }
+
+  self.robotListen = function (session, list, fullList, confidence, blockID, callback, destruct = true) {
+    session.service("ALSpeechRecognition").then(function (sr) {
+      sr.setVocabulary(fullList, false)
+      sr.setAudioExpression(false)
+      sr.subscribe(blockID)
+      
+      _start_word_recognition(session, list, confidence, callback, sr)
+      
+    }).fail(function (error) {
+      console.log("An error occurred:", error);
+    });
+    if (destruct) {
+      self.addDestructor(function () {
+        _destroy_robot_listen(session, blockID)
+      })
+    }
+  }
+
+  self.lookForPerson = function (session, callback, destruct = true) {
+    session.service("ALBasicAwareness").then(function (ba) {
+      ba.startAwareness()
+      _start_perception(session, callback, ba)
+    }).fail(function (error) {
+      console.log("An error occurred:", error)
+    })
+    if (destruct) {
+      self.addDestructor(function () {
+        _destroy_perception(session)
+      })
+    }
+  }
+
+  self.touchEvent = function (session, sensor, blockID, callback, destruct = true) {
+    _start_touchEvents(session, sensor, callback, blockID)    
+    if (destruct) {
+      self.addDestructor(function () {
+        _destroy_touchEvents()
+      })
+    }
   }
 
 })()

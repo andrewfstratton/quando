@@ -959,16 +959,6 @@
         return `{${infix}\n${statement}}\n`
       }
     })
-    
-    let ROBOT_IP = 'Robot IP'
-    let ROBOT_CONNECT = 'Connect'
-    self.defineRobot({
-      name: ROBOT_CONNECT,
-      interface: [{ name: ROBOT_IP, title: '', text: '#ROBOT IP#' }],
-      javascript: (block) => {
-        return 'quando.robot.connect("' + quando_editor.getText(block, ROBOT_IP) + '");\n'
-      }
-    })
 
     let SCRIPT_BLOCK = 'Javascript: '
     let SCRIPT_TEXT = 'script_text'
@@ -1021,6 +1011,73 @@
       }
     })
 
+    function _getIndividualChildCode(start, prefix, postfix, separator) {
+      let result = ''
+      let child = start
+      while (child != null) {
+        let code = quando_editor.getIndividualBlockCode(child)
+        if (result != '') {
+          result += separator
+        }
+        result += prefix + code + postfix
+        child = child.getNextBlock()
+      }
+      return result
+    }
+
+    let PICK_RANDOM_BLOCK = 'Pick one at Random'
+    self.defineAdvanced({
+      name: PICK_RANDOM_BLOCK, title:'\uD83C\uDFB2 Pick Random',
+      interface: [
+        { statement: STATEMENT }
+      ],
+      javascript : (block) => {
+        let stateBlock = block.getInputTargetBlock(STATEMENT)
+        let arr = _getIndividualChildCode(stateBlock, 'function(){\n', '}', ',\n')
+        return `quando.pick_random([\n${arr}\n])\n`
+      }
+    })
+
+    let PICK_ONE_BLOCK = 'Pick one'
+    self.defineAdvanced({
+      name: PICK_ONE_BLOCK, title: ICON_CONSUME_VALUE + PICK_ONE_BLOCK,
+      interface: [
+        { statement: STATEMENT }
+      ],
+      javascript : (block) => {
+        let id = block.id
+        let stateBlock = block.getInputTargetBlock(STATEMENT)
+        let arr = _getIndividualChildCode(stateBlock, 'function(){\n', '}', ',\n')
+        quando_editor.pushToSetup(`quando.setOnId('${id}', [${arr}])\n`)
+        return `quando.pick(val, quando.getOnId('${id}'))\n`
+      }
+    })
+
+    let PICK_ONE_EACH_BLOCK = 'Pick one each time'
+    self.defineAdvanced({
+      name: PICK_ONE_EACH_BLOCK,
+      interface: [
+        { statement: STATEMENT }
+      ],
+      javascript : (block) => {
+        let id = block.id
+        let stateBlock = block.getInputTargetBlock(STATEMENT)
+        let arr = _getIndividualChildCode(stateBlock, 'function(){\n', '}', ',\n')
+        quando_editor.pushToSetup(`quando.setOnId('${id}', [${arr}])\n`)
+        return `quando.pick_one_each_time(quando.getOnId('${id}'))\n`
+      }
+    })
+
+    let ROBOT_IP = 'Robot IP'
+    let ROBOT_CONNECT = 'Connect'
+    self.defineRobot({
+      name: ROBOT_CONNECT,
+      interface: [{ name: ROBOT_IP, title: '', text: '#ROBOT IP#' }],
+      javascript: (block) => {
+        return 'quando.robot.connect("' + quando_editor.getText(block, ROBOT_IP) + '");\n'
+      }
+    })
+    
     let ROBOT_SAYS = 'Say'
     let ROBOT_TEXT_SAYS = 'Robot Text Says'
     let ROBOT_INTERUPT_SPEECH = ''
@@ -1215,63 +1272,6 @@
         let list = _getContainedBlockID(block, [ROBOT_CREATE_LIST])       
         let vocab = quando_editor.getText(block, ROBOT_VOCABULARY_ADD)
         return `quando.robot.addToWordList("${list}","${vocab}");\n`
-      }
-    })
-
-    function _getIndividualChildCode(start, prefix, postfix, separator) {
-      let result = ''
-      let child = start
-      while (child != null) {
-        let code = quando_editor.getIndividualBlockCode(child)
-        if (result != '') {
-          result += separator
-        }
-        result += prefix + code + postfix
-        child = child.getNextBlock()
-      }
-      return result
-    }
-
-    let PICK_RANDOM_BLOCK = 'Pick one at Random'
-    self.defineAdvanced({
-      name: PICK_RANDOM_BLOCK, title:'\uD83C\uDFB2 Pick Random',
-      interface: [
-        { statement: STATEMENT }
-      ],
-      javascript : (block) => {
-        let stateBlock = block.getInputTargetBlock(STATEMENT)
-        let arr = _getIndividualChildCode(stateBlock, 'function(){\n', '}', ',\n')
-        return `quando.pick_random([\n${arr}\n])\n`
-      }
-    })
-
-    let PICK_ONE_BLOCK = 'Pick one'
-    self.defineAdvanced({
-      name: PICK_ONE_BLOCK, title: ICON_CONSUME_VALUE + PICK_ONE_BLOCK,
-      interface: [
-        { statement: STATEMENT }
-      ],
-      javascript : (block) => {
-        let id = block.id
-        let stateBlock = block.getInputTargetBlock(STATEMENT)
-        let arr = _getIndividualChildCode(stateBlock, 'function(){\n', '}', ',\n')
-        quando_editor.pushToSetup(`quando.setOnId('${id}', [${arr}])\n`)
-        return `quando.pick(val, quando.getOnId('${id}'))\n`
-      }
-    })
-
-    let PICK_ONE_EACH_BLOCK = 'Pick one each time'
-    self.defineAdvanced({
-      name: PICK_ONE_EACH_BLOCK,
-      interface: [
-        { statement: STATEMENT }
-      ],
-      javascript : (block) => {
-        let id = block.id
-        let stateBlock = block.getInputTargetBlock(STATEMENT)
-        let arr = _getIndividualChildCode(stateBlock, 'function(){\n', '}', ',\n')
-        quando_editor.pushToSetup(`quando.setOnId('${id}', [${arr}])\n`)
-        return `quando.pick_one_each_time(quando.getOnId('${id}'))\n`
       }
     })
 
