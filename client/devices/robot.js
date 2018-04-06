@@ -254,9 +254,7 @@
             motion.setAngles(armJoint, newAngle, 0.5);
           }).fail(function (error) {
             console.log("An error occurred:", error);
-          });
-        // ARM_LOOKUP[arm]["up"]["value"] = helper_ConvertAngle(ARM_LOOKUP[arm][direction][angle]);
-        // ARM_LOOKUP[arm]["down"]["value"] = helper_ConvertAngle(ARM_LOOKUP[arm][direction][angle]);        
+          });      
     }
 
     self.moveMotor = function(val, motor, direction) {

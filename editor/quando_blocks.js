@@ -1122,18 +1122,13 @@
 
     let ROBOT_POSTURE = 'Robot posture'
     self.defineRobot({
-      name: ROBOT_HAND, title: "Change posture to ",
-      interface: [{ name: ROBOT_POSTURE, title: '', menu: ['Standing',
-      'Sitting',
-      'SittingOnChair',
+      name: ROBOT_POSTURE, title: 'Change posture to ',
+      interface: [{ name: ROBOT_POSTURE, title: '', menu: ['Crouch',
+      'LyingBack',
       'LyingBelly',
-      'LyingBack',	
-      'LyingLeft',	
-      'LyingRight',	
-      'Belly',	
-      'Back',	
-      'Left',	
-      'Right']}], 
+      'Sit',
+      'SitRelax',
+      'Stand']}], 
       javascript: (block) => {
         let posture = quando_editor.getMenu(block, ROBOT_POSTURE)
         return `quando.robot.changePosture("${posture}");\n`
@@ -1159,7 +1154,7 @@
       name: ROBOT_TOUCH_SENSORS, title: 'When ',
       interface: [{ name: ROBOT_TOUCH_SENSORS_NAMES, menu: [['Front of head', 'FrontTactilTouched'],
         ['On top of head','MiddleTactilTouched'],
-        ['Read of head','RearTactilTouched'],
+        ['Rear of head','RearTactilTouched'],
         ['Blue plate of right hand','HandRightBackTouched'],
         ['Front of right hand','HandRightLeftTouched'],
         ['Back of right hand','HandRightRightTouched'],
