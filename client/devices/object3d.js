@@ -6,25 +6,67 @@
     var self = quando.object3d = {}
     self.width = screen.width
     self.height = screen.height
+    var scene = false
+    var object = false
+    var fixed = false
+    var animation_id = false 
+    var canvas = false
 
-    _add_object_to_scene = (obj) => {
-        renderer = new THREE.WebGLRenderer()
-        camera = new THREE.PerspectiveCamera( 25, self.width/self.height, 0.1, 10000 )
-        scene = new THREE.Scene()
-        camera.position.z = 100 // pull back camera
-        camera.up = new THREE.Vector3(0,1,0)
-        camera.lookAt(new THREE.Vector3(0,0,0))
-        renderer.setSize(self.width, self.height) // start the renderer
-        // attach the render-supplied DOM element to container
-        document.getElementById('quando_image').append(renderer.domElement)
+    function _clear_object() {
+        if (object) {
+            scene.remove(object)
+            object = false
+        }
+        if (animation_id) {
+            cancelAnimationFrame( animation_id )
+            animation_id = false
+        }
+    }
 
+    function _clear_canvas() {
+        if (canvas) {
+            document.getElementById('quando_image').removeChild(canvas)
+            canvas = false
+        }
+    }
+
+    function _clear_fixed() {
+        if (fixed) {
+            scene.remove(fixed)
+            fixed = false
+        }
+    }
+
+    self.clear = function() {
+        _clear_object()
+        _clear_fixed()
+        _clear_canvas()
+    }
+
+    function _add_object_to_scene(obj) {
+        if (object) {
+            _clear_object()
+        } else {
+            renderer = new THREE.WebGLRenderer()
+            camera = new THREE.PerspectiveCamera( 25, self.width/self.height, 0.1, 10000 )
+            scene = new THREE.Scene()
+            camera.position.z = 100 // pull back camera
+            camera.up = new THREE.Vector3(0,1,0)
+            camera.lookAt(new THREE.Vector3(0,0,0))
+            renderer.setSize(self.width, self.height) // start the renderer
+            // attach the render-supplied DOM element to container
+            canvas = renderer.domElement
+            document.getElementById('quando_image').append(canvas)
+            var pointLight = new THREE.PointLight( 0xFFFFFF )
+            pointLight.position.set(10, 50, 230)
+            scene.add(pointLight)
+            var light = new THREE.AmbientLight( 0xAAAAAA )
+            scene.add( light )
+        }
+        object = obj
         // add an object to the scene
         scene.add(obj)
-        var pointLight = new THREE.PointLight( 0xFFFFFF )
-        pointLight.position.set(10, 50, 230)
-        scene.add(pointLight)
-        var light = new THREE.AmbientLight( 0xAAAAAA )
-        scene.add( light )
+        obj.rotation.order='ZXY'
         function update(renderer, scene, camera) {
             if (self.z) { obj.position.z = self.z; delete self.z }
             if (self.y) { obj.position.y = self.y; delete self.y }
@@ -34,11 +76,16 @@
             if (self._yaw) { obj.rotation.y = self._yaw; delete self._yaw }
             // camera.lookAt(obj.position)
             renderer.render(scene, camera)
-            requestAnimationFrame(function() {
+            animation_id = requestAnimationFrame(function() {
                 update(renderer, scene, camera)
             })
         }
         update(renderer, scene, camera)
+    }
+
+    function _add_fixed_object(fixed) {
+        _clear_fixed()
+        scene.add(fixed)
     }
 
     function _degrees_to_radians (degrees) {
@@ -107,11 +154,15 @@
         })
     }
 
-    self.loadGLTF = function(filename) {
+    self.loadGLTF = function(filename, fixed=false) {
         let loader = new THREE.GLTFLoader()
         loader.load(filename,
             function ( gltf ) {
-                _add_object_to_scene(gltf.scene)
+                if (fixed) {
+                    _add_fixed_object(gltf.scene)
+                } else {
+                    _add_object_to_scene(gltf.scene)
+                }
         })
     }
 

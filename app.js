@@ -108,7 +108,25 @@ app.get('/script/id/:id', (req, res) => {
 
 app.delete('/script/id/:id', (req, res) => {
   let id = req.params.id
-  script.deleteOnId(id).then(
+  let userid = req.session.user.id
+  script.deleteOnId(userid, id).then(
+        (doc) => { res.json({ 'success': true }) },
+        (err) => { res.json({ 'success': false, 'message': err }) })
+})
+
+app.delete('/script/name/:name', (req, res) => {
+  let name = encodeURI(req.params.name)
+  let userid = req.session.user.id
+  script.deleteAllOnName(userid, name).then(
+        (doc) => { res.json({ 'success': true }) },
+        (err) => { res.json({ 'success': false, 'message': err }) })
+})
+
+app.delete('/script/tidy/:name/id/:id', (req, res) => {
+  let id = req.params.id
+  let name = decodeURI(req.params.name)
+  let userid = req.session.user.id
+  script.tidyOnIdName(userid, id, name).then(
         (doc) => { res.json({ 'success': true }) },
         (err) => { res.json({ 'success': false, 'message': err }) })
 })
@@ -150,10 +168,6 @@ function ubit_success (serial) {
         }
         if (ubit.ir) {
           io.emit('ubit', {ir: true})
-        }
-        if (ubit.mag_x) {
-          io.emit('ubit', {'mag_x': ubit.mag_x, 'mag_y': ubit.mag_y})
-// console.log(ubit.mag_x, ubit.mag_y)
         }
         if (ubit.orientation) {
           io.emit('ubit', {'orientation': ubit.orientation})

@@ -48,11 +48,28 @@ exports.getOnId = (id) => {
   })
 }
 
-exports.deleteOnId = (id) => {
+exports.deleteOnId = (userid, id) => {
   return new Promise((success, fail) => {
     const oid = new ObjectID(id)
-    const query = { _id: { $eq: oid } }
+    const query = { _id: { $eq: oid }, ownerid: { $eq: userid } }
     const options = { single: 1 }
+    db.remove(COLLECTION, query, options).then(success, fail)
+  })
+}
+
+exports.tidyOnIdName = (userid, id, name) => {
+  return new Promise((success, fail) => {
+    const oid = new ObjectID(id)
+    const query = { name: { $eq: name }, _id: { $ne: oid }, ownerid: { $eq: userid } }
+    const options = {}
+    db.remove(COLLECTION, query, options).then(success, fail)
+  })
+}
+
+exports.deleteAllOnName = (userid, name) => {
+  return new Promise((success, fail) => {
+    const query = { name: { $eq: name }, ownerid: { $eq: userid } }
+    const options = {}
     db.remove(COLLECTION, query, options).then(success, fail)
   })
 }
