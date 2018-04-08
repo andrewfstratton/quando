@@ -529,12 +529,26 @@
     return _lookup[id]
   }
 
+  /**
+   * Class instace to store event disconnector
+   * @param {function} disconnect Stores the function used to sidconnect the event
+   */
   var disEvent = class {
     constructor(disconnect) { this.disconnect = disconnect }
   }
 
+  /** Stores the disEvents  */
   speechRecognitionEvents = []  
   let disconnectSpeechRecognition = false
+  /**
+   * Starts the listener for the robot listening for words, also creates
+   * the disconnect event
+   * @param {object} session Stores the connection to the robot
+   * @param {strings} list Stores the list of words to respond to
+   * @param {number} confidence Stores the confidence value
+   * @param {function} callback Function to execute if a word from list is heard
+   * @param {object} sr Stores the speech recognition
+   */
   function _start_word_recognition(session, list, confidence, callback, sr) {
     session.service("ALMemory").then(function (ALMemory) {        
       ALMemory.subscriber("WordRecognized").then(function (sub){
@@ -560,6 +574,11 @@
     })
   }
 
+  /**
+   * Stops the robot listening 
+   * @param {object} session Stores the connection to the robot
+   * @param {string} blockID ID of block associated with the current listen event
+   */
   function _destroy_robot_listen (session, blockID) {
     session.service("ALSpeechRecognition").then(function (sr) {
       sr.unsubscribe(blockID)                  
@@ -571,8 +590,16 @@
     })
   }
 
+  /** Stores the person perception event distructors */
   perceptionEvents = []  
   let disconnectPerception = false
+  /**
+   * Makes the robot execute the function if he sees someone
+   * Also creates the disconnect event
+   * @param {object} session Stores the connection to the robot
+   * @param {function} callback Function to execute if the robot sees someone
+   * @param {object} ba Basic awareness service
+   */
   function _start_perception(session, callback, ba) {
     session.service("ALMemory").then(function (ALMemory) {            
       ALMemory.subscriber("ALBasicAwareness/HumanTracked").then(function (sub){
@@ -589,6 +616,9 @@
     })
   }
 
+  /**
+   * Destructor for the person perception
+   */
   function _destroy_perception() {
     perceptionEvents.forEach(function (PE){
       PE.disconnect()
@@ -601,8 +631,17 @@
     })  
   }
 
+  /** Stores the disconnect events for the touchEvents */
   touchEvents = []
   let disconnectTouch = false
+  /**
+   * Sets up the listener for the touch events
+   * Also sets up the disconnector
+   * @param {object} session Stores the connection to the robot
+   * @param {string} sensor Name of the sensor
+   * @param {function} callback Function to execute
+   * @param {string} blockID The ID of the block it was created from
+   */
   function _start_touchEvents(session, sensor, callback, blockID) {
     session.service("ALMemory").then(function (ALMemory) {
       ALMemory.subscriber(sensor).then(function (sub){
@@ -622,12 +661,25 @@
     })
   }
 
+  /**
+   * Destroys the touch events by executing the disconnectors
+   */
   function _destroy_touchEvents() {
     touchEvents.forEach(function (TE){
       TE.disconnect()
     })
   }
 
+  /**
+   * 
+   * @param {object} session Stores the connection to the robot
+   * @param {strings} list Stores the words to listen for 
+   * @param {strings} fullList Stores all the lists of strings
+   * @param {number} confidence Stores the confidence value for the robot to use
+   * @param {string} blockID Stores the blockID for disconnection later
+   * @param {function} callback Stores the function to execute
+   * @param {boolean} destruct If it needs a destructor or not
+   */
   self.robotListen = function (session, list, fullList, confidence, blockID, callback, destruct = true) {
     session.service("ALSpeechRecognition").then(function (sr) {
       sr.setVocabulary(fullList, false)
@@ -641,11 +693,17 @@
     });
     if (destruct) {
       self.addDestructor(function () {
-        _destroy_robot_listen(session, blockID)
+        _destroy_robot_listen(session, blockID) //create the destructor
       })
     }
   }
 
+  /**
+   * Starts the person perception listener
+   * @param {object} session Stores the conneciton to the robot
+   * @param {function} callback Function to execute
+   * @param {boolean} destruct Whether to create the destructor or not
+   */
   self.lookForPerson = function (session, callback, destruct = true) {
     session.service("ALBasicAwareness").then(function (ba) {
       ba.startAwareness()
@@ -660,6 +718,14 @@
     }
   }
 
+  /**
+   * Starts the touch events listener
+   * @param {object} session Stores the connection to the robot
+   * @param {string} sensor Stores the sensor to listen to
+   * @param {string} blockID Stores the blockID for disconnection later
+   * @param {function} callback Stores the function to execute
+   * @param {boolean} destruct Whether a destructor is needed
+   */
   self.touchEvent = function (session, sensor, blockID, callback, destruct = true) {
     _start_touchEvents(session, sensor, callback, blockID)    
     if (destruct) {
