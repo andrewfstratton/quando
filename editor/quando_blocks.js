@@ -133,8 +133,7 @@
     let ID_GREETING = 'Greeting'
     let TEXT_MENU = 'text menu'
     self.defineMedia({
-      name: 'Show "',
-      title: '',
+      name: 'Show "', title: '',
       interface: [
         { name: TEXT_MENU, title: '', menu: ['Show', 'Add'] },
         { name: ID_GREETING, title: 'Text "', text: '.type your text here..' }, { title: '"' }
@@ -150,11 +149,20 @@
     })
 
     let SHOW_TITLE = 'Show Title'
+    let TITLE_MENU = 'title menu'
     self.defineMedia({
-      name: 'Show Title "',
-      interface: [{ name: SHOW_TITLE, title: '', text: '.type your title here..' }, { title: '"' }],
+      name: 'Show Title "', title:'',
+      interface: [
+        { name: TITLE_MENU, title: '', menu: ['Show', 'Add'] },
+        { name: SHOW_TITLE, title: 'Title "', text: '.type your title here..' }, { title: '"' }
+      ],
       javascript: (block) => {
-        return 'quando.title("' + quando_editor.getText(block, SHOW_TITLE) + '");\n'
+        let result = 'quando.title("' + quando_editor.getText(block, SHOW_TITLE) + '"'
+        if (quando_editor.getMenu(block, TITLE_MENU) == 'Add') {
+          result += ', true'
+        }
+        result += ');\n'
+        return result
       }
     })
 

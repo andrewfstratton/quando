@@ -207,8 +207,15 @@
     self.idle_callback_id = setTimeout(self.idle_callback, self.idle_reset_secs)
   }
 
-  self.title = function (txt) {
-    var elem = document.getElementById('quando_title')
+  function _set_or_append_tag_text(txt, tag, append) {
+    var elem = document.getElementById(tag)
+    if (typeof txt === 'function') {
+      // HACK: N.B. This may be a security worry?!
+      txt = txt()
+    }    
+    if (append) {
+      txt = elem.innerHTML + txt
+    }
     if (!txt) {
       elem.style.visibility = 'hidden'
     } else {
@@ -216,22 +223,13 @@
       elem.innerHTML = txt
     }
   }
+  
+  self.title = function (txt, append=false) {
+    _set_or_append_tag_text(txt, 'quando_title', append)
+  }
 
   self.text = function (txt, append=false) {
-    var elem = document.getElementById('quando_text')
-    if (!txt) {
-      elem.style.visibility = 'hidden'
-    } else {
-      elem.style.visibility = 'visible'
-      if (typeof txt === 'function') {
-                // HACK: N.B. This may be a security worry?!
-        txt = txt()
-      }
-      if (append) {
-        txt = elem.innerHTML + txt
-      }
-      elem.innerHTML = txt
-    }
+    _set_or_append_tag_text(txt, 'quando_text', append)
   }
 
   self.image_update_video = function (img) {
