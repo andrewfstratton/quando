@@ -131,12 +131,21 @@
     })
 
     let ID_GREETING = 'Greeting'
+    let TEXT_MENU = 'text menu'
     self.defineMedia({
       name: 'Show "',
-      title: 'Show Text',
-      interface: [{ name: ID_GREETING, title: '"', text: '.type your text here..' }, { title: '"' }],
+      title: '',
+      interface: [
+        { name: TEXT_MENU, title: '', menu: ['Show', 'Add'] },
+        { name: ID_GREETING, title: 'Text "', text: '.type your text here..' }, { title: '"' }
+      ],
       javascript: (block) => {
-        return 'quando.text("' + quando_editor.getText(block, ID_GREETING) + '");\n'
+        let result = 'quando.text("' + quando_editor.getText(block, ID_GREETING) + '"'
+        if (quando_editor.getMenu(block, TEXT_MENU) == 'Add') {
+          result += ', true'
+        }
+        result += ');\n'
+        return result
       }
     })
 

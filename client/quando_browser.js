@@ -217,7 +217,7 @@
     }
   }
 
-  self.text = function (txt) {
+  self.text = function (txt, append=false) {
     var elem = document.getElementById('quando_text')
     if (!txt) {
       elem.style.visibility = 'hidden'
@@ -226,6 +226,9 @@
       if (typeof txt === 'function') {
                 // HACK: N.B. This may be a security worry?!
         txt = txt()
+      }
+      if (append) {
+        txt = elem.innerHTML + txt
       }
       elem.innerHTML = txt
     }
