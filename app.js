@@ -1,15 +1,15 @@
 'use strict'
 const express = require('express')
+const session = require('express-session')
+// const FileStore = require('session-file-store')(session)
 const app = express()
 const fs = require('fs')
 const formidable = require('formidable')
 const morgan = require('morgan')
-const session = require('express-session')
 const body_parser = require('body-parser')
 const script = require('./script')
 const client_deploy = './client/deployed_js/'
 const user = require('./user')
-const mongo_store = require('connect-mongo')(session)
 const path = require('path')
 
 const router = express.Router()
@@ -53,7 +53,7 @@ app.use(session({
         // name: may need this later - if sessions exist for clients...
     httpOnly: false
   },
-  store: new mongo_store({ url: 'mongodb://127.0.0.1/quando' })
+  // store: new FileStore({ path: './sessions' }) // This should work...
 }))
 app.use('/', (req, res, next) => {
     // console.log(">>" + JSON.stringify(req.session.user))
@@ -124,8 +124,8 @@ app.delete('/script/name/:name', (req, res) => {
 
 app.delete('/script/tidy/:name/id/:id', (req, res) => {
   let id = req.params.id
-  let name = decodeURI(req.params.name)
   let userid = req.session.user.id
+  let name = encodeURI(req.params.name) // N.B. Leave name encoded...
   script.tidyOnIdName(userid, id, name).then(
         (doc) => { res.json({ 'success': true }) },
         (err) => { res.json({ 'success': false, 'message': err }) })
@@ -293,6 +293,6 @@ app.get('/client/js', (req, res) => {
 
 app.use('/client', express.static(path.join(client_dir, 'index.html')))
 
-// user.save("test5", "test4", null).then(
+// user.save("andy", "andy", null).then(
 //     () => { console.log("Success") },
 //     (err) => { console.log("Fail : ", err) } )

@@ -190,7 +190,7 @@
     toastr.info(message)
   }
   function _error (message) {
-    toastr.options.timeOut = 5000,
+    toastr.options.timeOut = 3500,
     toastr.error(message)
   }
   function _warning (message) {
@@ -411,10 +411,11 @@
       url: '/script/tidy/' + encodeURI(name) + '/id/' + id,
       type: 'DELETE',
       success: (res) => {
-        if (!res.success) {
-          alert(res.message) // V hard to fail - if possible at all
+        if (res.success) {
+          _success('Tidied...')
+        } else {
+          _error(res.message)
         }
-        _success('Tidied...')
         _remote_load_list()
       },
       error: () => {
@@ -509,7 +510,7 @@
             _update_remote_list()
           }
         } else {
-          alert(res.message)
+         _error(res.message)
         }
       },
       error: () => {

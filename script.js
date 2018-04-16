@@ -1,6 +1,5 @@
 'use strict'
 const db = require('./db')
-let ObjectID = require('mongodb').ObjectID
 const COLLECTION = 'script'
 
 exports.save = (name, id, userid, script) => {
@@ -30,8 +29,7 @@ exports.getNamesOnOwnerID = (userid) => {
 
 exports.getOnId = (id) => {
   return new Promise((success, fail) => {
-    const oid = new ObjectID(id)
-    const query = { _id: { $eq: oid } }
+    const query = { _id: { $eq: id } }
     const options = { limit: 1 }
     const fields = { _id: 0 }
     db.getArray(COLLECTION, query, fields, options).then((result) => {
@@ -50,26 +48,22 @@ exports.getOnId = (id) => {
 
 exports.deleteOnId = (userid, id) => {
   return new Promise((success, fail) => {
-    const oid = new ObjectID(id)
-    const query = { _id: { $eq: oid }, ownerid: { $eq: userid } }
-    const options = { single: 1 }
+    const query = { _id: { $eq: id }, ownerid: { $eq: userid } }
+    const options = { justOne: true }
     db.remove(COLLECTION, query, options).then(success, fail)
   })
 }
 
 exports.tidyOnIdName = (userid, id, name) => {
   return new Promise((success, fail) => {
-    const oid = new ObjectID(id)
-    const query = { name: { $eq: name }, _id: { $ne: oid }, ownerid: { $eq: userid } }
-    const options = {}
-    db.remove(COLLECTION, query, options).then(success, fail)
+    const query = { name: { $eq: name }, _id: { $ne: id }, ownerid: { $eq: userid } }
+    db.remove(COLLECTION, query).then(success, fail)
   })
 }
 
 exports.deleteAllOnName = (userid, name) => {
   return new Promise((success, fail) => {
     const query = { name: { $eq: name }, ownerid: { $eq: userid } }
-    const options = {}
-    db.remove(COLLECTION, query, options).then(success, fail)
+    db.remove(COLLECTION, query).then(success, fail)
   })
 }
