@@ -1,6 +1,6 @@
 {
   "name": "quando",
-  "version": "0.6.20180207",
+  "version": "0.7.20180418",
   "description": "Quando Toolset",
   "main": "app.js",
   "scripts": {
