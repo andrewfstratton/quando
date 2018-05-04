@@ -15,17 +15,17 @@
     "express": "^4.14.0",
     "express-session": "^1.14.2",
     "formidable": "^1.1.1",
-    "fs": "0.0.1-security",
+    "graceful-fs": "4.1.10",
     "leapjs": "^0.6.4",
     "morgan": "^1.7.0",
+    "nedb": "^1.8.0",
+    "nedb-session-store": "^1.1.2",
     "serialport": "^4.0.7",
-    "session-file-store": "^1.2.0",
-    "socket.io": "^1.7.0",
-    "tingodb": "^0.6.1"
+    "socket.io": "^1.7.0"
   },
   "devDependencies": {
     "chai": "^4.1.2",
-    "mocha": "^4.0.1",
+    "mocha": "^4.1.0",
     "standard": "^10.0.3"
   }
 }

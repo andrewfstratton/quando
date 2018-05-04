@@ -4,22 +4,20 @@ const COLLECTION = 'user'
 
 exports.getOnIdPassword = (id, password) => {
   return new Promise((success, fail) => {
-    const query = { _id: { $eq: id }, password: { $eq: password } }
-    const options = { limit: 1 }
-    const fields = { _id: 0, password: 0 }
-    db.getArray(COLLECTION, query, fields, options).then(
-            (result) => {
-              if (result.length == 1) {
-                let user_doc = result[0]
-                user_doc.id = id
-                    // decode the current_script
-                user_doc.script_name = decodeURIComponent(user_doc.script_name)
-                    // no need to store deployed name - will be in script
-                success(user_doc)
-              } else {
-                fail(Error('Failed to find unique user'))
-              }
-            }, fail)
+    const query = { _id: id, password: password }
+    db.find(COLLECTION, query).then(
+      (result) => {
+        if (result.length == 1) {
+          let user_doc = result[0]
+          user_doc.id = id
+              // decode the current_script
+          user_doc.script_name = decodeURIComponent(user_doc.script_name)
+              // no need to store deployed name - will be in script
+          success(user_doc)
+        } else {
+          fail(Error('Failed to find unique user'))
+        }
+      }, fail)
   })
 }
 

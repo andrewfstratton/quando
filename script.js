@@ -4,17 +4,17 @@ const COLLECTION = 'script'
 
 exports.save = (name, id, userid, script) => {
   return new Promise((success, fail) => {
-    let doc = { name: name, ownerid: userid, xml: script, date: new Date() }
+    let now = new Date()
+    let doc = { name: name, ownerid: userid, date: now, xml: script}
     db.save(COLLECTION, doc).then(success, fail)
   })
 }
 
 exports.getNamesOnOwnerID = (userid) => {
   return new Promise((success, fail) => {
-    const query = { ownerid: { $eq: userid } }
-    const options = { sort: [['date', 'desc']] }
-    const fields = { name: 1, date: 1 }
-    db.getArray(COLLECTION, query, fields, options).then((result) => {
+    const query = { ownerid: userid }
+    const sort = {date:-1}
+    db.find(COLLECTION, query, sort).then((result) => {
       let list = []
       result.forEach((item) => {
         let date = new Date(item.date)
@@ -29,10 +29,8 @@ exports.getNamesOnOwnerID = (userid) => {
 
 exports.getOnId = (id) => {
   return new Promise((success, fail) => {
-    const query = { _id: { $eq: id } }
-    const options = { limit: 1 }
-    const fields = { _id: 0 }
-    db.getArray(COLLECTION, query, fields, options).then((result) => {
+    const query = { _id: id }
+    db.find(COLLECTION, query).then((result) => {
       if (result.length == 0) {
         fail('Failed to find script')
       } else {
@@ -48,7 +46,7 @@ exports.getOnId = (id) => {
 
 exports.deleteOnId = (userid, id) => {
   return new Promise((success, fail) => {
-    const query = { _id: { $eq: id }, ownerid: { $eq: userid } }
+    const query = { _id: id, ownerid: userid}
     const options = { justOne: true }
     db.remove(COLLECTION, query, options).then(success, fail)
   })
@@ -56,14 +54,15 @@ exports.deleteOnId = (userid, id) => {
 
 exports.tidyOnIdName = (userid, id, name) => {
   return new Promise((success, fail) => {
-    const query = { name: { $eq: name }, _id: { $ne: id }, ownerid: { $eq: userid } }
+    const query = { name: name, _id: {$ne: id}, ownerid: userid}
     db.remove(COLLECTION, query).then(success, fail)
   })
 }
 
 exports.deleteAllOnName = (userid, name) => {
   return new Promise((success, fail) => {
-    const query = { name: { $eq: name }, ownerid: { $eq: userid } }
-    db.remove(COLLECTION, query).then(success, fail)
+    const query = { name: name, ownerid: userid}
+    let options = { multi: true }
+    db.remove(COLLECTION, query, options).then(success, fail)
   })
 }

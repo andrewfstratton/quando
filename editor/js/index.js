@@ -392,10 +392,11 @@
         type: 'DELETE',
         success: (res) => {
           if (!res.success) {
-            alert(res.message) // V hard to fail - if possible at all
+            _error(res.message) // possible to fail if no longer logged in...
+          } else {
+            _success('Deleted...')
+            _remote_load_list()
           }
-          _success('Deleted...')
-          _remote_load_list()
         },
         error: () => {
           alert('Failed to find server')
@@ -432,10 +433,11 @@
         type: 'DELETE',
         success: (res) => {
           if (!res.success) {
-            alert(res.message) // V hard to fail - if possible at all
+            _error(res.message) // possible to fail if no longer logged in...
+          } else {
+            _success('Deleted ALL...')
+            _remote_load_list()
           }
-          _success('Deleted ALL...')
-          _remote_load_list()
         },
         error: () => {
           alert('Failed to find server')

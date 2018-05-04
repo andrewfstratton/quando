@@ -1,51 +1,49 @@
 'use strict'
-const TingoDb = require('tingodb')().Db
+// Type 3: Persistent datastore with automatic loading
+const NeDB = require('nedb')
 const fs = require('fs') // Used for dumping collection
-const DB_LOCATION = process.cwd() + '/tingo_db'
-
-let cached_db = null
-
-function getDB() {
-  return new Promise((success, fail) => { // promise is hangover from mongodb
-    if (!cached_db) {
-      cached_db = new TingoDb(DB_LOCATION, {})
-      if (!cached_db) {
-        console.log('Attempt to open TingoDB database at: "'+DB_LOCATION+'"')
-        console.trace()
-        fail('Unknown Error: Opening TingoDB database - check folder exists')
-      }
-    }
-    success(cached_db)
-  })
-}
+const DB_LOCATION = process.cwd() + '\\nedb\\'
 
 function collection(name) {
   return new Promise((success, fail) => {
-    getDB().then((db) => {
-      success(db.collection(name))
-    }, fail)
+    let collection = new NeDB({ filename: DB_LOCATION + name})
+    collection.loadDatabase((err) => {
+      if (err) {
+        fail('Failed to open collection : ' + name)
+        console.log('error = ' + err)
+      } else {
+        success(collection)
+      }
+    })
   })
 }
 
 exports.save = (collection_name, doc) => {
   return new Promise((success, fail) => {
     collection(collection_name).then((_collection) => {
-      _collection.save(doc, (err, doc) => {
+      _collection.insert(doc, (err, newDocs) => {
         if (err) {
-          fail(JSON.stringify(err))
+          let id = doc._id
+          delete doc._id
+          _collection.update({_id:id}, doc, {}, (err, doc) => {
+            if (err) {
+              fail(JSON.stringify(err))
+            } else {
+              success()
+            }
+          })
         } else {
-          success() // could return doc.result.upserted[0]._id ?!
+          success()
         }
-      })
-    }, fail)
+      }, fail)
+    })
   })
 }
 
-exports.getArray = (collection_name, query, fields, options) => {
+exports.find = (collection_name, query, sort={}) => {
   return new Promise((success, fail) => {
     collection(collection_name).then((_collection) => {
-      options.projection = fields
-      _collection.find(query, options).toArray((err, array) => {
+      _collection.find(query).sort(sort).exec((err, array) => {
         if (err) {
           fail(err)
         } else {
@@ -77,7 +75,7 @@ exports.remove = (collection_name, query, options = {}) => {
 exports.dump = (collection_name, filename) => {
   return new Promise((success, fail) => {
     collection(collection_name).then((_collection) => {
-      _collection.find().toArray((err, array) => {
+      _collection.find({}, (err, array) => {
         if (err) {
           fail(JSON.stringify(err))
         } else {

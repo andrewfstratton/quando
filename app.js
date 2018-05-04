@@ -1,7 +1,7 @@
 'use strict'
 const express = require('express')
 const session = require('express-session')
-// const FileStore = require('session-file-store')(session)
+const NedbStore = require('nedb-session-store')( session )
 const app = express()
 const fs = require('fs')
 const formidable = require('formidable')
@@ -53,7 +53,7 @@ app.use(session({
         // name: may need this later - if sessions exist for clients...
     httpOnly: false
   },
-  // store: new FileStore({ path: './sessions' }) // This should work...
+  store: new NedbStore({ filename: 'nedb_session.db', autoCompactInterval: 60000 })
 }))
 app.use('/', (req, res, next) => {
     // console.log(">>" + JSON.stringify(req.session.user))
@@ -108,27 +108,39 @@ app.get('/script/id/:id', (req, res) => {
 
 app.delete('/script/id/:id', (req, res) => {
   let id = req.params.id
-  let userid = req.session.user.id
-  script.deleteOnId(userid, id).then(
-        (doc) => { res.json({ 'success': true }) },
-        (err) => { res.json({ 'success': false, 'message': err }) })
+  if (!req.session.user) {
+    res.json({ 'success': false, 'message': 'Not Logged in' }) 
+  } else {
+    let userid = req.session.user.id
+    script.deleteOnId(userid, id).then(
+          (doc) => { res.json({ 'success': true }) },
+          (err) => { res.json({ 'success': false, 'message': err }) })
+  }
 })
 
 app.delete('/script/name/:name', (req, res) => {
   let name = encodeURI(req.params.name)
-  let userid = req.session.user.id
-  script.deleteAllOnName(userid, name).then(
-        (doc) => { res.json({ 'success': true }) },
-        (err) => { res.json({ 'success': false, 'message': err }) })
+  if (!req.session.user) {
+    res.json({ 'success': false, 'message': 'Not Logged in' }) 
+  } else {
+    let userid = req.session.user.id
+    script.deleteAllOnName(userid, name).then(
+          (doc) => { res.json({ 'success': true }) },
+          (err) => { res.json({ 'success': false, 'message': err }) })
+    }
 })
 
 app.delete('/script/tidy/:name/id/:id', (req, res) => {
-  let id = req.params.id
-  let userid = req.session.user.id
-  let name = encodeURI(req.params.name) // N.B. Leave name encoded...
-  script.tidyOnIdName(userid, id, name).then(
-        (doc) => { res.json({ 'success': true }) },
-        (err) => { res.json({ 'success': false, 'message': err }) })
+  if (!req.session.user) {
+    res.json({ 'success': false, 'message': 'Not Logged in' }) 
+  } else {
+    let id = req.params.id
+    let userid = req.session.user.id
+    let name = encodeURI(req.params.name) // N.B. Leave name encoded...
+    script.tidyOnIdName(userid, id, name).then(
+          (doc) => { res.json({ 'success': true }) },
+          (err) => { res.json({ 'success': false, 'message': err }) })
+  }
 })
 
 app.put('/script/deploy/:filename', (req, res) => {
