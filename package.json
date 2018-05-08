@@ -6,7 +6,8 @@
   "scripts": {
     "test": "mocha --ui tdd test",
     "start": "node app.js",
-    "standardize": "standard"
+    "standardize": "standard",
+    "pouchd": "pouchdb-server --port 5984 --dir pouchdb --config pouchdb-config.json"
   },
   "author": "",
   "license": "ISC",
@@ -20,6 +21,8 @@
     "morgan": "^1.7.0",
     "nedb": "^1.8.0",
     "nedb-session-store": "^1.1.2",
+    "pouchdb": "^6.4.3",
+    "pouchdb-server": "^4.0.0",
     "serialport": "^4.0.7",
     "socket.io": "^1.7.0"
   },

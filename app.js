@@ -1,7 +1,7 @@
 'use strict'
 const express = require('express')
 const session = require('express-session')
-const NedbStore = require('nedb-session-store')( session )
+//const NedbStore = require('nedb-session-store')( session )
 const app = express()
 const fs = require('fs')
 const formidable = require('formidable')
@@ -53,7 +53,7 @@ app.use(session({
         // name: may need this later - if sessions exist for clients...
     httpOnly: false
   },
-  store: new NedbStore({ filename: 'nedb_session.db', autoCompactInterval: 60000 })
+  // store: new NedbStore({ filename: 'nedb_session.db', autoCompactInterval: 60000 })
 }))
 app.use('/', (req, res, next) => {
     // console.log(">>" + JSON.stringify(req.session.user))
