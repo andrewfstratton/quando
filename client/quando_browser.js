@@ -218,10 +218,11 @@
     }
     if (!txt) {
       elem.style.visibility = 'hidden'
+      txt = ''
     } else {
       elem.style.visibility = 'visible'
-      elem.innerHTML = txt
     }
+    elem.innerHTML = txt
   }
   
   self.title = function (txt, append=false) {
