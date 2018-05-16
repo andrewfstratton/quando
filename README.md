@@ -28,6 +28,9 @@ Prerequisites: Chrome, Node JS, mongoDB (complete install in c:\mongodb), git fo
 
 If everything is fine - then try restarting to see if everything boots correctly - and test remotely to be sure that you can edit remotely.
 
+# Optional - Leap Motion
+The standard Leap Motion (Orion) software needs to be installed - the SDK is not needed.
+
 Optional - npm install -g nodemon
 
 To update (assuming quando has changed), First kill the Node.js process in the task manager,

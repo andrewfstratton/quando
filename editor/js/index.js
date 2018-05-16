@@ -395,8 +395,8 @@
             _error(res.message) // possible to fail if no longer logged in...
           } else {
             _success('Deleted...')
-            _remote_load_list()
           }
+          _remote_load_list()
         },
         error: () => {
           alert('Failed to find server')
@@ -436,8 +436,8 @@
             _error(res.message) // possible to fail if no longer logged in...
           } else {
             _success('Deleted ALL...')
-            _remote_load_list()
           }
+          _remote_load_list()
         },
         error: () => {
           alert('Failed to find server')

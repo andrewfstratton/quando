@@ -1,121 +1,63 @@
 'use strict'
-// Type 3: Persistent datastore with automatic loading
-const NeDB = require('nedb')
+const PouchDB = require('pouchdb')
+PouchDB.plugin(require('pouchdb-find'))
 const fs = require('fs') // Used for dumping collection
-const DB_LOCATION = process.cwd() + '\\nedb\\'
+const DB_LOCATION = 'http://127.0.0.1:5984/'
 
-function collection(name) {
+function db(name) {
+  return new PouchDB(DB_LOCATION + name)
+}
+
+exports.save = (db_name, doc) => {
   return new Promise((success, fail) => {
-    let collection = new NeDB({ filename: DB_LOCATION + name})
-    collection.loadDatabase((err) => {
-      if (err) {
-        fail('Failed to open collection : ' + name)
-        console.log('error = ' + err)
-      } else {
-        success(collection)
+    db(db_name).post(doc).then(success, fail)
+  })
+}
+
+exports.find = (db_name, options={}) => {
+  return new Promise((success, fail) => {
+    let _db = db(db_name)
+    _db.find(options).then((doc) => {
+      let results = []
+      let rows = doc.docs.length
+      for(let i=0; i<rows; i++) {
+        results.push(doc.docs[i])
       }
-    })
-  })
-}
-
-exports.save = (collection_name, doc) => {
-  return new Promise((success, fail) => {
-    collection(collection_name).then((_collection) => {
-      _collection.insert(doc, (err, newDocs) => {
-        if (err) {
-          let id = doc._id
-          delete doc._id
-          _collection.update({_id:id}, doc, {}, (err, doc) => {
-            if (err) {
-              fail(JSON.stringify(err))
-            } else {
-              success()
-            }
-          })
-        } else {
-          success()
-        }
+      success(results)
       }, fail)
+  })
+}
+
+exports.remove = (db_name, query) => {
+  return new Promise((success, fail) => {
+    let _db = db(db_name)
+    const options = {selector: query}
+    _db.find(options).then((result) => {
+      if (result.docs.length == 0) {
+        fail('No Scripts to Remove')
+      } else {
+        let count = 0
+        for (let i=0; i< result.docs.length; i++) {
+          let doc = result.docs[i]
+          doc._deleted = true
+          _db.put(doc).then((result) => {
+            count++
+          }, (err) => {
+            fail(err)
+          })
+        }
+        success(count)
+      }
+    }, (err) => {
+      fail('Script query failed with error: ' + err)
     })
   })
 }
 
-exports.find = (collection_name, query, sort={}) => {
-  return new Promise((success, fail) => {
-    collection(collection_name).then((_collection) => {
-      _collection.find(query).sort(sort).exec((err, array) => {
-        if (err) {
-          fail(err)
-        } else {
-          success(array)
-        }
-      })
-    }, fail)
-  })
-}
-
-exports.remove = (collection_name, query, options = {}) => {
-  return new Promise((success, fail) => {
-    collection(collection_name).then((_collection) => {
-      _collection.remove(query, options, (err, removed_count) => {
-        if (removed_count == 0) {
-          fail('No Scripts to Remove') // needs fixing...
-        } else {
-          if (err) {
-            fail(JSON.stringify(err))
-          } else {
-            success()
-          }
-        }
-      })
-    }, fail)
-  })
-}
-
-exports.dump = (collection_name, filename) => {
-  return new Promise((success, fail) => {
-    collection(collection_name).then((_collection) => {
-      _collection.find({}, (err, array) => {
-        if (err) {
-          fail(JSON.stringify(err))
-        } else {
-          fs.writeFile(filename, JSON.stringify(array, null, 2), (err) => {
-            if (!err) {
-              success(`Collection: ${collection_name} saved to ${filename}`)
-            } else {
-              fail(`**Error: Failed to dump collection: ${collection_name} to ${filename}, error:${err}`)
-            }
-          })
-        }
-      })
-    }, fail)
-  })
-}
-
-exports.undump_script = (collection_name, filename) => {
-  return new Promise((success, fail) => {
-    collection(collection_name).then((_collection) => {
-      fs.readFile(filename, 'utf8', (err, data) => {
-        if (!err) {
-          // console.log(data)
-          let array = JSON.parse(data)
-          console.log('inserting ' + array.length + ' documents...')
-          // N.B. inserts in reverse order (!) and adds adte as now (!)
-          for(let i=array.length - 1; i>=0; i--) {
-            array[i].date = new Date()
-            _collection.save(array[i], (err) => {
-              if (err) {
-                fail(JSON.stringify(err))
-              } else {
-                process.stdout.write('.')
-              }
-            })
-          }
-          success(`Collection: ${collection_name} inserted from ${filename}`)
-        } else {
-          fail(`**Error: Failed to undump collection: ${collection_name} to ${filename}, error:${err}`)
-        }
-      })
-    }, fail)
+exports.checkDB = () => {
+  PouchDB(DB_LOCATION + "_users").info((err, info)=>{
+    if (err) {
+      console.log("Database Not running!\n>> Use 'npm run pouchd'\n" + err.toString())
+    }
   })
 }

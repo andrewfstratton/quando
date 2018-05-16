@@ -1,7 +1,8 @@
 'use strict'
 const express = require('express')
 const session = require('express-session')
-//const NedbStore = require('nedb-session-store')( session )
+require('./db').checkDB()
+const PouchSession = require('session-pouchdb-store')
 const app = express()
 const fs = require('fs')
 const formidable = require('formidable')
@@ -53,7 +54,11 @@ app.use(session({
         // name: may need this later - if sessions exist for clients...
     httpOnly: false
   },
-  // store: new NedbStore({ filename: 'nedb_session.db', autoCompactInterval: 60000 })
+  store: new PouchSession('http://127.0.0.1:5984/session', {
+    maxIdle : 12*60*60*1000,
+    scavenge : 60*1000,
+    purge : 12*60*60*1000			
+  })
 }))
 app.use('/', (req, res, next) => {
     // console.log(">>" + JSON.stringify(req.session.user))
@@ -111,8 +116,7 @@ app.delete('/script/id/:id', (req, res) => {
   if (!req.session.user) {
     res.json({ 'success': false, 'message': 'Not Logged in' }) 
   } else {
-    let userid = req.session.user.id
-    script.deleteOnId(userid, id).then(
+    script.deleteOnId(id).then(
           (doc) => { res.json({ 'success': true }) },
           (err) => { res.json({ 'success': false, 'message': err }) })
   }

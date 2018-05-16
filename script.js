@@ -4,17 +4,16 @@ const COLLECTION = 'script'
 
 exports.save = (name, id, userid, script) => {
   return new Promise((success, fail) => {
-    let now = new Date()
-    let doc = { name: name, ownerid: userid, date: now, xml: script}
+    let now = new Date().toJSON()
+    let doc = { ownerid: userid, name: name, date: now, xml: script}
     db.save(COLLECTION, doc).then(success, fail)
   })
 }
 
 exports.getNamesOnOwnerID = (userid) => {
   return new Promise((success, fail) => {
-    const query = { ownerid: userid }
-    const sort = {date:-1}
-    db.find(COLLECTION, query, sort).then((result) => {
+    const options = {selector: {date: {$gte: null}, ownerid: {$eq: userid}}, sort: [{date:'desc'}]}
+    db.find(COLLECTION, options).then((result) => {
       let list = []
       result.forEach((item) => {
         let date = new Date(item.date)
@@ -29,26 +28,27 @@ exports.getNamesOnOwnerID = (userid) => {
 
 exports.getOnId = (id) => {
   return new Promise((success, fail) => {
-    const query = { _id: id }
-    db.find(COLLECTION, query).then((result) => {
+    const options = {selector: {_id: {$eq: id}}}
+    db.find(COLLECTION, options).then((result) => {
       if (result.length == 0) {
         fail('Failed to find script')
       } else {
         let doc = result[0]
-                // decode the name and the dployment name
+                // decode the name and the deployment name
         doc.name = decodeURIComponent(doc.name)
-        doc.deploy = decodeURIComponent(doc.deploy)
+        if (doc.deploy) {
+          doc.deploy = decodeURIComponent(doc.deploy)
+        }
         success(doc)
       }
     }, fail)
   })
 }
 
-exports.deleteOnId = (userid, id) => {
+exports.deleteOnId = (id) => {
   return new Promise((success, fail) => {
-    const query = { _id: id, ownerid: userid}
-    const options = { justOne: true }
-    db.remove(COLLECTION, query, options).then(success, fail)
+    const query = {_id: {$eq: id}}
+    db.remove(COLLECTION, query).then(success, fail)
   })
 }
 
@@ -61,8 +61,7 @@ exports.tidyOnIdName = (userid, id, name) => {
 
 exports.deleteAllOnName = (userid, name) => {
   return new Promise((success, fail) => {
-    const query = { name: name, ownerid: userid}
-    let options = { multi: true }
-    db.remove(COLLECTION, query, options).then(success, fail)
+    const query = { name: {$eq: name}, ownerid: userid}
+    db.remove(COLLECTION, query).then(success, fail)
   })
 }
