@@ -1,6 +1,10 @@
 {
   "name": "quando",
+<<<<<<< HEAD
   "version": "0.7.20180513",
+=======
+  "version": "0.7.20180418",
+>>>>>>> origin/master
   "description": "Quando Toolset",
   "main": "app.js",
   "scripts": {
