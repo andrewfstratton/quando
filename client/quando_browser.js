@@ -370,7 +370,7 @@
     self.setDefaultStyle('#cursor', 'background-color', 'rgba(255, 255, 102, 0.7)');
     self.setDefaultStyle('#cursor', ['width','height'], '4.4vw');
     self.setDefaultStyle('#cursor', ['margin-left','margin-top'], '-2.2vw');    
-    document.querySelector('#quando_title').addEventListener('contextmenu', // right click title to go to setup
+    document.querySelector('#container').addEventListener('contextmenu', // right click title to go to setup
             function (ev) {
               ev.preventDefault()
               window.location.href = '../../client/setup'
