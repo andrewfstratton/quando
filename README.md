@@ -50,7 +50,19 @@ then use:
 git pull
 quando
 
+# Editing
+
+The instructions below assume that you are using Visual Studio Code, though specifics are generally avoided.
+
+The run the editor, you need to:
+1. Run the pouchdb database, using `npm run pouchd`
+2. Run `node app.js`, e.g. through Launch
+3. Open a Browser to 127.0.0.1/editor
+
+To use a client, access 127.0.0.1/client from a browser. This will automatically re-open the last script. You can right click the display to go to a screen that allows you to select already deployed/created scripts - whichever one you open will be reopened next time you open 127.0.0.1/client. Note that _.js is special, and is the test script.
+
 # Block Development
+
 ## Example text to speech
 
 ### Test the initial Javascript

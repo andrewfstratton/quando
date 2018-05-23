@@ -1077,7 +1077,7 @@
 
     let SAY_BLOCK = 'Say'
     let SAY_TEXT = 'Say text'
-    self.defineMedia({
+    self.defineExperiment({
       name: SAY_BLOCK,
       interface: [
         { name: SAY_TEXT, title: '', text:'...Something...' }
