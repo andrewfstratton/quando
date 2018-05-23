@@ -50,7 +50,7 @@ then use:
 git pull
 quando
 
-# Editing
+# Editing as a Developer
 
 The instructions below assume that you are using Visual Studio Code, though specifics are generally avoided.
 
