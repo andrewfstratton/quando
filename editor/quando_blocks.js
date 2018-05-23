@@ -1066,12 +1066,26 @@
       interface: [
         { statement: STATEMENT }
       ],
-      javascript : (block) => {
+      javascript: (block) => {
         let id = block.id
         let stateBlock = block.getInputTargetBlock(STATEMENT)
         let arr = _getIndividualChildCode(stateBlock, 'function(){\n', '}', ',\n')
         quando_editor.pushToSetup(`quando.setOnId('${id}', [${arr}])\n`)
         return `quando.pick_one_each_time(quando.getOnId('${id}'))\n`
+      }
+    })
+
+    let SAY_BLOCK = 'Say'
+    let SAY_TEXT = 'Say text'
+    self.defineMedia({
+      name: SAY_BLOCK,
+      interface: [
+        { name: SAY_TEXT, title: '', text:'...Something...' }
+      ],
+      javascript: (block) => {
+        let say_text = quando_editor.getText(block, SAY_TEXT)
+        let result = `quando.speech.say("${say_text}")`
+        return result + '\n'
       }
     })
 
