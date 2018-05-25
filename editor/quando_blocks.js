@@ -967,15 +967,29 @@
       }
     })
 
+    const ICON_JAVASCRIPT = '\u270D'
     let SCRIPT_BLOCK = 'Javascript: '
     let SCRIPT_TEXT = 'script_text'
     self.defineAdvanced({
-      name: SCRIPT_BLOCK,
-      interface: [{name:SCRIPT_TEXT, title:'', text:''}
+      name: SCRIPT_BLOCK, title: ICON_JAVASCRIPT + ' ' + SCRIPT_BLOCK,
+      interface: [{name:SCRIPT_TEXT, title: '', text:''}
       ],
       javascript : (block) => {
         let script = quando_editor.getRawText(block, SCRIPT_TEXT)
         return `${script};\n`
+      }
+    })
+
+    let SCRIPT_STATEMENT_BLOCK = 'Javascript {} '
+    self.defineAdvanced({
+      name: SCRIPT_STATEMENT_BLOCK, title: ICON_JAVASCRIPT + ' ' + SCRIPT_BLOCK,
+      interface: [{name:SCRIPT_TEXT, title: '', text:''},
+        { statement: STATEMENT }
+      ],
+      javascript : (block) => {
+        let statement = quando_editor.getStatement(block, STATEMENT)
+        let script = quando_editor.getRawText(block, SCRIPT_TEXT)
+        return `${script} {\n${statement}}\n`
       }
     })
 
