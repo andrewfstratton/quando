@@ -24,6 +24,7 @@
       let utter = new SpeechSynthesisUtterance(say.sentence)
       utter.rate = say.rate
       utter.pitch = say.pitch
+      utter.volume = say.volume
       self.utter = utter // attempt to solve Chrome bug - needing a global reference to utter to avoid it being garbage colected before onend is handled
       utter.onstart = () => {
           if (self.next) {
@@ -51,8 +52,8 @@
       self.synth.speak(utter)
     }
   
-    self.say = function(sentence, rate = 1, pitch = 1) {
-      let new_say = {'sentence': sentence, 'rate': rate, 'pitch': pitch}
+    self.say = function(sentence, rate = 1, pitch = 1, volume = 1) {
+      let new_say = {'sentence': sentence, 'rate': rate, 'pitch': pitch, 'volume': volume}
       if (equalSay(self.saying, new_say)) {
           // ignore when already saying the same
       } else {
