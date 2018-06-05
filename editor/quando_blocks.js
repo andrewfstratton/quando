@@ -1091,14 +1091,25 @@
 
     let SAY_BLOCK = 'Say'
     let SAY_TEXT = 'Say text'
+    let SAY_RATE = 'Speed'
+    let SAY_PITCH = 'Pitch'
     self.defineExperiment({
       name: SAY_BLOCK,
       interface: [
-        { name: SAY_TEXT, title: '', text:'...Something...' }
+        { name: SAY_TEXT, title: '', text:'...Something...',
+          extras: [
+              {name: SAY_RATE, number: 100},
+              {title:'%'},
+              {name: SAY_PITCH, number: 100},
+              {title:'%'},
+          ],
+        },
       ],
       javascript: (block) => {
         let say_text = quando_editor.getText(block, SAY_TEXT)
-        let result = `quando.speech.say("${say_text}")`
+        let say_rate = quando_editor.getNumber(block, SAY_RATE) / 100
+        let say_pitch = quando_editor.getNumber(block, SAY_PITCH) / 100
+        let result = `quando.speech.say("${say_text}", ${say_rate}, ${say_pitch})`
         return result + '\n'
       }
     })
