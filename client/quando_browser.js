@@ -531,29 +531,35 @@
     return _lookup[id]
   }
 
-  self.vary_each_time = function(fn, vary_over, inverted, seesaw) {
-    // seesaw also needs to store direction in function?!
-    vary_over--
-    if (vary_over < 1) { // Avoid infinite answers...
-      vary_over = 1
+  self.vary_each_time = function(fn, end_value, inverted, seesaw) {
+    end_value--
+    if (end_value < 1) { // Avoid infinite answers...
+      end_value = 1
     }
     if (!fn.hasOwnProperty('counter')) {
       fn.counter = 0
-      if (inverted) {
-        fn.counter = vary_over
+      fn.direction = 1 // go up at the start - inverted will flip the final result...
+    }
+    // calculate the current value, then adjust the counter to the next value...
+    let val = fn.counter/end_value
+    if (inverted) {
+      val = 1 - val
+    }
+    fn.counter += fn.direction
+    if (fn.counter < 0) {
+      if (seesaw) {
+        fn.counter = 1 // i.e. next time is one more than the 0 minimum
+        fn.direction = 1
+      } else {
+        fn.counter = end_value // logically this can't happen now...
       }
     }
-    let val = fn.counter/vary_over
-    // will need direction to add or subtract instead...
-    if (inverted) {
-      fn.counter--
-      if (fn.counter < 0) {
-        fn.counter = vary_over // or change direction
-      }
-    } else {
-      fn.counter++
-      if (fn.counter > vary_over) {
-        fn.counter = 0 // or change direction
+    if (fn.counter > end_value) {
+      if (seesaw) {
+        fn.counter = end_value - 1 // next value is one less than the maximum
+        fn.direction = -1
+      } else {
+        fn.counter = 0 // back to start
       }
     }
     if (typeof fn === 'function') { fn.call(this, val) }
