@@ -505,14 +505,11 @@
     let EXPLORATION_RULE = 'Exploration Rule'
     self.defineExperiment({
       name: EXPLORATION_RULE,
-      title: 'When',
+      title: '',
       interface: [
                 { name: 'title', title: '', text: ''},
-                { name: 'text', title: '', text: ''},
                 { extras: [
                   { name: 'text3', title: '', text: ''},
-                  { name: 'text4', title: '', text: ''},
-                  { name: 'text5', title: '', text: ''}
                   ]
                 },
                 { statement: STATEMENT },
@@ -525,10 +522,7 @@
       title: 'Do',
       interface: [
                 { name: 'title', title: '', text: ''},
-                { name: 'text', title: '', text: ''},
                 { extras : [
-                  { name: 'text3', title: '', text: ''},
-                  { name: 'text4', title: '', text: ''},
                   { name: 'text5', title: '', text: ''}
                 ] }
       ]
@@ -1115,6 +1109,32 @@
         let say_volume = quando_editor.getNumber(block, SAY_VOLUME) / 100
         let result = `quando.speech.say("${say_text}", ${say_rate}, ${say_pitch}, ${say_volume})`
         return result + '\n'
+      }
+    })
+
+    let VARY_BLOCK = 'Vary '
+    let VARY_OVER = 'over'
+    let MENU_VARY = { name: 'Menu vary', title: '', menu: ['Restart', 'Bounce back'] }
+    self.defineAdvanced({
+      name: VARY_BLOCK, title: VARY_BLOCK + ICON_CONSUME_VALUE,
+      interface: [
+        {name: VARY_OVER, number: 2},
+        {title: 'times'},
+        { extras: [
+          MENU_VARY, // TODO fix
+          {title:'at end'},
+          {name: CHECK_INVERTED, check: false},
+        ]},
+        { statement: STATEMENT }
+      ],
+      javascript: (block) => {
+        let id = block.id
+        let statement = quando_editor.getStatement(block, STATEMENT)
+        let vary_over = quando_editor.getNumber(block, VARY_OVER)
+        let inverted = quando_editor.getCheck(block, CHECK_INVERTED)
+        let seesaw = quando_editor.getMenu(block, MENU_VARY.name) != 'Restart'
+        quando_editor.pushToSetup(`quando.setOnId('${id}', function(val) {\n${statement}})\n`)
+        return `quando.vary_each_time(quando.getOnId('${id}'), ${vary_over}, ${inverted}, ${seesaw})\n`
       }
     })
 

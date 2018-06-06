@@ -531,6 +531,34 @@
     return _lookup[id]
   }
 
+  self.vary_each_time = function(fn, vary_over, inverted, seesaw) {
+    // seesaw also needs to store direction in function?!
+    vary_over--
+    if (vary_over < 1) { // Avoid infinite answers...
+      vary_over = 1
+    }
+    if (!fn.hasOwnProperty('counter')) {
+      fn.counter = 0
+      if (inverted) {
+        fn.counter = vary_over
+      }
+    }
+    let val = fn.counter/vary_over
+    // will need direction to add or subtract instead...
+    if (inverted) {
+      fn.counter--
+      if (fn.counter < 0) {
+        fn.counter = vary_over // or change direction
+      }
+    } else {
+      fn.counter++
+      if (fn.counter > vary_over) {
+        fn.counter = 0 // or change direction
+      }
+    }
+    if (typeof fn === 'function') { fn.call(this, val) }
+  }
+
 })()
 
 var val = false // force handler to manage when not embedded
