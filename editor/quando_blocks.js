@@ -16,6 +16,7 @@
   }
   const ICON_PRODUCE_VALUE = '\u26A1' // \uD83D\uDD33'
   const ICON_CONSUME_VALUE = '\u26A1' // \uD83D\uDD32'
+  const ICON_ENVELOPE = '\u2709'
 
   let ajax_get = (url, callback) => {
     let xhr = new XMLHttpRequest()
@@ -1137,6 +1138,35 @@
         return `quando.vary_each_time(quando.getOnId('${id}'), ${vary_over}, ${inverted}, ${seesaw})\n`
       }
     })
+
+    let SEND_MESSAGE_BLOCK = ' Send'
+    let MESSAGE_TEXT = 'message'
+    self.defineAdvanced({
+      name: SEND_MESSAGE_BLOCK, title: ICON_ENVELOPE + SEND_MESSAGE_BLOCK,
+      interface: [
+        { name: MESSAGE_TEXT, text: '...'},
+        { title: ICON_PRODUCE_VALUE}
+      ],
+      javascript: (block) => {
+        let message = quando_editor.getText(block, MESSAGE_TEXT)
+        return `quando.send_message('${message}', val)\n`
+      }
+    })
+
+    // let PICK_ONE_EACH_BLOCK = 'Pick one each time'
+    // self.defineAdvanced({
+    //   name: PICK_ONE_EACH_BLOCK,
+    //   interface: [
+    //     { statement: STATEMENT }
+    //   ],
+    //   javascript: (block) => {
+    //     let id = block.id
+    //     let stateBlock = block.getInputTargetBlock(STATEMENT)
+    //     let arr = _getIndividualChildCode(stateBlock, 'function(){\n', '}', ',\n')
+    //     quando_editor.pushToSetup(`quando.setOnId('${id}', [${arr}])\n`)
+    //     return `quando.pick_one_each_time(quando.getOnId('${id}'))\n`
+    //   }
+    // })
 
   } // self.addBlocks
 })()

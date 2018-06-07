@@ -31,6 +31,22 @@
     }
   })
 
+  self.add_message_handler = function (message, fn, destruct) {
+    self.socket.on(message, fn)
+    if (destruct) {
+      self.addDestructor(function () {
+        self.socket.off(message, fn)
+      })
+    }
+  }
+
+  self.send_message = function(message, val) {
+    fetch('/message/' + message, { method: 'POST', 
+      body: JSON.stringify({'val':val}), 
+      headers: {"Content-Type": "application/json"}
+    })
+  }
+
   self.idle_reset = function () {
     if (self.idle_reset_secs > 0) {
       clearTimeout(self.idle_callback_id)

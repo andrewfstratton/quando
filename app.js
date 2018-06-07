@@ -309,6 +309,12 @@ app.get('/client/js', (req, res) => {
 
 app.use('/client', express.static(path.join(client_dir, 'index.html')))
 
+app.post('/message/:id', (req, res) => {
+  let id = req.params.id
+  let val = req.body.val
+  io.emit(id, {'val': val})
+  res.json({})
+})
 // user.save("andy", "andy", null).then(
 //     () => { console.log("Success") },
 //     (err) => { console.log("Fail : ", err) } )
