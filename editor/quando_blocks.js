@@ -1153,20 +1153,20 @@
       }
     })
 
-    // let PICK_ONE_EACH_BLOCK = 'Pick one each time'
-    // self.defineAdvanced({
-    //   name: PICK_ONE_EACH_BLOCK,
-    //   interface: [
-    //     { statement: STATEMENT }
-    //   ],
-    //   javascript: (block) => {
-    //     let id = block.id
-    //     let stateBlock = block.getInputTargetBlock(STATEMENT)
-    //     let arr = _getIndividualChildCode(stateBlock, 'function(){\n', '}', ',\n')
-    //     quando_editor.pushToSetup(`quando.setOnId('${id}', [${arr}])\n`)
-    //     return `quando.pick_one_each_time(quando.getOnId('${id}'))\n`
-    //   }
-    // })
+    let RECEIVE_MESSAGE_BLOCK = 'When message'
+    self.defineAdvanced({
+      name: RECEIVE_MESSAGE_BLOCK, title: ICON_ENVELOPE + ' When',
+      interface: [
+        { name: MESSAGE_TEXT, text: '...'},
+        { title: ICON_PRODUCE_VALUE},
+        { statement: STATEMENT }
+      ],
+      javascript: (block) => {
+        let message = quando_editor.getText(block, MESSAGE_TEXT)
+        let statement = quando_editor.getStatement(block, STATEMENT)
+        return `quando.add_message_handler('${message}', (data) => {\nlet val = data.val;\n${statement}})\n`
+      }
+    })
 
   } // self.addBlocks
 })()
