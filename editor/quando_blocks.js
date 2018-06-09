@@ -2,7 +2,9 @@
   let self = this['quando_blocks'] = {}
   let PREFIX = 'quando_' // TODO share with quando_editor
   self.CONFIG = {
-    ADVANCED_COLOUR: '#ff8888',
+    ADVANCED_COLOUR: '#ff9999',
+    DEVELOPER_COLOUR: '#9999ff',
+    MESSAGE_COLOUR: '#99ff99',
     DISPLAY_COLOUR: '#ffcc88',
     MEDIA_COLOUR: '#b3ffb3',
     STYLE_COLOUR: '#ffccff',
@@ -70,6 +72,12 @@
   }
   self.defineExperiment = (json) => {
       return _defineBlock(json, 'quando_experiment', self.CONFIG.EXPERIMENT_COLOUR)
+  }
+  self.defineDeveloper = (json) => {
+      return _defineBlock(json, 'quando_developer', self.CONFIG.DEVELOPER_COLOUR)
+  }
+  self.defineMessage = (json) => {
+      return _defineBlock(json, 'quando_message', self.CONFIG.MESSAGE_COLOUR)
   }
 
   self.addBlocks = (quando_editor) => {
@@ -946,7 +954,7 @@
 
     let DESCRIPTION_BLOCK = 'Description'
     let DESCRIPTION_TEXT = 'description_text'
-    self.defineAdvanced({
+    self.defineDeveloper({
       name: DESCRIPTION_BLOCK, title:' ',
       interface: [{name:DESCRIPTION_TEXT, title:' ', text:''},
         { statement: STATEMENT }
@@ -965,7 +973,7 @@
     const ICON_JAVASCRIPT = '\u270D'
     let SCRIPT_BLOCK = 'Javascript: '
     let SCRIPT_TEXT = 'script_text'
-    self.defineAdvanced({
+    self.defineDeveloper({
       name: SCRIPT_BLOCK, title: ICON_JAVASCRIPT + ' ' + SCRIPT_BLOCK,
       interface: [{name:SCRIPT_TEXT, title: '', text:''}
       ],
@@ -976,7 +984,7 @@
     })
 
     let SCRIPT_STATEMENT_BLOCK = 'Javascript {} '
-    self.defineAdvanced({
+    self.defineDeveloper({
       name: SCRIPT_STATEMENT_BLOCK, title: ICON_JAVASCRIPT + ' ' + SCRIPT_BLOCK,
       interface: [{name:SCRIPT_TEXT, title: '', text:''},
         { statement: STATEMENT }
@@ -1141,7 +1149,7 @@
 
     let SEND_MESSAGE_BLOCK = ' Send'
     let MESSAGE_TEXT = 'message'
-    self.defineAdvanced({
+    self.defineMessage({
       name: SEND_MESSAGE_BLOCK, title: ICON_ENVELOPE + SEND_MESSAGE_BLOCK,
       interface: [
         { name: MESSAGE_TEXT, text: '...'},
@@ -1154,7 +1162,7 @@
     })
 
     let RECEIVE_MESSAGE_BLOCK = 'When message'
-    self.defineAdvanced({
+    self.defineMessage({
       name: RECEIVE_MESSAGE_BLOCK, title: ICON_ENVELOPE + ' When',
       interface: [
         { name: MESSAGE_TEXT, text: '...'},
