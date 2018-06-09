@@ -1,2 +1,2 @@
-start /b npm pouchd
+start /b npm run pouchd
 start /b node app.js
