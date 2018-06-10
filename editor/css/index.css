@@ -24,9 +24,10 @@ body {
 #editor_content {
     background-color: #ddffff;
 }
+.blocklyText[style],
 .blocklyText,
 .blocklySvg text { /* for older version */
-  fill:black;
+  fill:black !important;
 }
 .blocklyTreeIcon {
   visibility : hidden;
