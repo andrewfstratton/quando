@@ -18,7 +18,7 @@
   }
   const ICON_PRODUCE_VALUE = '\u26A1' // \uD83D\uDD33'
   const ICON_CONSUME_VALUE = '\u26A1' // \uD83D\uDD32'
-  const ICON_ENVELOPE = '\u2709'
+  const ICON_MESSAGE = '\uD83D\uDCE1'
 
   let ajax_get = (url, callback) => {
     let xhr = new XMLHttpRequest()
@@ -1150,9 +1150,9 @@
     let SEND_MESSAGE_BLOCK = ' Send'
     let MESSAGE_TEXT = 'message'
     self.defineMessage({
-      name: SEND_MESSAGE_BLOCK, title: ICON_ENVELOPE + SEND_MESSAGE_BLOCK,
+      name: SEND_MESSAGE_BLOCK, title: ICON_MESSAGE + SEND_MESSAGE_BLOCK,
       interface: [
-        { name: MESSAGE_TEXT, text: '...'},
+        { name: MESSAGE_TEXT, text: '..message..'},
         { title: ICON_PRODUCE_VALUE}
       ],
       javascript: (block) => {
@@ -1163,9 +1163,9 @@
 
     let RECEIVE_MESSAGE_BLOCK = 'When message'
     self.defineMessage({
-      name: RECEIVE_MESSAGE_BLOCK, title: ICON_ENVELOPE + ' When',
+      name: RECEIVE_MESSAGE_BLOCK, title:'When ' + ICON_MESSAGE,
       interface: [
-        { name: MESSAGE_TEXT, text: '...'},
+        { name: MESSAGE_TEXT, text: '..message..'},
         { title: ICON_PRODUCE_VALUE},
         { statement: STATEMENT }
       ],
