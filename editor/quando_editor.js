@@ -508,10 +508,11 @@
                 'quando_microbit': CONFIG.DEVICE_COLOUR,
                 'quando_robot': CONFIG.DEVICE_COLOUR,
                 'quando_cursor': CONFIG.DEVICE_COLOUR,
-            'quando_experiment': CONFIG.EXPERIMENT_COLOUR,
             'quando_advanced': CONFIG.ADVANCED_COLOUR,
                 'quando_developer': CONFIG.DEVELOPER_COLOUR,
-                'quando_message': CONFIG.MESSAGE_COLOUR
+                'quando_message': CONFIG.MESSAGE_COLOUR,
+            'quando_experiment': CONFIG.EXPERIMENT_COLOUR,
+            'quando_invention': CONFIG.INVENTION_COLOUR
         }
         for (let key in map) {
             let elem = _fromDom(key, null)

@@ -3,8 +3,6 @@
   let PREFIX = 'quando_' // TODO share with quando_editor
   self.CONFIG = {
     ADVANCED_COLOUR: '#ff9999',
-    DEVELOPER_COLOUR: '#9999ff',
-    MESSAGE_COLOUR: '#99ff99',
     DISPLAY_COLOUR: '#ffcc88',
     MEDIA_COLOUR: '#b3ffb3',
     STYLE_COLOUR: '#ffccff',
@@ -12,6 +10,9 @@
     TIME_COLOUR: '#ffb3b3',
     LEAP_MOTION_COLOUR: '#aaaaaa',
     DEVICE_COLOUR: '#e6ccff',
+    DEVELOPER_COLOUR: '#9999ff',
+    MESSAGE_COLOUR: '#99ff99',
+    INVENTION_COLOUR: '#66cc66',
     EXPERIMENT_COLOUR: '#bbbbbb',
     BLOCKLY_SATURATION: 1, // default for hue only colour - probably not used anymore - see http://colorizer.org/
     BLOCKLY_VALUE: 1, // ditto
@@ -19,6 +20,7 @@
   const ICON_PRODUCE_VALUE = '\u26A1' // \uD83D\uDD33'
   const ICON_CONSUME_VALUE = '\u26A1' // \uD83D\uDD32'
   const ICON_MESSAGE = '\uD83D\uDCE1'
+  const ICON_BLOCK = '\uD83D\uDCBC'
 
   let ajax_get = (url, callback) => {
     let xhr = new XMLHttpRequest()
@@ -78,6 +80,9 @@
   }
   self.defineMessage = (json) => {
       return _defineBlock(json, 'quando_message', self.CONFIG.MESSAGE_COLOUR)
+  }
+  self.defineInvention = (json) => {
+      return _defineBlock(json, 'quando_invention', self.CONFIG.INVENTION_COLOUR)
   }
 
   self.addBlocks = (quando_editor) => {
@@ -973,13 +978,21 @@
     const ICON_JAVASCRIPT = '\u270D'
     let SCRIPT_BLOCK = 'Javascript: '
     let SCRIPT_TEXT = 'script_text'
+    const SCRIPT_SEMICOLON = 'semi colon'
     self.defineDeveloper({
       name: SCRIPT_BLOCK, title: ICON_JAVASCRIPT + ' ' + SCRIPT_BLOCK,
-      interface: [{name:SCRIPT_TEXT, title: '', text:''}
+      interface: [{name:SCRIPT_TEXT, title: '', text:''},
+        {extras:[
+          {name:SCRIPT_SEMICOLON, title: '', check: true},
+          {title: 'End with ;\\n'}
+        ]}
       ],
       javascript : (block) => {
         let script = quando_editor.getRawText(block, SCRIPT_TEXT)
-        return `${script};\n`
+        if (quando_editor.getCheck(block, SCRIPT_SEMICOLON)) {
+          script += ';\n'
+        }
+        return script
       }
     })
 
@@ -1176,5 +1189,114 @@
       }
     })
 
+    let INVENTION_CREATE_BLOCK = 'Create Block'
+    const NAME_TEXT = 'name'
+    const GENERATOR_STATEMENT = 'Generator'
+    self.defineInvention({
+      name: INVENTION_CREATE_BLOCK, title:'Create ' + ICON_BLOCK,
+      interface: [
+        { name: NAME_TEXT, text: '..unique name..'},
+        { statement: STATEMENT },
+        { row: 'Generator', statement: GENERATOR_STATEMENT }
+      ],
+      javascript: (block) => {
+        let name = quando_editor.getText(block, NAME_TEXT)
+        let statement = quando_editor.getStatement(block, STATEMENT)
+        let generator = quando_editor.getStatement(block, GENERATOR_STATEMENT)
+        return `{
+          name: '${name}', title:'',
+          interface: [
+            ${statement}
+          ],
+          javascript: (block) => {
+            ${generator}
+          }
+        }`
+      }
+    })
+
+    self.defineInvention(
+      {
+        name: 'Show Text', title:'',
+        interface: [
+            {name:'text', title:'Show "', text:''},{title:'"'}
+        ],
+        javascript: (block) => {
+            return `{title: '${quando_editor.getText(block, 'text')}'},`
+        }
+      }
+    )
+
+    self.defineInvention(
+      {
+        name: 'InputText', title:'',
+        interface: [
+            {title: 'Input Text'},{name:'name', title:' Name:', text:''},{name:'default', title:' Default', text:''}
+        ],
+        javascript: (block) => {
+            return `{name: '${quando_editor.getText(block, 'name')}', title:'', text: '${quando_editor.getText(block, 'default')}'},`
+        }
+      }
+    )
+
+    self.defineInvention(
+      {
+        name: 'Generate Text', title:'',
+        interface: [
+            {title: 'Generate Text:'},{name: 'text', title:'', text: ''},
+        ],
+        javascript: (block) => {
+            return `quando_editor.getText(block, '${quando_editor.getText(block, 'text')}')`
+        }
+      }
+    )
+
+    self.defineInvention(
+      {
+        name: 'Generate Code', title:'',
+        interface: [
+            {title: 'Generate Code 💾'},{name: 'code', title:'', text: ''},
+        ],
+        javascript: (block) => {
+            return quando_editor.getText(block, 'code')
+        }
+      }
+    )
+
+    self.defineInvention(
+      {
+        name: 'UI Statement', title:'',
+        interface: [
+            {title: '📰 Statement'},{name: 'name', title:'', text: 'name'},
+        ],
+        javascript: (block) => {
+            return `{statement:'${quando_editor.getText(block, 'name')}'},`
+        }
+      }
+    )
+    
+    self.defineInvention(
+      {
+        name: 'Show Menu', title:'',
+        interface: [
+            {title: '📰 Menu'},{name: 'name', title:'', text: 'name'},{statement:'statement'},
+        ],
+        javascript: (block) => {
+            return `{name:'` + quando_editor.getText(block, 'name')+`', title:'', menu: [` + quando_editor.getText(block, 'statement')+`]},`
+        }
+      }
+    )
+
+    self.defineExperiment(
+      {
+        name: 'Open URL', title:'',
+        interface: [
+            {title: 'Open Url 🌍'},{name:'name',title:'',menu:['Url','Deployed',]},{name: 'script', title:'', text: ''},
+        ],
+        javascript: (block) => {
+            return `window.location.href = '` + (quando_editor.getMenu(block,'name') == 'Url'?'http://':'') +quando_editor.getText(block, 'script')+`';\n`
+        }
+      }
+    )
   } // self.addBlocks
 })()
