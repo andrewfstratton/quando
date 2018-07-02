@@ -1322,5 +1322,17 @@
         }
       }
     )
+
+    self.defineMedia(
+      {
+        name: '📷 Image Rotate', title:'',
+        interface: [
+            {title: '📷 Image Rotate'},{name:'clock', title:'', menu: [  '↻ clockwise','↺ anti-clockwise',]},{name: 'degrees', title:'', text: '90'},{title: '°degrees'},
+        ],
+        javascript: (block) => {
+            let method = _getStyleOnContained(block, [WHEN_VITRINE_BLOCK, WHEN_IDLE]); return `quando.${method}('#quando_image', 'transform', 'rotate(` + ((quando_editor.getMenu(block,'clock') != '↻ clockwise')?'-':'') + quando_editor.getText(block, 'degrees')+`deg)');\n`
+        }
+      }
+    )
   } // self.addBlocks
 })()
