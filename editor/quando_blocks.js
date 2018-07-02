@@ -1282,7 +1282,31 @@
             {title: '📰 Menu'},{name: 'name', title:'', text: 'name'},{statement:'statement'},
         ],
         javascript: (block) => {
-            return `{name:'` + quando_editor.getText(block, 'name')+`', title:'', menu: [` + quando_editor.getText(block, 'statement')+`]},`
+            return `{name:'` + quando_editor.getText(block, 'name')+`', title:'', menu: [` + quando_editor.getStatement(block, 'statement')+`]},`
+        }
+      }
+    )
+
+    self.defineInvention(
+      {
+        name: '📰 Menu Choice', title:'',
+        interface: [
+            {title: '📰 Menu Choice'},{name: 'name', title:'', text: 'name'},
+        ],
+        javascript: (block) => {
+            return `'` + quando_editor.getText(block, 'name')+ `',`
+        }
+      }
+    )
+
+    self.defineInvention(
+      {
+        name: '🔨 Statement', title:'',
+        interface: [
+            {title: '🔨 Statement'},{name: 'statement', title:'', text: ''},
+        ],
+        javascript: (block) => {
+            return `quando_editor.getStatement(block, '${quando_editor.getText(block, 'statement')}')`
         }
       }
     )
@@ -1291,7 +1315,7 @@
       {
         name: 'Open URL', title:'',
         interface: [
-            {title: 'Open Url 🌍'},{name:'name',title:'',menu:['Url','Deployed',]},{name: 'script', title:'', text: ''},
+            {title: 'Open Url 🌍'},{name:'name', title:'', menu: [  'Url','Deployed',]},{name: 'script', title:'', text: ''},
         ],
         javascript: (block) => {
             return `window.location.href = '` + (quando_editor.getMenu(block,'name') == 'Url'?'http://':'') +quando_editor.getText(block, 'script')+`';\n`
