@@ -353,7 +353,7 @@ app.post('/socket/:id', (req, res) => {
   let val = req.body.val
   let socket = net_server.socket
   let msg = JSON.stringify({id:id, val:val})
-  console.log("Sent:"+msg)
+  console.log("Send:"+msg)
   net_server.broadcast(msg)
   res.json({})
 })

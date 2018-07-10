@@ -44,20 +44,20 @@ def setup_wifi():
   if not station.isconnected():
     show('connecting...')
     station.active(True)
-    station.connect("D5321W", "1612641612")
+    station.connect("Quando", "1234567890")
     while not station.isconnected():
       time.sleep(1)
       show('...')
   clear()
   show(' Connected as:')
-  show(str(station.ifconfig()[0]))
+  show(str(station.ifconfig()[0], "utf-8"))
 
 def main():
   setup_wifi()
   show('starting...')
   sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-  addr = socket.getaddrinfo('192.168.1.115', 591)
+  addr = socket.getaddrinfo('192.168.137.1', 591)
   con = addr[0][-1]
   show(str(con))
   sock.connect(con)
@@ -66,31 +66,16 @@ def main():
   # show('sent')
   while True:
     req = sock.recv(256)
-    show('.')
-    # obj = ujson.loads(req)
-    # show('>'+str(obj.id)+'<')
-  # show('...have socket')
-  # _socket.bind(('',80))
-  # _socket.listen(5)
-  # show('..listening')
-  # while True:
-  #   conn, addr = _socket.accept()
-  #   # show('Con<<'+str(addr))
-  #   print('Connected ' + str(addr))
-  #   print(str(conn))
-  #   while conn != False:
-  #     print('..')
-  #     try:
-  #       req = conn.recv(256)
-  #       if not req:
-  #         conn.close()
-  #         conn = False
-  #       else:
-  #         req = req.decode('utf-8').rstrip()
-  #         if len(req) > 0:
-  #           show(req)
-  #           print('>'+req)
-  #       # conn.send('ok')
+    req = str(req, "utf-8")
+    print(req)
+    try:
+      obj = ujson.loads(req)
+      print('len obj='+str(len(obj)))
+      print(obj['id'])
+      show(obj['id'])
+    except: ValueError
+      print('Exception')
+    #obj['id'])
   #     except OSError:
   #       print('EX:')
   #       conn.close()
