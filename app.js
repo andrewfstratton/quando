@@ -18,11 +18,39 @@ const router = express.Router()
 const http = require('http').Server(app)
 const io = require('socket.io')(http)
 const ubit = require('./ubit')
+const net = require('net')
+const SOCKET_PORT = 591
+let net_server = net.createServer( (socket)=>{
+  console.log('Socket connected...')
+  net_server.sockets.push(socket)
+  socket.on('data', (data)=>{
+    console.log(data.toString())
+    socket.write('Ok\n')
+  })
+  socket.on('end', ()=>{
+    let index = net_server.sockets.indexOf(socket)
+    if (index != -1) {
+      net_server.sockets.splice(index, 1)
+    }
+    console.log('...closed['+index+']')
+  })
+})
+net_server.sockets=[]
+net_server.broadcast = (msg) => {
+  net_server.sockets.forEach(socket => {
+    console.log('broadcast...')
+    socket.write(msg)
+  })
+}
 
 let server = http.listen(process.env.PORT || 80, () => {
   let host = process.env.IP || server.address().address
   let port = server.address().port
   console.log('Quando Server listening at http://%s:%s', host, port)
+})
+
+net_server.listen(SOCKET_PORT, '0.0.0.0', ()=>{
+  console.log('Net Socket started on port '+SOCKET_PORT)
 })
 
 const MEDIA_FOLDER = path.join(__dirname, 'client', 'media')
@@ -315,6 +343,17 @@ app.post('/message/:id', (req, res) => {
   io.emit(id, {'val': val})
   res.json({})
 })
-// user.save("andy", "andy", null).then(
-//     () => { console.log("Success") },
-//     (err) => { console.log("Fail : ", err) } )
+
+app.get('/socket', (req, res) => {
+  res.json({port:SOCKET_PORT})
+})
+
+app.post('/socket/:id', (req, res) => {
+  let id = req.params.id
+  let val = req.body.val
+  let socket = net_server.socket
+  let msg = JSON.stringify({id:id, val:val})
+  console.log("Sent:"+msg)
+  net_server.broadcast(msg)
+  res.json({})
+})

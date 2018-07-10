@@ -1,4 +1,4 @@
-import time, machine, ssd1306, usocket as socket, network, uctypes
+import time, machine, ssd1306, usocket as socket, network, uctypes, ujson
 
 oled = False
 line = 0
@@ -44,44 +44,57 @@ def setup_wifi():
   if not station.isconnected():
     show('connecting...')
     station.active(True)
-    station.connect("Quando", "1234567890")
+    station.connect("D5321W", "1612641612")
     while not station.isconnected():
       time.sleep(1)
       show('...')
   clear()
-  show(' Connected to:')
+  show(' Connected as:')
   show(str(station.ifconfig()[0]))
 
 def main():
   setup_wifi()
   show('starting...')
-  _socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-  show('...have socket')
-  _socket.bind(('',80))
-  _socket.listen(5)
-  show('..listening')
+  sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+  addr = socket.getaddrinfo('192.168.1.115', 591)
+  con = addr[0][-1]
+  show(str(con))
+  sock.connect(con)
+  show('connected')
+  # sock.send("hello")
+  # show('sent')
   while True:
-    conn, addr = _socket.accept()
-    # show('Con<<'+str(addr))
-    print('Connected ' + str(addr))
-    print(str(conn))
-    while conn != False:
-      print('..')
-      try:
-        req = conn.recv(256)
-        if not req:
-          conn.close()
-          conn = False
-        else:
-          req = req.decode('utf-8').rstrip()
-          if len(req) > 0:
-            show(req)
-            print('>'+req)
-        # conn.send('ok')
-      except OSError:
-        print('EX:')
-        conn.close()
-        conn = False
+    req = sock.recv(256)
+    show('.')
+    # obj = ujson.loads(req)
+    # show('>'+str(obj.id)+'<')
+  # show('...have socket')
+  # _socket.bind(('',80))
+  # _socket.listen(5)
+  # show('..listening')
+  # while True:
+  #   conn, addr = _socket.accept()
+  #   # show('Con<<'+str(addr))
+  #   print('Connected ' + str(addr))
+  #   print(str(conn))
+  #   while conn != False:
+  #     print('..')
+  #     try:
+  #       req = conn.recv(256)
+  #       if not req:
+  #         conn.close()
+  #         conn = False
+  #       else:
+  #         req = req.decode('utf-8').rstrip()
+  #         if len(req) > 0:
+  #           show(req)
+  #           print('>'+req)
+  #       # conn.send('ok')
+  #     except OSError:
+  #       print('EX:')
+  #       conn.close()
+  #       conn = False
 
 main()
 time.sleep(10)
