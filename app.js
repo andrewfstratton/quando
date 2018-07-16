@@ -12,6 +12,7 @@ const script = require('./script')
 const client_deploy = './client/deployed_js/'
 const user = require('./user')
 const path = require('path')
+require('longjohn')
 
 const router = express.Router()
 
@@ -21,25 +22,36 @@ const ubit = require('./ubit')
 const net = require('net')
 const SOCKET_PORT = 591
 let net_server = net.createServer( (socket)=>{
-  console.log('Socket connected...')
-  net_server.sockets.push(socket)
-  socket.on('data', (data)=>{
-    console.log(data.toString())
-    socket.write('Ok\n')
-  })
-  socket.on('end', ()=>{
+  let drop_socket = (socket) => {
     let index = net_server.sockets.indexOf(socket)
     if (index != -1) {
       net_server.sockets.splice(index, 1)
     }
+  }
+  console.log('Socket connected...')
+  net_server.sockets.push(socket)
+  socket.on('error', ()=>{
+  console.log('Socket error...')
+    drop_socket(socket)
+  })
+  socket.on('timeout', ()=>{
+  console.log('Socket timeout...')
+    drop_socket(socket)
+  })
+  socket.on('data', (data)=>{
+  console.log('Socket data...')
+    console.log(data.toString())
+    socket.write('Ok\n')
+  })
+  socket.on('end', ()=>{
+    drop_socket(socket)
     console.log('...closed['+index+']')
   })
 })
 net_server.sockets=[]
 net_server.broadcast = (msg) => {
   net_server.sockets.forEach(socket => {
-    console.log('broadcast...')
-    socket.write(msg)
+    socket.write(msg + '\n')
   })
 }
 
@@ -353,7 +365,6 @@ app.post('/socket/:id', (req, res) => {
   let val = req.body.val
   let socket = net_server.socket
   let msg = JSON.stringify({id:id, val:val})
-  console.log("Send:"+msg)
   net_server.broadcast(msg)
   res.json({})
 })

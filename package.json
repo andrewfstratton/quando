@@ -19,6 +19,7 @@
     "formidable": "^1.2.1",
     "graceful-fs": "4.1.10",
     "leapjs": "^0.6.4",
+    "longjohn": "^0.2.12",
     "morgan": "^1.7.0",
     "pouchdb": "^6.4.3",
     "pouchdb-find": "^6.4.3",

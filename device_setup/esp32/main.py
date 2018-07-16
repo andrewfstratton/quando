@@ -53,15 +53,17 @@ def setup_wifi():
   show(str(station.ifconfig()[0], "utf-8"))
 
 def main():
-  setup_wifi()
+  host_ip = '192.168.137.1'
   show('starting...')
+  setup_wifi()
   sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-  addr = socket.getaddrinfo('192.168.137.1', 591)
+  show('connect to:')
+  show(' '+host_ip)
+  addr = socket.getaddrinfo(host_ip, 591)
   con = addr[0][-1]
   show(str(con))
   sock.connect(con)
-  show('connected')
+  show(' connected...')
   # sock.send("hello")
   # show('sent')
   while True:
@@ -73,9 +75,10 @@ def main():
       print('len obj='+str(len(obj)))
       print(obj['id'])
       show(obj['id'])
-    except: ValueError
+    except ValueError:
       print('Exception')
-    #obj['id'])
+      time.sleep(10)
+    #obj['i.1d'])
   #     except OSError:
   #       print('EX:')
   #       conn.close()
