@@ -13,6 +13,7 @@
   window.onbeforeunload = () => {
     return 'Are you sure you want to leave the editor?' // Doesn't seem to show this message in Chrome?!
   }
+
   function _encodeXml (str) {
     return str.replace(/&/g, '&amp;')
             .replace(/</g, '&lt;')
@@ -20,6 +21,7 @@
             .replace(/"/g, '&quot;')
             .replace(/'/g, '&apos;')
   }
+
   self.setup = () => {
     toastr.options = {
       closeButton: false,
@@ -66,6 +68,7 @@
       }
     })
   }
+
   self.handle_login = () => {
     let userid = $('#userid').val()
     let password = $('#password').val()
@@ -91,6 +94,7 @@
       }
     })
   }
+
   self.handle_load = () => {
     if (_userid) {
       $('#remote_load_modal').modal('show')
@@ -100,6 +104,7 @@
       $('#local_load_modal').modal('show')
     }
   }
+
   self.handle_save = () => {
     if (_userid) {
       $('#remote_save_modal').modal('show')
@@ -107,6 +112,7 @@
       $('#local_save_modal').modal('show')
     }
   }
+
   self.handle_clear = () => {
     _info('Cleared...')
     _content = ''
@@ -114,6 +120,7 @@
     $('#file_name').html('[no file]')
     Blockly.mainWorkspace.clear()
   }
+
   self.handle_logout = () => {
     $.ajax({
       url: '/login',
@@ -128,15 +135,18 @@
       }
     })
   }
+
   self.handle_remote_to_local_load = () => {
     _local_load_list()
     $('#remote_load_modal').modal('hide')
     $('#local_load_modal').modal('show')
   }
+  
   self.handle_remote_to_local_save = () => {
     $('#remote_save_modal').modal('hide')
     $('#local_save_modal').modal('show')
   }
+  
   self.handle_local_save = () => {
     let key = $('#local_save_key').val()
     localStorage.setItem(PREFIX + key, JSON.stringify({
@@ -147,6 +157,7 @@
     $('#local_save_modal').modal('hide')
     _saved(key)
   }
+  
   self.handle_remote_save = () => {
     let name = encodeURI($('#remote_save_key').val())
     let obj = JSON.stringify({ deploy: _deploy, xml: _getXml(), content: _content })
@@ -167,6 +178,7 @@
       }
     })
   }
+
   self.handle_show_xml = () => {
     $('#menu_dropdown').dropdown('hide')
     $('#show_modal_title').html('Show Xml')
@@ -174,6 +186,7 @@
     $('#show_modal_code').removeClass('language-javascript').addClass('language-xml')
     $('#show_modal_code').html(_encodeXml(_getXml()))
   }
+
   self.handle_show_code = () => {
     $('#menu_dropdown').dropdown('hide')
     $('#show_modal_title').html('Show Code')
@@ -181,22 +194,27 @@
     $('#show_modal_code').removeClass('language-xml').addClass('language-javascript')
     $('#show_modal_code').html(quando_editor.getCode())
   }
+
   function _success (message) {
     toastr.options.timeOut = 1500,
     toastr.success(message)
   }
+
   function _info (message) {
     toastr.options.timeOut = 1500,
     toastr.info(message)
   }
+
   function _error (message) {
     toastr.options.timeOut = 3500,
     toastr.error(message)
   }
+
   function _warning (message) {
     toastr.options.timeOut = 2500,
     toastr.warning(message)
   }
+
   self.handle_deploy = () => {
     let code = quando_editor.getCode()
     if (code) {
@@ -226,6 +244,7 @@
       alert('Behaviour incomplete.')
     }
   }
+
   self.handle_test = () => {
     let code = quando_editor.getCode()
     if (code) {
@@ -248,6 +267,7 @@
       alert('Behaviour incomplete.')
     }
   }
+
   self.handle_file = (media, block_id, widget_id, path = '') => {
         // when media is 'UPLOAD', then we are uploading, note then that block_id and widget_id are null
     let file_modal = $('#file_modal')
@@ -298,9 +318,11 @@
       }
     })
   }
+
   self.handle_folder_selected = (media, block_id, widget_id, path) => {
     self.handle_file(media, block_id, widget_id, path)
   }
+
   self.handle_file_selected = (filename, block_id, widget_id) => {
         // When blocK-id is null, then this is an upload - so do nothing...
     if (block_id != null) {
@@ -310,6 +332,7 @@
     }
         // TODO get/return/set filename
   }
+
   self.handle_upload_media = () => {
     if ($('#upload_media').val()) {
       self.handle_file('UPLOAD', null, null, '')

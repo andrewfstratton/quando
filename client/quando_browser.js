@@ -248,12 +248,12 @@
     elem.innerHTML = txt
   }
   
-  self.title = function (txt, append=false) {
-    _set_or_append_tag_text(txt, 'quando_title', append)
+  self.title = function ({text = '', append = false}={}) {
+    _set_or_append_tag_text(text, 'quando_title', append)
   }
 
-  self.text = function (txt, append=false) {
-    _set_or_append_tag_text(txt, 'quando_text', append)
+  self.text = function ({text = '', append = false}={}) {
+    _set_or_append_tag_text(text, 'quando_text', append)
   }
 
   self.image_update_video = function (img) {

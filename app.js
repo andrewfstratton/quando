@@ -368,3 +368,5 @@ app.post('/socket/:id', (req, res) => {
   net_server.broadcast(msg)
   res.json({})
 })
+
+app.use('/inventor', express.static(path.join(__dirname, 'inventor')))
