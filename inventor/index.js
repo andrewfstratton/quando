@@ -1,34 +1,9 @@
 (() => {
 let self = this['index'] = {}
 
-    self.getParams = function(block) {
-        let params = {}
-        let children = block.children
-        for (let child of children) {
-            if (child.name) {
-                params[child.name] = child.value
-            }
-        }
-        if (params == {}) {
-            params = false
-        }
-        return params
-    }
-
 self.handleRightClick = function(event) {
     event.preventDefault()
     return false
-}
-
-self.getCode = function(block) {
-    let params = self.getParams(block)
-    let result = block.dataset.quando_fn
-    if (params) {
-        result += '(' + JSON.stringify(params) + ')'
-    } else {
-        result += '()'
-    }
-    return result
 }
 
 self.say = ({text = ''}={}) => {
@@ -36,11 +11,11 @@ self.say = ({text = ''}={}) => {
 }
 
 self.setup = () => {
-    window.onbeforeunload = () => {
-        return 'Are you sure you want to leave the editor?' // Doesn't seem to show this message in Chrome?!
-    }
+    // window.onbeforeunload = () => {
+        // return 'Are you sure you want to leave the editor?' // Doesn't seem to show this message in Chrome?!
+    // }
 
-    for (let item of document.getElementsByClassName("block")) {
+    for (let item of document.getElementsByClassName("quando-block")) {
         item.addEventListener('contextmenu', self.handleRightClick, false)
     }
 
@@ -83,20 +58,56 @@ function _warning (message) {
     toastr.warning(message)
 }
 
-self.generateCode = function() {
-    let script = document.getElementById('script')
-    let children = script.children
+self.getParams_Code = function(block) {
+    let params = {}
+    let code = ""
+    let children = block.children
+    for (let child of children) {
+        if (child.name) {
+            params[child.name] = child.value
+        }
+        if (child.classList.contains("quando-box")) {
+            code = "() => {\n"
+            code += self.generateCode(child)
+            code += "}"
+        }
+    }
+    if (params == {}) {
+        params = false
+    }
+    if (code == "") {
+        code = false
+    }
+    return [params, code]
+}
+    
+self.getCode = function(block) {
+    let [params, code] = self.getParams_Code(block)
+    let result = block.dataset.quando_fn + "("
+    if (params) {
+        result += JSON.stringify(params)
+    }
+    if (code) {
+        result += ", " + code
+    }
+    result += ')'
+    return result
+}
+
+self.generateCode = function(elem) {
+    let children = elem.children
     let result = ""
     for (let child of children) {
-        result += self.getCode(child) + '\n'
+        result += self.getCode(child)
+        result += '\n'
     }
     return result
 }
 
 self.handle_test = () => {
-    let code = self.generateCode()
+    let code = self.generateCode(document.getElementById('script'))
     if (code) {
-      let filename = '_'
+      let filename = '-'
       $.ajax({
         url: '/script/deploy/' + encodeURI(filename),
         type: 'PUT',
@@ -115,6 +126,16 @@ self.handle_test = () => {
       alert('Behaviour incomplete.')
     }
   }
+
+  self.handle_show_code = () => {
+    $('#menu_dropdown').dropdown('hide')
+    $('#show_modal_title').html('Show Code')
+    $('#show_modal').modal('show')
+    $('#show_modal_code').removeClass('language-xml').addClass('language-javascript')
+    let code = self.generateCode(document.getElementById('script'))
+    $('#show_modal_code').html(code)
+  }
+
 })()
 
 window.onload = index.setup()
@@ -124,6 +145,9 @@ dragula([menu, script], {
     revertOnSpill: true,
     copy: function (elem, source) {
         return source === menu
+    },
+    isContainer: function (el) {
+        return el.classList.contains('quando-box')
     // },
     // accepts: function (elem, target) {
         // return target === script

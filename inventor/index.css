@@ -1,4 +1,4 @@
-#menu {
+#menu, .quando-box {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -10,8 +10,8 @@
     z-index: 1;
   }
   
-  .block {
-    text-align: center;
+  .quando-block, .quando-box {
+    text-align: left;
     float: left;
     padding: 2px;
     margin: 0 2px 2px 0;
@@ -20,6 +20,16 @@
     border: 2px solid #ececec;
     background: #F7F7F7;
     transition: all .5s ease;
+  }
+
+  .quando-box {
+    min-height: 1em;
+    width: 100%;
+    background: #ffeeee;
+  }
+
+  .quando-display {
+    background: #FFEE99;
   }
 
   #script {

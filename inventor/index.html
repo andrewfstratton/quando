@@ -33,20 +33,39 @@
                 </h3>
             </div>
         </div><!-- /.container-fluid -->
+        </div><!-- /.container-fluid -->
     </nav>
     <div id="editor_content" data-role="content">
         <div class="row container-fluid">
             <div id="menu" class="container col-md-2">
-                <div data-quando_fn="quando.title" class="block">Title <input name="text" type="text" value="" size="5"/></div>
-                <div data-quando_fn="quando.text" class="block">Text <input name="text" type="text" value="" size="5"/></div>
-                <div data-quando_fn="alert" class="block">Pick 
+                <div data-quando_fn="quando.title" class="quando-block quando-display">Title <input name="text" type="text" value="" size="5"/></div>
+                <div data-quando_fn="quando.text" class="quando-block quando-display">Text <input name="text" type="text" value="" size="5"/></div>
+                <div data-quando_fn="quando.after" class="quando-block">After
+                    <input name="count" type="number" min="0" max="99" maxLength="2" value="1" style="width: 3em"/> 
+                    <select name="units">
+                        <option value="seconds">Seconds</option>
+                        <option value="minutes">Minutes</option>
+                        <option value="hours">Hours</option>
+                    </select>
+                    <div class="container quando-box"></div>
+                </div>
+                <div data-quando_fn="quando.every" class="quando-block">Every
+                    <input name="count" type="number" min="0" max="99" maxLength="2" value="1" style="width: 3em"/> 
+                    <select name="units">
+                        <option value="seconds">Seconds</option>
+                        <option value="minutes">Minutes</option>
+                        <option value="hours">Hours</option>
+                    </select>
+                    <div class="container quando-box"></div>
+                </div>
+                <div data-quando_fn="alert" class="quando-block">Pick 
                     <select name="pick">
                         <option value="yes">Yes</option>
                         <option value="no">No</option>
                         <option value="maybe">Maybe</option>
                     </select>
                 </div>
-                <div data-quando_fn="alert('Three was called');" class="block">Three</div>
+                <div data-quando_fn="alert('Three was called');" class="quando-block">Three</div>
             </div>
             <div id="script" class="container col-md-10" style="height: 100%;"></div>
             </div>
@@ -57,7 +76,7 @@
             <div class="navbar-footer">
                 <div>
                     <div class="btn-group" role="group" disabled="true">
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#login_modal" disabled="true">
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#login_modal">
                             Login
                         </button>
                     </div>
@@ -86,6 +105,9 @@
                         <button type="button" class="btn btn-primary" onclick="index.handle_deploy();" disabled="true">
                             <span class="glyphicon glyphicon-briefcase"></span> Deploy
                         </button>
+                        <button type="button" class="btn btn-warning" onclick="index.handle_show_code();">
+                            <span class="glyphicon glyphicon-eye-open"></span> Code
+                        </button>
                     </div>
                     <button type="button" class="btn btn-warning" onclick="index.handle_logout();" disabled="true">
                         Logout
@@ -95,6 +117,201 @@
             </div>
         </div>
     </nav>
+    <div class="modal fade" id="login_modal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Login</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="userid">User Id</label>
+                        <input type="text" class="form-control" id="userid">
+                    </div>
+                    <div class="form-group">
+                        <label for="pwd">Password</label>
+                        <input type="password" class="form-control" id="password">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <label id="login_modal_footer_message"></label>
+                    <button type="button" class="btn btn-primary" onclick="index.handle_login()">Login</button>
+                    <button type="button" class="btn" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="loading_modal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Loading...</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label id="loading_modal_message">Please wait...</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="processForm()">Retry</button>
+                    <button type="button" class="btn"
+                            data-dismiss="modal" onclick="$('#logged_in_status').html('Guest');">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="remote_load_modal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Load from Server</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group row">
+                        <div class="col-xs-3" align="right">
+                            <label for="remote_load_show_versions">Show Versions:</label>
+                        </div>
+                        <div class="col-xs-3">
+                            <select class="form-control" id="remote_load_show_versions"
+                                    onchange='index.handle_show_version()'>
+                                <option value='false'>Latest</option>
+                                <option value='true'>All</option>
+                            </select>
+                        </div>
+                        <div class="col-xs-3"> </div>
+                        <div class="col-md-3">
+                            Delete
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="list-group" id="remote_load_list">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" data-position="fixed">
+                    <button type="button" class="btn btn-primary" onclick='index.handle_remote_to_local_load()'>Browser Files</button>
+                    <button type="button" class="btn" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="local_load_modal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Load from Browser</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div class="list-group" id="local_load_list">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="local_save_modal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Save</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Save to local/browser storage</label>
+                    </div>
+                    <div class="form-group">
+                        <label for="local_save_key">Key</label>
+                        <input type="text" class="form-control" id="local_save_key">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick='index.handle_local_save()'>Save</button>
+                    <button type="button" class="btn" onclick='' data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="remote_save_modal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Save</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Save to remote storage</label>
+                    </div>
+                    <div class="form-group">
+                        <label for="remote_save_key">Key</label>
+                        <input type="text" class="form-control" id="remote_save_key">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick='index.handle_remote_save()'>Save</button>
+                    <button type="button" class="btn btn-primary" onclick='index.handle_remote_to_local_save()'>Browser Files</button>
+                    <button type="button" class="btn" onclick='' data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="show_modal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="show_modal_title"></h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <figure class="highlight">
+                            <pre><code id="show_modal_code" class="language-html" data-lang="html">Code</code></pre>
+                        </figure>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="file_modal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title file_modal_select_file">Select File</h4>
+                    <h4 class="modal-title file_modal_upload">Select Folder for Upload</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="file_modal_select_file">Remote files</label>
+                        <label class="file_modal_upload">Remote folder: </label>
+                        <span id="file_modal_path"></span>
+                    </div>
+                    <div class="form-group">
+                        <div class="list-group" id="file_list">
+                            
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn file_modal_upload"
+                        onclick="index.handle_upload();">Upload</button>
+                    <button type="button" class="btn" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="/editor/js/jquery-2.2.0.js"></script>
     <script src="/editor/js/bootstrap.min.js"></script>

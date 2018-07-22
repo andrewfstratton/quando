@@ -192,8 +192,18 @@
   var Config = self.Config = {
   }
 
-  self.after = function (time_secs, callback, destruct = true) {
-    var timeout = setTimeout(callback, time_secs * 1000)
+  function _units_to_ms(units, count) {
+    let result = count
+    if (units == "minutes")  {
+      result *= 60
+    } else if (units == "hours")  {
+      result *= 60*60
+    }
+    return result * 1000 // convert to ms
+  }
+  self.after = function ({count = 1, units = "seconds", destruct = false}={}, callback) {
+    let time_ms = _units_to_ms(units, count)
+    let timeout = setTimeout(callback, time_ms)
     if (destruct) {
       self.addDestructor(function () {
         clearTimeout(timeout)
@@ -201,9 +211,10 @@
     }
   }
 
-  self.every = function (time_secs, callback, destruct = true) {
+  self.every = function ({count = 1, units = "seconds", destruct = false}={}, callback) {
     callback() // do it straight away
-    var id = setInterval(callback, time_secs * 1000)
+    let time_ms = _units_to_ms(units, count)
+    let id = setInterval(callback, time_ms)
     if (destruct) {
       self.addDestructor(function () {
         clearInterval(id)
