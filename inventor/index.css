@@ -1,3 +1,6 @@
+* {
+  font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+}
   #menu, #script {
     min-height: 50px;
   }
@@ -15,6 +18,7 @@
     background-color: #ffffff;
     text-align: center;
   }
+  
   #script {
     background-color: #ffeeee;
     text-align: center;
@@ -53,13 +57,16 @@
   .quando-display {
     background: #FFCC80;
   }
+  .quando-media {
+    background: #C5E1A5;
+  }
   .quando-time {
     background: #F48FB1;
   }
 
   /* the 200 value colours from https://www.materialui.co/colors
-  red ef9a9a
-  -- Pink F48FB1
+   red ef9a9a
+-- Pink F48FB1
    purple CE93D8
    Deep Purple B39DDB
    Indigo 9FA8DA
@@ -68,7 +75,7 @@
    Cyan 80DEEA
    Teal 80CBC4
    Green A5D6A7
-   Light Green C5E1A5
+-- Light Green C5E1A5
    Lime E6EE9C
    Yellow FFF59D
    Amber FFE082

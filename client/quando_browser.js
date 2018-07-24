@@ -222,6 +222,19 @@
     }
   }
 
+  self.check = function({times = 1, units = 'second', destruct = false}={}, callback) {
+    let time = 1
+    if (units == 'minute') {
+      time = 60
+    } else if (units == 'hour') {
+      time = 60*60
+    } else if (units == 'day') {
+      time = 60*60*24
+    }
+    let count = time / times
+    self.every({count:count, units:'seconds', destrcut:destruct}, callback)
+  }
+
   self.idle = function (time_secs, idle_fn, active_fn) {
     clearTimeout(self.idle_callback_id)
     self.idle_reset_secs = time_secs * 1000
@@ -259,12 +272,28 @@
     elem.innerHTML = txt
   }
   
-  self.title = function ({text = '', append = false}={}) {
+  self.title = function ({text = '', replace = 'false'}={}) {
+    let append = true
+    if (replace == 'true') {
+      append = false
+    }
     _set_or_append_tag_text(text, 'quando_title', append)
   }
 
-  self.text = function ({text = '', append = false}={}) {
+  self.text = function ({text = '', replace = 'false'}={}) {
+    let append = true
+    if (replace == 'true') {
+      append = false
+    }
     _set_or_append_tag_text(text, 'quando_text', append)
+  }
+
+  self.projection = function ({direction = "front"}={}) {
+    let scale = 1
+    if (direction == 'rear') {
+      scale = -1
+    }
+    document.getElementById('html').style.transform = 'scale(' + scale + ',1)'
   }
 
   self.image_update_video = function (img) {
@@ -339,12 +368,12 @@
       }
     }
     if (self.leap) {
-      self.every(1 / 20, handler, false)
+      self.every({count: 1/20}, handler)
     } else {
       self.leap = new Leap.Controller()
       self.leap.connect()
       self.leap.on('connect', function () {
-        self.every(1 / 20, handler, false)
+        self.every({count: 1/20}, handler)
       })
     }
   }
@@ -375,12 +404,12 @@
       }
     }
     if (self.leap) {
-      self.every(1 / 20, handler, false)
+      self.every({count: 1/20}, handler)
     } else {
       self.leap = new Leap.Controller()
       self.leap.connect()
       self.leap.on('connect', function () {
-        self.every(1 / 20, handler, false)
+        self.every({count: 1/20}, handler)
       })
     }
   }
