@@ -2,15 +2,14 @@
   font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
 }
   #menu, #script {
-    min-height: 50px;
+    padding: 4px;
+    height: 100%;
   }
+
   #menu, #script, .quando-box {
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    /* border-radius: 2px; */
+    flex-flow: column nowrap;
     margin: 0 auto;
-    padding: 4px;
     z-index: 1;
   }
   
@@ -27,29 +26,20 @@
   .quando-block {
     margin: 0 2px 2px 0;
     padding: 4px;
+    width: max-content;
+    border-radius: 4px;
   }
 
   .quando-block, .quando-box {
     text-align: left;
-    float: left;
     transition: all .5s ease;
-  }
-
-  .quando-box * {
-    background-color: rgba(255,255,255, 1);
-  }
-
-  .quando-box img {
-    background-color: rgba(255,255,255, 0);
   }
 
   .quando-box {
     min-height: 2em;
     margin-top: 4px;
-    padding: 2px 0px 2px 4px;
-    border-style: solid;
-    border-width: 4px 1px 1px 1px;
-    border-color: transparent;
+    /* margin-left: 4px; */
+    padding: 6px 4px 4px 6px;
     background-color: rgba(255,255,255, 0.3);
     width: 100%;
   }
