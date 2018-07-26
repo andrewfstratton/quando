@@ -6,8 +6,21 @@ self.handleRightClick = function(event) {
     return false
 }
 
-self.say = ({text = ''}={}) => {
-    alert(text)
+self.setElementHandlers = (elem) => {
+    elem.addEventListener('contextmenu', self.handleRightClick, false)
+}
+
+self.copyValues = (old, clone) => {
+    if (old.hasChildNodes()) {
+        let oldNodes = old.children
+        let cloneNodes = clone.children
+        for (let i=0; i<oldNodes.length; i++) {
+            let val = oldNodes[i].selectedIndex
+            if (val) {
+                cloneNodes[i].selectedIndex = val // N.B. Only works for single selection
+            }
+        }
+    }
 }
 
 self.setup = () => {
@@ -16,7 +29,7 @@ self.setup = () => {
     // }
 
     for (let item of document.getElementsByClassName("quando-block")) {
-        item.addEventListener('contextmenu', self.handleRightClick, false)
+        self.setElementHandlers(item)
     }
 
     toastr.options = {
@@ -148,10 +161,14 @@ dragula([menu, script], {
     },
     isContainer: function (el) {
         return el.classList.contains('quando-box')
-    // },
-    // accepts: function (elem, target) {
-        // return target === script
+    },
+    accepts: function (elem, target) {
+        return (target === script) || (target.classList.contains('quando-box'))
     }}).on ('drop', function (elem) {
-        elem.oncontextmenu = index.handleRightClick
+        index.setElementHandlers(elem)
+    }).on ('cloned', function (clone, old, type) {
+        if (type == 'copy') {
+            index.copyValues(old, clone)
+        }
     })
 
