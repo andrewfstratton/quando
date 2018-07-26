@@ -17,10 +17,21 @@ self.copyValues = (old, clone) => {
         for (let i=0; i<oldNodes.length; i++) {
             let val = oldNodes[i].selectedIndex
             if (val) {
-                cloneNodes[i].selectedIndex = val // N.B. Only works for single selection
+                cloneNodes[i].selectedIndex = val // N.B. Only works for single selection  - but Ctrl click is not used in Quando
             }
         }
     }
+}
+
+self.hasAncestor = (elem, ancestor) => {
+    let found = false
+    let el = elem
+    while (!found && (el = el.parentNode)) {
+        if (el == ancestor) {
+            found = true
+        }
+    }
+    return found
 }
 
 self.setup = () => {
@@ -155,7 +166,7 @@ window.onload = index.setup()
 let menu = document.getElementById('menu')
 let script = document.getElementById('script')
 dragula([menu, script], {
-    revertOnSpill: true,
+    removeOnSpill: true,
     copy: function (elem, source) {
         return source === menu
     },
@@ -163,7 +174,19 @@ dragula([menu, script], {
         return el.classList.contains('quando-box')
     },
     accepts: function (elem, target) {
-        return (target === script) || (target.classList.contains('quando-box'))
+        let accept = true
+        if (target === script) {
+            // accept = true
+        } else if (target === menu) {
+            accept = false
+        } else if (target.classList.contains('quando-box')) { // i.e. a valid container
+            if (index.hasAncestor(target, menu)) {
+                accept = false
+            }
+        } else {
+            accept = false
+        } 
+        return accept
     }}).on ('drop', function (elem) {
         index.setElementHandlers(elem)
     }).on ('cloned', function (clone, old, type) {
