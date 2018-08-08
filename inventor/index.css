@@ -1,15 +1,31 @@
 * {
   font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
 }
+
+button, input, select, textarea {
+  font-family : inherit;
+  font-size   : 100%;
+  background-color: rgba(255,255,255, 0.65);
+}
+
+input, select {
+  border:none;
+  border:1px solid rgba(0,0,0, 0.3);
+}
+
+input {
+  padding-left: 4px;
+}
+
   #menu, #script {
     padding: 4px;
     height: 100%;
+    margin: 0 auto;
   }
 
   #menu, #script, .quando-box {
     display: flex;
     flex-flow: column nowrap;
-    margin: 0 auto;
     z-index: 1;
   }
   
@@ -24,21 +40,28 @@
   }
 
   .quando-block {
-    margin: 0 2px 2px 0;
-    padding: 4px;
+    margin: 0px 2px 6px 0px;
+    padding: 4px 14px 4px 0px;
     width: max-content;
-    border-radius: 4px;
+    border-radius: 6px;
+    box-shadow: 2px 2px 3px rgba(0,0,0,0.5);
+  }
+
+  .quando-block:hover {
+    box-shadow: 4px 4px 6px rgba(0, 0, 0, 0.7);
   }
 
   .quando-block, .quando-box {
     text-align: left;
-    transition: all .5s ease;
+    transition: all .3s ease;
   }
 
   .quando-box {
     min-height: 2em;
-    margin-top: 4px;
-    padding: 6px 4px 4px 6px;
+    position: relative;
+    left: 14px;
+    margin: 4px 0px 4px 0px;
+    padding: 6px 4px 4px 4px;
     background-color: rgba(255,255,255, 0.3);
     width: 100%;
   }
@@ -50,7 +73,7 @@
     background: #C5E1A5;
   }
   .quando-time {
-    background: #F48FB1;
+    background: #ef9a9a;
   }
 
   /* the 200 value colours from https://www.materialui.co/colors

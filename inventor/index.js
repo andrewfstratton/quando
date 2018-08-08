@@ -107,7 +107,7 @@ self.getParams_Code = function(block) {
     
 self.getCode = function(block) {
     let [params, code] = self.getParams_Code(block)
-    let result = block.dataset.quando_fn + "("
+    let result = block.dataset.quandoFn + "("
     if (params) {
         result += JSON.stringify(params)
     }

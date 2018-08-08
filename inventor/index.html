@@ -39,29 +39,29 @@
         <div class="row container-fluid">
             <div id="menu" class="container col-md-2">
                 <!-- Icons from https://icons8.com/icon/set/alarm/material -->
-                <div data-quando_fn="quando.title" class="quando-block quando-media">
-                    <img src="img/icons8-abc-24.png"/>
+                <div data-quando-fn="quando.title" class="quando-block quando-media">
+                    &nbsp;<img src="img/icons8-abc-24.png"/>
                     <select name="replace">
                         <option value="true">Show</option>
                         <option value="false">Add</option>
                     </select>
                      Title <input name="text" type="text" value="" size="5"/></div>
-                <div data-quando_fn="quando.text" class="quando-block quando-media">
-                    <img src="img/icons8-abc-24.png"/> 
+                <div data-quando-fn="quando.text" class="quando-block quando-media">
+                    &nbsp;<img src="img/icons8-abc-24.png"/> 
                     <select name="replace">
                         <option value="true">Show</option>
                         <option value="false">Add</option>
                     </select>
                     Text <input name="text" type="text" value="" size="5"/></div>
-                <div data-quando_fn="quando.projection" class="quando-block quando-display">
-                    <img src="img/icons8-monitor-24.png"/>
+                <div data-quando-fn="quando.projection" class="quando-block quando-display">
+                    &nbsp;<img src="img/icons8-monitor-24.png"/>
                     <select name="direction">
                         <option value="front">Normal</option>
                         <option value="rear">Rear</option>
                     </select>
                     Projection
                 </div>
-                <div data-quando_fn="quando.after" class="quando-block quando-time"><img src="img/icons8-alarm-clock-24.png"/> After
+                <div data-quando-fn="quando.after" class="quando-block quando-time">&nbsp;<img src="img/icons8-alarm-clock-24.png"/> After
                     <input name="count" type="number" min="0" max="99" maxLength="2" value="1" style="width: 3em"/> 
                     <select name="units">
                         <option value="seconds">Seconds</option>
@@ -70,7 +70,7 @@
                     </select>
                     <div class="container quando-box"></div>
                 </div>
-                <div data-quando_fn="quando.every" class="quando-block quando-time"><img src="img/icons8-alarm-clock-24.png"/> Every
+                <div data-quando-fn="quando.every" class="quando-block quando-time">&nbsp;<img src="img/icons8-alarm-clock-24.png"/> Every
                     <input name="count" type="number" min="0" max="99" maxLength="2" value="1" style="width: 3em"/> 
                     <select name="units">
                         <option value="seconds">Seconds</option>
@@ -79,8 +79,8 @@
                     </select>
                     <div class="container quando-box"></div>
                 </div>
-                <div data-quando_fn="quando.check" class="quando-block quando-time"><img src="img/icons8-alarm-clock-24.png"/>
-                    <input name="times" type="number" min="0" max="9999" maxLength="4" value="1" style="width: 3em"/> 
+                <div data-quando-fn="quando.check" class="quando-block quando-time">&nbsp;<img src="img/icons8-alarm-clock-24.png"/>
+                    <input name="times" type="text" pattern="[0-9]*" min="0" max="9999" maxLength="4" value="1" style="width: 3em"/> 
                     times per
                     <select name="units">
                         <option value="second">Second</option>
@@ -90,8 +90,11 @@
                     </select>
                     <div class="container quando-box"></div>
                 </div>
+                <div class="quando-block quando-media">&nbsp;Quando
+                    <div class="container quando-box"></div>
+                </div>
             </div>
-            <div id="script" class="container col-md-10" style="height: 100%;"></div>
+            <div id="script" class="container col-md-10"></div>
             </div>
         </div>
     </div>
