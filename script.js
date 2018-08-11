@@ -2,24 +2,30 @@
 const db = require('./db')
 const COLLECTION = 'script'
 
-exports.save = (name, id, userid, script) => {
+exports.save = (name, userid, script) => {
   return new Promise((success, fail) => {
     let now = new Date().toJSON()
-    let doc = { ownerid: userid, name: name, date: now, xml: script}
+    let doc = { ownerid: userid, name: name, date: now, script: script}
     db.save(COLLECTION, doc).then(success, fail)
   })
 }
 
 exports.getNamesOnOwnerID = (userid) => {
   return new Promise((success, fail) => {
-    const options = {selector: {date: {$gte: null}, ownerid: {$eq: userid}}, sort: [{date:'desc'}]}
+    const options = {selector: {'ownerid': {$eq: userid}}} // Note: option to sort on descending date removed due to runtime error
     db.find(COLLECTION, options).then((result) => {
       let list = []
-      result.forEach((item) => {
-        let date = new Date(item.date)
-        let datetime = ('0' + date.getHours()).slice(-2) +
-                    ':' + ('0' + date.getMinutes()).slice(-2) + ' - ' + date.toDateString()
-        list.push({ name: decodeURIComponent(item.name), date: datetime, id: item._id + '' })
+      result.forEach((item) => { // get ready to sort
+        list.push({ name: decodeURIComponent(item.name), date: new Date(item.date), id: item._id + '' })
+      })
+      list.sort((a,b) => {
+        return b.date - a.date
+      })
+      list.forEach((item) => {
+        let idate = item.date
+        let datetime = ('0' + idate.getHours()).slice(-2) +
+            ':' + ('0' + idate.getMinutes()).slice(-2) + ' ' + idate.toDateString()
+        item.date = datetime
       })
       success(list)
     }, fail)

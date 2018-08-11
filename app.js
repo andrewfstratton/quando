@@ -133,7 +133,7 @@ app.delete('/login', (req, res) => {
 })
 
 app.post('/script', (req, res) => {
-  script.save(req.body.name, req.body.id, req.body.userid, req.body.script).then(
+  script.save(req.body.name, req.body.userid, req.body.script).then(
         (doc) => { res.json({ 'success': true }) },
         (err) => { res.json({ 'success': false, 'message': err }) })
 })

@@ -30,12 +30,12 @@ input {
   }
   
   #menu {
-    background-color: #ffffff;
+    background-color: #eeeeff;
     text-align: center;
   }
   
   #script {
-    background-color: #ffeeee;
+    background-color: #ffffff;
     text-align: center;
   }
 
@@ -49,6 +49,7 @@ input {
 
   .quando-block:hover {
     box-shadow: 4px 4px 6px rgba(0, 0, 0, 0.7);
+    cursor: move;
   }
 
   .quando-block, .quando-box {
@@ -77,8 +78,8 @@ input {
   }
 
   /* the 200 value colours from https://www.materialui.co/colors
-   red ef9a9a
--- Pink F48FB1
+-- red ef9a9a
+   Pink F48FB1
    purple CE93D8
    Deep Purple B39DDB
    Indigo 9FA8DA
