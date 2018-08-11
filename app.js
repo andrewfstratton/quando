@@ -296,7 +296,9 @@ app.post('/file/upload/*', (req, res) => {
     file.path = path.join(form.uploadDir, `${fileName}_${new Date().getTime()}.${fileExt}`)
   })
   form.on('file', (field, file) => {
-    fs.rename(file.path, path.join(form.uploadDir, file.name))
+    fs.rename(file.path, path.join(form.uploadDir, file.name), (err) => {
+      res.json({ 'success': false, 'message': 'an error has occured with form upload' + err })
+    })
   })
   form.on('error', (err) => {
     res.json({ 'success': false, 'message': 'an error has occured with form upload' + err })

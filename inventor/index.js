@@ -611,6 +611,144 @@ self.handle_test = () => {
     _showHtml('')
   }
 
+  function _file_list_add (file_name, path, fn_name, block_id, widget_id) {
+    let result = '<div class="row"><div class="col-sm-1"> </div>' +
+            '<a class="list-group-item col-md-5" onclick="index.' +
+            `${fn_name}('${path}${file_name}', `
+    if (block_id == null) {
+      result += 'null'
+    } else {
+      result += `'${block_id}'`
+    }
+    result += `, '${widget_id}')">${file_name}</a>` +
+            '</div>\n'
+    return result
+  }
+
+  function _folder_list_add (folder_name, media, path, block_id, widget_id) {
+    let result = '<div class="row"><div class="col-sm-1"> </div>' +
+            '<a class="list-group-item col-md-5" onclick="index.' +
+                `handle_folder_selected('${media}', `
+    if (block_id == null) {
+      result += 'null'
+    } else {
+      result += `'${block_id}'`
+    }
+    result += `, '${widget_id}', '${path}')">&#x1f5c1; ${folder_name}</a>` +
+            '</div>\n'
+    return result
+  }
+
+  self.handle_file = (media, block_id, widget_id, path = '') => {
+        // when media is 'UPLOAD', then we are uploading, note then that block_id and widget_id are null
+    let file_modal = $('#file_modal')
+    if (media == 'UPLOAD') {
+      $('.file_modal_upload').show()
+      $('.file_modal_select_file').hide()
+    } else {
+      $('.file_modal_select_file').show()
+      $('.file_modal_upload').hide()
+    }
+    $('#file_modal_path').html('Loading...')
+    file_modal.modal('show')
+    $('#file_list').html('Loading...')
+    $.ajax({
+      url: '/file/type' + path + '/' + media,
+      success: (res) => {
+        if (res.success) {
+          $('#file_modal_path').html(path)
+          $('#file_list').html('')
+          if (path != '') {
+            let parent_path = ''
+            let slash_loc = path.lastIndexOf('/')
+            if (slash_loc > 0) {
+              parent_path = path.substring(0, slash_loc)
+            }
+            $('#file_list').append(_folder_list_add('..', media, parent_path,
+                            block_id, widget_id))
+          }
+          for (let i in res.folders) {
+            $('#file_list').append(_folder_list_add(res.folders[i], media, path + '/' + res.folders[i],
+                            block_id, widget_id))
+          }
+          if (path != '') {
+            path = path.substring(1) + '/' // strip off the intial slash and put infront of the file
+          }
+          for (let i in res.files) {
+            $('#file_list').append(_file_list_add(res.files[i], path,
+                            'handle_file_selected', block_id, widget_id))
+          }
+        } else {
+          alert('Failed to find server files')
+          $('#file_modal').modal('hide')
+        }
+      },
+      error: () => {
+        alert('Failed to access server')
+        $('#file_modal').modal('hide')
+      }
+    })
+  }
+
+  self.handle_folder_selected = (media, block_id, widget_id, path) => {
+    self.handle_file(media, block_id, widget_id, path)
+  }
+
+  self.handle_file_selected = (filename, block_id, widget_id) => {
+        // When blocK-id is null, then this is an upload - so do nothing...
+    if (block_id != null) {
+      let block = Blockly.mainWorkspace.getBlockById(block_id)
+      block.setFieldValue(filename, widget_id)
+      $('#file_modal').modal('hide')
+    }
+        // TODO get/return/set filename
+  }
+
+  self.handle_upload_media = () => {
+    if ($('#upload_media').val()) {
+      self.handle_file('UPLOAD', null, null, '')
+    }
+  }
+
+  function _upload_next_file(files, remote_path) {
+    let file = files.shift()
+    let file_in = file.name
+    let filename = encodeURI(file_in.substring(1 + file_in.lastIndexOf('\\')))
+    let form_data = new FormData()
+    form_data.append('upload_data', file)
+    $.ajax({
+      url: '/file/upload' + remote_path + '/' + filename,
+      type: 'POST',
+      data: form_data,
+      processData: false,
+      contentType: false,
+      success: (res) => {
+        if (res.success) {
+          _success('Uploaded...' + decodeURI(`${remote_path}/${filename}`))
+          if (files.length > 0) {
+            _upload_next_file(files, remote_path)
+          } else {
+            $('#file_modal').modal('hide')
+            $('#upload_media').val(null) // clear once finished - forces a change event next time
+          }
+        } else {
+          alert('Failed to save')
+        }
+      },
+      error: () => {
+        alert('Failed to find server')
+      }
+    })
+  }
+
+  self.handle_upload = () => {
+    let files = Array.from($('#upload_media')[0].files)
+    let remote_path = encodeURI($('#file_modal_path').html())
+    if (files.length > 0) {
+      _upload_next_file(files, remote_path)
+    }
+  }
+
 })()
 
 window.onload = index.setup()
