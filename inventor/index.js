@@ -749,6 +749,21 @@ self.handle_test = () => {
     }
   }
 
+  self.handle_logout = () => {
+    $.ajax({
+      url: '/login',
+      type: 'DELETE',
+      success: (res, status, xhr) => {
+        _info('Logged out')
+        _userid = null
+        _show_user_status()
+      },
+      error: () => {
+        $('#loading_modal_message').html('Failed to find server')
+      }
+    })
+  }
+
 })()
 
 window.onload = index.setup()
