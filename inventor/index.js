@@ -602,6 +602,15 @@ self.handle_test = () => {
     $('#show_modal_code').html(code)
   }
 
+  self.handle_clear = () => {
+    _info('Cleared...')
+    _deploy = ''
+    $('#file_name').html('[no file]')
+    $('#local_save_key').val('')
+    $('#remote_save_key').val('')
+    _showHtml('')
+  }
+
 })()
 
 window.onload = index.setup()
