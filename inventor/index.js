@@ -764,6 +764,35 @@ self.handle_test = () => {
     })
   }
 
+  self.handle_deploy = () => {
+    let code = self.generateCode(document.getElementById('script'))
+    if (code) {
+      let filename = 'guest'
+      if (_userid) {
+        filename = prompt('Please enter the deployment filename \n(without a suffix)', _deploy)
+      }
+      if (filename !== null) {
+        if (filename == '') {
+          alert('Filename cannot be blank')
+        } else {
+          $.ajax({
+            url: '/script/deploy/' + encodeURI(filename),
+            type: 'PUT',
+            data: { javascript: code },
+            success: () => {
+              _deploy = filename
+              _success("Deployed as '" + filename + ".js'")
+            },
+            error: () => {
+              alert('Failed to find server')
+            }
+          })
+        }
+      }
+    } else {
+      alert('Behaviour incomplete.')
+    }
+  }
 })()
 
 window.onload = index.setup()
