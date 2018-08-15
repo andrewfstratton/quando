@@ -2,7 +2,8 @@
   font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
 }
 
-button, input, select, textarea {
+.quando-block input,
+.quando-block select {
   font-family : inherit;
   font-size   : 100%;
   background-color: rgba(255,255,255, 0.65);
@@ -21,22 +22,25 @@ input {
     padding: 4px;
     height: 100%;
     margin: 0 auto;
+    border-right: 4px;
+    border-color: #808080;
+    border-style: solid;
   }
 
-  #menu, #script, .quando-box {
+  #menu, #script, .quando-box, .quando-title {
     display: flex;
     flex-flow: column nowrap;
     z-index: 1;
-  }
-  
-  #menu {
-    background-color: #eeeeff;
-    text-align: center;
-  }
-  
-  #script {
     background-color: #ffffff;
     text-align: center;
+  }
+  
+  .quando-title {
+    color: white;
+    font-size: large;
+    left: 0px;
+    margin-bottom: 4px;
+    background: #888888;
   }
 
   .quando-block {
@@ -44,7 +48,8 @@ input {
     padding: 4px 14px 4px 0px;
     width: max-content;
     border-radius: 6px;
-    box-shadow: 2px 2px 3px rgba(0,0,0,0.5);
+    border-left: 8px;
+    /* box-shadow: 2px 2px 3px rgba(0,0,0,0.5); */
   }
 
   .quando-block:hover {
@@ -63,8 +68,9 @@ input {
     left: 14px;
     margin: 4px 0px 4px 0px;
     padding: 6px 4px 4px 4px;
-    background-color: rgba(255,255,255, 0.3);
+    background-color: rgba(255,255,255, 1);
     width: 100%;
+    border-radius: 6px 0px 0px 6px;
   }
 
   .quando-display {

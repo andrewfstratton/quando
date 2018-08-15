@@ -65,6 +65,28 @@ self.handleRightClick = function(event) {
     return false
 }
 
+function _leftClickTitle(open_elem) {
+  let parent = open_elem.parentNode
+  let display = '' // i.e. show everything not preceeded by a title
+  for (let elem of parent.querySelectorAll(".quando-title,.quando-block")) {
+    if (elem.classList.contains("quando-title")) {
+      if (elem == open_elem) {
+        display =''
+      } else {
+        display = 'none'
+      }
+    } else { // must be a quando-block?!
+      elem.style.display = display
+    }
+  }
+}
+
+self.handleLeftClick = function(event) {
+  event.preventDefault()
+  _leftClickTitle(event.target)
+  return false
+}
+
 self.setElementHandlers = (elem) => {
     elem.addEventListener('contextmenu', self.handleRightClick, false)
 }
@@ -96,34 +118,41 @@ self.hasAncestor = (elem, ancestor) => {
 function _setupDragula() {
   let menu = document.getElementById('menu')
   let script = document.getElementById('script')
-  dragula([menu, script], {
-      removeOnSpill: true,
-      copy: function (elem, source) {
-          return source === menu
-      },
-      isContainer: function (el) {
-          return el.classList.contains('quando-box')
-      },
-      accepts: function (elem, target) {
-          let accept = true
-          if (target === script) {
-              // accept = true
-          } else if (target === menu) {
-              accept = false
-          } else if (target.classList.contains('quando-box')) { // i.e. a valid container
-              if (index.hasAncestor(target, menu)) {
-                  accept = false
-              }
-          } else {
-              accept = false
-          } 
-          return accept
-      }}).on ('drop', function (elem) {
-          index.setElementHandlers(elem)
-      }).on ('cloned', function (clone, old, type) {
-          if (type == 'copy') {
-              index.copyValues(old, clone)
-          }
+  let collections = []
+  collections.push(script)
+  collections.push(menu)
+  let options = {}
+  options.removeOnSpill = true
+  options.copy = function (elem, source) {
+    return source === menu
+  }
+  options.isContainer = function (el) {
+    return el.classList.contains('quando-box')
+  }
+  options.accepts = function (elem, target) {
+    let accept = true
+    if (target === script) {
+      // accept = true
+    } else if (target === menu) {
+      accept = false
+    } else if (target.classList.contains('quando-box')) { // i.e. a valid container
+      if (index.hasAncestor(target, menu)) {
+        accept = false
+      }
+    } else {
+      accept = false
+    }
+    return accept
+  }
+  options.invalid = (elem, handle) => {
+    return elem.classList.contains("quando-title")
+  }
+  dragula(collections, options).on('drop', function (elem) {
+    index.setElementHandlers(elem)
+  }).on('cloned', function (clone, old, type) {
+    if (type == 'copy') {
+      index.copyValues(old, clone)
+    }
   })
 }
 
@@ -132,6 +161,9 @@ self.setup = () => {
       // return 'Are you sure you want to leave the editor?' // Doesn't seem to show this message in Chrome?!
   // }
 
+  for (let elem of document.getElementsByClassName("quando-title")) {
+    elem.addEventListener('click', self.handleLeftClick)
+  }
   for (let item of document.getElementsByClassName("quando-block")) {
       self.setElementHandlers(item)
   }
@@ -179,6 +211,10 @@ self.setup = () => {
     }
   })
   _setupDragula()
+  let first_title = document.getElementsByClassName("quando-title")[0]
+  if (first_title) {
+    _leftClickTitle(first_title)
+  }
 }
 
 function _show_user_status () {
