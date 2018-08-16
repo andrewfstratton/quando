@@ -373,35 +373,36 @@ function _warning (message) {
     return result
   }
 
-self.getParams_Code = function(block) {
+self.getParams_Code = function(block, prefix) {
     let params = {}
-    let code = ""
-    let children = block.children
-    for (let child of children) {
-        if (child.name) {
-            params[child.name] = child.value
+    let code = ''
+    let right = block.querySelector(".quando-right")
+    for (let row_box of right.children) { // i.e. for each row or box
+      if (row_box.classList.contains("quando-row")) {
+        for (let child of row_box.children) { // i.e. each input
+          if (child.name) {
+              params[child.name] = child.value
+          }
         }
-        if (child.classList.contains("quando-box")) {
-            code = "() => {\n"
-            code += self.generateCode(child)
-            code += "}"
+      } else if (row_box.classList.contains("quando-box")) {
+        if (code != '') {
+          code += ", \n" + prefix
         }
-    }
-    if (params == {}) {
-        params = false
-    }
-    if (code == "") {
-        code = false
+        code += "() => {\n"
+        let blocks = row_box.children
+        for (let block of blocks) {
+          code += prefix + self.getCode(block, prefix + '  ') + "\n"
+        }
+        code += prefix + "}"
+      }
     }
     return [params, code]
 }
     
-self.getCode = function(block) {
-    let [params, code] = self.getParams_Code(block)
-    let result = block.dataset.quandoFn + "("
-    if (params) {
-        result += JSON.stringify(params)
-    }
+self.getCode = function(block, prefix) {
+    let [params, code] = self.getParams_Code(block, prefix)
+    let result = prefix + block.dataset.quandoFn + "("
+    result += JSON.stringify(params)
     if (code) {
         result += ", " + code
     }
@@ -413,7 +414,7 @@ self.generateCode = function(elem) {
     let children = elem.children
     let result = ""
     for (let child of children) {
-        result += self.getCode(child)
+        result += self.getCode(child, '')
         result += '\n'
     }
     return result

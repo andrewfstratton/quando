@@ -40,64 +40,96 @@
             <div id="menu" class="container col-md-2">
                 <!-- Icons from https://icons8.com/icon/set/alarm/material -->
                 <div class="quando-title quando-media">Media</div>
-                <div data-quando-fn="quando.title" class="quando-block quando-media">
-                    &nbsp;<img src="img/icons8-abc-24.png"/>
-                    <select name="replace">
-                        <option value="true">Show</option>
-                        <option value="false">Add</option>
-                    </select>
-                    Title <input name="text" type="text" value="" size="5"/>
+                <div class="quando-block" data-quando-fn="quando.title">
+                    <div class="quando-left quando-media"></div>
+                    <div class="quando-right">
+                        <div class="quando-row quando-media">
+                            <img src="img/icons8-abc-24.png"/>
+                            <select name="replace">
+                                <option value="true">Show</option>
+                                <option value="false">Add</option>
+                            </select>
+                            Title <input name="text" type="text" value="" size="5"/>
+                        </div>
+                    </div>
                 </div>
-                <div data-quando-fn="quando.text" class="quando-block quando-media">
-                    &nbsp;<img src="img/icons8-abc-24.png"/> 
-                    <select name="replace">
-                        <option value="true">Show</option>
-                        <option value="false">Add</option>
-                    </select>
-                    Text <input name="text" type="text" value="" size="5"/>
+                <div class="quando-block" data-quando-fn="quando.text">
+                    <div class="quando-left quando-media"></div>
+                    <div class="quando-right">
+                        <div class="quando-row quando-media">
+                            <img src="img/icons8-abc-24.png"/> 
+                            <select name="replace">
+                                <option value="true">Show</option>
+                                <option value="false">Add</option>
+                            </select>
+                            Text <input name="text" type="text" value="" size="5"/>
+                        </div>
+                    </div>
                 </div>
                 <div class="quando-title quando-display">Display</div>
-                <div data-quando-fn="quando.projection" class="quando-block quando-display">
-                    &nbsp;<img src="img/icons8-monitor-24.png"/>
-                    <select name="direction">
-                        <option value="front">Normal</option>
-                        <option value="rear">Rear</option>
-                    </select>
-                    Projection
+                <div class="quando-block" data-quando-fn="quando.projection">
+                    <div class="quando-left quando-display"></div>
+                    <div class="quando-right">
+                        <div class="quando-row quando-display">
+                            <img src="img/icons8-monitor-24.png"/>
+                            <select name="direction">
+                                <option value="front">Normal</option>
+                                <option value="rear">Rear</option>
+                            </select>
+                            Projection
+                        </div>
+                    </div>
                 </div>
                 <div class="quando-title quando-time">Time</div>
-                <div data-quando-fn="quando.after" class="quando-block quando-time">&nbsp;<img src="img/icons8-alarm-clock-24.png"/> After
-                    <input name="count" type="number" min="0" max="99" maxLength="2" value="1" style="width: 3em"/> 
-                    <select name="units">
-                        <option value="seconds">Seconds</option>
-                        <option value="minutes">Minutes</option>
-                        <option value="hours">Hours</option>
-                    </select>
-                    <div class="quando-box"></div>
+                <div class="quando-block" data-quando-fn="quando.after">
+                    <div class="quando-left quando-time"></div>
+                    <div class="quando-right">
+                        <div class="quando-row quando-time">
+                            <img src="img/icons8-alarm-clock-24.png"/> After
+                            <input name="count" type="number" min="0" max="99" maxLength="2" value="1" style="width: 3em" />
+                            <select name="units">
+                                <option value="seconds">Seconds</option>
+                                <option value="minutes">Minutes</option>
+                                <option value="hours">Hours</option>
+                            </select>
+                        </div>
+                        <div class="quando-box"></div>
+                        <div class="quando-row quando-time"></div>
+                    </div>
                 </div>
-                <div data-quando-fn="quando.every" class="quando-block quando-time">&nbsp;<img src="img/icons8-alarm-clock-24.png"/> Every
-                    <input name="count" type="number" min="0" max="99" maxLength="2" value="1" style="width: 3em"/> 
-                    <select name="units">
-                        <option value="seconds">Seconds</option>
-                        <option value="minutes">Minutes</option>
-                        <option value="hours">Hours</option>
-                    </select>
-                    <div class="quando-box"></div>
+                <div class="quando-block" data-quando-fn="quando.every">
+                    <div class="quando-left quando-time"></div>
+                    <div class="quando-right">
+                        <div class="quando-row quando-time">
+                            <img src="img/icons8-alarm-clock-24.png"/> Every
+                            <input name="count" type="number" min="0" max="99" maxLength="2" value="1" style="width: 3em"/> 
+                            <select name="units">
+                                <option value="seconds">Seconds</option>
+                                <option value="minutes">Minutes</option>
+                                <option value="hours">Hours</option>
+                            </select>
+                        </div>
+                        <div class="quando-box"></div>
+                        <div class="quando-row quando-time"></div>
+                    </div>
                 </div>
-                <div data-quando-fn="quando.check" class="quando-block quando-time">&nbsp;<img src="img/icons8-alarm-clock-24.png"/>
-                    <input name="times" type="text" pattern="[0-9]*" min="0" max="9999" maxLength="4" value="1" style="width: 3em"/> 
-                    times per
-                    <select name="units">
-                        <option value="second">Second</option>
-                        <option value="minute">Minute</option>
-                        <option value="hour">Hour</option>
-                        <option value="day">Day</option>
-                    </select>
-                    <div class="quando-box"></div>
-                </div>
-                <div class="quando-title">Misc.</div>
-                <div class="quando-block quando-media">&nbsp;Quando
-                    <div class="container quando-box"></div>
+                <div class="quando-block" data-quando-fn="quando.check">
+                    <div class="quando-left quando-time"></div>
+                    <div class="quando-right">
+                        <div class="quando-row quando-time">
+                        <img src="img/icons8-alarm-clock-24.png"/>
+                            <input name="times" type="text" pattern="[0-9]*" min="0" max="9999" maxLength="4" value="1" style="width: 3em"/> 
+                            times per
+                            <select name="units">
+                                <option value="second">Second</option>
+                                <option value="minute">Minute</option>
+                                <option value="hour">Hour</option>
+                                <option value="day">Day</option>
+                            </select>
+                        </div>
+                        <div class="quando-box"></div>
+                        <div class="quando-row quando-time"></div>
+                    </div>
                 </div>
             </div>
             <div id="script" class="col-md-10"></div>
