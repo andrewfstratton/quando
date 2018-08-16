@@ -25,7 +25,14 @@ input {
     border-right: 4px;
     border-color: #808080;
     border-style: solid;
+  }
+
+  #menu {
     background-color: #ffffff;
+  }
+
+  #script {
+    background-color: #ffeeee;
   }
 
   #menu, #script, .quando-box, .quando-title {
@@ -50,12 +57,13 @@ input {
     margin: 0px 0px 4px 0px;
   }
 
-  /* .hover {
-    box-shadow: 4px 4px 6px rgba(0, 0, 0, 0.7);
-  } */
-
   .quando-block:hover {
     cursor: move;
+  }
+
+  .quando-block:hover>.quando-left,
+  .quando-block:hover>*>.quando-row {
+    box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.7);
   }
 
   .quando-left {
