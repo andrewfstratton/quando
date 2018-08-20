@@ -373,7 +373,7 @@ function _warning (message) {
     return result
   }
 
-self.getParams_Code = function(block, prefix) {
+self.getParamsCode = function(block, prefix) {
     let params = {}
     let code = ''
     let right = block.querySelector(".quando-right")
@@ -382,6 +382,8 @@ self.getParams_Code = function(block, prefix) {
         for (let child of row_box.children) { // i.e. each input
           if (child.name) {
               params[child.name] = child.value
+          } else if (child.value) {
+            code += child.value
           }
         }
       } else if (row_box.classList.contains("quando-box")) {
@@ -391,7 +393,7 @@ self.getParams_Code = function(block, prefix) {
         code += "() => {\n"
         let blocks = row_box.children
         for (let block of blocks) {
-          code += prefix + self.getCode(block, prefix + '  ') + "\n"
+          code += prefix + self.getCode(block, prefix + '  ')
         }
         code += prefix + "}"
       }
@@ -400,13 +402,18 @@ self.getParams_Code = function(block, prefix) {
 }
     
 self.getCode = function(block, prefix) {
-    let [params, code] = self.getParams_Code(block, prefix)
-    let result = prefix + block.dataset.quandoFn + "("
-    result += JSON.stringify(params)
-    if (code) {
-        result += ", " + code
+    let [params, code] = self.getParamsCode(block, prefix)
+    let result = prefix 
+    if (block.dataset.quandoApi) {
+      result += block.dataset.quandoApi + "("
+      result += JSON.stringify(params)
+      if (code) {
+          result += ", " + code
+      }
+      result += ')\n'
+    } else if (block.dataset.quandoJavascript) {
+      result += code + "\n"
     }
-    result += ')'
     return result
 }
 
@@ -414,8 +421,7 @@ self.generateCode = function(elem) {
     let children = elem.children
     let result = ""
     for (let child of children) {
-        result += self.getCode(child, '')
-        result += '\n'
+      result += self.getCode(child, '')
     }
     return result
 }
