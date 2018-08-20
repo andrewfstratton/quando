@@ -201,7 +201,7 @@
     }
     return result * 1000 // convert to ms
   }
-  self.after = function ({count = 1, units = "seconds", destruct = false}={}, callback) {
+  self.after = function (count = 1, units = 'seconds', destruct = false, callback) {
     let time_ms = _units_to_ms(units, count)
     let timeout = setTimeout(callback, time_ms)
     if (destruct) {
@@ -211,7 +211,7 @@
     }
   }
 
-  self.every = function ({count = 1, units = "seconds", destruct = false}={}, callback) {
+  self.every = function (count = 1, units = 'seconds', destruct = false, callback) {
     callback() // do it straight away
     let time_ms = _units_to_ms(units, count)
     let id = setInterval(callback, time_ms)
@@ -222,7 +222,7 @@
     }
   }
 
-  self.check = function({times = 1, units = 'second', destruct = false}={}, callback) {
+  self.check = function(times = 1, units = 'second', destruct = false, callback) {
     let time = 1
     if (units == 'minute') {
       time = 60
@@ -232,7 +232,7 @@
       time = 60*60*24
     }
     let count = time / times
-    self.every({count:count, units:'seconds', destrcut:destruct}, callback)
+    self.every(count, 'seconds', destruct, callback)
   }
 
   self.idle = function (time_secs, idle_fn, active_fn) {
@@ -272,25 +272,17 @@
     elem.innerHTML = txt
   }
   
-  self.title = function ({text = '', replace = 'false'}={}) {
-    let append = true
-    if (replace == 'true') {
-      append = false
-    }
+  self.title = function (append = true, text = '') {
     _set_or_append_tag_text(text, 'quando_title', append)
   }
 
-  self.text = function ({text = '', replace = 'false'}={}) {
-    let append = true
-    if (replace == 'true') {
-      append = false
-    }
+  self.text = function (append = true, text = '') {
     _set_or_append_tag_text(text, 'quando_text', append)
   }
 
-  self.projection = function ({direction = "front"}={}) {
+  self.projection = function (front = true) {
     let scale = 1
-    if (direction == 'rear') {
+    if (!front) {
       scale = -1
     }
     document.getElementById('html').style.transform = 'scale(' + scale + ',1)'

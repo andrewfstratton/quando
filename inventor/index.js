@@ -387,15 +387,16 @@ self.getParamsCode = function(block, prefix) {
           }
         }
       } else if (row_box.classList.contains("quando-box")) {
+        let indent = prefix + '  '
         if (code != '') {
-          code += ", \n" + prefix
+          code += ", \n" + indent
         }
         code += "() => {\n"
         let blocks = row_box.children
         for (let block of blocks) {
-          code += prefix + self.getCode(block, prefix + '  ')
+          code += prefix + self.getCode(block, indent + '  ')
         }
-        code += prefix + "}"
+        code += indent + "}"
       }
     }
     return [params, code]
