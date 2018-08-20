@@ -373,16 +373,13 @@ function _warning (message) {
     return result
   }
 
-self.getParamsCode = function(block, prefix) {
-    let params = {}
+self.getCodeInBlock = function(block, prefix) {
     let code = ''
     let right = block.querySelector(".quando-right")
     for (let row_box of right.children) { // i.e. for each row or box
       if (row_box.classList.contains("quando-row")) {
         for (let child of row_box.children) { // i.e. each input
-          if (child.name) {
-              params[child.name] = child.value
-          } else if (child.value) {
+          if (child.value) {
             code += child.value
           }
         }
@@ -399,21 +396,14 @@ self.getParamsCode = function(block, prefix) {
         code += indent + "}"
       }
     }
-    return [params, code]
+    return code
 }
     
 self.getCode = function(block, prefix) {
-    let [params, code] = self.getParamsCode(block, prefix)
-    let result = prefix 
-    if (block.dataset.quandoApi) {
-      result += block.dataset.quandoApi + "("
-      result += JSON.stringify(params)
-      if (code) {
-          result += ", " + code
-      }
-      result += ')\n'
-    } else if (block.dataset.quandoJavascript) {
-      result += code + "\n"
+    let code = self.getCodeInBlock(block, prefix)
+    let result = '' 
+    if (block.dataset.quandoJavascript) {
+      result = prefix + code + "\n"
     }
     return result
 }
