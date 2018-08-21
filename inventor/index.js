@@ -375,35 +375,43 @@ function _warning (message) {
 
 self.getCodeInBlock = function(block, prefix) {
     let code = ''
+    if (block.dataset.quandoJavascript) {
+      code = block.dataset.quandoJavascript
+    }
     let right = block.querySelector(".quando-right")
     for (let row_box of right.children) { // i.e. for each row or box
       if (row_box.classList.contains("quando-row")) {
         for (let child of row_box.children) { // i.e. each input
-          if (child.value) {
-            code += child.value
+          if (child.dataset.quandoName) {
+            let match = '${' + child.dataset.quandoName + '}'
+            while (code.indexOf(match) != -1) {
+              code = code.replace(match, child.value)
+            }
           }
         }
       } else if (row_box.classList.contains("quando-box")) {
         let indent = prefix + '  '
-        if (code != '') {
-          code += ", \n" + indent
-        }
-        code += "() => {\n"
+        let box_code = '\n' + indent + "() => {\n"
         let blocks = row_box.children
         for (let block of blocks) {
-          code += prefix + self.getCode(block, indent + '  ')
+          box_code += prefix + self.getCode(block, indent + '  ')
         }
-        code += indent + "}"
+        box_code += indent + "}"
+        if (row_box.dataset.quandoName) {
+          let match = '${' + row_box.dataset.quandoName + '}'
+          while (code.indexOf(match) != -1) {
+            code = code.replace(match, box_code)
+          }
+        }
       }
     }
     return code
 }
     
 self.getCode = function(block, prefix) {
-    let code = self.getCodeInBlock(block, prefix)
     let result = '' 
     if (block.dataset.quandoJavascript) {
-      result = prefix + code + "\n"
+      result = prefix + self.getCodeInBlock(block, prefix) + "\n"
     }
     return result
 }

@@ -38,135 +38,109 @@
     <div id="editor_content" data-role="content">
         <div class="row container-fluid">
             <div id="menu" class="container col-md-2">
-                <div class="quando-block" data-quando-javascript="true">
+                <div class="quando-block" data-quando-javascript="${fn}('${text}')">
                     <div class="quando-left quando-media"></div>
                     <div class="quando-right">
                         <div class="quando-row quando-media">
-                            <input type="hidden" value="alert('"/>
-                            Say <input type="text" value="" size="9"/>
-                            <input type="hidden" value="' + '"/>
-                            then <input type="text" value="" size="9"/>
-                            <input type="hidden" value="')"/>
+                            <input data-quando-name="fn" type="hidden" value="alert"/>
+                            Say <input data-quando-name="text" type="text" value="" size="9"/>
                         </div>
                     </div>
                 </div>
                 <!-- Icons from https://icons8.com/icon/set/alarm/material -->
                 <div class="quando-title quando-media">Media</div>
-                <div class="quando-block" data-quando-javascript="true">
+                <div class="quando-block" data-quando-javascript="quando.title(${append}, '${text}')">
                     <div class="quando-left quando-media"></div>
                     <div class="quando-right">
                         <div class="quando-row quando-media">
-                            <input type="hidden" value="quando.title("/>
                             <img src="img/icons8-abc-24.png"/>
-                            <select> <!-- append parameter -->
+                            <select data-quando-name="append">
                                 <option value="false">Show</option>
                                 <option value="true">Add</option>
                             </select>
-                            <input type="hidden" value=", '"/>
-                            Title <input type="text" value="" size="5"/>
-                            <input type="hidden" value="')"/>
+                            Title <input data-quando-name="text" type="text" value="" size="5"/>
                         </div>
                     </div>
                 </div>
-                <div class="quando-block" data-quando-javascript="true">
+                <div class="quando-block" data-quando-javascript="quando.text(${append}, '${text}')">
                     <div class="quando-left quando-media"></div>
                     <div class="quando-right">
                         <div class="quando-row quando-media">
-                            <input type="hidden" value="quando.text("/>
                             <img src="img/icons8-abc-24.png"/>
-                            <select> <!-- append parameter -->
+                            <select data-quando-name="append">
                                 <option value="false">Show</option>
                                 <option value="true">Add</option>
                             </select>
-                            <input type="hidden" value=", '"/>
-                            Text <input type="text" value="" size="5"/>
-                            <input type="hidden" value="')"/>
+                            Text <input data-quando-name="text" type="text" value="" size="5"/>
                         </div>
                     </div>
                 </div>
                 <div class="quando-title quando-display">Display</div>
-                <div class="quando-block" data-quando-javascript="true">
+                <div class="quando-block" data-quando-javascript="quando.projection(${front})">
                     <div class="quando-left quando-display"></div>
                     <div class="quando-right">
                         <div class="quando-row quando-display">
-                            <input type="hidden" value="quando.projection("/>
                             <img src="img/icons8-monitor-24.png"/>
-                            <select>
+                            <select data-quando-name="front">
                                 <option value="true">Normal</option>
                                 <option value="false">Rear</option>
                             </select>
                             Projection
-                            <input type="hidden" value=")"/>
                         </div>
                     </div>
                 </div>
                 <div class="quando-title quando-time">Time</div>
-                <div class="quando-block" data-quando-javascript="true">
+                <div class="quando-block" data-quando-javascript="quando.after(${count}, '${units}', ${destructor}, ${box})">
                     <div class="quando-left quando-time"></div>
                     <div class="quando-right">
                         <div class="quando-row quando-time">
                             <img src="img/icons8-alarm-clock-24.png"/> After
-                            <input type="hidden" value="quando.after("/>
-                            <input type="number" min="0" max="99" maxLength="2" value="1" style="width: 3em" />
-                            <input type="hidden" value=", '"/>
-                            <select>
+                            <input data-quando-name="count" type="number" min="0" max="99" maxLength="2" value="1" style="width: 3em" />
+                            <select data-quando-name="units">
                                 <option value="seconds">Seconds</option>
                                 <option value="minutes">Minutes</option>
                                 <option value="hours">Hours</option>
                             </select>
-                            <input type="hidden" value="'"/>
-                            <input type="hidden" value=", false"/>
+                            <input data-quando-name="destructor" type="hidden" value="false"/>
                         </div>
-                        <div class="quando-box"></div>
-                        <div class="quando-row quando-time">
-                            <input type="hidden" value=")"/>
-                        </div>
+                        <div data-quando-name="box" class="quando-box"></div>
+                        <div class="quando-row quando-time"></div>
                     </div>
                 </div>
-                <div class="quando-block" data-quando-javascript="true">
+                <div class="quando-block" data-quando-javascript="quando.every(${count}, '${units}', ${destructor}, ${box})">
                     <div class="quando-left quando-time"></div>
                     <div class="quando-right">
                         <div class="quando-row quando-time">
                             <img src="img/icons8-alarm-clock-24.png"/> Every
-                            <input type="hidden" value="quando.every("/>
-                            <input type="number" min="0" max="99" maxLength="2" value="1" style="width: 3em"/> 
-                            <input type="hidden" value=", '"/>
-                            <select>
+                            <input data-quando-name="count" type="number" min="0" max="99" maxLength="2" value="1" style="width: 3em" />
+                            <select data-quando-name="units">
                                 <option value="seconds">Seconds</option>
                                 <option value="minutes">Minutes</option>
                                 <option value="hours">Hours</option>
                             </select>
-                            <input type="hidden" value="'"/>
-                            <input type="hidden" value=", false"/>
+                            <input data-quando-name="destructor" type="hidden" value="false"/>
                         </div>
-                        <div class="quando-box"></div>
-                        <div class="quando-row quando-time">
-                            <input type="hidden" value=")"/>
-                        </div>
+                        <div data-quando-name="box" class="quando-box"></div>
+                        <div class="quando-row quando-time"></div>
                     </div>
                 </div>
-                <div class="quando-block" data-quando-javascript="true">
+                <div class="quando-block" data-quando-javascript="quando.check(${count}, '${units}', ${destructor}, ${box})">
                     <div class="quando-left quando-time"></div>
                     <div class="quando-right">
                         <div class="quando-row quando-time">
                             <img src="img/icons8-alarm-clock-24.png"/>
-                            <input type="hidden" value="quando.check("/>
-                            <input type="text" pattern="[0-9]*" min="0" max="9999" maxLength="4" value="1" style="width: 3em"/> 
+                            <input data-quando-name="count" type="text" pattern="[0-9]*" min="0" max="9999" maxLength="4" value="1" style="width: 3em"/> 
                             times per
-                            <input type="hidden" value=", '"/>
-                            <select name="units">
+                            <select data-quando-name="units">
                                 <option value="second">Second</option>
                                 <option value="minute">Minute</option>
                                 <option value="hour">Hour</option>
                                 <option value="day">Day</option>
                             </select>
-                            <input type="hidden" value="'"/>
-                            <input type="hidden" value=", false"/>
+                            <input data-quando-name="destructor" type="hidden" value="false"/>
                         </div>
-                        <div class="quando-box"></div>
-                        <div class="quando-row quando-time">
-                            <input type="hidden" value=")"/>
-                        </div>
+                        <div data-quando-name="box" class="quando-box"></div>
+                        <div class="quando-row quando-time"></div>
                     </div>
                 </div>
             </div>
