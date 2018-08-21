@@ -2,10 +2,10 @@
   var self = this['quando'] = {}
   self.idle_reset_secs = 0
   self.idle_callback_id = 0
-  self.vitrines = new Map()
+  self._displays = new Map()
   self.DISPLAY_STYLE = 'quando_css_override'
   self.pinching = false
-  self._vitrine_destructors = []
+  self._display_destructors = []
   self.DEFAULT_STYLE = 'quando_css'
   var _lookup = {} // holds run time arrays
 
@@ -406,8 +406,8 @@
     }
   }
 
-  self.vitrine = function (key, fn) { // Yes this is all of it...
-    self.vitrines.set(key, fn)
+  self.display = function (key, fn) { // Yes this is all of it...
+    self._displays.set(key, fn)
   }
 
   self._removeFocus = function () {
@@ -421,7 +421,7 @@
     ev.target.click()
   }
 
-  self.startVitrine = function (leap) {
+  self.startDisplay = function (leap) {
     self.setDefaultStyle('#cursor', 'background-color', 'rgba(255, 255, 102, 0.7)');
     self.setDefaultStyle('#cursor', ['width','height'], '4.4vw');
     self.setDefaultStyle('#cursor', ['margin-left','margin-top'], '-2.2vw');    
@@ -432,9 +432,9 @@
               return false
             }, false)
     self.pinching = false
-    if (self.vitrines.size != 0) {
+    if (self._displays.size != 0) {
             // TODO Should this be deferred?
-      (self.vitrines.values().next().value)() // this runs the very first vitrine :)
+      (self._displays.values().next().value)() // this runs the very first display :)
             // can't use [0] because we don't know the id of the first entry
     }
   }
@@ -455,22 +455,22 @@
     }
   }
 
-  self.showVitrine = function (id) {
+  self.showDisplay = function (id) {
         // perform any destructors - which will cancel pending events, etc.
-    var destructor = self._vitrine_destructors.pop()
+    let destructor = self._display_destructors.pop()
     while (destructor) {
       destructor()
-      destructor = self._vitrine_destructors.pop()
+      destructor = self._display_destructors.pop()
     }
-        // Find vitrine
-    var vitrine = self.vitrines.get(id)
+        // Find display
+    let display = self._displays.get(id)
         // Clear current labels, title and text
     document.getElementById('quando_labels').innerHTML = ''
     self.title()
     self.text()
 //        self.video() removed to make sure video can continue playing between displays
     self._resetStyle()
-    vitrine()
+    display()
   }
 
   self.addLabel = function (id, title) {
@@ -479,7 +479,7 @@
     div.className = 'quando_label'
     div.innerHTML = title
     elem.appendChild(div)
-    div.onclick = function () { setTimeout(function () { quando.showVitrine(id) }, 0) }
+    div.onclick = function () { setTimeout(function () { quando.showDisplay(id) }, 0) }
   }
 
   self.addLabelStatement = function (text, fn) {
@@ -546,7 +546,7 @@
   }
 
   self.addDestructor = function (fn) {
-    self._vitrine_destructors.push(fn)
+    self._display_destructors.push(fn)
   }
 
   self.pick = function(val, arr) {
