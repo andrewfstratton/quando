@@ -272,11 +272,11 @@
     elem.innerHTML = txt
   }
   
-  self.title = function (append = true, text = '') {
+  self.title = function (text = '', append = false) {
     _set_or_append_tag_text(text, 'quando_title', append)
   }
 
-  self.text = function (append = true, text = '') {
+  self.text = function (text = '', append = false) {
     _set_or_append_tag_text(text, 'quando_text', append)
   }
 
