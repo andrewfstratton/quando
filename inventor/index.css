@@ -102,6 +102,9 @@ input {
   .quando-time {
     background: #ef9a9a;
   }
+  .quando-inventor {
+    background: #b39ddb;
+  }
 
   /* the 200 value colours from https://www.materialui.co/colors
 -- red ef9a9a

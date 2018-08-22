@@ -391,12 +391,11 @@ self.getCodeInBlock = function(block, prefix) {
         }
       } else if (row_box.classList.contains("quando-box")) {
         let indent = prefix + '  '
-        let box_code = '\n' + indent + "() => {\n"
+        let box_code = ''
         let blocks = row_box.children
         for (let block of blocks) {
-          box_code += prefix + self.getCode(block, indent + '  ')
+          box_code += indent + self.getCode(block, indent + '  ')
         }
-        box_code += indent + "}"
         if (row_box.dataset.quandoName) {
           let match = '${' + row_box.dataset.quandoName + '}'
           while (code.indexOf(match) != -1) {
@@ -641,6 +640,7 @@ self.handle_test = () => {
     $('#show_modal').modal('show')
     $('#show_modal_code').removeClass('language-xml').addClass('language-javascript')
     let code = self.generateCode(document.getElementById('script'))
+    code = code.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\$\{\}/g, '\n')
     $('#show_modal_code').html(code)
   }
 

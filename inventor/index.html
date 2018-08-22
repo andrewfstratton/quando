@@ -47,6 +47,61 @@
                         </div>
                     </div>
                 </div>
+                <div class="quando-title quando-inventor">Inventor</div>
+                <div class="quando-block" data-quando-javascript="${1}${2}${3}${box}${d}${d}">
+                    <div class="quando-left quando-inventor"></div>
+                    <div class="quando-right">
+                        <div class="quando-row quando-inventor">
+                            <input data-quando-name="1" type="hidden"
+                                value='<div class="quando-block" data-quando-javascript="${javascript}">${}'/>
+                            <input data-quando-name="2" type="hidden"
+                                value='<div class="quando-left ${class}">${d}'/>
+                            <input data-quando-name="3" type="hidden"
+                                value='<div class="quando-right">${}'/>
+                            <input data-quando-name="class" type="hidden" value="quando-inventor"/>
+                            <input data-quando-name="d" type="hidden" value='</div>${}'>
+                            Block <input data-quando-name="javascript" type="text" value="" title = "Javascript" size="18"/>
+                        </div>
+                        <div data-quando-name="box" class="quando-box"></div>
+                        <div class="quando-row quando-inventor"></div>
+                    </div>
+                </div>
+                <div class="quando-block" data-quando-javascript='<div class="quando-row ${class}">${}${box}</div>'/>
+                    <div class="quando-left quando-inventor"></div>
+                    <div class="quando-right">
+                        <div class="quando-row quando-inventor">
+                            <input data-quando-name="class" type="hidden" value="quando-inventor"/>
+                            Row
+                        </div>
+                        <div data-quando-name="box" class="quando-box"></div>
+                        <div class="quando-row quando-inventor"></div>
+                    </div>
+                </div>
+                <div class="quando-block" data-quando-javascript='${text}'>
+                    <div class="quando-left quando-inventor"></div>
+                    <div class="quando-right">
+                        <div class="quando-row quando-inventor">
+                            Text <input data-quando-name="text" type="text" value="" size="6"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="quando-block" data-quando-javascript='<input data-quando-name="${input}" type="text" value="${default}" size="6"/>'>
+                    <div class="quando-left quando-inventor"></div>
+                    <div class="quando-right">
+                        <div class="quando-row quando-inventor">
+                            Input <input data-quando-name="input" title="Name" type="text" value="" size="5"/>
+                            Default <input data-quando-name="default" title="value" type="text" value="" size="2"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="quando-block" data-quando-javascript='<div data-quando-name="${name}" class="quando-box"></div>'>
+                    <div class="quando-left quando-inventor"></div>
+                    <div class="quando-right">
+                        <div class="quando-row quando-inventor">
+                            Box <input data-quando-name="name" title="Title" type="text" value="box" size="6"/>
+                        </div>
+                    </div>
+                </div>
                 <!-- Icons from https://icons8.com/icon/set/alarm/material -->
                 <div class="quando-title quando-media">Media</div>
                 <div class="quando-block" data-quando-javascript="quando.title(${append}, '${text}')">
