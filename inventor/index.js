@@ -421,7 +421,7 @@ self.generateCode = function(elem) {
     for (let child of children) {
       result += self.getCode(child, '')
     }
-    return result
+    return result.replace(/\$\{\}/g, '\n') // replaces ${} with newline...for templates
 }
 
 self.handle_login = () => {
@@ -640,7 +640,7 @@ self.handle_test = () => {
     $('#show_modal').modal('show')
     $('#show_modal_code').removeClass('language-xml').addClass('language-javascript')
     let code = self.generateCode(document.getElementById('script'))
-    code = code.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\$\{\}/g, '\n')
+    code = code.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
     $('#show_modal_code').html(code)
   }
 
