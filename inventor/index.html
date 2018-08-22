@@ -38,17 +38,8 @@
     <div id="editor_content" data-role="content">
         <div class="row container-fluid">
             <div id="menu" class="container col-md-2">
-                <div class="quando-block" data-quando-javascript="${fn}('${text}')">
-                    <div class="quando-left quando-media"></div>
-                    <div class="quando-right">
-                        <div class="quando-row quando-media">
-                            <input data-quando-name="fn" type="hidden" value="alert"/>
-                            Say <input data-quando-name="text" type="text" value="" size="9"/>
-                        </div>
-                    </div>
-                </div>
                 <div class="quando-title quando-inventor">Inventor</div>
-                <div class="quando-block" data-quando-javascript="${1}${2}${3}${box}${d}${d}">
+                <div class="quando-block" data-quando-javascript="${1}${2}${3}${_quando_inventor_box_}${d}${d}">
                     <div class="quando-left quando-inventor"></div>
                     <div class="quando-right">
                         <div class="quando-row quando-inventor">
@@ -62,18 +53,18 @@
                             <input data-quando-name="d" type="hidden" value='</div>${}'>
                             Block <input data-quando-name="javascript" type="text" value="" title = "Javascript" size="18"/>
                         </div>
-                        <div data-quando-name="box" class="quando-box"></div>
+                        <div data-quando-name="_quando_inventor_box_" class="quando-box"></div>
                         <div class="quando-row quando-inventor"></div>
                     </div>
                 </div>
-                <div class="quando-block" data-quando-javascript='<div class="quando-row ${class}">${}${box}</div>'/>
+                <div class="quando-block" data-quando-javascript='<div class="quando-row ${class}">${}${_quando_inventor_box_}</div>'/>
                     <div class="quando-left quando-inventor"></div>
                     <div class="quando-right">
                         <div class="quando-row quando-inventor">
                             <input data-quando-name="class" type="hidden" value="quando-inventor"/>
                             Row
                         </div>
-                        <div data-quando-name="box" class="quando-box"></div>
+                        <div data-quando-name="_quando_inventor_box_" class="quando-box"></div>
                         <div class="quando-row quando-inventor"></div>
                     </div>
                 </div>
@@ -91,6 +82,28 @@
                         <div class="quando-row quando-inventor">
                             Input <input data-quando-name="input" title="Name" type="text" value="" size="5"/>
                             Default <input data-quando-name="default" title="value" type="text" value="" size="2"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="quando-block" data-quando-javascript="<select data-quando-name='${name}'>${}${box}</select>">
+                    <div class="quando-left quando-inventor"></div>
+                    <div class="quando-right">
+                        <div class="quando-row quando-inventor">
+                            List
+                            <input data-quando-name="name" type="text" value="" size="6"/>
+                        </div>
+                        <div data-quando-name="box" class="quando-box"></div>
+                        <div class="quando-row quando-inventor"></div>
+                    </div>
+                </div>
+                <div class="quando-block" data-quando-javascript="<option value='${value}'>${choice}</option>">
+                    <div class="quando-left quando-inventor"></div>
+                    <div class="quando-right">
+                        <div class="quando-row quando-inventor">
+                            Choice
+                            <input data-quando-name="choice" type="text" value="" size="6"/>
+                            value
+                            <input data-quando-name="value" type="text" value="" size="6"/>
                         </div>
                     </div>
                 </div>
