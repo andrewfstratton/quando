@@ -122,38 +122,53 @@ self.setElementHandlers = (elem) => {
     }
 }
 
-self.copyValues = (old, clone) => {
-    if (old.hasChildNodes()) {
-        let oldNodes = old.children
-        let cloneNodes = clone.children
-        for (let i=0; i<oldNodes.length; i++) {
-            let val = oldNodes[i].selectedIndex
-            if (val) {
-                cloneNodes[i].selectedIndex = val // N.B. Only works for single selection  - but Ctrl click is not used in Quando
-            }
-        }
-    }
-    if (old.dataset.quandoId) {
-      let _id = 0
-      while (document.querySelector(`[data-quando-id='${_id}']`)) {
-        _id++
-      }
-      clone.dataset.quandoId=_id
-      // has just created id - now add id to select options
-      let input = old.querySelector("input[data-quando-list]")
-      if (input) {
-        let list_name = input.dataset.quandoList
-        if (list_name) {
-          let selects = document.querySelectorAll("select[data-quando-list='" + list_name + "']")
-          for(let select of selects) {
-            let option = document.createElement('option')
-            option.value = _id
-            option.innerHTML = '' // starts empty
-            select.appendChild(option)
-          }
+self.copyBlock = (old, clone) => {
+  if (old.hasChildNodes()) {
+    let selector = "select"
+      let oldNodes = old.querySelectorAll(selector)
+      let cloneNodes = clone.querySelectorAll(selector)
+      for (let i=0; i<oldNodes.length; i++) {
+        let val = oldNodes[i].selectedIndex
+        if (val) {
+          cloneNodes[i].selectedIndex = val
         }
       }
+  }
+  if (old.dataset.quandoId) {
+    let _id = 0
+    while (document.querySelector(`[data-quando-id='${_id}']`)) {
+      _id++
     }
+    clone.dataset.quandoId=_id
+    // has just created id - now add id to select options
+    let input = old.querySelector("input[data-quando-list]")
+    if (input) {
+      let list_name = input.dataset.quandoList
+      if (list_name) {
+        let selects = document.querySelectorAll("select[data-quando-list='" + list_name + "']")
+        for(let select of selects) {
+          let option = document.createElement('option')
+          option.value = _id
+          option.innerHTML = '' // starts empty
+          select.appendChild(option)
+        }
+      }
+    }
+  }
+  let elems = clone.querySelectorAll("input")
+  for(let elem of elems) {
+    elem.disabled = false
+  }
+}
+
+self.removeBlock = (elem) => {
+  let id = elem.dataset.quandoId
+  if (id) {
+    let options = document.querySelectorAll("option[value='" + id + "']")
+    for (let option of options) {
+      option.parentNode.removeChild(option)
+    }
+  }
 }
 
 self.hasAncestor = (elem, ancestor) => {
@@ -169,6 +184,10 @@ self.hasAncestor = (elem, ancestor) => {
 
 function _setupDragula() {
   let menu = document.getElementById('menu')
+  let elems = menu.querySelectorAll("input")
+  for(let elem of elems) {
+    elem.disabled = true
+  }
   let script = document.getElementById('script')
   let collections = []
   collections.push(script)
@@ -203,8 +222,10 @@ function _setupDragula() {
     index.setElementHandlers(elem)
   }).on('cloned', function (clone, old, type) {
     if (type == 'copy') {
-      index.copyValues(old, clone)
+      index.copyBlock(old, clone)
     }
+  }).on('remove', (elem) => {
+    index.removeBlock(elem)
   })
 }
 
