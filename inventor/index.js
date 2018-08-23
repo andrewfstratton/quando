@@ -411,6 +411,10 @@ self.getCodeInBlock = function(block, prefix) {
         }
       }
     }
+    let match = '${data-quando-id}'
+    while (code.indexOf(match) != -1) {
+      code = code.replace(match, block.dataset.quandoId)
+    }
     return code
 }
     
