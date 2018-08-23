@@ -87,8 +87,39 @@ self.handleLeftClick = function(event) {
   return false
 }
 
+function _handleListNameChange(event) {
+  let target = event.target
+  let ancestor = target.parentElement
+  while (ancestor && !ancestor.classList.contains("quando-block")) {
+    ancestor = ancestor.parentElement
+  }
+  if (ancestor) {
+    let id = ancestor.dataset.quandoId
+    if (id != null && id != "true") {
+      let list_name = target.dataset.quandoList
+      if (list_name) {
+        let selects = document.querySelectorAll("select[data-quando-list='" + list_name + "']")
+        for(let select of selects) {
+          let option = select.querySelector("option[value='" + id + "']")
+          if (option) {
+            option.textContent = target.value
+          }
+        }
+      }
+    }
+  }
+}
+
 self.setElementHandlers = (elem) => {
     elem.addEventListener('contextmenu', self.handleRightClick, false)
+    // add handler for list item change
+    let id = elem.dataset.quandoId
+    if (id && id != "true") {
+      let inputs = elem.querySelectorAll("input[data-quando-list]")
+      for (let input of inputs) {
+        input.addEventListener('input', _handleListNameChange)
+      }
+    }
 }
 
 self.copyValues = (old, clone) => {
@@ -108,6 +139,20 @@ self.copyValues = (old, clone) => {
         _id++
       }
       clone.dataset.quandoId=_id
+      // has just created id - now add id to select options
+      let input = old.querySelector("input[data-quando-list]")
+      if (input) {
+        let list_name = input.dataset.quandoList
+        if (list_name) {
+          let selects = document.querySelectorAll("select[data-quando-list='" + list_name + "']")
+          for(let select of selects) {
+            let option = document.createElement('option')
+            option.value = _id
+            option.innerHTML = '' // starts empty
+            select.appendChild(option)
+          }
+        }
+      }
     }
 }
 
