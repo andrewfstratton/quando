@@ -144,18 +144,18 @@
                     </div>
                 </div>
                 <div class="quando-title quando-display">Display</div>
-                <div class="quando-block" data-quando-javascript="quando.display('${name}',()=>{${}quando.title('${name}')${}${box}})">
-                        <div class="quando-left quando-inventor"></div>
+                <div class="quando-block" data-quando-id="true"
+                    data-quando-javascript="quando.display('${name}',()=>{${}quando.title('${name}')${}${box}})">
+                        <div class="quando-left quando-display"></div>
                         <div class="quando-right">
-                              <div class="quando-row quando-inventor">
-                                      Display
-                                      <input data-quando-name="name" type="text" value="" size="6"/>
+                              <div class="quando-row quando-display">
+                                      Display <input data-quando-name="name" type="text" value="" size="6"/>
                         </div>
                               <div data-quando-name="box" class="quando-box"></div>
-                              <div class="quando-row quando-inventor">
+                              <div class="quando-row quando-display">
                         </div>
-                        </div>
-                        </div>
+                    </div>
+                </div>
                 <div class="quando-block" data-quando-javascript="quando.projection(${front})">
                     <div class="quando-left quando-display"></div>
                     <div class="quando-right">
@@ -228,11 +228,10 @@
                         <div class="quando-left quando-advanced"></div>
                         <div class="quando-right">
                               <div class="quando-row quando-advanced">
-                                      Javascript
-                                      <input data-quando-name="javascript" type="text" value="" size="6"/>
+                                Javascript <input data-quando-name="javascript" type="text" value="" size="6"/>
                         </div>
-                        </div>
-                        </div>
+                    </div>
+                </div>
             </div>
             <div id="script" class="col-md-10"></div>
             </div>

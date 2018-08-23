@@ -102,6 +102,13 @@ self.copyValues = (old, clone) => {
             }
         }
     }
+    if (old.dataset.quandoId) {
+      let _id = 0
+      while (document.querySelector(`[data-quando-id='${_id}']`)) {
+        _id++
+      }
+      clone.dataset.quandoId=_id
+    }
 }
 
 self.hasAncestor = (elem, ancestor) => {
