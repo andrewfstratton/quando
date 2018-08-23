@@ -89,7 +89,7 @@
                     <div class="quando-left quando-inventor"></div>
                     <div class="quando-right">
                         <div class="quando-row quando-inventor">
-                            List
+                            Menu
                             <input data-quando-name="name" type="text" value="" size="6"/>
                         </div>
                         <div data-quando-name="box" class="quando-box"></div>
@@ -148,11 +148,33 @@
                     data-quando-javascript="quando.display('${data-quando-id}',()=>{${}quando.title('${name}')${}${box}})">
                         <div class="quando-left quando-display"></div>
                         <div class="quando-right">
-                              <div class="quando-row quando-display">
-                                      Display <input data-quando-name="name" type="text" value="" size="6"/>
+                            <div class="quando-row quando-display">
+                                Display <input data-quando-name="name" type="text" value="" size="6"/>
+                            </div>
+                            <div data-quando-name="box" class="quando-box"></div>
+                            <div class="quando-row quando-display">
                         </div>
-                              <div data-quando-name="box" class="quando-box"></div>
-                              <div class="quando-row quando-display">
+                    </div>
+                </div>
+                <div class="quando-block" data-quando-javascript="quando.addLabelStatement('${text}', ()=>{${}${box}})">
+                    <div class="quando-left quando-display"></div>
+                    <div class="quando-right">
+                        <div class="quando-row quando-display">
+                            When Label <input data-quando-name="text" type="text" value="" size="6"/>
+                        </div>
+                        <div data-quando-name="box" class="quando-box"></div>
+                        <div class="quando-row quando-display"></div>
+                    </div>
+                </div>
+                <div class="quando-block" data-quando-javascript="quando.showDisplay('${display_id}')">
+                    <div class="quando-left quando-display"></div>
+                    <div class="quando-right">
+                        <div class="quando-row quando-display">
+                            Show Display
+                            <select data-quando-name='display_id' data-quando-list="display">
+                                <option value='0'>Hello</option>
+                                <option value='1'>Goodbye</option>
+                            </select>
                         </div>
                     </div>
                 </div>
