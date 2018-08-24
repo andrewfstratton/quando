@@ -54,10 +54,14 @@ function _getTmpFromLoad(node) {
 }
 
 function _showHtml (html) {
-    let script = document.getElementById('script')
-    script.innerHTML = html
-    _getTmpFromLoad(script) // populate values and selected from dataset
-    _removeTmpForSave(script)
+  let script = document.getElementById('script')
+  script.innerHTML = html
+  _getTmpFromLoad(script) // populate values and selected from dataset
+  _removeTmpForSave(script)
+  for (let item of script.getElementsByClassName("quando-block")) {
+    self.setElementHandlers(item)
+  }
+  _populateLists()
 }
 
 self.handleRightClick = function(event) {
@@ -87,39 +91,82 @@ self.handleLeftClick = function(event) {
   return false
 }
 
-function _handleListNameChange(event) {
-  let target = event.target
-  let ancestor = target.parentElement
-  while (ancestor && !ancestor.classList.contains("quando-block")) {
+function _getAncestorId(elem, _class) {
+  let id = null
+  let ancestor = elem.parentElement
+  while (ancestor && !ancestor.classList.contains(_class)) {
     ancestor = ancestor.parentElement
   }
-  if (ancestor) {
-    let id = ancestor.dataset.quandoId
+  if (ancestor) { // with the block id
+    id = ancestor.dataset.quandoId
+  }
+  return id
+}
+
+function _populateListOptions(list_name) {
+  let script = document.getElementById('script')
+  let inputs = script.querySelectorAll("input[data-quando-list='" + list_name + "']") // the elements containing the values and text
+  let add_to_select = `<option value="-1">----</option>\n`
+  for (let input of inputs) {
+    let id = _getAncestorId(input, "quando-block")
     if (id != null && id != "true") {
-      let list_name = target.dataset.quandoList
-      if (list_name) {
-        let selects = document.querySelectorAll("select[data-quando-list='" + list_name + "']")
-        for(let select of selects) {
-          let option = select.querySelector("option[value='" + id + "']")
-          if (option) {
-            option.textContent = target.value
-          }
+      let value = input.value
+      add_to_select += `<option value="${id}">${value}</option>\n`
+    }
+  }
+  let selects = document.querySelectorAll("select[data-quando-list='" + list_name + "']") // all the selectors to reset
+  for(let select of selects) {
+    let value = select.value
+    let selectedIndex = select.selectedIndex
+    select.innerHTML = add_to_select
+    if (selectedIndex > 0) {
+      let found = select.querySelector("option[value='" + value + "']")
+      if (found) {
+        found.selected = true
+      }
+    }
+  }
+}
+
+function _populateLists() {
+  let inputs = document.querySelectorAll("input[data-quando-list]")
+  let list_names = []
+  for(let input of inputs) {
+    let list_name = input.dataset.quandoList
+    if (list_name && !list_names.includes(list_name)) {
+      list_names.push(list_name)
+      _populateListOptions(list_name)
+    }
+  }
+}
+
+function _handleListNameChange(event) {
+  let target = event.target
+  let id = _getAncestorId(target, "quando-block")
+  if (id != null && id != "true") {
+    let list_name = target.dataset.quandoList
+    if (list_name) { // with the list name
+      let selects = document.querySelectorAll("select[data-quando-list='" + list_name + "']") // find any selects
+      for(let select of selects) {
+        let option = select.querySelector("option[value='" + id + "']") // update the text for any matching options
+        if (option) {
+          option.textContent = target.value
         }
       }
     }
   }
 }
 
-self.setElementHandlers = (elem) => {
-    elem.addEventListener('contextmenu', self.handleRightClick, false)
-    // add handler for list item change
-    let id = elem.dataset.quandoId
-    if (id && id != "true") {
-      let inputs = elem.querySelectorAll("input[data-quando-list]")
-      for (let input of inputs) {
-        input.addEventListener('input', _handleListNameChange)
-      }
+self.setElementHandlers = (block) => {
+  block.addEventListener('contextmenu', self.handleRightClick, false)
+  // add handler for list item change
+  let id = block.dataset.quandoId
+  if (id && id != "true") {
+    let inputs = block.querySelectorAll("input[data-quando-list]")
+    for (let input of inputs) {
+      input.addEventListener('input', _handleListNameChange)
     }
+  }
 }
 
 self.copyBlock = (old, clone) => {
