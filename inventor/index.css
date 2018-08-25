@@ -2,20 +2,27 @@
   font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
 }
 
+#_hidden_width_element_ {
+  position: absolute;
+  height: 0;
+  overflow: hidden;
+  white-space: pre;
+}
+
+#_hidden_width_element_,
 .quando-block input,
 .quando-block select {
   font-family : inherit;
   font-size   : 100%;
   background-color: rgba(255,255,255, 0.65);
-}
-
-input, select {
   border:none;
   border:1px solid rgba(0,0,0, 0.3);
 }
 
-input {
+input, #_hidden_width_element_ {
   padding-left: 4px;
+  min-width: 10px;
+  width: auto;
 }
 
   #menu, #script {
@@ -107,6 +114,13 @@ input {
   }
   .quando-advanced {
     background: #eee48c;
+  }
+
+  .quando-separator {
+    border-top-style:solid;
+    border-top-width:10px;
+    border-top-color: rgba(196,0,0,0.5);
+    margin-top: 12px;
   }
 
   /* the 200 value colours from https://www.materialui.co/colors

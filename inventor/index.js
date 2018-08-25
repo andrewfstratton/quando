@@ -157,6 +157,19 @@ function _handleListNameChange(event) {
   }
 }
 
+function _resizeWidth(event) {
+    let target = event.target
+    let hidden = document.getElementById('_hidden_width_element_')
+    hidden.textContent = target.value
+    let width = hidden.offsetWidth + 10
+    // if (target.type=='number') { // need extra width for arrows
+      // width += 8
+    // }
+    width = Math.min(width, 300)
+    width = Math.max(width, 24)
+    target.style.width = width + 'px'
+}
+  
 self.setElementHandlers = (block) => {
   block.addEventListener('contextmenu', self.handleRightClick, false)
   // add handler for list item change
@@ -166,6 +179,12 @@ self.setElementHandlers = (block) => {
     for (let input of inputs) {
       input.addEventListener('input', _handleListNameChange)
     }
+  }
+  // set auto resize for input fields
+  let inputs = block.querySelectorAll("input[type='text']")
+  for (let input of inputs) {
+    _resizeWidth({target:input})
+    input.addEventListener('input', _resizeWidth)
   }
 }
 
