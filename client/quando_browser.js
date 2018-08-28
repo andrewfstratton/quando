@@ -474,19 +474,14 @@
   }
 
   self.addLabel = function (id, title) {
+    self.addLabelStatement(title, () => { setTimeout( () => { quando.showDisplay(id) }, 0) })
+  }
+
+  self.addLabelStatement = function (title, fn) {
     var elem = document.getElementById('quando_labels')
     var div = document.createElement('div')
     div.className = 'quando_label'
     div.innerHTML = title
-    elem.appendChild(div)
-    div.onclick = function () { setTimeout(function () { quando.showDisplay(id) }, 0) }
-  }
-
-  self.addLabelStatement = function (text, fn) {
-    var elem = document.getElementById('quando_labels')
-    var div = document.createElement('div')
-    div.className = 'quando_label'
-    div.innerHTML = text
     elem.appendChild(div)
     div.onclick = fn
   }

@@ -6,6 +6,14 @@ let _deploy = ''
 let _remote_list = []
 let PREFIX = 'quando_'
 
+function _encodeText (str) {
+  return str.replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&apos;')
+}
+
 function _setTmpForSave(node) {
   if (node.selectedIndex) {
     node.dataset.quandoTmpSelected = node.selectedIndex
@@ -524,7 +532,11 @@ self.getCodeInBlock = function(block, prefix) {
           if (child.dataset.quandoName) {
             let match = '${' + child.dataset.quandoName + '}'
             while (code.indexOf(match) != -1) {
-              code = code.replace(match, child.value)
+              let value = child.value
+              if ((typeof value) === 'string' && (child.dataset.quandoEncode != "raw")) {
+                value = _encodeText(child.value)
+              }
+              code = code.replace(match, value)
             }
           }
         }
