@@ -67,7 +67,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="quando-block" data-quando-javascript='<div class="quando-row ${class}">${}${_quando_inventor_box_}</div>'/>
+                <div class="quando-block" data-quando-block-type="inventor_row"
+                    data-quando-javascript='<div class="quando-row ${class}">${}${_quando_inventor_box_}</div>'/>
                     <div class="quando-left quando-inventor"></div>
                     <div class="quando-right">
                         <div class="quando-row quando-inventor">
@@ -77,7 +78,7 @@
                         <div class="quando-row quando-inventor"></div>
                     </div>
                 </div>
-                <div class="quando-block" data-quando-javascript='${text}'>
+                <div class="quando-block" data-quando-block-type="inventor_text" data-quando-javascript='${text}'>
                     <div class="quando-left quando-inventor"></div>
                     <div class="quando-right">
                         <div class="quando-row quando-inventor">
@@ -85,7 +86,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="quando-block" data-quando-javascript='<input data-quando-name="${input}" type="text" value="${default}"/>'>
+                <div class="quando-block" data-quando-block-type="inventor_input"
+                    data-quando-javascript='<input data-quando-name="${input}" type="text" value="${default}"/>'>
                     <div class="quando-left quando-inventor"></div>
                     <div class="quando-right">
                         <div class="quando-row quando-inventor">
@@ -94,7 +96,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="quando-block" data-quando-javascript='<select data-quando-name="${name}">${}${box}</select>'>
+                <div class="quando-block" data-quando-block-type="inventor_menu"
+                    data-quando-javascript='<select data-quando-name="${name}">${}${box}</select>'>
                     <div class="quando-left quando-inventor"></div>
                     <div class="quando-right">
                         <div class="quando-row quando-inventor">
@@ -105,7 +108,8 @@
                         <div class="quando-row quando-inventor"></div>
                     </div>
                 </div>
-                <div class="quando-block" data-quando-javascript='<option value="${value}">${choice}</option>'>
+                <div class="quando-block" data-quando-block-type="inventor_choice"
+                    data-quando-javascript='<option value="${value}">${choice}</option>'>
                     <div class="quando-left quando-inventor"></div>
                     <div class="quando-right">
                         <div class="quando-row quando-inventor">
@@ -116,7 +120,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="quando-block" data-quando-javascript='<div data-quando-name="${name}" class="quando-box"></div>'>
+                <div class="quando-block" data-quando-block-type="inventor_box"
+                    data-quando-javascript='<div data-quando-name="${name}" class="quando-box"></div>'>
                     <div class="quando-left quando-inventor"></div>
                     <div class="quando-right">
                         <div class="quando-row quando-inventor">
@@ -126,7 +131,8 @@
                 </div>
                 <!-- Icons from https://icons8.com/icon/set/alarm/material -->
                 <div class="quando-title quando-media">Media</div>
-                <div class="quando-block" data-quando-javascript="quando.title('${text}', ${append})">
+                <div class="quando-block" data-quando-block-type="media_title"
+                    data-quando-javascript="quando.title('${text}', ${append})">
                     <div class="quando-left quando-media"></div>
                     <div class="quando-right">
                         <div class="quando-row quando-media">
@@ -139,7 +145,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="quando-block" data-quando-javascript="quando.text('${text}', ${append})">
+                <div class="quando-block" data-quando-block-type="media_text"
+                    data-quando-javascript="quando.text('${text}', ${append})">
                     <div class="quando-left quando-media"></div>
                     <div class="quando-right">
                         <div class="quando-row quando-media">
@@ -153,7 +160,7 @@
                     </div>
                 </div>
                 <div class="quando-title quando-display">Display</div>
-                <div class="quando-block" data-quando-id="true"
+                <div class="quando-block" data-quando-block-type="display_when_display" data-quando-id="true"
                     data-quando-javascript="quando.display('${data-quando-id}',()=>{${}quando.title('${name}')${}${box}})">
                     <div class="quando-left quando-separator quando-display"></div>
                     <div class="quando-right">
@@ -165,7 +172,8 @@
                     </div>
                     </div>
                 </div>
-                <div class="quando-block" data-quando-javascript="quando.addLabelStatement('${text}', ()=>{${}${box}})">
+                <div class="quando-block" data-quando-block-type="display_when_label"
+                    data-quando-javascript="quando.addLabelStatement('${text}', ()=>{${}${box}})">
                     <div class="quando-left quando-display"></div>
                     <div class="quando-right">
                         <div class="quando-row quando-display">
@@ -175,7 +183,8 @@
                         <div class="quando-row quando-display"></div>
                     </div>
                 </div>
-                <div class="quando-block" data-quando-javascript="quando.showDisplay('${display_id}')">
+                <div class="quando-block" data-quando-block-type="display_show_display"
+                    data-quando-javascript="quando.showDisplay('${display_id}')">
                     <div class="quando-left quando-display"></div>
                     <div class="quando-right">
                         <div class="quando-row quando-display">
@@ -186,7 +195,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="quando-block" data-quando-javascript="quando.projection(${front})">
+                <div class="quando-block" data-quando-block-type="display_projection"
+                    data-quando-javascript="quando.projection(${front})">
                     <div class="quando-left quando-display"></div>
                     <div class="quando-right">
                         <div class="quando-row quando-display">
@@ -200,7 +210,8 @@
                     </div>
                 </div>
                 <div class="quando-title quando-time">Time</div>
-                <div class="quando-block" data-quando-javascript="quando.after(${count}, '${units}', ${destructor}, ()=>{${}${box}})">
+                <div class="quando-block" data-quando-block-type="time_after"
+                    data-quando-javascript="quando.after(${count}, '${units}', ${destructor}, ()=>{${}${box}})">
                     <div class="quando-left quando-time"></div>
                     <div class="quando-right">
                         <div class="quando-row quando-time">
@@ -217,7 +228,8 @@
                         <div class="quando-row quando-time"></div>
                     </div>
                 </div>
-                <div class="quando-block" data-quando-javascript="quando.every(${count}, '${units}', ${destructor}, ()=>{${}${box}})">
+                <div class="quando-block" data-quando-block-type="time_every"
+                    data-quando-javascript="quando.every(${count}, '${units}', ${destructor}, ()=>{${}${box}})">
                     <div class="quando-left quando-time"></div>
                     <div class="quando-right">
                         <div class="quando-row quando-time">
@@ -234,7 +246,8 @@
                         <div class="quando-row quando-time"></div>
                     </div>
                 </div>
-                <div class="quando-block" data-quando-javascript="quando.check(${count}, '${units}', ${destructor}, ()=>{${}${box}})">
+                <div class="quando-block" data-quando-block-type="time_per"
+                    data-quando-javascript="quando.check(${count}, '${units}', ${destructor}, ()=>{${}${box}})">
                     <div class="quando-left quando-time"></div>
                     <div class="quando-right">
                         <div class="quando-row quando-time">
@@ -254,7 +267,7 @@
                     </div>
                 </div>
                 <div class="quando-title quando-advanced">Advanced</div>
-                <div class="quando-block" data-quando-javascript="${javascript}">
+                <div class="quando-block" data-quando-block-type="advanced_javascript" data-quando-javascript="${javascript}">
                         <div class="quando-left quando-advanced"></div>
                         <div class="quando-right">
                               <div class="quando-row quando-advanced">
