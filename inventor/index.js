@@ -14,62 +14,99 @@ function _encodeText (str) {
           .replace(/'/g, '&apos;')
 }
 
-function _setTmpForSave(node) {
-  if (node.selectedIndex) {
-    node.dataset.quandoTmpSelected = node.selectedIndex
-  } else if (node.value) {
-    node.dataset.quandoTmpValue = node.value
+function _filterClass(cls, children, callback) {
+  let result = []
+  for (let child of children) {
+    if (child.classList && child.classList.contains(cls)) {
+      result.push(child)
+    }
   }
-  if (node.hasChildNodes()) { // need to recurse down tree
-    let childNodes = node.children
-    for (let i=0; i<childNodes.length; i++) {
-      _setTmpForSave(childNodes[i])
+  return result
+}
+
+function _scriptToArray(script) {
+  let arr = []
+  for (let block of _filterClass("quando-block", script.children)) {
+    // persist data-quando-id
+    let block_persist = {}
+    block_persist["id"] = block.dataset.quandoId
+    block_persist["block_type"] = block.dataset.quandoBlockType
+    let values = {}
+    let boxes = []
+    // Find the quando-right
+    for (let right of _filterClass("quando-right", block.children)) {
+      // Then loop through all the rows and boxes in the quando-right
+      for (let row of _filterClass("quando-row", right.children)) {
+        // now find all quando-value with values
+        for (let named of row.querySelectorAll("[data-quando-name]")) {
+          let name = named.dataset.quandoName
+          if (name) {
+            values[name] = named.value
+          }
+        }
+      }
+      for (let box of _filterClass("quando-box", right.children)) {
+        // recurse
+        let contents = _scriptToArray(box)
+        let obj = {}
+        obj.id = box.dataset.quandoName
+        if (contents.length > 0) {
+          obj.box = contents
+        }
+        boxes.push(obj)
+      }
+    }
+    block_persist.values = values
+    if (boxes.length > 0) {
+      block_persist.boxes = boxes
+    }
+    arr.push(block_persist)
+  }
+  return arr
+}
+
+function _addObjectToElement(obj, elem) {
+  if (obj) {
+    for(let block of obj) {
+      let id = block.id
+      // find block_type
+      let src_block = document.getElementById("menu").querySelector("[data-quando-block-type='"+ block.block_type +"']")
+      // clone to script
+      elem.appendChild(src_block.cloneNode(true))
+      let clone = elem.lastChild
+      for(let elem of clone.querySelectorAll("input, select")) {
+        elem.disabled = false
+      }
+      clone.style.display = "" // removes display none ?!
+      for (let key in block.values) {
+        let element = clone.querySelector("[data-quando-name='"+ key +"']")
+        if (element) {
+          element.value = block.values[key]
+        }
+      }
+      for (let key in block.boxes) {
+        let obj = block.boxes[key]
+        let element = clone.querySelector(".quando-box[data-quando-name='"+ obj.id +"']")
+        if (element && obj.box) {
+          _addObjectToElement(obj.box, element)
+        }
+      }
     }
   }
 }
 
-function _removeTmpForSave(node) {
-  delete node.dataset.quandoTmpValue
-  delete node.dataset.quandoTmpSelected
-  if (node.hasChildNodes()) { // need to recurse down tree
-    let childNodes = node.children
-    for (let i=0; i<childNodes.length; i++) {
-      _removeTmpForSave(childNodes[i])
-    }
-  }
-}
-
-function _getHtml () {
-    let script = document.getElementById('script')
-    _setTmpForSave(script) // populate data-quando-tmp-[value, selected]
-    let html = script.innerHTML
-    _removeTmpForSave(script)
-    return html
-}
-
-function _getTmpFromLoad(node) {
-  if (node.dataset.quandoTmpSelected) {
-    node.selectedIndex = node.dataset.quandoTmpSelected
-  } else if (node.dataset.quandoTmpValue) {
-    node.value = node.dataset.quandoTmpValue
-  }
-  if (node.hasChildNodes()) { // need to recurse down tree
-    let childNodes = node.children
-    for (let i=0; i<childNodes.length; i++) {
-      _getTmpFromLoad(childNodes[i])
-    }
-  }
-}
-
-function _showHtml (html) {
+function _showObject (obj) {
   let script = document.getElementById('script')
-  script.innerHTML = html
-  _getTmpFromLoad(script) // populate values and selected from dataset
-  _removeTmpForSave(script)
+  script.innerHTML = ''
+  _addObjectToElement(obj, script)
   for (let item of script.getElementsByClassName("quando-block")) {
     self.setElementHandlers(item)
   }
   _populateLists()
+}
+
+function _getScriptAsObject() {
+   return _scriptToArray(document.getElementById('script'))
 }
 
 self.handleRightClick = function(event) {
@@ -91,6 +128,28 @@ function _leftClickTitle(open_elem) {
       elem.style.display = display
     }
   }
+}
+
+self.toggleSiblingsOnElement = (elem) => {
+  for(let child of elem.parentNode.children) {
+    let toggle = child.dataset.quandoToggle
+    if (toggle) {
+      child.style.display = (toggle == elem.value ? '' : 'none')
+    }
+  }
+}
+
+self.handleToggle = (event) => {
+  event.preventDefault()
+  let select = event.target
+  let selectedIndex = select.selectedIndex + 1
+  if (selectedIndex >= select.length) {
+    selectedIndex = 0
+  }
+  select.selectedIndex = selectedIndex
+  // now update the visibles...
+  self.toggleSiblingsOnElement(select)
+  return false
 }
 
 self.handleLeftClick = function(event) {
@@ -188,6 +247,11 @@ self.setElementHandlers = (block) => {
       input.addEventListener('input', _handleListNameChange)
     }
   }
+  for (let elem of block.querySelectorAll("select.quando-toggle")) {
+    elem.addEventListener('click', index.handleToggle, true)
+    self.toggleSiblingsOnElement(elem)
+    elem.addEventListener('mousedown', (ev)=>{ev.preventDefault();return false})
+  }
   // set auto resize for input fields
   let inputs = block.querySelectorAll("input[type='text']")
   for (let input of inputs) {
@@ -229,8 +293,7 @@ self.copyBlock = (old, clone) => {
       }
     }
   }
-  let elems = clone.querySelectorAll("input")
-  for(let elem of elems) {
+  for(let elem of clone.querySelectorAll("input, select")) {
     elem.disabled = false
   }
 }
@@ -258,7 +321,7 @@ self.hasAncestor = (elem, ancestor) => {
 
 function _setupDragula() {
   let menu = document.getElementById('menu')
-  let elems = menu.querySelectorAll("input")
+  let elems = menu.querySelectorAll("input, select")
   for(let elem of elems) {
     elem.disabled = true
   }
@@ -312,7 +375,7 @@ self.setup = () => {
     elem.addEventListener('click', self.handleLeftClick)
   }
   for (let item of document.getElementsByClassName("quando-block")) {
-      self.setElementHandlers(item)
+    self.setElementHandlers(item)
   }
 
   toastr.options = {
@@ -431,13 +494,13 @@ function _warning (message) {
   }
 
   function _loaded (obj, modal_id, name) {
-      _showHtml(obj.html)
-      _deploy = obj.deploy
-      $(modal_id).modal('hide')
-      _success('Loaded...')
-      $('#local_save_key').val(name)
-      $('#remote_save_key').val(name)
-      $('#file_name').html(name)
+    _showObject(obj.script)
+    _deploy = obj.deploy
+    $(modal_id).modal('hide')
+    _success('Loaded...')
+    $('#local_save_key').val(name)
+    $('#remote_save_key').val(name)
+    $('#file_name').html(name)
   }
 
   function _saved (name) {
@@ -645,7 +708,7 @@ self.handle_test = () => {
     let key = $('#local_save_key').val()
     localStorage.setItem(PREFIX + key, JSON.stringify({
       deploy: _deploy,
-      html: _getHtml(),
+      script: _getScriptAsObject(),
     }))
     $('#local_save_modal').modal('hide')
     _saved(key)
@@ -653,7 +716,7 @@ self.handle_test = () => {
   
   self.handle_remote_save = () => {
     let name = encodeURI($('#remote_save_key').val())
-    let obj = JSON.stringify({ deploy: _deploy, html: _getHtml()})
+    let obj = JSON.stringify({ deploy: _deploy, script: _getScriptAsObject()})
     $.ajax({
       url: '/script',
       type: 'POST',
@@ -805,7 +868,7 @@ self.handle_test = () => {
     $('#file_name').html('[no file]')
     $('#local_save_key').val('')
     $('#remote_save_key').val('')
-    _showHtml('')
+    _showObject()
   }
 
   function _file_list_add (file_name, path, fn_name, block_id, widget_id) {

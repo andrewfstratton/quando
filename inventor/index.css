@@ -123,6 +123,21 @@ input, #_hidden_width_element_ {
     margin-top: 12px;
   }
 
+  select.quando-toggle {
+    -webkit-appearance:none;
+    appearance:none;
+    padding-left: 4px;
+    padding-right: 4px;
+  }
+
+  /* select.quando-toggle option {
+    display:none;
+  } */
+
+  select {
+    border-radius: 6px;
+  }
+
   /* the 200 value colours from https://www.materialui.co/colors
 -- red ef9a9a
    Pink F48FB1

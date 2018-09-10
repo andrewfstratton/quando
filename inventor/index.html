@@ -40,18 +40,20 @@
             <span id="_hidden_width_element_"></span> <!-- used to calculate width of input text elements -->
             <div id="menu" class="container col-md-2">
                 <div class="quando-title quando-inventor">Inventor</div>
-                <div class="quando-block"
+                <div class="quando-block" data-quando-block-type="inventor_block"
                 data-quando-javascript="${_quando_inventor_1}${_quando_inventor_2}${_quando_inventor_3}${_quando_inventor_box_}</div>${}</div>${}">
                     <div class="quando-left quando-inventor"></div>
                     <div class="quando-right">
                         <div class="quando-row quando-inventor">
                             <input data-quando-name="_quando_inventor_1" type="hidden" data-quando-encode="raw"
-                                value='<div class="quando-block" data-quando-javascript="${_quando_inventor_javascript_}">${}'/>
+                                value='<div class="quando-block" data-quando-block-type="${_quando_inventor_type_}" data-quando-javascript="${_quando_inventor_javascript_}">${}'/>
                             <input data-quando-name="_quando_inventor_2" type="hidden" data-quando-encode="raw"
                                 value='<div class="quando-left ${class}"></div>${}'/>
                             <input data-quando-name="_quando_inventor_3" type="hidden" data-quando-encode="raw"
                                 value='<div class="quando-right">${}'/>
-                            Block <input data-quando-name="_quando_inventor_javascript_" type="text" data-quando-encode="raw"
+                            Block Type <input data-quando-name="_quando_inventor_type_" type="text" data-quando-encode="raw"
+                                value="" title = "Type"/>
+                            Javascript <input data-quando-name="_quando_inventor_javascript_" type="text" data-quando-encode="raw"
                                 value="" title = "Javascript"/>
                         </div>
                         <div data-quando-name="_quando_inventor_box_" class="quando-box"></div>
@@ -87,12 +89,23 @@
                     </div>
                 </div>
                 <div class="quando-block" data-quando-block-type="inventor_input"
-                    data-quando-javascript='<input data-quando-name="${input}" type="text" value="${default}"/>'>
+                    data-quando-javascript='<input data-quando-name="${input}" type="text" value="${default}" data-quando-encode="${encode}"/>'>
                     <div class="quando-left quando-inventor"></div>
                     <div class="quando-right">
                         <div class="quando-row quando-inventor">
                             Input <input data-quando-name="input" title="Name" type="text" value=""/>
                             Default <input data-quando-name="default" title="value" type="text" value=""/>
+                            <span>
+                                <select data-quando-name="show_hide" class="quando-toggle" disabled="true">
+                                    <option value="show">...</option>
+                                    <option value="hide">▲</option>
+                                </select>
+                                <!-- <span onclick="index.handleShowHide()" data-quando-action="click">▼</span> -->
+                                <select data-quando-toggle="hide" data-quando-name="encode">
+                                    <option value="">Encode</option>
+                                    <option value="raw">Raw</option>
+                                </select>
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -108,15 +121,12 @@
                         <div class="quando-row quando-inventor"></div>
                     </div>
                 </div>
-                <div class="quando-block" data-quando-block-type="inventor_choice"
-                    data-quando-javascript='<option value="${value}">${choice}</option>'>
+                <div class="quando-block" data-quando-block-type="inventor_choice" data-quando-javascript="<option value='${value}'>${choice}</option>">
                     <div class="quando-left quando-inventor"></div>
                     <div class="quando-right">
                         <div class="quando-row quando-inventor">
-                            Choice
-                            <input data-quando-name="choice" type="text" value=""/>
-                            value
-                            <input data-quando-name="value" type="text" value=""/>
+                            Choice <input data-quando-name="choice" type="text" value=""/>
+                            value <input data-quando-name="value" type="text" value=""/>
                         </div>
                     </div>
                 </div>
@@ -200,10 +210,10 @@
                     <div class="quando-left quando-display"></div>
                     <div class="quando-right">
                         <div class="quando-row quando-display">
-                            <img src="img/icons8-monitor-24.png"/>
+                            📺
                             <select data-quando-name="front">
-                                <option value="true">Normal</option>
-                                <option value="false">Rear</option>
+                                <option value='true'>Normal</option>
+                                <option value='false'>Rear</option>
                             </select>
                             Projection
                         </div>
@@ -268,10 +278,18 @@
                 </div>
                 <div class="quando-title quando-advanced">Advanced</div>
                 <div class="quando-block" data-quando-block-type="advanced_javascript" data-quando-javascript="${javascript}">
-                        <div class="quando-left quando-advanced"></div>
-                        <div class="quando-right">
-                              <div class="quando-row quando-advanced">
-                                Javascript <input data-quando-name="javascript" type="text" value=""/>
+                    <div class="quando-left quando-advanced"></div>
+                    <div class="quando-right">
+                        <div class="quando-row quando-advanced">
+                            Javascript <input data-quando-name="javascript" type="text" value="" data-quando-encode="raw"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="quando-block" data-quando-block-type="advanced_say" data-quando-javascript="alert('${txt}')">
+                    <div class="quando-left quando-advanced"></div>
+                    <div class="quando-right">
+                        <div class="quando-row quando-advanced">
+                            Say <input data-quando-name="txt" type="text" value=""/>
                         </div>
                     </div>
                 </div>
