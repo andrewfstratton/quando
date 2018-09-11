@@ -35,8 +35,8 @@
         </div><!-- /.container-fluid -->
         </div><!-- /.container-fluid -->
     </nav>
-    <div id="editor_content" data-role="content">
-        <div class="row container-fluid">
+    <div data-role="content">
+        <div id="editor_content" class="row container-fluid ">
             <span id="_hidden_width_element_"></span> <!-- used to calculate width of input text elements -->
             <div id="menu" class="container col-md-2">
                 <div class="quando-title quando-inventor">Inventor</div>
@@ -70,7 +70,7 @@
                     </div>
                 </div>
                 <div class="quando-block" data-quando-block-type="inventor_row"
-                    data-quando-javascript='<div class="quando-row ${class}">${}${_quando_inventor_box_}</div>'/>
+                    data-quando-javascript='<div class="quando-row ${class}">${}${_quando_inventor_box_}</div>'>
                     <div class="quando-left quando-inventor"></div>
                     <div class="quando-right">
                         <div class="quando-row quando-inventor">
@@ -95,17 +95,15 @@
                         <div class="quando-row quando-inventor">
                             Input <input data-quando-name="input" title="Name" type="text" value=""/>
                             Default <input data-quando-name="default" title="value" type="text" value=""/>
-                            <span>
-                                <select data-quando-name="show_hide" class="quando-toggle" disabled="true">
+                            <select data-quando-name="show_hide" class="quando-toggle">
                                     <option value="show">...</option>
                                     <option value="hide">▲</option>
                                 </select>
-                                <!-- <span onclick="index.handleShowHide()" data-quando-action="click">▼</span> -->
+                            <!-- <br data-quando-toggle="hide"/> -->
                                 <select data-quando-toggle="hide" data-quando-name="encode">
                                     <option value="">Encode</option>
                                     <option value="raw">Raw</option>
                                 </select>
-                            </span>
                         </div>
                     </div>
                 </div>
@@ -116,6 +114,28 @@
                         <div class="quando-row quando-inventor">
                             Menu
                             <input data-quando-name="name" type="text" value=""/>
+                        </div>
+                        <div data-quando-name="box" class="quando-box"></div>
+                        <div class="quando-row quando-inventor"></div>
+                    </div>
+                </div>
+                <div class="quando-block" data-quando-block-type="inventor_toggle"
+                    data-quando-javascript="<select data-quando-name='${name}' class='quando-toggle'>${}${box}</select>">
+                    <div class="quando-left quando-inventor"></div>
+                    <div class="quando-right">
+                        <div class="quando-row quando-inventor">
+                            Toggle <input data-quando-name="name" type="text" value="" data-quando-encode="${encode}"/>
+                        </div>
+                        <div data-quando-name="box" class="quando-box"></div>
+                        <div class="quando-row quando-inventor"></div>
+                    </div>
+                </div>
+                <div class="quando-block" data-quando-block-type="inventor_show_on_toggle"
+                    data-quando-javascript="<span data-quando-toggle='${name}'>${}${box}</span>">
+                    <div class="quando-left quando-inventor"></div>
+                    <div class="quando-right">
+                        <div class="quando-row quando-inventor">
+                            Show on Toggle <input data-quando-name='name' type='text' value='' data-quando-encode=''/>
                         </div>
                         <div data-quando-name="box" class="quando-box"></div>
                         <div class="quando-row quando-inventor"></div>
@@ -293,11 +313,34 @@
                         </div>
                     </div>
                 </div>
+                <div class="quando-block" data-quando-block-type="advanced_test" data-quando-javascript="if (${extras}){alert('yes')}">
+                    <div class="quando-left quando-advanced"></div>
+                    <div class="quando-right">
+                        <div class="quando-row quando-advanced">
+                            Test
+                            <select data-quando-name='extras' class='quando-toggle'>
+                                <option value='true'>show</option>
+                                <option value='false'>hide</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="quando-block" data-quando-block-type="test_l_t" data-quando-javascript="alert('${name} says hello')">
+                    <div class="quando-left quando-advanced"></div>
+                    <div class="quando-right">
+                        <div class="quando-row quando-advanced">
+                            Says
+                            <select data-quando-name="name">
+                                <option value='Louis'>Him</option>
+                                <option value='Tabby'>Her</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div id="script" class="col-md-10"></div>
             </div>
         </div>
-    </div>
     <nav class="navbar navbar-default navbar-fixed-bottom">
         <div class="container-fluid">
             <div class="navbar-footer">

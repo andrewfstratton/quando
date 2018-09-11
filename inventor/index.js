@@ -39,10 +39,7 @@ function _scriptToArray(script) {
       for (let row of _filterClass("quando-row", right.children)) {
         // now find all quando-value with values
         for (let named of row.querySelectorAll("[data-quando-name]")) {
-          let name = named.dataset.quandoName
-          if (name) {
-            values[name] = named.value
-          }
+          values[named.dataset.quandoName] = named.value
         }
       }
       for (let box of _filterClass("quando-box", right.children)) {
@@ -596,6 +593,7 @@ self.getCodeInBlock = function(block, prefix) {
             let match = '${' + child.dataset.quandoName + '}'
             while (code.indexOf(match) != -1) {
               let value = child.value
+debugger
               if ((typeof value) === 'string' && (child.dataset.quandoEncode != "raw")) {
                 value = _encodeText(child.value)
               }

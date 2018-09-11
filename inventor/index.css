@@ -2,7 +2,8 @@
   font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
 }
 
-#_hidden_width_element_ {
+#_hidden_width_element_ { 
+  /* Used to calculate the width of text typed in */
   position: absolute;
   height: 0;
   overflow: hidden;
@@ -13,10 +14,10 @@
 .quando-block input,
 .quando-block select {
   font-family : inherit;
-  font-size   : 100%;
   background-color: rgba(255,255,255, 0.65);
   border:none;
   border:1px solid rgba(0,0,0, 0.3);
+  border-radius: 6px;
 }
 
 input, #_hidden_width_element_ {
@@ -25,6 +26,24 @@ input, #_hidden_width_element_ {
   width: auto;
 }
 
+#editor_content {
+    display:flex;
+}
+
+  #menu {
+    position:relative;
+    float: left;
+    width: 35%;
+    background-color: #ffffff;
+  }
+
+  #script {
+    position:relative;
+    margin-left: 35%;
+    width:100%;
+    background-color: #ffeeee;
+  }
+
   #menu, #script {
     padding: 4px;
     height: 100%;
@@ -32,22 +51,15 @@ input, #_hidden_width_element_ {
     border-right: 4px;
     border-color: #808080;
     border-style: solid;
+    overflow: auto;
   }
 
-  #menu {
-    background-color: #ffffff;
-  }
-
-  #script {
-    background-color: #ffeeee;
-  }
-
-  #menu, #script, .quando-box, .quando-title {
+  #menu, #script, .quando-box {
     display: flex;
     flex-flow: column nowrap;
     z-index: 1;
   }
-  
+
   .quando-title {
     color: white;
     font-size: large;
@@ -55,12 +67,13 @@ input, #_hidden_width_element_ {
     margin-bottom: 4px;
     background: #888888;
     text-align: center;
+    float: left;
+    z-index: 1;
   }
 
   .quando-block {
     width: max-content;
-    display: flex;
-    flex-flow: row nowrap;
+    height: max-content;
     margin: 0px 0px 4px 0px;
   }
 
@@ -74,11 +87,18 @@ input, #_hidden_width_element_ {
   }
 
   .quando-left {
+    position:relative;
+    float:left;
     width: 8px;
+    height:100%;
     border-radius: 6px 0px 0px 6px;
   }
 
   .quando-right {
+    position:relative;
+    z-index:1;
+    border-radius: 0px 6px 6px 0px;
+    margin-left:8px;
     width:100%;
   }
 
@@ -94,7 +114,7 @@ input, #_hidden_width_element_ {
 
   .quando-box {
     margin: 4px 8px 0px 4px;
-    min-height: 2em;
+    min-height: 16px;
     width: 100%;
   }
 
@@ -116,26 +136,18 @@ input, #_hidden_width_element_ {
     background: #eee48c;
   }
 
-  .quando-separator {
+  /* .quando-separator {
     border-top-style:solid;
     border-top-width:10px;
     border-top-color: rgba(196,0,0,0.5);
     margin-top: 12px;
-  }
+  } */
 
   select.quando-toggle {
     -webkit-appearance:none;
     appearance:none;
     padding-left: 4px;
     padding-right: 4px;
-  }
-
-  /* select.quando-toggle option {
-    display:none;
-  } */
-
-  select {
-    border-radius: 6px;
   }
 
   /* the 200 value colours from https://www.materialui.co/colors
