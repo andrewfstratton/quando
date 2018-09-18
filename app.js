@@ -372,3 +372,4 @@ app.post('/socket/:id', (req, res) => {
 })
 
 app.use('/inventor', express.static(path.join(__dirname, 'inventor')))
+app.use('/common', express.static(path.join(__dirname, 'common')))

@@ -1,18 +1,10 @@
 // support the inventor (editor) page
-(() => {
+((generator) => {
 let self = this['index'] = {}
 let _userid = null
 let _deploy = ''
 let _remote_list = []
 let PREFIX = 'quando_'
-
-function _encodeText (str) {
-  return str.replace(/&/g, '&amp;')
-          .replace(/</g, '&lt;')
-          .replace(/>/g, '&gt;')
-          .replace(/"/g, '&quot;')
-          .replace(/'/g, '&apos;')
-}
 
 function _filterClass(cls, children, callback) {
   let result = []
@@ -74,6 +66,7 @@ function _addObjectToElement(obj, elem) {
       for(let elem of clone.querySelectorAll("input, select")) {
         elem.disabled = false
       }
+      clone.dataset.quandoId = id
       clone.style.display = "" // removes display none ?!
       for (let key in block.values) {
         let element = clone.querySelector("[data-quando-name='"+ key +"']")
@@ -360,6 +353,8 @@ function _setupDragula() {
     }
   }).on('remove', (elem) => {
     index.removeBlock(elem)
+  // }).on('over', (elem, container) => {
+  // }).on('out', (elem, container) => {
   })
 }
 
@@ -580,65 +575,14 @@ function _warning (message) {
     return result
   }
 
-self.getCodeInBlock = function(block, prefix) {
-    let code = ''
-    if (block.dataset.quandoJavascript) {
-      code = block.dataset.quandoJavascript
-    }
-    let right = block.querySelector(".quando-right")
-    for (let row_box of right.children) { // i.e. for each row or box
-      if (row_box.classList.contains("quando-row")) {
-        for (let child of row_box.children) { // i.e. each input
-          if (child.dataset.quandoName) {
-            let match = '${' + child.dataset.quandoName + '}'
-            while (code.indexOf(match) != -1) {
-              let value = child.value
-debugger
-              if ((typeof value) === 'string' && (child.dataset.quandoEncode != "raw")) {
-                value = _encodeText(child.value)
-              }
-              code = code.replace(match, value)
-            }
-          }
-        }
-      } else if (row_box.classList.contains("quando-box")) {
-        let indent = prefix + '  '
-        let box_code = ''
-        let blocks = row_box.children
-        for (let block of blocks) {
-          box_code += indent + self.getCode(block, indent + '  ')
-        }
-        if (row_box.dataset.quandoName) {
-          let match = '${' + row_box.dataset.quandoName + '}'
-          while (code.indexOf(match) != -1) {
-            code = code.replace(match, box_code)
-          }
-        }
-      }
-    }
-    let match = '${data-quando-id}'
-    while (code.indexOf(match) != -1) {
-      code = code.replace(match, block.dataset.quandoId)
-    }
-    return code
-}
-    
-self.getCode = function(block, prefix) {
-    let result = '' 
-    if (block.dataset.quandoJavascript) {
-      result = prefix + self.getCodeInBlock(block, prefix) + "\n"
-    }
-    return result
-}
-
 self.generateCode = function(elem) {
     let children = elem.children
     let result = ""
     for (let child of children) {
-      result += self.getCode(child, '')
+      result += generator.getCode(child)
     }
-    return result.replace(/\$\{\}/g, '\n') // replaces ${} with newline...for templates
-}
+    return result
+  }
 
 self.handle_login = () => {
     let userid = $('#userid').val()
@@ -666,24 +610,38 @@ self.handle_login = () => {
     })
 }
 
+self.testCreator = (code) => {
+  let filename = '-'
+  $.ajax({
+    url: '/script/deploy/' + encodeURI(filename),
+    type: 'PUT',
+    data: { javascript: code },
+    success: () => {
+      _success('Opening Test...')
+      let deploy_window = window.open('/client/js/' + filename + '.js', 'quando_deployed_test', 'left=0,top=0,width=9999,height=9999');
+      deploy_window.focus() // moveTo(0,0);
+    },
+    error: () => {
+      alert('Failed to find server')
+    }
+  })
+}
+
 self.handle_test = () => {
     let code = self.generateCode(document.getElementById('script'))
     if (code) {
-      let filename = '-'
-      $.ajax({
-        url: '/script/deploy/' + encodeURI(filename),
-        type: 'PUT',
-        data: { javascript: code },
-        success: () => {
-          _success('Opening Test...')
-          let deploy_window = window.open('/client/js/' + filename + '.js', 'quando_deployed_test',
-                        'left=0,top=0,width=9999,height=9999')
-          deploy_window.focus() // moveTo(0,0);
-        },
-        error: () => {
-          alert('Failed to find server')
+      let inventor_test = document.getElementById('inventor_test')
+      if (inventor_test && code.startsWith('<div class="quando-block"')) {
+        let menu = document.getElementById('menu')
+        while (menu.lastChild != inventor_test) {
+          menu.removeChild(menu.lastChild)
         }
-      })
+        let tmp = document.createElement('div')
+        tmp.innerHTML = code
+        menu.appendChild(tmp.firstChild)
+      } else {
+        self.testCreator(code)
+      }
     } else {
       alert('Behaviour incomplete.')
     }
@@ -1051,6 +1009,6 @@ self.handle_test = () => {
       alert('Behaviour incomplete.')
     }
   }
-})()
+})(this['generator'])
 
 window.onload = index.setup()
