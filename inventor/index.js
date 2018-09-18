@@ -1,102 +1,23 @@
 // support the inventor (editor) page
-((generator) => {
+((generator, json) => {
 let self = this['index'] = {}
 let _userid = null
 let _deploy = ''
 let _remote_list = []
 let PREFIX = 'quando_'
 
-function _filterClass(cls, children, callback) {
-  let result = []
-  for (let child of children) {
-    if (child.classList && child.classList.contains(cls)) {
-      result.push(child)
-    }
-  }
-  return result
-}
-
-function _scriptToArray(script) {
-  let arr = []
-  for (let block of _filterClass("quando-block", script.children)) {
-    // persist data-quando-id
-    let block_persist = {}
-    block_persist["id"] = block.dataset.quandoId
-    block_persist["block_type"] = block.dataset.quandoBlockType
-    let values = {}
-    let boxes = []
-    // Find the quando-right
-    for (let right of _filterClass("quando-right", block.children)) {
-      // Then loop through all the rows and boxes in the quando-right
-      for (let row of _filterClass("quando-row", right.children)) {
-        // now find all quando-value with values
-        for (let named of row.querySelectorAll("[data-quando-name]")) {
-          values[named.dataset.quandoName] = named.value
-        }
-      }
-      for (let box of _filterClass("quando-box", right.children)) {
-        // recurse
-        let contents = _scriptToArray(box)
-        let obj = {}
-        obj.id = box.dataset.quandoName
-        if (contents.length > 0) {
-          obj.box = contents
-        }
-        boxes.push(obj)
-      }
-    }
-    block_persist.values = values
-    if (boxes.length > 0) {
-      block_persist.boxes = boxes
-    }
-    arr.push(block_persist)
-  }
-  return arr
-}
-
-function _addObjectToElement(obj, elem) {
-  if (obj) {
-    for(let block of obj) {
-      let id = block.id
-      // find block_type
-      let src_block = document.getElementById("menu").querySelector("[data-quando-block-type='"+ block.block_type +"']")
-      // clone to script
-      elem.appendChild(src_block.cloneNode(true))
-      let clone = elem.lastChild
-      for(let elem of clone.querySelectorAll("input, select")) {
-        elem.disabled = false
-      }
-      clone.dataset.quandoId = id
-      clone.style.display = "" // removes display none ?!
-      for (let key in block.values) {
-        let element = clone.querySelector("[data-quando-name='"+ key +"']")
-        if (element) {
-          element.value = block.values[key]
-        }
-      }
-      for (let key in block.boxes) {
-        let obj = block.boxes[key]
-        let element = clone.querySelector(".quando-box[data-quando-name='"+ obj.id +"']")
-        if (element && obj.box) {
-          _addObjectToElement(obj.box, element)
-        }
-      }
-    }
-  }
-}
-
-function _showObject (obj) {
+self.showObject = (obj) => {
   let script = document.getElementById('script')
   script.innerHTML = ''
-  _addObjectToElement(obj, script)
+  json.addObjectToElement(obj, script)
   for (let item of script.getElementsByClassName("quando-block")) {
     self.setElementHandlers(item)
   }
   _populateLists()
 }
 
-function _getScriptAsObject() {
-   return _scriptToArray(document.getElementById('script'))
+self.getScriptAsObject = () => {
+   return json.scriptToArray(document.getElementById('script'))
 }
 
 self.handleRightClick = function(event) {
@@ -120,11 +41,22 @@ function _leftClickTitle(open_elem) {
   }
 }
 
-self.toggleSiblingsOnElement = (elem) => {
-  for(let child of elem.parentNode.children) {
-    let toggle = child.dataset.quandoToggle
-    if (toggle) {
-      child.style.display = (toggle == elem.value ? '' : 'none')
+self.toggleRelativesOnElement = (elem) => {
+  let elem_name = elem.dataset.quandoName
+  let block = _getAncestor(elem, "quando-block")
+  if (block) {
+    for(let child of block.querySelectorAll('[data-quando-toggle]')) {
+      let toggle = child.dataset.quandoToggle
+      if (toggle) {
+        if (toggle.includes('=')) { // check for name and value
+          let [key, value] = toggle.split('=')
+          if (key == elem_name) { // only toggle when the key is the same...
+            child.style.display = (value == elem.value ? '' : 'none')
+          }
+        } else { // simple test
+          child.style.display = (toggle == elem.value ? '' : 'none')
+        }
+      }
     }
   }
 }
@@ -138,7 +70,7 @@ self.handleToggle = (event) => {
   }
   select.selectedIndex = selectedIndex
   // now update the visibles...
-  self.toggleSiblingsOnElement(select)
+  self.toggleRelativesOnElement(select)
   return false
 }
 
@@ -148,12 +80,17 @@ self.handleLeftClick = function(event) {
   return false
 }
 
-function _getAncestorId(elem, _class) {
-  let id = null
+function _getAncestor(elem, _class) {
   let ancestor = elem.parentElement
   while (ancestor && !ancestor.classList.contains(_class)) {
     ancestor = ancestor.parentElement
   }
+  return ancestor
+}
+
+function _getAncestorId(elem, _class) {
+  let id = null
+  let ancestor = _getAncestor(elem, _class)
   if (ancestor) { // with the block id
     id = ancestor.dataset.quandoId
   }
@@ -239,7 +176,7 @@ self.setElementHandlers = (block) => {
   }
   for (let elem of block.querySelectorAll("select.quando-toggle")) {
     elem.addEventListener('click', index.handleToggle, true)
-    self.toggleSiblingsOnElement(elem)
+    self.toggleRelativesOnElement(elem)
     elem.addEventListener('mousedown', (ev)=>{ev.preventDefault();return false})
   }
   // set auto resize for input fields
@@ -485,8 +422,8 @@ function _warning (message) {
     }
   }
 
-  function _loaded (obj, modal_id, name) {
-    _showObject(obj.script)
+  self.loaded = (obj, modal_id, name) => {
+    self.showObject(obj.script)
     _deploy = obj.deploy
     $(modal_id).modal('hide')
     _success('Loaded...')
@@ -672,7 +609,7 @@ self.handle_test = () => {
   
   self.handle_remote_save = () => {
     let name = encodeURI($('#remote_save_key').val())
-    let obj = JSON.stringify({ deploy: _deploy, script: _getScriptAsObject()})
+    let obj = JSON.stringify({ deploy: _deploy, script: self.getScriptAsObject()})
     $.ajax({
       url: '/script',
       type: 'POST',
@@ -715,7 +652,7 @@ self.handle_test = () => {
   self.local_load = (key) => {
     let obj = JSON.parse(localStorage.getItem(key))
     let name = key.slice(PREFIX.length)
-    _loaded(obj, '#local_load_modal', name)
+    self.loaded(obj, '#local_load_modal', name)
   }
   
   self.remote_load = (index) => {
@@ -724,7 +661,7 @@ self.handle_test = () => {
       success: (res) => {
         if (res.success) {
           let script = JSON.parse(res.doc.script)
-          _loaded(script, '#remote_load_modal', res.doc.name)
+          self.loaded(script, '#remote_load_modal', res.doc.name)
         } else {
           alert('Failed to find script')
         }
@@ -824,7 +761,7 @@ self.handle_test = () => {
     $('#file_name').html('[no file]')
     $('#local_save_key').val('')
     $('#remote_save_key').val('')
-    _showObject()
+    self.showObject()
   }
 
   function _file_list_add (file_name, path, fn_name, block_id, widget_id) {
@@ -1009,6 +946,6 @@ self.handle_test = () => {
       alert('Behaviour incomplete.')
     }
   }
-})(this['generator'])
+})(this['generator'], this['json'])
 
 window.onload = index.setup()

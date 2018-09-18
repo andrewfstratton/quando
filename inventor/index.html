@@ -58,12 +58,27 @@ data-quando-javascript="${_quando_inventor_javascript_}">
                                 value="" title = "Unique Name"/>
                             Javascript <input data-quando-name="_quando_inventor_javascript_" type="text" data-quando-encode="raw"
                                 value="" title = "Javascript"/>
+                            <span data-quando-toggle="box_row2=no">Box</span>
+                            <select data-quando-toggle="box_row2=no" data-quando-name="box_row1" class="quando-toggle">
+                                <option value="no">[+]</option>
+                                <option value="yes">[-]</option>
+                            </select>
                         </div>
                         <div data-quando-name="_quando_inventor_row1_" class="quando-box" title="First row"></div>
-                        <div class="quando-row quando-inventor">
+                        <div data-quando-toggle="box_row1=yes" class="quando-row quando-inventor">
+                            Box name <input data-quando-name="_quando_box_name_" type="text" value="" title="Name"/>
+                            Box
+                            <select data-quando-name="box_row2" class="quando-toggle">
+                                <option value="no">[+]</option>
+                                <option value="yes">[-]</option>
+                            </select>
+                        </div>
+                        <div data-quando-toggle="box_row2=yes" data-quando-name="_quando_inventor_row2_"
+                            class="quando-box" title="Second row"></div>
+                        <div data-quando-toggle="box_row2=yes" class="quando-row quando-inventor">
                             Box name <input data-quando-name="_quando_box_name_" type="text" value="" title="Name"/>
                         </div>
-                        <div data-quando-name="_quando_inventor_row2_" class="quando-box" title="Last row - often empty"></div>
+                        <div data-quando-toggle="box_row1=yes" data-quando-name="_quando_inventor_row2_" class="quando-box" title="Last row - often empty"></div>
                         <div class="quando-row quando-inventor">
                             Class
                             <select data-quando-name="class">
@@ -92,14 +107,14 @@ data-quando-javascript="${_quando_inventor_javascript_}">
                             Input <input data-quando-name="input" title="Name" type="text" value=""/>
                             Default <input data-quando-name="default" title="value" type="text" value=""/>
                             <select data-quando-name="show_hide" class="quando-toggle">
-                                    <option value="show">...</option>
-                                    <option value="hide">▲</option>
-                                </select>
+                                <option value="show">...</option>
+                                <option value="hide">▲</option>
+                            </select>
                             <!-- <br data-quando-toggle="hide"/> -->
-                                <select data-quando-toggle="hide" data-quando-name="encode">
-                                    <option value="">Encode</option>
-                                    <option value="raw">Raw</option>
-                                </select>
+                            <select data-quando-toggle="hide" data-quando-name="encode">
+                                <option value="">Encode</option>
+                                <option value="raw">Raw</option>
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -602,6 +617,7 @@ data-quando-javascript="${_quando_inventor_javascript_}">
     <script src="/editor/js/toastr.min.js"></script>
     <script src="/editor/js/notify.min.js" type="text/javascript"></script>
     <script src="dragula.js" type="text/javascript"></script>
+    <script src="/common/json.js" type="text/javascript"></script>
     <script src="/common/generator.js" type="text/javascript"></script>
     <script src="index.js" type="text/javascript"></script>
 </body>
