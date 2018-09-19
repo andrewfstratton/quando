@@ -300,13 +300,6 @@ self.setup = () => {
       // return 'Are you sure you want to leave the editor?' // Doesn't seem to show this message in Chrome?!
   // }
 
-  for (let elem of document.getElementsByClassName("quando-title")) {
-    elem.addEventListener('click', self.handleLeftClick)
-  }
-  for (let item of document.getElementsByClassName("quando-block")) {
-    self.setElementHandlers(item)
-  }
-
   toastr.options = {
     closeButton: false,
     debug: false,
@@ -350,10 +343,41 @@ self.setup = () => {
     }
   })
   _setupDragula()
-  let first_title = document.getElementsByClassName("quando-title")[0]
-  if (first_title) {
-    _leftClickTitle(first_title)
-  }
+  $.ajax({
+    url: '/blocks',
+    success: (res) => {
+      if (res.success) {
+        _success('Blocks loaded')
+        let menu_title = document.getElementById('_menu_title')
+        let parent = menu_title.parentNode
+        for(let menu of res.blocks) {
+          let elem = menu_title.cloneNode(false)
+          elem.classList.add('quando-' + menu.class)
+          elem.innerHTML = menu.name
+          elem.style.display = ''
+          parent.appendChild(elem)
+        }
+      } else {
+        _warning(res.message)
+      }
+      $('#loading_modal').modal('hide')
+      for (let elem of document.getElementsByClassName("quando-title")) {
+        elem.addEventListener('click', self.handleLeftClick)
+      }
+      for (let item of document.getElementsByClassName("quando-block")) {
+        self.setElementHandlers(item)
+      }
+
+      let first_title = document.getElementsByClassName("quando-title")[0]
+      if (first_title) {
+        _leftClickTitle(first_title)
+      }
+    },
+    error: () => {
+      _error('Failed to find server blocks')
+      $('#loading_modal').modal('hide')
+    }
+  })
 }
 
 function _show_user_status () {

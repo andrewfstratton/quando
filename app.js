@@ -12,7 +12,7 @@ const script = require('./script')
 const client_deploy = './client/deployed_js/'
 const user = require('./user')
 const path = require('path')
-require('longjohn')
+// require('longjohn')
 
 const router = express.Router()
 
@@ -373,3 +373,31 @@ app.post('/socket/:id', (req, res) => {
 
 app.use('/inventor', express.static(path.join(__dirname, 'inventor')))
 app.use('/common', express.static(path.join(__dirname, 'common')))
+
+app.get('/blocks', (req, res) => {
+  fs.readdir(path.join(__dirname, 'blocks'), (err, files) => {
+    if (!err) {
+      let blocks = []
+      for(let file of files) {
+        let menu = {}
+        let parts = file.split('_')
+        parts.shift() // drop the number
+        let name = ''
+        let cls = ''
+        for(let part of parts) {
+          cls += part + '-'
+          name += part.charAt(0).toUpperCase() + part.slice(1) + ' '
+        }
+        menu.name = name.slice(0, -1)
+        menu.class = cls.slice(0, -1)
+        blocks.push(menu)
+      }
+      res.json({ 'success': true, 'blocks': blocks })
+    } else {
+      res.json({
+        'success': false,
+        'message': 'Failed to retrieve contents of blocks folder'
+      })
+    }
+  })
+})
