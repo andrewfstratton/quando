@@ -37,7 +37,7 @@ self.scriptToArray = (script) => {
       }
       for (let box of _filterClass("quando-box", right.children)) {
         // recurse
-        let contents = _scriptToArray(box)
+        let contents = self.scriptToArray(box)
         let obj = {}
         obj.id = box.dataset.quandoName
         if (contents.length > 0) {

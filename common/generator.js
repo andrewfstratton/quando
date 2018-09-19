@@ -87,8 +87,9 @@ self.getCodeInBlock = function(block) {
             // split into comma separated
             let params = matched.split(',')
             // parameters need ${} replacement
-            let func = fn[params.shift()]
+            let func = fn[params[0]]
             if (func) {
+                params[0] = block
                 code += func.apply(null, params)
             } else {
                 console.log("Warning - function generator.fn." + matched + "() not found")
@@ -106,9 +107,18 @@ self.getCode = function(block) {
     return result
 }
 
-fn.log = (str) => {
+fn.log = (block, str) => {
     console.log(str)
     return ""
+}
+
+fn.visible = (block, name, str) => {
+    let result = ''
+    let elem = block.querySelector('[data-quando-name='+name+']')
+    if (elem && elem.style.display != 'none') {
+        result = str
+    }
+    return result
 }
 
 fn.$ = () => { return "$" }

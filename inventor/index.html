@@ -47,8 +47,10 @@ data-quando-javascript="${_quando_inventor_javascript_}">
 <div class="quando-left ${class}"></div>
 <div class="quando-right">
 <div class="quando-row ${class}">${_quando_inventor_row1_}</div>
-<div data-quando-name="${_quando_box_name_}" class="quando-box"></div>
-<div class="quando-row ${class}">${_quando_inventor_row2_}</div>
+$(visible,_quando_inventor_row2_,<div data-quando-name="${_quando_box_name1_}" class="quando-box"></div>
+<div class="quando-row ${class}">${_quando_inventor_row2_}</div>)
+$(visible,_quando_inventor_row3_,<div data-quando-name="${_quando_box_name2_}" class="quando-box"></div>
+<div class="quando-row ${class}">${_quando_inventor_row3_}</div>)
 </div>
 </div>'/>
                     <div class="quando-left quando-inventor"></div>
@@ -66,19 +68,19 @@ data-quando-javascript="${_quando_inventor_javascript_}">
                         </div>
                         <div data-quando-name="_quando_inventor_row1_" class="quando-box" title="First row"></div>
                         <div data-quando-toggle="box_row1=yes" class="quando-row quando-inventor">
-                            Box name <input data-quando-name="_quando_box_name_" type="text" value="" title="Name"/>
+                            Box name <input data-quando-name="_quando_box_name1_" type="text" value="" title="Name"/>
                             Box
                             <select data-quando-name="box_row2" class="quando-toggle">
                                 <option value="no">[+]</option>
                                 <option value="yes">[-]</option>
                             </select>
                         </div>
-                        <div data-quando-toggle="box_row2=yes" data-quando-name="_quando_inventor_row2_"
+                        <div data-quando-toggle="box_row1=yes" data-quando-name="_quando_inventor_row2_"
                             class="quando-box" title="Second row"></div>
                         <div data-quando-toggle="box_row2=yes" class="quando-row quando-inventor">
-                            Box name <input data-quando-name="_quando_box_name_" type="text" value="" title="Name"/>
+                            Box name <input data-quando-name="_quando_box_name2_" type="text" value="" title="Name"/>
                         </div>
-                        <div data-quando-toggle="box_row1=yes" data-quando-name="_quando_inventor_row2_" class="quando-box" title="Last row - often empty"></div>
+                        <div data-quando-toggle="box_row2=yes" data-quando-name="_quando_inventor_row3_" class="quando-box" title="Last row - often empty"></div>
                         <div class="quando-row quando-inventor">
                             Class
                             <select data-quando-name="class">
