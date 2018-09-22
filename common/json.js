@@ -13,10 +13,6 @@ function _filterClass(cls, children) {
   return result
 }
 
-self.x = () => {
-
-}
-
 self.scriptToArray = (script) => {
   let arr = []
   for (let block of _filterClass("quando-block", script.children)) {
@@ -72,7 +68,14 @@ self.addObjectToElement = (obj, elem) => {
       for (let key in block.values) {
         let element = clone.querySelector("[data-quando-name='"+ key +"']")
         if (element) {
-          element.value = block.values[key]
+          if (element.nodeName.toLowerCase() == 'select') {
+            element.dataset.quandoTmpValue = block.values[key]
+          } else {
+            element.value = block.values[key]
+          }
+        } else {
+          console.log("Failed to set block '" + block.block_type + "', key '" + key + "' to:")
+          console.log(block.values[key])
         }
       }
       for (let key in block.boxes) {
@@ -82,6 +85,19 @@ self.addObjectToElement = (obj, elem) => {
           self.addObjectToElement(obj.box, element)
         }
       }
+    }
+  }
+}
+
+self.setOptions = () => {
+  let script = document.getElementById("script")
+  for(let elem of script.querySelectorAll("[data-quando-tmp-value]")) {
+    if (elem.dataset.quandoTmpValue) {
+      let found = elem.querySelector("option[value='" + elem.dataset.quandoTmpValue + "']")
+      if (found) {
+        found.selected = true
+      }
+      delete elem.dataset.quandoTmpValue
     }
   }
 }

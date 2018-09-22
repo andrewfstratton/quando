@@ -14,6 +14,7 @@ self.showObject = (obj) => {
     self.setElementHandlers(item)
   }
   _populateLists()
+  json.setOptions()
 }
 
 self.getScriptAsObject = () => {
