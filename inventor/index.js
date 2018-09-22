@@ -10,11 +10,11 @@ self.showObject = (obj) => {
   let script = document.getElementById('script')
   script.innerHTML = ''
   json.addObjectToElement(obj, script)
+  _populateLists()
+  json.setOptions()
   for (let item of script.getElementsByClassName("quando-block")) {
     self.setElementHandlers(item)
   }
-  _populateLists()
-  json.setOptions()
 }
 
 self.getScriptAsObject = () => {
