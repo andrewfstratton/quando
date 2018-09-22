@@ -223,6 +223,9 @@ self.copyBlock = (old, clone) => {
   for(let elem of clone.querySelectorAll("input, select")) {
     elem.disabled = false
   }
+  for(let elem of clone.querySelectorAll(".quando-box")) {
+    elem.style.minHeight = "24px"
+  }
 }
 
 self.removeBlock = (elem) => {
@@ -350,11 +353,24 @@ self.setup = () => {
         _success('Blocks loaded')
         let menu_title = document.getElementById('_menu_title')
         let parent = menu_title.parentNode
-        for(let menu of res.blocks) {
-          let elem = menu_title.cloneNode(false)
-          elem.classList.add('quando-' + menu.class)
-          elem.innerHTML = menu.name
-          elem.style.display = ''
+        let title = ''
+        for (let block of res.blocks) {
+          let elem = null
+          if (block.title) {
+            elem = menu_title.cloneNode(false)
+            title = block.class
+            elem.classList.add('quando-' + title)
+            elem.innerHTML = block.name
+            if (title == 'test') {
+              elem.id = "inventor_test"
+            }
+            elem.style.display = ''
+          } else {
+            let tmp = document.createElement('div')
+            tmp.innerHTML = block.html
+            elem = tmp.firstChild
+            elem.dataset.quandoBlockType = title + '_' + block.type
+          }
           parent.appendChild(elem)
         }
       } else {

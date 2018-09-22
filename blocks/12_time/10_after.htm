@@ -1,0 +1,18 @@
+<div class="quando-block"
+    data-quando-javascript="quando.after(${count}, '${units}', ${destructor}, ()=>{$(nl)${box}$(nl)})">
+    <div class="quando-left quando-time"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-time">
+            <img src="img/icons8-alarm-clock-24.png"/> After
+            <input data-quando-name="count" type="number" min="0" max="99" maxLength="2" value="1" style="width: 4em" />
+            <select data-quando-name="units">
+                <option value="seconds">Seconds</option>
+                <option value="minutes">Minutes</option>
+                <option value="hours">Hours</option>
+            </select>
+            <input data-quando-name="destructor" type="hidden" value="false"/>
+        </div>
+        <div data-quando-name="box" class="quando-box"></div>
+        <div class="quando-row quando-time"></div>
+    </div>
+</div>

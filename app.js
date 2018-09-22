@@ -375,12 +375,12 @@ app.use('/inventor', express.static(path.join(__dirname, 'inventor')))
 app.use('/common', express.static(path.join(__dirname, 'common')))
 
 app.get('/blocks', (req, res) => {
-  fs.readdir(path.join(__dirname, 'blocks'), (err, files) => {
+  fs.readdir(path.join(__dirname, 'blocks'), (err, folders) => {
     if (!err) {
       let blocks = []
-      for(let file of files) {
-        let menu = {}
-        let parts = file.split('_')
+      for(let folder of folders) {
+        let menu = {title:true}
+        let parts = folder.split('_')
         parts.shift() // drop the number
         let name = ''
         let cls = ''
@@ -390,8 +390,26 @@ app.get('/blocks', (req, res) => {
         }
         menu.name = name.slice(0, -1)
         menu.class = cls.slice(0, -1)
+        menu.folder = folder
         blocks.push(menu)
-      }
+        let files = fs.readdirSync(path.join(__dirname, 'blocks', folder))
+        if (files) {
+          let failed = false
+          for(let file of files) {
+            if (!failed) {
+              let block = {title:false}
+              block.type = file.substring(file.indexOf('_') + 1).slice(0, -4) // drop the number, and the '.htm'
+              let contents = fs.readFileSync(path.join(__dirname, 'blocks', folder, file))
+              if (contents) {
+                block.html = contents.toString('utf8')
+              } else {
+                failed = true
+              }
+              blocks.push(block)
+            }
+          }
+        }
+      } // for
       res.json({ 'success': true, 'blocks': blocks })
     } else {
       res.json({
