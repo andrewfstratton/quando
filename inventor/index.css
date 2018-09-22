@@ -115,13 +115,13 @@ input, #_hidden_width_element_ {
   .quando-box {
     margin: 0px 8px 0px 4px;
     padding: 4px 0px 0px 0px;
-    min-height: 8px;
+    min-height: 10px;
     width: 100%;
   }
 
-  #script .quando-box {
+  /* #script .quando-box {
     min-height: 24px;
-  }
+  } */
 
  /* Colours for block backgrounds and title */
 

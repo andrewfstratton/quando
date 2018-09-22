@@ -167,7 +167,10 @@ function _resizeWidth(event) {
 self.setElementHandlers = (block) => {
   block.addEventListener('contextmenu', self.handleRightClick, false)
   // add handler for list item change
-  let id = block.dataset.quandoId
+  let id = null
+  if (block.dataset) {
+    id = block.dataset.quandoId
+  }
   if (id && id != "true") {
     let inputs = block.querySelectorAll("input[data-quando-list]")
     for (let input of inputs) {
@@ -224,7 +227,7 @@ self.copyBlock = (old, clone) => {
     elem.disabled = false
   }
   for(let elem of clone.querySelectorAll(".quando-box")) {
-    elem.style.minHeight = "24px"
+    elem.style.minHeight = "36px"
   }
 }
 
@@ -368,10 +371,21 @@ self.setup = () => {
           } else {
             let tmp = document.createElement('div')
             tmp.innerHTML = block.html
-            elem = tmp.firstChild
-            elem.dataset.quandoBlockType = title + '_' + block.type
+            elem = tmp.querySelector(".quando-block")
+            if (elem) {
+              elem.dataset.quandoBlockType = title + '_' + block.type
+            }
           }
-          parent.appendChild(elem)
+          if (elem) {
+            parent.appendChild(elem)
+          } else {
+            let name = block.name
+            if (!name) {
+              name = block.type
+            }
+            console.log("Error with block '" + name + "'")
+            console.log(block)
+          }
         }
       } else {
         _warning(res.message)
@@ -615,7 +629,8 @@ self.handle_test = () => {
         }
         let tmp = document.createElement('div')
         tmp.innerHTML = code
-        menu.appendChild(tmp.firstChild)
+        self.setElementHandlers(tmp.firstChild)
+        document.getElementById('menu').appendChild(tmp.firstChild)
       } else {
         self.testCreator(code)
       }
