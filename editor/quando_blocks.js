@@ -516,32 +516,6 @@
       }
     })
 
-    let EXPLORATION_RULE = 'Exploration Rule'
-    self.defineExperiment({
-      name: EXPLORATION_RULE,
-      title: '',
-      interface: [
-                { name: 'title', title: '', text: ''},
-                { extras: [
-                  { name: 'text3', title: '', text: ''},
-                  ]
-                },
-                { statement: STATEMENT },
-      ]
-    })
-
-    let EXPLORATION_ACTION = 'Exploration Action'
-    self.defineExperiment({
-      name: EXPLORATION_ACTION,
-      title: 'Do',
-      interface: [
-                { name: 'title', title: '', text: ''},
-                { extras : [
-                  { name: 'text5', title: '', text: ''}
-                ] }
-      ]
-    })
-
     let MICROBIT_GESTURE_MENU = 'MicroBit Gesture'
     self.defineMicrobit({
       name: 'When micro:bit',

@@ -140,6 +140,9 @@ input, #_hidden_width_element_ {
   .quando-advanced {
     background: #eee48c;
   }
+  .quando-devices {
+    background: #81d4fa;
+  }
 
   /* .quando-separator {
     border-top-style:solid;

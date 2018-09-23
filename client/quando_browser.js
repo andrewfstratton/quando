@@ -19,11 +19,6 @@
     return window.innerHeight
   }
 
-  function endSame (longer, shorter) {
-    var loc = longer.indexOf(shorter, longer.length - shorter.length)
-    return loc >= 0
-  }
-
   self.socket.on('deploy', function (data) {
     var locStr = decodeURIComponent(window.location.href)
     if (locStr.endsWith('/'+data.script)) {
@@ -348,9 +343,6 @@
       if (frame.hands) {
         self.idle_reset() // any hand data means there is a visitor present...
         if (frame.hands.length !== hands) {
-                    //                var now = (new Date).getTime()
-                    //                if (now > self.leap_start_check_time+1000) {
-                    //                    self.leap_start_check_time = now
           hands = frame.hands.length
           if (hands === count) {
             do_fn()
