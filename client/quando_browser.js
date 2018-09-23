@@ -463,14 +463,14 @@
       destructor = self._display_destructors.pop()
     }
         // Find display
-    let display = self._displays.get(id)
+    let tmp_display = self._displays.get(id)
         // Clear current labels, title and text
     document.getElementById('quando_labels').innerHTML = ''
     self.title()
     self.text()
 //        self.video() removed to make sure video can continue playing between displays
     self._resetStyle()
-    display()
+    tmp_display()
   }
 
   self.addLabel = function (id, title) {

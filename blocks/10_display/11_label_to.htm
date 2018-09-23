@@ -1,4 +1,4 @@
-<div class="quando-block" data-quando-javascript="quando.addLabel('XXX', '${display_id}')">
+<div class="quando-block" data-quando-javascript="quando.addLabel(${display_id}, '$(displayTitle,display_id)')">
 <div class="quando-left quando-display"></div>
 <div class="quando-right">
     <div class="quando-row quando-display">
@@ -6,8 +6,6 @@
         <select data-quando-name='display_id' data-quando-list="display">
             <option value='-1'>----</option>
         </select>
-        <input data-quando-name="display-title" dataset-quando-chosen="display_id"
-            type="hidden" value="false"/>
     </div>
 </div>
 </div>

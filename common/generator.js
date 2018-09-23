@@ -123,5 +123,17 @@ fn.visible = (block, name, str) => {
 
 fn.$ = () => { return "$" }
 fn.nl = () => { return "\n" }
+fn.displayTitle = (block, display_id) => {
+    let result = '----'
+    let select = block.querySelector('select[data-quando-name='+display_id+']') // find the select
+    if (select) {
+        let value = select.value // this is the id
+        let option = select.querySelector("option[value='" + value + "']")
+        if (option) {
+            result = option.innerHTML
+        }
+    }
+    return result
+}
 
 })()
