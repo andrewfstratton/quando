@@ -158,23 +158,36 @@
     self.idle_reset()
   }
 
-  self.cursor_up_down = function (y, extras) {
+  self.cursor_up_down = function (mid, range, inverted, y) {
+    min = mid-range
+    max = mid+range
+    min /= 100
+    max /= 100
     if (y === false) {
-      y = (extras.min + extras.max)/2
+      y = (min + max)/2
     }
-    y = 1 - y // invert
-    var scr_min = extras.min * _displayHeight()
-    var scr_max = extras.max * _displayHeight()
+    if (!inverted) {
+      y = 1 - y // starts inverted
+    }
+    var scr_min = min * _displayHeight()
+    var scr_max = max * _displayHeight()
     self._y = scr_min + (y * (scr_max-scr_min))
     _cursor_adjust()
   }
 
-  self.cursor_left_right = function (x, extras) {
+  self.cursor_left_right = function (mid, range, inverted, x) {
+    min = mid-range
+    max = mid+range
+    min /= 100
+    max /= 100
     if (x === false) {
-      x = (extras.min + extras.max)/2
+      x = (min + max)/2
     }
-    var scr_min = extras.min * _displayWidth()
-    var scr_max = extras.max * _displayWidth()
+    if (inverted) {
+      x = 1 - x // starts normal
+    }
+    var scr_min = min * _displayWidth()
+    var scr_max = max * _displayWidth()
     self._x = scr_min + (x * (scr_max-scr_min))
     _cursor_adjust()
   }

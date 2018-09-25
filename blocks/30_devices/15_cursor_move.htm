@@ -1,0 +1,27 @@
+<div class="quando-block" data-quando-javascript="quando.cursor_${direction}(${mid}, ${plus_minus}, ${inverted}, val)">
+    <div class="quando-left quando-devices"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-devices">
+            ⚡ Move Cursor
+            <select data-quando-name='direction' class='quando-toggle'>
+                <option value='left_right'>⇔</option>
+                <option value='up_down'>⇕</option>
+            </select>
+            <select data-quando-name='extras' class='quando-toggle'>
+                <option value='hidden'>[+]</option>
+                <option value='show'>[-]</option>
+            </select>
+            <span data-quando-toggle='extras=show'>
+                <br />
+                <input data-quando-name="mid" type="text" value="50" data-quando-encode="normal" />
+                % +/-
+                <input data-quando-name="plus_minus" type="text" value="50" data-quando-encode="normal" />
+                %
+                <select data-quando-name='inverted' class='quando-toggle'>
+                    <option value='false'>Normal</option>
+                    <option value='true'>Inverted</option>
+                </select>
+            </span>
+        </div>
+    </div>
+</div>
