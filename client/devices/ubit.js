@@ -13,53 +13,53 @@
     }
   }
 
-  self.ubitForward = function (callback, destruct = true) {
-    quando.add_handler('ubitForward', callback, destruct)
+  self.ubitForward = function (callback) {
+    quando.add_handler('ubitForward', callback)
   }
 
-  self.ubitBackward = function (callback, destruct = true) {
-    quando.add_handler('ubitBackward', callback, destruct)
+  self.ubitBackward = function (callback) {
+    quando.add_handler('ubitBackward', callback)
   }
 
-  self.ubitUp = function (callback, destruct = true) {
-    quando.add_handler('ubitUp', callback, destruct)
+  self.ubitUp = function (callback) {
+    quando.add_handler('ubitUp', callback)
   }
 
-  self.ubitDown = function (callback, destruct = true) {
-    quando.add_handler('ubitDown', callback, destruct)
+  self.ubitDown = function (callback) {
+    quando.add_handler('ubitDown', callback)
   }
 
-  self.ubitLeft = function (callback, destruct = true) {
-    quando.add_handler('ubitLeft', callback, destruct)
+  self.ubitLeft = function (callback) {
+    quando.add_handler('ubitLeft', callback)
   }
 
-  self.ubitRight = function (callback, destruct = true) {
-    quando.add_handler('ubitRight', callback, destruct)
+  self.ubitRight = function (callback) {
+    quando.add_handler('ubitRight', callback)
   }
 
-  self.ubitA = function (callback, destruct = true) {
-    quando.add_handler('ubitA', callback, destruct)
+  self.ubitA = function (callback) {
+    quando.add_handler('ubitA', callback)
   }
 
-  self.ubitB = function (callback, destruct = true) {
-    quando.add_handler('ubitB', callback, destruct)
+  self.ubitB = function (callback) {
+    quando.add_handler('ubitB', callback)
   }
 
-  function _handleAngle (event, callback, extras, destruct = true) {
+  function _handleAngle (event, callback, extras) {
     var scale = quando.new_angle_scaler(extras.mid_angle, extras.plus_minus, extras.inverted)
-    quando.add_scaled_handler(event, callback, scale, destruct)
+    quando.add_scaled_handler(event, callback, scale)
   }
 
-  self.handleRoll = function (callback, extras = {}, destruct = true) {
-    _handleAngle('ubitRoll', callback, extras, destruct)
+  self.handleRoll = function (callback, extras = {}) {
+    _handleAngle('ubitRoll', callback, extras)
   }
 
-  self.handlePitch = function (callback, extras = {}, destruct = true) {
-    _handleAngle('ubitPitch', callback, extras, destruct)
+  self.handlePitch = function (callback, extras = {}) {
+    _handleAngle('ubitPitch', callback, extras)
   }
 
-  self.handleHeading = function (callback, extras = {}, destruct = true) {
-    _handleAngle('ubitHeading', callback, extras, destruct)
+  self.handleHeading = function (callback, extras = {}) {
+    _handleAngle('ubitHeading', callback, extras)
   }
 
   quando.socket.on('ubit', function (data) {

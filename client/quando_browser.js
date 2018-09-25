@@ -5,7 +5,6 @@
   self._displays = new Map()
   self.DISPLAY_STYLE = 'quando_css_override'
   self.pinching = false
-  self._display_destructors = []
   self.DEFAULT_STYLE = 'quando_css'
   var _lookup = {} // holds run time arrays
 
@@ -26,13 +25,11 @@
     }
   })
 
-  self.add_message_handler = function (message, fn, destruct) {
+  self.add_message_handler = function (message, fn) {
     self.socket.on(message, fn)
-    if (destruct) {
-      self.addDestructor(function () {
-        self.socket.off(message, fn)
-      })
-    }
+    self.destructor.add( () => {
+      self.socket.off(message, fn)
+    })
   }
 
   self.send_message = function(message, val) {
@@ -73,23 +70,21 @@
     }
   }
 
-  self.add_handler = function (event, callback, destruct) {
+  self.add_handler = function (event, callback) {
     document.addEventListener(event, callback)
-    if (destruct) {
-      self.addDestructor(function () {
-        document.removeEventListener(event, callback)
-      })
-    }
+    self.destructor.add( () => {
+      document.removeEventListener(event, callback)
+    })
   }
 
-  self.add_scaled_handler = function (event_name, callback, scaler, destruct = true) {
+  self.add_scaled_handler = function (event_name, callback, scaler) {
     var handler = function (ev) {
       var value = scaler(ev.detail)
       if (value !== null) {
         callback(value)
       }
     }
-    quando.add_handler(event_name, handler, destruct)
+    quando.add_handler(event_name, handler)
   }
 
   self.new_scaler = function (min, max, inverted = false) {
@@ -196,28 +191,24 @@
     }
     return result * 1000 // convert to ms
   }
-  self.after = function (count = 1, units = 'seconds', destruct = false, callback) {
+  self.after = function (count = 1, units = 'seconds', callback) {
     let time_ms = _units_to_ms(units, count)
     let timeout = setTimeout(callback, time_ms)
-    if (destruct) {
-      self.addDestructor(function () {
-        clearTimeout(timeout)
-      })
-    }
+    self.destructor.add( () => {
+      clearTimeout(timeout)
+    })
   }
 
-  self.every = function (count = 1, units = 'seconds', destruct = false, callback) {
+  self.every = function (count = 1, units = 'seconds', callback) {
     callback() // do it straight away
     let time_ms = _units_to_ms(units, count)
     let id = setInterval(callback, time_ms)
-    if (destruct) {
-      self.addDestructor(function () {
-        clearInterval(id)
-      })
-    }
+    self.destructor.add( () => {
+      clearInterval(id)
+    })
   }
 
-  self.check = function(times = 1, units = 'second', destruct = false, callback) {
+  self.check = function(times = 1, units = 'second', callback) {
     let time = 1
     if (units == 'minute') {
       time = 60
@@ -227,7 +218,7 @@
       time = 60*60*24
     }
     let count = time / times
-    self.every(count, 'seconds', destruct, callback)
+    self.every(count, 'seconds', callback)
   }
 
   self.idle = function (time_secs, idle_fn, active_fn) {
@@ -414,21 +405,25 @@
   }
 
   self.startDisplay = function (leap) {
-    self.setDefaultStyle('#cursor', 'background-color', 'rgba(255, 255, 102, 0.7)');
-    self.setDefaultStyle('#cursor', ['width','height'], '4.4vw');
-    self.setDefaultStyle('#cursor', ['margin-left','margin-top'], '-2.2vw');    
-    document.querySelector('#container').addEventListener('contextmenu', // right click title to go to setup
-            function (ev) {
-              ev.preventDefault()
-              window.location.href = '../../client/setup'
-              return false
-            }, false)
-    self.pinching = false
-    if (self._displays.size != 0) {
-            // TODO Should this be deferred?
-      (self._displays.values().next().value)() // this runs the very first display :)
-            // can't use [0] because we don't know the id of the first entry
-    }
+    setTimeout( () => {
+      self.setDefaultStyle('#cursor', 'background-color', 'rgba(255, 255, 102, 0.7)');
+      self.setDefaultStyle('#cursor', ['width','height'], '4.4vw');
+      self.setDefaultStyle('#cursor', ['margin-left','margin-top'], '-2.2vw');    
+      document.querySelector('#container').addEventListener('contextmenu', // right click title to go to setup
+              function (ev) {
+                ev.preventDefault()
+                window.location.href = '../../client/setup'
+                return false
+              }, false)
+      self.pinching = false
+      if (self._displays.size != 0) {
+        let val_done = self._displays.values().next()
+        if (val_done.value) {
+          val_done.value() // this runs the very first display :)
+              // can't use [0] because we don't know the id of the first entry
+        }
+      }
+    }, 0)
   }
 
   self.hover = function (elem) {
@@ -448,21 +443,17 @@
   }
 
   self.showDisplay = function (id) {
-        // perform any destructors - which will cancel pending events, etc.
-    let destructor = self._display_destructors.pop()
-    while (destructor) {
-      destructor()
-      destructor = self._display_destructors.pop()
-    }
-        // Find display
-    let tmp_display = self._displays.get(id)
-        // Clear current labels, title and text
+    // perform any destructors - which will cancel pending events, etc.
+    // assumes that display is unique...
+    self.destructor.destroy()
+    // Clear current labels, title and text
     document.getElementById('quando_labels').innerHTML = ''
     self.title()
     self.text()
 //        self.video() removed to make sure video can continue playing between displays
     self._resetStyle()
-    tmp_display()
+    // Find display and execute...
+    self._displays.get(id)()
   }
 
   self.addLabel = function (id, title) {
@@ -530,10 +521,6 @@
         elem.parentNode.removeChild(elem)
       }
     }
-  }
-
-  self.addDestructor = function (fn) {
-    self._display_destructors.push(fn)
   }
 
   self.pick = function(val, arr) {

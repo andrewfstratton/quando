@@ -9,46 +9,46 @@
     self.controller.on('frame', self.handler)
   })
 
-  self.handOpen = function (callback, destruct = true) {
-    quando.add_handler('leapHandOpen', callback, destruct)
+  self.handOpen = function (callback) {
+    quando.add_handler('leapHandOpen', callback)
   }
 
-  self.handClosed = function (callback, destruct = true) {
-    quando.add_handler('leapHandClosed', callback, destruct)
+  self.handClosed = function (callback) {
+    quando.add_handler('leapHandClosed', callback)
   }
 
-  function _handleXYZ (event, callback, extras, destruct = true) {
+  function _handleXYZ (event, callback, extras) {
     var scale = quando.new_scaler(extras.min, extras.max, extras.inverted)
-    quando.add_scaled_handler(event, callback, scale, destruct)
+    quando.add_scaled_handler(event, callback, scale)
   }
 
-  function _handleAngle (event, callback, extras, destruct = true) {
+  function _handleAngle (event, callback, extras) {
     var scale = quando.new_angle_scaler(extras.mid_angle, extras.plus_minus, extras.inverted)
-    quando.add_scaled_handler(event, callback, scale, destruct)
+    quando.add_scaled_handler(event, callback, scale)
   }
 
-  self.handleX = function (callback, extras, destruct = true) {
-    _handleXYZ('leapX', callback, extras, destruct)
+  self.handleX = function (callback, extras) {
+    _handleXYZ('leapX', callback, extras)
   }
 
-  self.handleY = function (callback, extras, destruct = true) {
-    _handleXYZ('leapY', callback, extras, destruct)
+  self.handleY = function (callback, extras) {
+    _handleXYZ('leapY', callback, extras)
   }
 
-  self.handleZ = function (callback, extras, destruct = true) {
-    _handleXYZ('leapZ', callback, extras, destruct)
+  self.handleZ = function (callback, extras) {
+    _handleXYZ('leapZ', callback, extras)
   }
 
-  self.handleRoll = function (callback, extras, destruct = true) {
-    _handleAngle('leapRoll', callback, extras, destruct)
+  self.handleRoll = function (callback, extras) {
+    _handleAngle('leapRoll', callback, extras)
   }
 
-  self.handlePitch = function (callback, extras, destruct = true) {
-    _handleAngle('leapPitch', callback, extras, destruct)
+  self.handlePitch = function (callback, extras) {
+    _handleAngle('leapPitch', callback, extras)
   }
 
-  self.handleYaw = function (callback, extras, destruct = true) {
-    _handleAngle('leapYaw', callback, extras, destruct)
+  self.handleYaw = function (callback, extras) {
+    _handleAngle('leapYaw', callback, extras)
   }
 
   function _radians_to_degrees (radians) {
