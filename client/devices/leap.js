@@ -17,38 +17,40 @@
     quando.add_handler('leapHandClosed', callback)
   }
 
-  function _handleXYZ (event, callback, extras) {
-    var scale = quando.new_scaler(extras.min, extras.max, extras.inverted)
+  function _handleXYZ (event, min, max, inverted, callback) {
+    var scale = quando.new_scaler(min, max, inverted)
     quando.add_scaled_handler(event, callback, scale)
   }
 
-  function _handleAngle (event, callback, extras) {
-    var scale = quando.new_angle_scaler(extras.mid_angle, extras.plus_minus, extras.inverted)
+  function _handleAngle (event, mid_angle, plus_minus, inverted, callback) {
+    var scale = quando.new_angle_scaler(mid_angle, plus_minus, inverted)
     quando.add_scaled_handler(event, callback, scale)
   }
 
-  self.handleX = function (callback, extras) {
-    _handleXYZ('leapX', callback, extras)
+  self.handleX = function (range, inverted, callback) {
+    _handleXYZ('leapX', -range*10, range*10, inverted, callback)
   }
 
-  self.handleY = function (callback, extras) {
-    _handleXYZ('leapY', callback, extras)
+  self.handleY = function (range, inverted, callback) {
+    let min = 100
+    let max = min + 20*range
+    _handleXYZ('leapY', min, max, inverted, callback)
   }
 
-  self.handleZ = function (callback, extras) {
-    _handleXYZ('leapZ', callback, extras)
+  self.handleZ = function (range, inverted, callback) {
+    _handleXYZ('leapZ', -range*10, range*10, inverted, callback)
   }
 
-  self.handleRoll = function (callback, extras) {
-    _handleAngle('leapRoll', callback, extras)
+  self.handleRoll = function (mid_angle, plus_minus, inverted, callback) {
+    _handleAngle('leapRoll', mid_angle, plus_minus, inverted, callback)
   }
 
-  self.handlePitch = function (callback, extras) {
-    _handleAngle('leapPitch', callback, extras)
+  self.handlePitch = function (mid_angle, plus_minus, inverted, callback) {
+    _handleAngle('leapPitch', mid_angle, plus_minus, inverted, callback)
   }
 
-  self.handleYaw = function (callback, extras) {
-    _handleAngle('leapYaw', callback, extras)
+  self.handleYaw = function (mid_angle, plus_minus, inverted, callback) {
+    _handleAngle('leapYaw', mid_angle, plus_minus, inverted, callback)
   }
 
   function _radians_to_degrees (radians) {

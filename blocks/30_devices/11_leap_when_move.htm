@@ -1,0 +1,30 @@
+<div class="quando-block" data-quando-javascript="quando.leap.handle${direction}(${range}, ${inverted}, (val) => {${box}})">
+    <div class="quando-left quando-devices"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-devices">
+            When Leap move
+            <select data-quando-name="direction">
+                <option value='X'>⇔</option>
+                <option value='Y'>⇕</option>
+                <option value='Z'>⤢</option>
+            </select>
+            ⚡
+            <select data-quando-name='extras' class='quando-toggle'>
+                <option value='hidden'>[+]</option>
+                <option value='show'>[-]</option>
+            </select>
+            <span data-quando-toggle='extras=show'>
+                <br />
+                +/-
+                <input data-quando-name="range" type="text" value="15" data-quando-encode="normal" />
+                cm
+                <select data-quando-name='inverted' class='quando-toggle'>
+                    <option value='false'>Normal</option>
+                    <option value='true'>Inverted</option>
+                </select>
+            </span>
+        </div>
+        <div data-quando-name="box" class="quando-box"></div>
+        <div class="quando-row quando-devices"></div>
+    </div>
+</div>

@@ -40,7 +40,8 @@ self.getCodeInBlock = function(block) {
     for (let row_box of right.children) { // i.e. for each row or box
         // collect the substitions in matches array
         if (row_box.classList.contains("quando-row")) {
-            for (let child of row_box.children) { // i.e. each input
+            for (let child of row_box.querySelectorAll('[data-quando-name]')) { // i.e. each named input
+                // N.B. Cannot have box here - will cause strange effects...
                 if (child.dataset.quandoName) {
                     let value = child.value
                     if ((typeof value) === 'string' && (child.dataset.quandoEncode != "raw")) {
@@ -73,7 +74,7 @@ self.getCodeInBlock = function(block) {
             if (typeof substitute === 'string') {
                 code += substitute
             } else {
-                console.log('Warning - ${' + matched + '} not found - passed through')
+                console.log('Warning - ${' + matched + '} is type ' + typeof substitute + ' - passed through')
                 code += '${' + matched + '}'
             }
         }
