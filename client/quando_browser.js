@@ -296,6 +296,12 @@
     }
   }
 
+  self.image = function (img) {
+    img = '/client/media/' + img
+    self.image_update_video(img)
+    self.setDisplayStyle('#quando_image', 'background-image', 'url('+img+')')
+  }
+
   self.video = function (vid, loop = false) {
     var video = document.getElementById('quando_video')
     video.loop = loop
