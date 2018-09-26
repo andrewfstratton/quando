@@ -327,6 +327,7 @@
   }
 
   self.audio = function (audio_in, loop = false) {
+    audio_in = '/client/media/' + encodeURI(audio_in)
     var audio = document.getElementById('quando_audio')
     audio.loop = loop
     if (audio.src != encodeURI(window.location.origin + audio_in)) { // src include http://127.0.0.1/
@@ -337,9 +338,9 @@
       audio.autoplay = true
       audio.addEventListener('ended', self.clear_audio)
       audio.load()
-      // audio.play()
     }
   }
+
   self.clear_audio = function () {
     var audio = document.getElementById('quando_audio')
     audio.src = ''
