@@ -297,12 +297,13 @@
   }
 
   self.image = function (img) {
-    img = '/client/media/' + img
+    img = '/client/media/' + encodeURI(img)
     self.image_update_video(img)
     self.setDisplayStyle('#quando_image', 'background-image', 'url('+img+')')
   }
 
   self.video = function (vid, loop = false) {
+    vid = '/client/media/' + encodeURI(vid)
     var video = document.getElementById('quando_video')
     video.loop = loop
     if (video.src != encodeURI(window.location.origin + vid)) { // i.e. ignore when already playing

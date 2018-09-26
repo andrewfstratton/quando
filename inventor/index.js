@@ -178,6 +178,9 @@ self.setElementHandlers = (block) => {
       input.addEventListener('input', _handleListNameChange)
     }
   }
+  for (let elem of block.querySelectorAll("input[data-quando-media]")) {
+    elem.addEventListener('click', index.handleFile, false)
+  }
   for (let elem of block.querySelectorAll("select.quando-toggle")) {
     elem.addEventListener('click', index.handleToggle, true)
     self.toggleRelativesOnElement(elem)
@@ -188,6 +191,7 @@ self.setElementHandlers = (block) => {
   for (let input of inputs) {
     _resizeWidth({target:input})
     input.addEventListener('input', _resizeWidth)
+    input.addEventListener('change', _resizeWidth)
   }
 }
 
@@ -820,7 +824,7 @@ self.handle_test = () => {
     self.showObject()
   }
 
-  function _file_list_add (file_name, path, fn_name, block_id, widget_id) {
+  function _file_list_add (file_name, path, fn_name, block_id, elem_name) {
     let result = '<div class="row"><div class="col-sm-1"> </div>' +
             '<a class="list-group-item col-md-5" onclick="index.' +
             `${fn_name}('${path}${file_name}', `
@@ -829,12 +833,12 @@ self.handle_test = () => {
     } else {
       result += `'${block_id}'`
     }
-    result += `, '${widget_id}')">${file_name}</a>` +
+    result += `, '${elem_name}')">${file_name}</a>` +
             '</div>\n'
     return result
   }
 
-  function _folder_list_add (folder_name, media, path, block_id, widget_id) {
+  function _folder_list_add (folder_name, media, path, block_id, elem_name) {
     let result = '<div class="row"><div class="col-sm-1"> </div>' +
             '<a class="list-group-item col-md-5" onclick="index.' +
                 `handle_folder_selected('${media}', `
@@ -843,13 +847,28 @@ self.handle_test = () => {
     } else {
       result += `'${block_id}'`
     }
-    result += `, '${widget_id}', '${path}')">&#x1f5c1; ${folder_name}</a>` +
+    result += `, '${elem_name}', '${path}')">&#x1f5c1; ${folder_name}</a>` +
             '</div>\n'
     return result
   }
 
-  self.handle_file = (media, block_id, widget_id, path = '') => {
-        // when media is 'UPLOAD', then we are uploading, note then that block_id and widget_id are null
+  self.handleFile = (event) => {
+    event.preventDefault()
+    let elem = event.target
+    let path = elem.value
+    let slash_loc = path.lastIndexOf('/')
+    if (slash_loc > 0) {
+      path = '/' + path.substring(0, slash_loc)
+    } else {
+      path = ''
+    }
+    let block_id = _getAncestorId(elem, "quando-block")
+    _handle_file(elem.dataset.quandoMedia, block_id, elem.dataset.quandoName, path)
+    return false
+  }
+
+  function _handle_file(media, block_id, elem_name, path = '') {
+        // when media is 'UPLOAD', then we are uploading, note then that block_id and elem_name are null
     let file_modal = $('#file_modal')
     if (media == 'UPLOAD') {
       $('.file_modal_upload').show()
@@ -874,18 +893,18 @@ self.handle_test = () => {
               parent_path = path.substring(0, slash_loc)
             }
             $('#file_list').append(_folder_list_add('..', media, parent_path,
-                            block_id, widget_id))
+                            block_id, elem_name))
           }
           for (let i in res.folders) {
             $('#file_list').append(_folder_list_add(res.folders[i], media, path + '/' + res.folders[i],
-                            block_id, widget_id))
+                            block_id, elem_name))
           }
           if (path != '') {
             path = path.substring(1) + '/' // strip off the intial slash and put infront of the file
           }
           for (let i in res.files) {
             $('#file_list').append(_file_list_add(res.files[i], path,
-                            'handle_file_selected', block_id, widget_id))
+                            'handle_file_selected', block_id, elem_name))
           }
         } else {
           alert('Failed to find server files')
@@ -899,23 +918,28 @@ self.handle_test = () => {
     })
   }
 
-  self.handle_folder_selected = (media, block_id, widget_id, path) => {
-    self.handle_file(media, block_id, widget_id, path)
+  self.handle_folder_selected = (media, block_id, elem_name, path) => {
+    _handle_file(media, block_id, elem_name, path)
   }
 
-  self.handle_file_selected = (filename, block_id, widget_id) => {
+  self.handle_file_selected = (filename, block_id, elem_name) => {
         // When blocK-id is null, then this is an upload - so do nothing...
     if (block_id != null) {
-      let block = Blockly.mainWorkspace.getBlockById(block_id)
-      block.setFieldValue(filename, widget_id)
+      let block = document.querySelector('[data-quando-id="'+block_id+'"]')
+      if (block) {
+        let elem = block.querySelector('[data-quando-name="'+elem_name+'"]')
+        if (elem) {
+          elem.value = filename
+          _resizeWidth({target:elem})
+        }
+      }
       $('#file_modal').modal('hide')
     }
-        // TODO get/return/set filename
   }
 
   self.handle_upload_media = () => {
     if ($('#upload_media').val()) {
-      self.handle_file('UPLOAD', null, null, '')
+      _handle_file('UPLOAD', null, null, '')
     }
   }
 
