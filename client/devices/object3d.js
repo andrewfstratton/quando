@@ -93,28 +93,29 @@
         return radians
     }
 
-    function _convert_linear(val, extras) {
+    function _convert_linear(val, mid, range, inverted) {
         if (val === false) { val = 0.5 }
-        return extras.min + (val * (extras.max-extras.min))
+        if (inverted) { val = 1 - val }
+        let min = 10 * (mid - range)
+        let max = 10 * (mid + range)
+        return min + (val * (max-min))
     }
 
-    self.in_out = function (val, extras) {
-        self.z = _convert_linear(val, extras)
+    self.in_out = function (val, mid, range, inverted) {
+        self.z = _convert_linear(val, mid, range, inverted)
     }
 
-    self.left_right = function (val, extras) {
-        self.x = _convert_linear(val, extras)
+    self.left_right = function (val, mid, range, inverted) {
+        self.x = _convert_linear(val, mid, range, !inverted) // yes - inverted must be inverted...
     }
 
-    self.up_down = function (val, extras) {
-        self.y = _convert_linear(val, extras)
+    self.up_down = function (val, mid, range, inverted) {
+        self.y = _convert_linear(val, mid, range, inverted)
     }
 
     function _convert_angle(val, mid, range, inverted) {
         if (val === false) { val = 0.5 }
-        if (inverted) {
-            val = 1 - val
-        }
+        if (inverted) { val = 1 - val }
         let min = _degrees_to_radians(mid - range)
         let max = _degrees_to_radians(mid + range)
         return min + (val * (max-min))

@@ -1,0 +1,29 @@
+<div class="quando-block" data-quando-javascript="quando.object3d.${direction}(val,${mid},${range},${inverted})">
+    <div class="quando-left quando-devices"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-devices">
+            ⚡ Move 3D Object
+            <select data-quando-name="direction">
+                <option value='left_right'>⇔</option>
+                <option value='up_down'>⇕</option>
+                <option value='in_out'>🔍</option>
+            </select>
+            <select data-quando-name='extras' class='quando-toggle'>
+                <option value='hidden'>+</option>
+                <option value='show'>-</option>
+            </select>
+            <span data-quando-toggle='extras=show'>
+                <br />
+                Middle
+                <input data-quando-name="mid" type="text" value="0" data-quando-encode="normal" />
+                cm ±
+                <input data-quando-name="range" type="text" value="5" data-quando-encode="normal" />
+                cm
+                <select data-quando-name='inverted' class='quando-toggle'>
+                    <option value='false'>Normal</option>
+                    <option value='true'>Inverted</option>
+                </select>
+            </span>
+        </div>
+    </div>
+</div>
