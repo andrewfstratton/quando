@@ -21,7 +21,7 @@ def roll_pitch_heading():
             print(COMMS.BUTTON_B[1])
         heading = compass.heading()
         if (heading != last_heading) :
-            print('{"heading":'+str(heading)+'}\n')
+            print('{"heading":'+str(heading)+'}')
             sleep(20)
             last_heading = heading
             needle = ((15 - heading)//30)%12
@@ -33,7 +33,7 @@ def roll_pitch_heading():
         roll = math.pi-(math.atan2(x, z)%(math.pi*2))
         pitch = math.pi-(math.atan2(y, z)%(math.pi*2))
         if roll != last_roll or pitch != last_pitch:
-            print('{"roll_pitch":['+str(roll)+','+str(pitch)+']}\n')
+            print('{"roll_pitch":['+str(roll)+','+str(pitch)+']}')
             last_roll = roll
             last_pitch = pitch
             display.show('+')
