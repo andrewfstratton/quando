@@ -45,21 +45,21 @@
     quando.add_handler('ubitB', callback)
   }
 
-  function _handleAngle (event, callback, extras) {
-    var scale = quando.new_angle_scaler(extras.mid_angle, extras.plus_minus, extras.inverted)
+  function _handleAngle (event, callback, mid, range, inverted) {
+    var scale = quando.new_angle_scaler(mid, range, inverted)
     quando.add_scaled_handler(event, callback, scale)
   }
 
-  self.handleRoll = function (callback, extras = {}) {
-    _handleAngle('ubitRoll', callback, extras)
+  self.handleRoll = function (mid, range, inverted, callback) {
+    _handleAngle('ubitRoll', callback, mid, range, inverted)
   }
 
-  self.handlePitch = function (callback, extras = {}) {
-    _handleAngle('ubitPitch', callback, extras)
+  self.handlePitch = function (mid, range, inverted, callback) {
+    _handleAngle('ubitPitch', callback, mid, range, inverted)
   }
 
-  self.handleHeading = function (callback, extras = {}) {
-    _handleAngle('ubitHeading', callback, extras)
+  self.handleHeading = function (mid, range, inverted, callback) {
+    _handleAngle('ubitHeading', callback, mid, range, !inverted) // heading inversion is inverted ?!
   }
 
   quando.socket.on('ubit', function (data) {
