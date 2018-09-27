@@ -110,23 +110,26 @@
         self.y = _convert_linear(val, extras)
     }
 
-    function _convert_angle(val, extras) {
+    function _convert_angle(val, mid, range, inverted) {
         if (val === false) { val = 0.5 }
-        var min = _degrees_to_radians(extras.min)
-        var max = _degrees_to_radians(extras.max)
+        if (inverted) {
+            val = 1 - val
+        }
+        let min = _degrees_to_radians(mid - range)
+        let max = _degrees_to_radians(mid + range)
         return min + (val * (max-min))
     }
 
-    self.roll = function (val, extras) {
-        self._roll = _convert_angle(val, extras)
+    self.roll = function (val, mid, range, inverted) {
+        self._roll = _convert_angle(val, mid, range, inverted)
     }
 
-    self.pitch = function (val, extras) {
-        self._pitch = _convert_angle(val, extras)
+    self.pitch = function (val, mid, range, inverted) {
+        self._pitch = _convert_angle(val, mid, range, inverted)
     }
 
-    self.yaw = function (val, extras) {
-        self._yaw = _convert_angle(val, extras)
+    self.yaw = function (val, mid, range, inverted) {
+        self._yaw = _convert_angle(val, mid, range, inverted)
     }
 
     function _load_obj(loader, path, obj) {
