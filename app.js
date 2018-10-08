@@ -400,6 +400,7 @@ app.get('/blocks', (req, res) => {
             if (!failed) {
               let block = {title:false}
               block.type = file.substring(file.indexOf('_') + 1).slice(0, -4) // drop the number, and the '.htm'
+              block.type = block.type.replace(/_/g, '-') // turn _ based filename into - based attribute
               let contents = fs.readFileSync(path.join(__dirname, 'blocks', folder, file))
               if (contents) {
                 block.html = contents.toString('utf8')

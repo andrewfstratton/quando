@@ -4,12 +4,19 @@
 
 Prerequisites: Firefox, Node JS, git for windows install (https://gitforwindows.org/)
 
+
+
 1. Clone the repository in C: using git clone https://github.com/andrewfstratton/quando.git
 2. In the command line, in C:\quando, npm update - this will likely take a while
-3. you may need to rebuild the serial-port, if so, then:
+3. you may need to rebuild the serial-port (this is only necessary if you wish to use a micro:bit), if so, then:
     1. (may need) npm install --global --production windows-build-tools
     2. npm install serialport --build-from-source
-4. Download blockly from github (most likely) and unzip into C:\quando\blockly
+4. Download blockly from github (most likely) and unzip into C:\quando\blockly (only needed for reference to previous version of blockly)
+
+_Note: Chrome can be used, but will need to be modified to work:_
+
+1. _open chrome://flags/#autoplay-policy_
+2. _change to 'no user gesture is required'_
 
 ### Setting up Quando for first time use
 

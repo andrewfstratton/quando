@@ -89,6 +89,14 @@ function _getAncestor(elem, _class) {
   return ancestor
 }
 
+function _getParentBlock(elem) {
+  let ancestor = elem.parentElement
+  while (ancestor && !ancestor.classList.contains("quando-block")) {
+    ancestor = ancestor.parentElement
+  }
+  return ancestor
+}
+
 function _getAncestorId(elem, _class) {
   let id = null
   let ancestor = _getAncestor(elem, _class)
@@ -284,6 +292,39 @@ function _setupDragula() {
     } else if (target.classList.contains('quando-box')) { // i.e. a valid container
       if (index.hasAncestor(target, menu)) {
         accept = false
+      } else {
+        let limited = elem.dataset.quandoDropValid
+        if (limited != undefined) {
+          accept = false // assume rejecting for now...
+          if (limited != "") { // i.e. can't be dropped in anything...
+            let parent_block = _getParentBlock(target)
+            if (parent_block) {
+              let block_type = parent_block.dataset.quandoBlockType
+              limited = limited.split(",")
+              for (let tuple of limited) {
+                let [type,box] = tuple.split(".")
+                let box_match = true // i.e. matches when no box name given
+                if (box) {
+                  if (target.dataset) {
+                    box_match = (box == target.dataset.quandoName)
+                  } else {
+                    box_match = false
+                  }
+                }
+                if (box_match && (block_type == type)) {
+                  accept = true
+                }
+              }
+            }
+          }
+        }
+        let reject = target.dataset.quandoReject
+        if (accept && reject) {
+          reject = reject.split(",")
+          if (reject.includes(elem.dataset.quandoBlockType)) {
+            accept = false
+          }
+        }
       }
     } else {
       accept = false
@@ -378,7 +419,7 @@ self.setup = () => {
             tmp.innerHTML = block.html
             elem = tmp.querySelector(".quando-block")
             if (elem) {
-              elem.dataset.quandoBlockType = title + '_' + block.type
+              elem.dataset.quandoBlockType = title + '-' + block.type
             }
           }
           if (elem) {
