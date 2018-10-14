@@ -318,13 +318,6 @@ function _setupDragula() {
             }
           }
         }
-        let reject = target.dataset.quandoReject
-        if (accept && reject) {
-          reject = reject.split(",")
-          if (reject.includes(elem.dataset.quandoBlockType)) {
-            accept = false
-          }
-        }
       }
     } else {
       accept = false

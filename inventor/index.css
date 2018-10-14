@@ -158,6 +158,13 @@ input, #_hidden_width_element_ {
     padding-right: 4px;
   }
 
+  .quando-info {
+    padding-left: 6px;
+    padding-right: 6px;
+    border-radius: 6px 6px 6px 6px;
+    background-color: rgba(255,255,255, 0.4);
+  }
+
   /* the 200 value colours from https://www.materialui.co/colors
 -- red ef9a9a
    Pink F48FB1
