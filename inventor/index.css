@@ -165,6 +165,9 @@ input, #_hidden_width_element_ {
     background-color: rgba(255,255,255, 0.4);
   }
 
+  .quando-comment {
+    filter: grayscale(75%);
+  }
   /* the 200 value colours from https://www.materialui.co/colors
 -- red ef9a9a
    Pink F48FB1
