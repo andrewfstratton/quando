@@ -437,12 +437,9 @@
                 return false
               }, false)
       self.pinching = false
-      if (self._displays.size != 0) {
-        let val_done = self._displays.values().next()
-        if (val_done.value) {
-          val_done.value() // this runs the very first display :)
-              // can't use [0] because we don't know the id of the first entry
-        }
+      let first = self._displays.keys().next()
+      if (first && !first.done) {
+        self.showDisplay(first.value) // this runs the very first display :)
       }
     }, 0)
   }
