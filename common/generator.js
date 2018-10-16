@@ -131,7 +131,7 @@ fn.displayTitle = (block, display_id) => {
         let value = select.value // this is the id
         let option = select.querySelector("option[value='" + value + "']")
         if (option) {
-            result = option.innerHTML
+            result = self.encodeText(option.innerHTML)
         }
     }
     return result
