@@ -42,26 +42,37 @@ function _leftClickTitle(open_elem) {
   }
 }
 
+function _buildToggleList(elem) {
+  let result = []
+  // append if quandoToggle exists...
+  if (elem.dataset && elem.dataset.quandoToggle) {
+    result.push(elem)
+  }
+  // don't descend into quando-box
+  if (!elem.classList.contains("quando-box")) {
+    for (let child of elem.children) {
+      result = result.concat(_buildToggleList(child))
+    }
+  }
+  return result
+}
+
 self.toggleRelativesOnElement = (elem) => {
   let elem_name = elem.dataset.quandoName
   let block = _getAncestor(elem, "quando-block")
   if (block) {
-    for (let right of json.filterClass("quando-right", block.children)) {
-      // Then loop through all the rows and boxes in the quando-right
-      let children = json.filterClass("quando-row", right.children)
-      children = children.concat(json.filterClass("quando-box", right.children))
-      for (let child of children) {
-        // now find all quando-value with values
-        let toggle = child.dataset && child.dataset.quandoToggle
-        if (toggle) {
-          if (toggle.includes('=')) { // check for name and value
-            let [key, value] = toggle.split('=')
-            if (key == elem_name) { // only toggle when the key is the same...
-              child.style.display = (value == elem.value ? '' : 'none')
-            }
-          } else { // simple test
-            child.style.display = (toggle == elem.value ? '' : 'none')
+    let toggles = _buildToggleList(block) // Note: does NOT descend into contained blocks
+    for (let child of toggles) {
+      // now match all toggles
+      let toggle = child.dataset && child.dataset.quandoToggle
+      if (toggle) {
+        if (toggle.includes('=')) { // check for name and value
+          let [key, value] = toggle.split('=')
+          if (key == elem_name) { // only toggle when the key is the same...
+            child.style.display = (value == elem.value ? '' : 'none')
           }
+        } else { // simple test
+          child.style.display = (toggle == elem.value ? '' : 'none')
         }
       }
     }
