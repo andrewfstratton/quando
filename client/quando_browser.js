@@ -3,9 +3,7 @@
   self.idle_reset_secs = 0
   self.idle_callback_id = 0
   self._displays = new Map()
-  self.DISPLAY_STYLE = 'quando_css_override'
   self.pinching = false
-  self.DEFAULT_STYLE = 'quando_css'
   var _lookup = {} // holds run time arrays
 
   self.socket = io.connect('http://' + window.location.hostname)
@@ -299,15 +297,15 @@
   function _image(style, img) {
     img = '/client/media/' + encodeURI(img)
     self.image_update_video(img)
-    _style(style, '#quando_image', 'background-image', 'url('+img+')')
+    self.style.set(style, '#quando_image', 'background-image', 'url('+img+')')
   }
 
   self.image = function (img) {
-    _image(self.DISPLAY_STYLE, img)
+    _image(self.style.DISPLAY, img)
   }
 
   self.imageDefault = function(img) {
-    _image(self.DEFAULT_STYLE, img)
+    _image(self.style.DEFAULT, img)
   }
 
   self.video = function (vid, loop = false) {
@@ -435,9 +433,9 @@
 
   self.startDisplay = function (leap) {
     setTimeout( () => {
-      self.setDefaultStyle('#cursor', 'background-color', 'rgba(255, 255, 102, 0.7)');
-      self.setDefaultStyle('#cursor', ['width','height'], '4.4vw');
-      self.setDefaultStyle('#cursor', ['margin-left','margin-top'], '-2.2vw');    
+      self.style.set(self.style.DEFAULT, '#cursor', 'background-color', 'rgba(255, 255, 102, 0.7)');
+      self.style.set(self.style.DEFAULT, '#cursor', ['width','height'], '4.4vw');
+      self.style.set(self.style.DEFAULT, '#cursor', ['margin-left','margin-top'], '-2.2vw');    
       document.querySelector('#container').addEventListener('contextmenu', // right click title to go to setup
               function (ev) {
                 ev.preventDefault()
@@ -477,7 +475,7 @@
     self.title()
     self.text()
 //        self.video() removed to make sure video can continue playing between displays
-    self._resetStyle()
+    self.style.reset()
     // Find display and execute...
     self._displays.get(id)()
   }
@@ -493,56 +491,6 @@
     div.innerHTML = title
     elem.appendChild(div)
     div.onclick = fn
-  }
-
-  var _style = function (style_id, id, property, value, separator = null) {
-    var style = document.getElementById(style_id)
-    if (style == null) {
-      var styleElem = document.createElement('style')
-      styleElem.type = 'text/css'
-      styleElem.id = style_id
-      document.head.appendChild(styleElem)
-      style = styleElem
-    }
-    if (separator) {
-      for (var child of style.childNodes) {
-        var data = child.data
-        if (data.startsWith(id + ' ')) {
-          data = data.replace(id + ' ', '')
-          if (data.startsWith('{' + property + ': ')) {
-            data = data.replace('{' + property + ': ', '')
-            var endOf = data.lastIndexOf(';}')
-            if (endOf != -1) {
-              data = data.substring(0, endOf)
-              value = data + separator + value // Note - this appends the new property
-            }
-          }
-        }
-      }
-    }
-    var rule
-    if (property instanceof Array) {
-      for (i in property) {
-        rule = id + '{' + property[i] + ': ' + value + ';}\n'
-        style.appendChild(document.createTextNode(rule))
-      }
-    } else {
-      rule = id + '{' + property + ': ' + value + ';}\n'
-      style.appendChild(document.createTextNode(rule))
-    }
-  }
-
-  self.setDefaultStyle = function (id, property, value, separator = null) {
-    _style(self.DEFAULT_STYLE, id, property, value, separator)
-  }
-
-  self._resetStyle = function () {
-    var elem = document.getElementById(self.DISPLAY_STYLE)
-    if (elem != null) {
-      if (elem.parentNode) {
-        elem.parentNode.removeChild(elem)
-      }
-    }
   }
 
   self.pick = function(val, arr) {
