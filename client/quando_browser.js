@@ -296,10 +296,18 @@
     }
   }
 
-  self.image = function (img) {
+  function _image(style, img) {
     img = '/client/media/' + encodeURI(img)
     self.image_update_video(img)
-    self.setDisplayStyle('#quando_image', 'background-image', 'url('+img+')')
+    _style(style, '#quando_image', 'background-image', 'url('+img+')')
+  }
+
+  self.image = function (img) {
+    _image(self.DISPLAY_STYLE, img)
+  }
+
+  self.imageDefault = function(img) {
+    _image(self.DEFAULT_STYLE, img)
   }
 
   self.video = function (vid, loop = false) {
@@ -522,10 +530,6 @@
       rule = id + '{' + property + ': ' + value + ';}\n'
       style.appendChild(document.createTextNode(rule))
     }
-  }
-
-  self.setDisplayStyle = function (id, property, value, separator = null) {
-    _style(self.DISPLAY_STYLE, id, property, value, separator)
   }
 
   self.setDefaultStyle = function (id, property, value, separator = null) {
