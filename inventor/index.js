@@ -695,7 +695,7 @@ self.handle_test = () => {
     let key = $('#local_save_key').val()
     localStorage.setItem(PREFIX + key, JSON.stringify({
       deploy: _deploy,
-      script: _getScriptAsObject(),
+      script: self.getScriptAsObject(),
     }))
     $('#local_save_modal').modal('hide')
     _saved(key)

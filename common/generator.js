@@ -137,4 +137,28 @@ fn.displayTitle = (block, display_id) => {
     return result
 }
 
+fn.hasAncestorClass = (block, cls, txt, alt = '') => {
+    let check = block
+    let found = false
+    let finished = false
+    while (!found && !finished) {
+        check = check.parentNode
+        if (check) {
+            if (check.dataset) {
+                let type = check.dataset.quandoBlockType
+                if (type) {
+                    found = type == cls
+                }
+            }
+        } else {
+            finished = true
+        }
+    }
+    return found ? txt : alt
+}
+
+fn.inDisplay = (block, txt, alt) => {
+    return fn.hasAncestorClass(block, 'display-when-display', txt, alt)
+}
+
 })()
