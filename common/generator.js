@@ -140,21 +140,17 @@ fn.displayTitle = (block, display_id) => {
 fn.hasAncestorClass = (block, cls, txt, alt = '') => {
     let check = block
     let found = false
-    let finished = false
-    while (!found && !finished) {
+    let result = alt // assume class isn't found
+    while (!(found || (check==document))) {
+        // i.e. continue until the class is found, or document is the ancestor
         check = check.parentNode
-        if (check) {
-            if (check.dataset) {
-                let type = check.dataset.quandoBlockType
-                if (type) {
-                    found = type == cls
-                }
-            }
-        } else {
-            finished = true
+        let type = check && check.dataset && check.dataset.quandoBlockType
+        if (type == cls) { // found it...
+            result = txt
+            found = true
         }
     }
-    return found ? txt : alt
+    return result
 }
 
 fn.inDisplay = (block, txt, alt) => {
