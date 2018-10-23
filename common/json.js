@@ -3,7 +3,7 @@
 (() => {
     let self = this['json'] = {} // for access from the web page, etc.
 
-function _filterClass(cls, children) {
+self.filterClass = (cls, children) => {
   let result = []
   for (let child of children) {
     if (child.classList && child.classList.contains(cls)) {
@@ -15,7 +15,7 @@ function _filterClass(cls, children) {
 
 self.scriptToArray = (script) => {
   let arr = []
-  for (let block of _filterClass("quando-block", script.children)) {
+  for (let block of self.filterClass("quando-block", script.children)) {
     // persist data-quando-id
     let block_persist = {}
     block_persist["id"] = block.dataset.quandoId
@@ -23,15 +23,15 @@ self.scriptToArray = (script) => {
     let values = {}
     let boxes = []
     // Find the quando-right
-    for (let right of _filterClass("quando-right", block.children)) {
+    for (let right of self.filterClass("quando-right", block.children)) {
       // Then loop through all the rows and boxes in the quando-right
-      for (let row of _filterClass("quando-row", right.children)) {
+      for (let row of self.filterClass("quando-row", right.children)) {
         // now find all quando-value with values
         for (let named of row.querySelectorAll("[data-quando-name]")) {
           values[named.dataset.quandoName] = named.value
         }
       }
-      for (let box of _filterClass("quando-box", right.children)) {
+      for (let box of self.filterClass("quando-box", right.children)) {
         // recurse
         let contents = self.scriptToArray(box)
         let obj = {}

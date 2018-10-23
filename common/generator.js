@@ -32,7 +32,7 @@ function nextMatch(str, open, close) {
 
 self.getCodeInBlock = function(block) {
     let code = ''
-    if (block.dataset.quandoJavascript) {
+    if (block.dataset && block.dataset.quandoJavascript) {
         code = block.dataset.quandoJavascript
     }
     let right = block.querySelector(".quando-right")
