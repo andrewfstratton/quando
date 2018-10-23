@@ -62,4 +62,37 @@
     self.colourDefault = (colour) => {
         _colour(self.DEFAULT, colour)
     }
+
+    function _text (display_default, style, colour) {
+        colour = 'rgb('+colour+',0.8)'
+        self.set(display_default, '#quando_text', style, colour)
+    }
+    self.text = (style, colour) => {
+        _text(self.DISPLAY, style, colour)
+    }
+    self.textDefault = (style, colour) => {
+        _text(self.DEFAULT, style, colour)
+    }
+
+    function _title (display_default, style, colour) {
+        colour = 'rgb('+colour+',0.8)'
+        self.set(display_default, '#quando_title', style, colour)
+    }
+    self.title = (style, colour) => {
+        _title(self.DISPLAY, style, colour)
+    }
+    self.titleDefault = (style, colour) => {
+        _title(self.DEFAULT, style, colour)
+    }
+
+    function _label (display_default, style, colour) {
+        self.set(display_default, '.quando_label', style, 'rgb('+colour+',0.6)')
+        self.set(display_default, '.quando_label.focus', style, 'rgb('+colour+',1)')
+    }
+    self.label = (style, colour) => {
+        _label(self.DISPLAY, style, colour)
+    }
+    self.labelDefault = (style, colour) => {
+        _label(self.DEFAULT, style, colour)
+    }
 })()
