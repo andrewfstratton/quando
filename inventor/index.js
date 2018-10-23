@@ -48,19 +48,19 @@ self.toggleRelativesOnElement = (elem) => {
   if (block) {
     for (let right of json.filterClass("quando-right", block.children)) {
       // Then loop through all the rows and boxes in the quando-right
-      for (let row of json.filterClass("quando-row", right.children)) {
+      let children = json.filterClass("quando-row", right.children)
+      children = children.concat(json.filterClass("quando-box", right.children))
+      for (let child of children) {
         // now find all quando-value with values
-        for(let child of row.querySelectorAll('[data-quando-toggle]')) {
-          let toggle = child.dataset.quandoToggle
-          if (toggle) {
-            if (toggle.includes('=')) { // check for name and value
-              let [key, value] = toggle.split('=')
-              if (key == elem_name) { // only toggle when the key is the same...
-                child.style.display = (value == elem.value ? '' : 'none')
-              }
-            } else { // simple test
-              child.style.display = (toggle == elem.value ? '' : 'none')
+        let toggle = child.dataset && child.dataset.quandoToggle
+        if (toggle) {
+          if (toggle.includes('=')) { // check for name and value
+            let [key, value] = toggle.split('=')
+            if (key == elem_name) { // only toggle when the key is the same...
+              child.style.display = (value == elem.value ? '' : 'none')
             }
+          } else { // simple test
+            child.style.display = (toggle == elem.value ? '' : 'none')
           }
         }
       }
