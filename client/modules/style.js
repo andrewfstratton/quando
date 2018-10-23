@@ -16,7 +16,7 @@
         }
     }
 
-    self.set = function (style_id, id, property, value, separator = null) {
+    self.set = (style_id, id, property, value, separator = null) => {
         let style = document.getElementById(style_id)
         if (style == null) {
             let styleElem = document.createElement('style')
@@ -51,5 +51,15 @@
             rule = id + '{' + property + ': ' + value + ';}\n'
             style.appendChild(document.createTextNode(rule))
         }
+    }
+
+    function _colour (style, colour) {
+        self.set(style, '#quando_image', 'background-color', colour)
+    }
+    self.colour = (colour) => {
+        _colour(self.DISPLAY, colour)
+    }
+    self.colourDefault = (colour) => {
+        _colour(self.DEFAULT, colour)
     }
 })()

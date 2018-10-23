@@ -119,6 +119,12 @@ input, #_hidden_width_element_ {
     width: 100%;
   }
 
+  input[type="color"] {
+    border: none;
+    margin: none;
+    width: 22px;
+    padding: 0px;
+  }
   /* #script .quando-box {
     min-height: 24px;
   } */
@@ -142,6 +148,9 @@ input, #_hidden_width_element_ {
   }
   .quando-devices {
     background: #81d4fa;
+  }
+  .quando-style {
+    background: #a0a0d0;
   }
 
   /* .quando-separator {
