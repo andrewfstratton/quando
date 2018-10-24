@@ -95,4 +95,15 @@
     self.labelDefault = (style, colour) => {
         _label(self.DEFAULT, style, colour)
     }
+
+    function _font_size (display_default, style, chars) {
+        let vw = Math.round(100/chars)
+        self.set(display_default, style, 'font-size', vw + 'vw')
+    }
+    self.font_size = (style, chars) => {
+        _font_size(self.DISPLAY, style, chars)
+    }
+    self.font_sizeDefault = (style, chars) => {
+        _font_size(self.DEFAULT, style, chars)
+    }
 })()
