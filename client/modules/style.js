@@ -106,4 +106,14 @@
     self.font_sizeDefault = (style, chars) => {
         _font_size(self.DEFAULT, style, chars)
     }
+
+    function _font_type (display_default, style, font) {
+        self.set(display_default, style, 'font-family', font, ',')
+    }
+    self.font_type = (style, font) => {
+        _font_type(self.DISPLAY, style, font)
+    }
+    self.font_typeDefault = (style, font) => {
+        _font_type(self.DEFAULT, style, font)
+    }
 })()
