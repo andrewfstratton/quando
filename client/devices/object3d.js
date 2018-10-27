@@ -88,11 +88,6 @@
         scene.add(fixed)
     }
 
-    function _degrees_to_radians (degrees) {
-        var radians = Math.PI * degrees / 180
-        return radians
-    }
-
     function _convert_linear(val, mid, range, inverted) {
         if (val === false) { val = 0.5 }
         if (inverted) { val = 1 - val }
@@ -113,24 +108,16 @@
         self.y = _convert_linear(val, mid, range, inverted)
     }
 
-    function _convert_angle(val, mid, range, inverted) {
-        if (val === false) { val = 0.5 }
-        if (inverted) { val = 1 - val }
-        let min = _degrees_to_radians(mid - range)
-        let max = _degrees_to_radians(mid + range)
-        return min + (val * (max-min))
-    }
-
     self.roll = function (val, mid, range, inverted) {
-        self._roll = _convert_angle(val, mid, range, inverted)
+        self._roll = quando.convert_angle(val, mid, range, inverted)
     }
 
     self.pitch = function (val, mid, range, inverted) {
-        self._pitch = _convert_angle(val, mid, range, inverted)
+        self._pitch = quando.convert_angle(val, mid, range, inverted)
     }
 
     self.yaw = function (val, mid, range, inverted) {
-        self._yaw = _convert_angle(val, mid, range, inverted)
+        self._yaw = quando.convert_angle(val, mid, range, inverted)
     }
 
     function _load_obj(loader, path, obj) {

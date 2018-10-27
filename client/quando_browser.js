@@ -294,20 +294,6 @@
     }
   }
 
-  function _image(style, img) {
-    img = '/client/media/' + encodeURI(img)
-    self.image_update_video(img)
-    self.style.set(style, '#quando_image', 'background-image', 'url('+img+')')
-  }
-
-  self.image = function (img) {
-    _image(self.style.DISPLAY, img)
-  }
-
-  self.imageDefault = function(img) {
-    _image(self.style.DEFAULT, img)
-  }
-
   self.video = function (vid, loop = false) {
     vid = '/client/media/' + encodeURI(vid)
     var video = document.getElementById('quando_video')
@@ -564,6 +550,18 @@
     if (typeof fn === 'function') { fn.call(this, val) }
   }
 
+  function _degrees_to_radians (degrees) {
+      var radians = Math.PI * degrees / 180
+      return radians
+  }
+
+  self.convert_angle = (val, mid, range, inverted) => {
+    if (val === false) { val = 0.5 }
+    if (inverted) { val = 1 - val }
+    let min = _degrees_to_radians(mid - range)
+    let max = _degrees_to_radians(mid + range)
+    return min + (val * (max-min))
+  }
 })()
 
 var val = false // force handler to manage when not embedded

@@ -1,0 +1,30 @@
+<div class="quando-block"
+  data-quando-javascript="quando.image.${angle}$(inDisplay,,Default)(val, ${mid_degrees}, ${plus_minus}, ${inverted})">
+  <div class="quando-left quando-media"></div>
+  <div class="quando-right">
+    <div class="quando-row quando-media">
+      ⚡ 📷 Image Rotate
+      <select data-quando-name="angle">
+        <option value='yaw'>⇔ Yaw</option>
+        <option value='pitch'>⇕ Pitch</option>
+        <option value='roll'>⤹⤸ Roll</option>
+      </select>
+      &nbsp;
+      <select data-quando-name='extras' class='quando-toggle'>
+        <option value='hidden'>+</option>
+        <option value='show'>-</option>
+      </select>
+      <span data-quando-toggle='extras=show'>
+        <br />
+        <input data-quando-name="mid_degrees" type="text" value="0" data-quando-encode="normal" />
+        degrees &nbsp; ±
+        <input data-quando-name="plus_minus" type="text" value="180" data-quando-encode="normal" />
+        degrees
+        <select data-quando-name='inverted' class='quando-toggle'>
+          <option value='false'>Normal</option>
+          <option value='true'>Inverted</option>
+        </select>
+      </span>
+    </div>
+  </div>
+</div>
