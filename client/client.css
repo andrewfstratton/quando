@@ -1,5 +1,6 @@
 body {
     font-family: arial, sans-serif;
+    background-color: black;
 }
 #quando_text,
 #quando_title {
@@ -59,7 +60,7 @@ body {
     max-height: 100%;
     margin: auto;
     overflow: hidden; /* was auto */
-    z-index: -100;
+    z-index: -10;
 }
 
 #quando_video {
@@ -86,8 +87,8 @@ body {
     background-size:contain;
     background-position: center;
     background-image: url('transparent.png');
-    background-color: black;
 }
+
 #cursor {
     position: fixed;
     z-index: 910;

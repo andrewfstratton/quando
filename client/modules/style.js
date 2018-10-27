@@ -54,7 +54,7 @@
     }
 
     function _colour (style, colour) {
-        self.set(style, '#quando_image', 'background-color', colour)
+        self.set(style, '#body', 'background-color', colour)
     }
     self.colour = (colour) => {
         _colour(self.DISPLAY, colour)
