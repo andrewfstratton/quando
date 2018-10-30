@@ -1,0 +1,30 @@
+<div class="quando-block" data-quando-javascript="quando.image.${direction}$(inDisplay,,Default)(val,${mid},${range},${inverted})">
+    <div class="quando-left quando-media"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-media">
+            ⚡ 📷 Move Image
+            <select data-quando-name="direction">
+                <option value='left_right'>⇔</option>
+                <option value='up_down'>⇕</option>
+                <option value='in_out'>🔍</option>
+            </select>
+            &nbsp;
+            <select data-quando-name='extras' class='quando-toggle'>
+                <option value='hidden'>+</option>
+                <option value='show'>-</option>
+            </select>
+            <span data-quando-toggle='extras=show'>
+                <br />
+                Middle
+                <input data-quando-name="mid" type="text" value="50" data-quando-encode="normal" />
+                % ±
+                <input data-quando-name="range" type="text" value="50" data-quando-encode="normal" />
+                %
+                <select data-quando-name='inverted' class='quando-toggle'>
+                    <option value='false'>Normal</option>
+                    <option value='true'>Inverted</option>
+                </select>
+            </span>
+        </div>
+    </div>
+</div>
