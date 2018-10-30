@@ -2,7 +2,7 @@
 
 ## To Deploy in Windows - tested with Windows 10 Pro
 
-Prerequisites: Firefox, Node JS, git for windows install (https://gitforwindows.org/)
+Prerequisites: Chrome browser, Node JS, git for windows install (https://gitforwindows.org/)
 
 
 
@@ -13,7 +13,7 @@ Prerequisites: Firefox, Node JS, git for windows install (https://gitforwindows.
     2. npm install serialport --build-from-source
 4. Download blockly from github (most likely) and unzip into C:\quando\blockly (only needed for reference to previous version of blockly)
 
-_Note: Chrome can be used, but will need to be modified to work:_
+_Note: Chrome now needs to be modified to allow video and audio to auto play:_
 
 1. _open chrome://flags/#autoplay-policy_
 2. _change to 'no user gesture is required'_
@@ -30,25 +30,29 @@ _Note: Chrome can be used, but will need to be modified to work:_
     5. Then choose 'Create Document'
 3. Then open 127.0.0.1/editor for the editor, login as test/test
 
-### To add automatic startup
+### To add automatic *Server* startup - for deployed use - not for development
 1. using Windows R, run gpedit.msc
 2. Choose Computer Configuration->Windows Settings->Scripts->Startup
     1. Then 'Add' C:\quando\quando.bat
-    2. Then 'Add' C:\quando\kiosk.bat to autostart firefox *(where you have a client display running on the server as well)*
-#### Client browser setup
+    2. (optional) follow the next instructions for Client browser setup - *(where you have a client display running on the server as well)*
+### Client browser setup
 The following setup can be done (by itself) on any client machine - though kiosk.bat will need to be copied over
 
-1. Open Firefox
-    1. Press Ctrl-Shift-A
-    2. Scroll down and choose 'See more add-ons!'
-    3. Type 'mpt fullscreen' in the search box
-    4. Select it and add it to firefox
-    5. Press Ctrl-Shift-A
-    6. Enable the Add on
-    7. Alt F4 to exit
-2. Run quando\kiosk.bat
-    1. Then choose the interaction you want to automatically load on booting.
-    2. You can right click the screen to go back to the client setup.
+1. Configure Chrome to allow auto play of audio and video
+    * open chrome://flags/#autoplay-policy
+    * change to 'no user gesture is required'
+2. (if necessary) Edit the kiosk.bat file to change the location of Chrome
+3. Then 
+  * Either change the location of the chrome user data folder
+  * Or create a folder c:\quando\chrome_user
+  * Or remove the --user-data-dir xxx from the file
+4. Save and Run quando\kiosk.bat
+5. Then choose the interaction you want to automatically load on booting.
+6. You can right click the screen to go back to the client setup.
+7. using Windows R, run gpedit.msc
+    * Choose Computer Configuration->Windows Settings->Scripts->Startup
+    * Then 'Add' C:\quando\kiosk.bat to autostart Chrome
+
 If everything is fine - then try restarting to see if everything boots correctly - and test remotely to be sure that you can edit remotely.
 
 ### Optional - Leap Motion
