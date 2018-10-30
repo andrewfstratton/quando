@@ -211,15 +211,18 @@ function ubit_error (err) {
 }
 function ubit_success (serial) {
   reported = false
-  let orientation = false
   serial.on('data', (data) => {
     try {
-      let ubit = JSON.parse(data)
+      let ubit = JSON.parse(data.trim())
       if (ubit && io) {
         if (ubit.button_a) {
           io.emit('ubit', {button: 'a'})
         }
         if (ubit.button_b) {
+          io.emit('ubit', {button: 'b'})
+        }
+        if (ubit.button_ab) {
+          io.emit('ubit', {button: 'a'})
           io.emit('ubit', {button: 'b'})
         }
         if (ubit.ir) {
