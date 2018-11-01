@@ -2,9 +2,15 @@
 let _pitch = -999
 let _roll = -999
 let _heading = -999
-type SendCallback = (ch: string, id: string, val: string) => void
+// type SendCallback = (ch: string, id: string, val: string) => void
 
-function pitch(send: SendCallback) {
+function send(ch: string, id: string, val: string) {
+    // led.stopAnimation()
+    // basic.showString(ch)
+    serial.writeLine(`{"${id}":"${val}"}`)
+}
+
+function pitch() {
     let pitch = input.rotation(Rotation.Pitch)
     if (pitch != _pitch) {
         send("+", "pitch", "" + pitch)
@@ -12,7 +18,7 @@ function pitch(send: SendCallback) {
     }
 }
 
-function roll(send: SendCallback) {
+function roll() {
     let roll = input.rotation(Rotation.Roll)
     if (roll != _roll) {
         send("-", "roll", "" + roll)
@@ -20,7 +26,7 @@ function roll(send: SendCallback) {
     }
 }
 
-function heading(send: SendCallback) {
+function heading() {
     let heading = input.compassHeading()
     if (heading != _heading) {
         send("*", "heading", "" + heading)
@@ -28,15 +34,10 @@ function heading(send: SendCallback) {
     }
 }
 
-let send: SendCallback = (ch: string, id: string, val: string) => {
-    basic.showString(ch)
-    serial.writeLine(`{"${id}":"${val}"}`)
-}
-
 basic.forever(function () {
-    led.stopAnimation()
-    pitch(send)
-    roll(send)
+    pitch()
+    roll()
+    heading()
     if (input.buttonIsPressed(Button.AB)) {
         send("C", "button_ab", "true")
     } else if (input.buttonIsPressed(Button.A)) {
