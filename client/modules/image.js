@@ -21,7 +21,21 @@
 
     function _rotate(style, axis, val, mid, range, inverted) {
         let rad = quando.convert_angle(val, mid, range, inverted)
-        quando.style.set(style, '#quando_image', 'transform', `rotate${axis}(${rad}rad)`);
+        let rotAxis = `rotate${axis}`
+        let transform = quando.style.get(style, '#quando_image', 'transform')
+        if (transform && transform.includes(rotAxis)) { // need to replace value
+            let start = 1 + rotAxis.length + transform.indexOf(rotAxis) // gets past the rotate#(
+            let end = transform.indexOf('rad)', start)
+            transform = transform.substring(0, start) + rad + transform.substring(end)
+        } else {
+            if (transform) { // need to append to existing
+                transform += " "
+            } else { // need to just set - no existing transform
+                transform = ''
+            }
+            transform += `${rotAxis}(${rad}rad)`
+        }
+        quando.style.set(style, '#quando_image', 'transform', transform)
     }
 
     self.roll = (val, mid, range, inverted) => {

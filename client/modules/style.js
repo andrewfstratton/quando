@@ -16,7 +16,27 @@
         }
     }
 
-    self.set = (style_id, id, property, value, separator = null) => {
+    self.get = (style_id, id, property) => {
+        let style = document.getElementById(style_id)
+        let result = false
+        for (let rule of style.sheet.cssRules) {
+            let css = rule.cssText
+            if (css.startsWith(id + ' { ')) {
+                css = css.replace(id + ' { ', '') // strip the id prefix
+                if (css.startsWith(property + ': ')) {
+                    css = css.replace(property + ': ', '') // strip the property prefix
+                    let endOf = css.lastIndexOf('; }')
+                    if (endOf != -1) {
+                        result = css.substring(0, endOf)
+                        break
+                    }
+                }
+            }
+        }
+        return result
+    }
+
+    self.set = (style_id, id, property, value) => {
         let style = document.getElementById(style_id)
         if (style == null) {
             let styleElem = document.createElement('style')
@@ -24,32 +44,21 @@
             styleElem.id = style_id
             document.head.appendChild(styleElem)
             style = styleElem
-        }
-        if (separator) {
-            for (let child of style.childNodes) {
-                let data = child.data
-                if (data.startsWith(id + ' ')) {
-                    data = data.replace(id + ' ', '')
-                    if (data.startsWith('{' + property + ': ')) {
-                        data = data.replace('{' + property + ': ', '')
-                        let endOf = data.lastIndexOf(';}')
-                        if (endOf != -1) {
-                            data = data.substring(0, endOf)
-                            value = data + separator + value // Note - this appends the new property
-                        }
-                    }
+        } // now replace...
+        let cssRules = style.sheet.cssRules
+        let replaced = false
+        for (let rule = 0; rule < cssRules.length; rule++) {
+            if (cssRules[rule].cssText.startsWith(`${id} { ${property}: `)) {
+                if (replaced) {
+                    style.sheet.deleteRule(rule) // delete all other matching rules - should never happen
+                } else {
+                    cssRules[rule].style[property] = value
+                    replaced = true
                 }
             }
         }
-        let rule = '' // overriden anyway
-        if (property instanceof Array) {
-            for (i in property) {
-                rule = id + '{' + property[i] + ': ' + value + ';}\n'
-                style.appendChild(document.createTextNode(rule))
-            }
-        } else {
-            rule = id + '{' + property + ': ' + value + ';}\n'
-            style.appendChild(document.createTextNode(rule))
+        if (!replaced) {
+            style.sheet.insertRule(`${id} { ${property}: ${value}; }`, 0)
         }
     }
 
