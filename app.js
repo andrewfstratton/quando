@@ -234,11 +234,10 @@ function ubit_success (serial) {
         if (ubit.heading) {
           io.emit('ubit', {'heading': ubit.heading})
         }
-        if (ubit.roll) {
-          io.emit('ubit', {'roll': ubit.roll})
-        }
-        if (ubit.pitch) {
-          io.emit('ubit', {'pitch': ubit.pitch})
+        if (ubit.roll_pitch) {
+          let roll = ubit.roll_pitch[0] *180/Math.PI
+          let pitch = ubit.roll_pitch[1] *180/Math.PI
+          io.emit('ubit', {'roll': roll, 'pitch': pitch})
         }
       }
     } catch (err) {
