@@ -91,22 +91,14 @@
         quando.dispatch_event('ubitB')
       }
     } else if (data.heading) {
-      quando.dispatch_event('ubitHeading', {'detail': data.heading})
       quando.idle_reset()
+      quando.dispatch_event('ubitHeading', {'detail': data.heading})
     } else if (data.roll || data.pitch) {
       if (data.roll) {
-        var roll = data.roll * 180 / Math.PI
-        if (roll < 0) {
-          roll += 360
-        }
-        quando.dispatch_event('ubitRoll', {'detail': roll})
+        quando.dispatch_event('ubitRoll', {'detail': data.roll})
       }
       if (data.pitch) {
-        var pitch = data.pitch * 180 / Math.PI
-        if (pitch < 0) {
-          pitch += 360
-        }
-        quando.dispatch_event('ubitPitch', {'detail': pitch})
+        quando.dispatch_event('ubitPitch', {'detail': data.pitch})
       }
       quando.idle_reset()
     }
