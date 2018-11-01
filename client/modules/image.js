@@ -89,8 +89,17 @@
         _left_right(quando.style.DEFAULT, val, mid, range, inverted)
     }
 
+    function _up_down(style, val, mid, range, inverted) {
+        let y = 100 - _convert_percent_linear(val, mid, range, inverted)
+        quando.style.set(style, '#quando_image', 'background-position-y', y + '%');
+    }
+
     self.up_down = (val, mid, range, inverted) => {
-        // self.y = _convert_linear(val, mid, range, inverted)
+        _up_down(quando.style.DISPLAY, val, mid, range, inverted)
+    }
+
+    self.up_downDefault = (val, mid, range, inverted) => {
+        _up_down(quando.style.DEFAULT, val, mid, range, inverted)
     }
 
 })()
