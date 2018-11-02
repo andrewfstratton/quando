@@ -102,4 +102,16 @@
         _up_down(quando.style.DEFAULT, val, mid, range, inverted)
     }
 
+    function _zoom_to(style, many) {
+        if (many < 0.01) { many = 0.01 }
+        quando.style.set(style, '#quando_image', 'transform', `scale(${many})`)
+    }
+
+    self.zoom_to = (many) => {
+        _zoom_to(quando.style.DISPLAY, many)
+    }
+
+    self.zoom_toDefault = (many) => {
+        _zoom_to(quando.style.DEFAULT, many)
+    }
 })()
