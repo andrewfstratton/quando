@@ -37,13 +37,6 @@
     })
   }
 
-  self.send_socket = function(message, val) {
-    fetch('/socket/' + message, { method: 'POST', 
-      body: JSON.stringify({'val':val}), 
-      headers: {"Content-Type": "application/json"}
-    })
-  }
-
   self.idle_reset = function () {
     if (self.idle_reset_secs > 0) {
       clearTimeout(self.idle_callback_id)
