@@ -62,13 +62,7 @@
         _rotate(quando.style.DEFAULT, 'Y', val, mid, range, inverted)
     }
 
-    self.in_out = (val, mid, range, inverted) => {
-        // let z = quando.convert_linear(val, mid, range, inverted)
-        // quando.style.set(style, '#quando_image', 'transform', `rotate${axis}(${rad}rad)`);
-        // _rotate(quando.style.DEFAULT, 'Y', val, mid, range, inverted)
-    }
-
-    function _convert_percent_linear(val, mid, range, inverted) {
+    function _convert_linear(val, mid, range, inverted) {
         if (val === false) { val = 0.5 }
         if (inverted) { val = 1 - val }
         let min = (mid - range)
@@ -77,7 +71,7 @@
     }
 
     function _left_right(style, val, mid, range, inverted) {
-        let x = _convert_percent_linear(val, mid, range, inverted)
+        let x = _convert_linear(val, mid, range, inverted)
         quando.style.set(style, '#quando_image', 'background-position-x', x + '%');
     }
 
@@ -90,7 +84,7 @@
     }
 
     function _up_down(style, val, mid, range, inverted) {
-        let y = 100 - _convert_percent_linear(val, mid, range, inverted)
+        let y = 100 - _convert_linear(val, mid, range, inverted)
         quando.style.set(style, '#quando_image', 'background-position-y', y + '%');
     }
 
@@ -102,16 +96,21 @@
         _up_down(quando.style.DEFAULT, val, mid, range, inverted)
     }
 
-    function _zoom_to(style, many) {
-        if (many < 0.01) { many = 0.01 }
-        quando.style.set(style, '#quando_image', 'transform', `scale(${many})`)
+    function _zoom(style, val, min, max, inverted) {
+        if (!val) {
+            val = 0; // this forces the minimum value - not the middle
+        }
+        let mid = (min + max) /2
+        let range = (max - min) / 2
+        let scale = _convert_linear(val, mid, range, inverted)
+        quando.style.set(style, '#quando_image', 'transform', `scale(${scale})`)
     }
 
-    self.zoom_to = (many) => {
-        _zoom_to(quando.style.DISPLAY, many)
+    self.zoom = (val, min, max, inverted) => {
+        _zoom(quando.style.DISPLAY, val, min, max, inverted)
     }
 
-    self.zoom_toDefault = (many) => {
-        _zoom_to(quando.style.DEFAULT, many)
+    self.zoomDefault = (val, min, max, inverted) => {
+        _zoom(quando.style.DEFAULT, val, min, max, inverted)
     }
 })()

@@ -1,11 +1,24 @@
-<div class="quando-block" data-quando-javascript="quando.image.zoom_to$(inDisplay,,Default)(${many})">
+<div class="quando-block" data-quando-javascript="quando.image.zoomDefault(val,${min},${max},${inverted})">
   <div class="quando-left quando-media"></div>
   <div class="quando-right">
     <div class="quando-row quando-media">
-      Zoom 📷 Image by
-      <input data-quando-name="many" type="number" min="0" max="99" maxLength="2" value="1" style="width: 3em"/>
-      times
+      ⚡ Zoom 📷 Image &nbsp;
+      <select data-quando-name='extras' class='quando-toggle'>
+        <option value='hidden'>+</option>
+        <option value='show'>-</option>
       </select>
+      <span data-quando-toggle='extras=show'>
+        <br />
+        Min
+        <input data-quando-name="min" type="text" value="1" data-quando-encode="normal" />
+        to
+        <input data-quando-name="max" type="text" value="5" data-quando-encode="normal" />
+        times
+        <select data-quando-name='inverted' class='quando-toggle'>
+          <option value='false'>Normal</option>
+          <option value='true'>Inverted</option>
+        </select>
+      </span>
     </div>
   </div>
 </div>
