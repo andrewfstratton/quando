@@ -97,7 +97,7 @@ self.getCodeInBlock = function(block) {
             }
         }
     }
-    return code
+    return code.replace(/(\r\n|\n|\r)+/gm, '\n')
 }
     
 self.getCode = function(block) {
