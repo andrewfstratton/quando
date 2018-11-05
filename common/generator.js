@@ -53,8 +53,20 @@ self.getCodeInBlock = function(block) {
         } else if (row_box.classList.contains("quando-box")) {
             let box_code = ''
             if (row_box.dataset.quandoName) {
+                let separator = "\n"
+                let prefix = ""
+                let postfix = ""
+                if (row_box.dataset.quandoFnArray) {
+                    prefix = "() => {\n"
+                    separator = ",\n"
+                    postfix = "}"
+                }
+                let infix = ''
                 for (let block of row_box.children) {
-                    box_code += '\n' + self.getCode(block)
+                    box_code += infix + prefix + self.getCode(block) + postfix
+                    if (infix == '') {
+                        infix = separator
+                    }
                 }
                 matches[row_box.dataset.quandoName] = box_code
             }
