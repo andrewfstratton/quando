@@ -50,7 +50,7 @@ body {
 }
 
 #quando_image {
-    object-fit: contain;
+    /* object-fit: contain; */
     position: fixed;
     background-position-x: 50%;
     background-position-y: 50%;
@@ -91,7 +91,7 @@ body {
 }
 #quando_image {
     background-repeat:no-repeat;
-    background-size:contain;
+    /* background-size:contain; */
     background-position: center;
 }
 
