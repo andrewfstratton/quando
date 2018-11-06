@@ -2,6 +2,11 @@
   font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
 }
 
+#show_modal_code {
+  width:100%;
+  height:60%;
+}
+
 #_hidden_width_element_ { 
   /* Used to calculate the width of text typed in */
   position: absolute;
