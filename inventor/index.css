@@ -132,19 +132,19 @@ input, #_hidden_width_element_ {
  /* Colours for block backgrounds and title */
 
   .quando-display {
-    background: #FFCC80;
+    background: #EEBB70;
   }
   .quando-media {
     background: #C5E1A5;
   }
   .quando-time {
-    background: #ef9a9a;
+    background: #ddd47c;
   }
   .quando-inventor {
-    background: #b39ddb;
+    background: #c3adeb;
   }
   .quando-advanced {
-    background: #eee48c;
+    background: #ef9a9a;
   }
   .quando-devices {
     background: #81d4fa;
