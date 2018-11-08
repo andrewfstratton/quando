@@ -2,6 +2,7 @@ body {
     font-family: arial, sans-serif;
     background-color: black;
 }
+
 #quando_text,
 #quando_title {
     position: absolute;
@@ -48,8 +49,11 @@ body {
     vertical-align: top;
     text-align: left;
 }
+#quando_image_parent, #container {
+    overflow: hidden;
+}
 
-#quando_image {
+#quando_image, #quando_image_display {
     /* object-fit: contain; */
     position: fixed;
     top: 0;
@@ -57,11 +61,8 @@ body {
     left: 0;
     right: 0;
     margin: auto;
-    overflow: hidden; /* was auto */
+    overflow: hidden;
     z-index: -10;
-    background-repeat:no-repeat;
-    background-size:contain;
-    background-position: center;
 }
 
 #quando_video {

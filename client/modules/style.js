@@ -14,6 +14,7 @@
                 elem.parentNode.removeChild(elem)
             }
         }
+        quando.image.reset()
     }
 
     self.get = (style_id, id, property) => {

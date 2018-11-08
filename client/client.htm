@@ -24,11 +24,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
-<body id="body" onload="quando.startDisplay(Leap);">
+<body id="body" onload="quando.startDisplay(Leap, quando.image.startup);">
     <div id="container">
         <div id='quando_title'></div>
         <div id="quando_image_parent">
-            <div id="quando_image"></div>
+            <img id="quando_image"/>
+            <img id="quando_image_display"/>
         </div>
         <video id="quando_video"></video>
         <audio id="quando_audio"></audio>

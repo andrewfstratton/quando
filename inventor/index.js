@@ -677,6 +677,7 @@ self.testCreator = (code) => {
 self.handle_test = () => {
     let code = self.generateCode(document.getElementById('script'))
     if (code) {
+      code = "let exec = () => {\n" + code + "}"
       let inventor_test = document.getElementById('inventor_test')
       if (inventor_test && code.startsWith('<div class="quando-block"')) {
         let menu = document.getElementById('menu')
@@ -1051,6 +1052,7 @@ self.handle_test = () => {
   self.handle_deploy = () => {
     let code = self.generateCode(document.getElementById('script'))
     if (code) {
+      code = "let exec = () => {\n" + code + "}"
       let filename = 'guest'
       if (_userid) {
         filename = prompt('Please enter the deployment filename \n(without a suffix)', _deploy)

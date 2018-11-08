@@ -410,8 +410,9 @@
     ev.target.click()
   }
 
-  self.startDisplay = function (leap) {
+  self.startDisplay = function (leap, image_start) {
     setTimeout( () => {
+      image_start()
       self.style.set(self.style.DEFAULT, '#cursor', 'background-color', 'rgba(255, 255, 102, 0.7)');
       self.style.set(self.style.DEFAULT, '#cursor', 'width', '4.4vw');
       self.style.set(self.style.DEFAULT, '#cursor', 'height', '4.4vw');
@@ -424,6 +425,7 @@
                 return false
               }, false)
       self.pinching = false
+      exec() // this is the function added by the generator
       let first = self._displays.keys().next()
       if (first && !first.done) {
         self.showDisplay(first.value) // this runs the very first display :)
