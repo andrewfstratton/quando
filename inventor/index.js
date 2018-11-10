@@ -677,7 +677,6 @@ self.testCreator = (code) => {
 self.handle_test = () => {
     let code = self.generateCode(document.getElementById('script'))
     if (code) {
-      code = "let exec = () => {\n" + code + "}"
       let inventor_test = document.getElementById('inventor_test')
       if (inventor_test && code.startsWith('<div class="quando-block"')) {
         let menu = document.getElementById('menu')
@@ -689,6 +688,7 @@ self.handle_test = () => {
         self.setElementHandlers(tmp.firstChild)
         document.getElementById('menu').appendChild(tmp.firstChild)
       } else {
+        code = "let exec = () => {\n" + code + "}"
         self.testCreator(code)
       }
     } else {
