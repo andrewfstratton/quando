@@ -1,6 +1,7 @@
 body {
     font-family: arial, sans-serif;
     background-color: black;
+    margin:0;
 }
 
 #quando_text,
@@ -51,6 +52,12 @@ body {
 }
 #quando_image_parent, #container {
     overflow: hidden;
+}
+
+#quando_image, #quando_image_display {
+    height:100%;
+    width:100%;
+    object-fit: contain;
 }
 
 #quando_image, #quando_image_display {

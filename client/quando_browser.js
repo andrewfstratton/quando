@@ -410,15 +410,14 @@
     ev.target.click()
   }
 
-  self.startDisplay = function (leap, image_start) {
+  self.startDisplay = function () {
     setTimeout( () => {
-      image_start()
       self.style.set(self.style.DEFAULT, '#cursor', 'background-color', 'rgba(255, 255, 102, 0.7)');
       self.style.set(self.style.DEFAULT, '#cursor', 'width', '4.4vw');
       self.style.set(self.style.DEFAULT, '#cursor', 'height', '4.4vw');
       self.style.set(self.style.DEFAULT, '#cursor', 'margin-left', '-2.2vw');    
       self.style.set(self.style.DEFAULT, '#cursor', 'margin-top', '-2.2vw');    
-      document.querySelector('#container').addEventListener('contextmenu', // right click title to go to setup
+      document.querySelector('body').addEventListener('contextmenu', // right click title to go to setup
               function (ev) {
                 ev.preventDefault()
                 window.location.href = '../../client/setup'

@@ -5,38 +5,26 @@
     }
 
     let self = quando.image = {}
+    self.current = false
     
-    function _redraw() {
-        let width_ratio = window.innerWidth / self.current.width
-        let height_ratio = window.innerHeight / self.current.height
-        let scale = Math.min(width_ratio, height_ratio)
-        self.current.style.transform = `scale(${scale})`
-    }
-
-    self.startup = () => {
-        self.default = document.getElementById('quando_image')
-        self.display = document.getElementById('quando_image_display')
-        self.current = self.default
-
-        self.default.onload = _redraw
-        self.display.onload = _redraw
-        document.body.onresize = _redraw
-    }
 
     function _get_image(display) {
+        let def = document.getElementById('quando_image')
+        let dis = document.getElementById('quando_image_display')
+        if (!self.current) {
+            self.current = display?def:dis
+        }
         if (display) {
-            if (self.current == self.default) {
-                self.current = self.display
-                self.display.style.visibility = 'visible'
-                self.default.style.visibility = 'hidden'
-                _redraw()
+            if (self.current == def) {
+                self.current = dis
+                dis.style.visibility = 'visible'
+                def.style.visibility = 'hidden'
             }
         } else {
-            if (self.current == self.display) {
-                self.current = self.default
-                self.default.style.visibility = 'visible'
-                self.display.style.visibility = 'hidden'
-                _redraw()
+            if (self.current == dis) {
+                self.current = def
+                def.style.visibility = 'visible'
+                dis.style.visibility = 'hidden'
             }
         }
         return self.current
@@ -117,7 +105,6 @@
         let x = _convert_linear(val, mid, range, inverted)
         let elem = document.getElementById('quando_image' + (display?'_display':''))
         elem.style.left = (x-50)+'%'
-        // quando.style.set(style, '#quando_image', 'background-position-x', x + '%');
     }
 
     self.left_right = (val, mid, range, inverted) => {
@@ -142,21 +129,22 @@
         _up_down(false, val, mid, range, inverted)
     }
 
-    function _zoom(style, val, min, max, inverted) {
+    function _zoom(display, val, min, max, inverted) {
         if (!val) {
             val = 0; // this forces the minimum value - not the middle
         }
         let mid = (min + max) /2
         let range = (max - min) / 2
         let scale = _convert_linear(val, mid, range, inverted)
-        quando.style.set(style, '#quando_image_parent', 'transform', `scale(${scale})`)
+        let elem = document.getElementById('quando_image' + (display?'_display':''))
+        elem.style.transform = `scale(${scale})`
     }
 
     self.zoom = (val, min, max, inverted) => {
-        _zoom(quando.style.DISPLAY, val, min, max, inverted)
+        _zoom(true, val, min, max, inverted)
     }
 
     self.zoomDefault = (val, min, max, inverted) => {
-        _zoom(quando.style.DEFAULT, val, min, max, inverted)
+        _zoom(false, val, min, max, inverted)
     }
 })()
