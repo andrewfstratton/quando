@@ -25,7 +25,7 @@
 
     function _clear_canvas() {
         if (canvas) {
-            document.getElementById('quando_image').removeChild(canvas)
+            document.getElementById('quando_image_parent').removeChild(canvas)
             canvas = false
         }
     }
@@ -56,7 +56,7 @@
             renderer.setSize(self.width, self.height) // start the renderer
             // attach the render-supplied DOM element to container
             canvas = renderer.domElement
-            document.getElementById('quando_image').append(canvas)
+            document.getElementById('quando_image_parent').append(canvas)
             var pointLight = new THREE.PointLight( 0xFFFFFF )
             pointLight.position.set(10, 50, 230)
             scene.add(pointLight)
