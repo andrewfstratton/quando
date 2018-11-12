@@ -628,6 +628,11 @@ self.generateCode = function(elem) {
     for (let child of children) {
       result += generator.getCode(child)
     }
+    let prefix = generator.prefix()
+    if (prefix) {
+      result = prefix + result
+    }
+    result = result.replace(/(\r\n|\n|\r)+/gm, '\n')
     return result
   }
 

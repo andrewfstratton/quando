@@ -3,6 +3,7 @@
 (() => {
   let self = this['generator'] = {} // for access from the web page, etc.
   let fn = self.fn = {} // for accessing the invocable generator functions
+  let prefix = ''
 
 self.encodeText = (str) => {
   return str.replace(/&/g, '&amp;')
@@ -12,15 +13,27 @@ self.encodeText = (str) => {
           .replace(/'/g, '&apos;')
 }
 
+self.prefix = () => {
+    let result = prefix
+    prefix = ''
+    if (result == '') {
+        result = false
+    } else {
+        result += '\n'
+    }
+    return result
+}
+
 function nextMatch(str, open, close) {
+    // returns the next found parsed..open..matched..close..remaining
+    // - matched will be false when no open..close found
     let [parsed, matched, remaining] = [str, false, false] // fall back when not found
     let index_open = str.indexOf(open)
     if (index_open != -1) { // found
         let left_match = index_open + open.length
-        let index_close = str.substring(left_match).indexOf(close)
+        let index_close = str.indexOf(close, left_match)
         if (index_close != -1) { // found
-            // so we have  match...
-            index_close += left_match
+            // so we have a match...
             let right_match = index_close + close.length
             parsed = str.substring(0, index_open)
             matched = str.substring(left_match, index_close)
@@ -47,7 +60,7 @@ self.getCodeInBlock = function(block) {
                     if ((typeof value) === 'string' && (child.dataset.quandoEncode != "raw")) {
                         value = self.encodeText(child.value)
                     }
-                    matches[child.dataset.quandoName] = value
+                    matches[child.dataset.quandoName] = value // stores a lookup for the value
                 }
             }
         } else if (row_box.classList.contains("quando-box")) {
@@ -73,7 +86,6 @@ self.getCodeInBlock = function(block) {
         }
     }
     matches['data-quando-id'] = block.dataset.quandoId
-    matches['$'] = '$'
     let remaining = code // i.e. what to parse
     code = '' // what has been parsed...
     let parsed = ''
@@ -91,15 +103,14 @@ self.getCodeInBlock = function(block) {
             }
         }
     }
-    remaining = code // second pass for $() - parameters are already substituted
+    remaining = code // second pass for $(...)$ - parameters are already substituted
     code =''
     while (remaining) {
-        [parsed, matched, remaining] = nextMatch(remaining, '$(', ')')
+        [parsed, matched, remaining] = nextMatch(remaining, '$(', ')$')
         code += parsed
         if (matched) {
             // split into comma separated
-            let params = matched.split(',')
-            // parameters need ${} replacement
+            let params = matched.split('$,')
             let func = fn[params[0]]
             if (func) {
                 params[0] = block
@@ -109,7 +120,7 @@ self.getCodeInBlock = function(block) {
             }
         }
     }
-    return code.replace(/(\r\n|\n|\r)+/gm, '\n')
+    return code
 }
     
 self.getCode = function(block) {
@@ -173,5 +184,12 @@ fn.rgb = (block, colour, alpha) => {
     // Modifed from https://stackoverflow.com/questions/36697749/html-get-color-in-rgb for conversion function
     // Converts #rrggbb to 'rrr, ggg, bbb'`
     return colour.match(/[A-Za-z0-9]{2}/g).map((v) => { return parseInt(v, 16) }).join(",")
+}
+
+fn.pre = (block, ...inserts) => {
+    for (let insert of inserts) {
+        prefix += insert + '\n'
+    }
+    return ''
 }
 })()
