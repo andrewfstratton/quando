@@ -40,4 +40,17 @@
       if (typeof fn === 'function') { fn() }
     }
   }
+
+  self.val = (id, val) => {
+    let arr = _list[id]
+    if (val === false) {
+      val = 0.5
+    }
+    let i = Math.floor(val * arr.length)
+    if (i == arr.length) {
+      i--
+    }
+    arr[i]()
+  }
+
 })()
