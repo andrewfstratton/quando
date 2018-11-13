@@ -26,4 +26,18 @@
   self.set = (id, arr) => {
     _list[id] = arr
   }
+
+  self.one = (id) => {
+    let arr = _list[id]
+    if (arr.length > 0) {
+      if (!arr.hasOwnProperty('index')) {
+        arr.index = 0
+      }
+      let fn = arr[arr.index]
+      if (++arr.index >= arr.length) {
+        arr.index = 0
+      }
+      if (typeof fn === 'function') { fn() }
+    }
+  }
 })()
