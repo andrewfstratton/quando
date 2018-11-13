@@ -1,4 +1,5 @@
 const serialport = require('serialport')
+let serial = false
 
 // list serial ports:
 const find_microbit = (error, success) => {
@@ -23,14 +24,26 @@ const find_microbit = (error, success) => {
 
 exports.get_serial = (error, success) => {
   find_microbit(error, (comName) => {
-    let serial = new serialport(comName, {baudRate: 115200, parser: serialport.parsers.readline('\n')}, (err) => {
+      serial = new serialport(comName, {baudRate: 115200, parser: serialport.parsers.readline('\n')}, (err) => {
       if (err) {
+        serial = false
         error(err)
       } else {
         success(serial)
       }
     })
   })
+}
+
+exports.send = (key, val) => {
+  if (serial) {
+    serial.write(key+'='+val+'\n', (err) => {
+      if (err) {
+        console.log('Error on write: ', err.message)
+      }
+      // console.log(`wrote ${key}=${val}`)
+    })
+  }
 }
 /* e.g.
 get_serial((err)=>{console.log("Error:" + err)},

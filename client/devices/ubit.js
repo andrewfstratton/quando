@@ -103,4 +103,19 @@
       quando.idle_reset()
     }
   })
+
+  function _ubit_fetch(key, val) {
+    fetch('/ubit/'+key, { method: 'POST', 
+      body: JSON.stringify({'val':val}), 
+      headers: {"Content-Type": "application/json"}
+    })
+  }
+
+  self.display = (str) => {
+    _ubit_fetch('display', str)
+  }
+
+  self.icon = (index) => {
+    _ubit_fetch('icon', index)
+  }
 })()

@@ -424,3 +424,15 @@ app.get('/blocks', (req, res) => {
     }
   })
 })
+
+app.post('/ubit/display', (req, res) => {
+  let val = req.body.val
+  ubit.send('display', val)
+  res.json({})
+})
+
+app.post('/ubit/icon', (req, res) => {
+  let val = req.body.val
+  ubit.send('icon', val)
+  res.json({})
+})
