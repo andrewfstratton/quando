@@ -37,11 +37,11 @@ exports.get_serial = (error, success) => {
 
 exports.send = (key, val) => {
   if (serial) {
-    serial.write(key+'='+val+'\n', (err) => {
+    let msg = `${key}=${val}\n`
+    serial.write(msg, (err) => {
       if (err) {
         console.log('Error on write: ', err.message)
       }
-      // console.log(`wrote ${key}=${val}`)
     })
   }
 }
