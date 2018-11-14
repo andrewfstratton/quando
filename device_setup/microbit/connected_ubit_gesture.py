@@ -69,9 +69,9 @@ def gesture():
 
 #Main program
 print('{"started":true}')
-#if button_a.is_pressed() and not button_b.is_pressed(): # only a pressed
-#    config()
-#else: 
+image = Image("08008:80800:08808:00800:88008")
+display.show(image)
+sleep(750)
 gesture()
 
 

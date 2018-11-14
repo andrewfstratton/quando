@@ -2,18 +2,17 @@
 
 ## To Deploy in Windows - tested with Windows 10 Pro
 
-Prerequisites: Chrome browser, Node JS, git for windows install (https://gitforwindows.org/)
+Prerequisites: Chrome browser, Node JS, (optional) git for windows install (https://gitforwindows.org/)
 
 
 
-1. Clone the repository in C: using git clone https://github.com/andrewfstratton/quando.git
+1. Download the zip and extract into C;\quando, or Clone the repository in C: using git clone https://github.com/andrewfstratton/quando.git
 2. In the command line, in C:\quando, npm update - this will likely take a while
 3. you may need to rebuild the serial-port (this is only necessary if you wish to use a micro:bit), if so, then:
     1. (may need) npm install --global --production windows-build-tools
     2. npm install serialport --build-from-source
-4. Download blockly from github (most likely) and unzip into C:\quando\blockly (only needed for reference to previous version of blockly)
 
-_Note: Chrome now needs to be modified to allow video and audio to auto play:_
+_Note: Chrome needs to be modified to allow video and audio to auto play:_
 
 1. _open chrome://flags/#autoplay-policy_
 2. _change to 'no user gesture is required'_
@@ -28,7 +27,7 @@ _Note: Chrome now needs to be modified to allow video and audio to auto play:_
     4. Ctrl-A -> Delete, then paste the next line in:
         1. {"_id": "test", "password": "test"}
     5. Then choose 'Create Document'
-3. Then open 127.0.0.1/editor for the editor, login as test/test
+3. Then open 127.0.0.1/inventor, login as test/test
 
 ### To add automatic *Server* startup - for deployed use - not for development
 1. using Windows R, run gpedit.msc

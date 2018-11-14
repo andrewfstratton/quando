@@ -43,4 +43,7 @@ def roll_pitch_heading():
     return # never does
 #Main program
 print('{"started":true}')
+image = Image("00008:00080:00800:08000:88888")
+display.show(image)
+sleep(750)
 roll_pitch_heading()

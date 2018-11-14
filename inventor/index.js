@@ -453,6 +453,10 @@ self.setup = () => {
       for (let item of document.getElementsByClassName("quando-block")) {
         self.setElementHandlers(item)
       }
+      // document.getElementById('menu').querySelectorAll('.quando-row, .quando-left').forEach(
+      //   (elem) => elem.addEventListener('click',
+      //   (ev)=>{console.log(".")})
+      // )
 
       let first_title = document.getElementsByClassName("quando-title")[0]
       if (first_title) {
