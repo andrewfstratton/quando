@@ -60,7 +60,7 @@ body {
     object-fit: contain;
 }
 
-#quando_image, #quando_image_display {
+#quando_image, #quando_image_display, #quando_3d {
     /* object-fit: contain; */
     position: fixed;
     top: 0;
@@ -72,6 +72,9 @@ body {
     z-index: -10;
 }
 
+#quando_3d {
+    z-index: 0;
+}
 #quando_video {
     position: fixed;
     width: 100%;
