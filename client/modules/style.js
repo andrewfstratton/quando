@@ -127,7 +127,7 @@
         _font_type(self.DEFAULT, style, font)
     }
 
-    function _cursor_colour (style, colour, opacity) {
+    function _cursor_colour(style, colour, opacity) {
         opacity /= 100
         self.set(style, '#cursor', 'background-color', `rgba(${colour}, ${opacity})`)
     }
@@ -136,5 +136,18 @@
     }
     self.cursor_colourDefault = (colour, opacity) => {
         _cursor_colour(self.DEFAULT, colour, opacity)
+    }
+
+    function _cursor_size(style, percent) {
+        self.set(style, '#cursor', 'width', `${percent}vw`)
+        self.set(style, '#cursor', 'height', `${percent}vw`)
+        self.set(style, '#cursor', 'margin-left', `${percent/2}vw`)
+        self.set(style, '#cursor', 'margin-top', `${percent/2}vw`)
+    }
+    self.cursor_size = (percent) => {
+        _cursor_size(self.DEFAULT, percent)
+    }
+    self.cursor_sizeDefault = (percent) => {
+        _cursor_size(self.DISPLAY, percent)
     }
 })()
