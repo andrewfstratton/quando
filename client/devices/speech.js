@@ -52,8 +52,8 @@
       self.synth.speak(utter)
     }
   
-    self.say = function(sentence, rate = 1, pitch = 1, volume = 1) {
-      let new_say = {'sentence': sentence, 'rate': rate, 'pitch': pitch, 'volume': volume}
+    self.say = function(sentence, rate, pitch, volume) {
+      let new_say = {'sentence': sentence, 'rate': rate/100, 'pitch': pitch/100, 'volume': volume/100}
       if (equalSay(self.saying, new_say)) {
           // ignore when already saying the same
       } else {
