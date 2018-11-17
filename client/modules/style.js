@@ -126,4 +126,15 @@
     self.font_typeDefault = (style, font) => {
         _font_type(self.DEFAULT, style, font)
     }
+
+    function _cursor_colour (style, colour, opacity) {
+        opacity /= 100
+        self.set(style, '#cursor', 'background-color', `rgba(${colour}, ${opacity})`)
+    }
+    self.cursor_colour = (colour, opacity) => {
+        _cursor_colour(self.DISPLAY, colour, opacity)
+    }
+    self.cursor_colourDefault = (colour, opacity) => {
+        _cursor_colour(self.DEFAULT, colour, opacity)
+    }
 })()
