@@ -314,7 +314,6 @@ app.post('/file/upload/*', (req, res) => {
 // Static for client
 let client_dir = path.join(__dirname, 'client')
 app.use('/client/media', express.static(path.join(client_dir, 'media')))
-app.use('/client/devices', express.static(path.join(client_dir, 'devices')))
 app.use('/client/modules', express.static(path.join(client_dir, 'modules')))
 app.use('/client/lib', express.static(path.join(client_dir, 'lib')))
 app.use('/client/setup', express.static(path.join(client_dir, 'setup.html')))

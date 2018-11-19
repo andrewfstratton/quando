@@ -186,45 +186,6 @@
   var Config = self.Config = {
   }
 
-  function _units_to_ms(units, count) {
-    let result = count
-    if (units == "minutes")  {
-      result *= 60
-    } else if (units == "hours")  {
-      result *= 60*60
-    }
-    return result * 1000 // convert to ms
-  }
-  self.after = function (count = 1, units = 'seconds', callback) {
-    let time_ms = _units_to_ms(units, count)
-    let timeout = setTimeout(callback, time_ms)
-    self.destructor.add( () => {
-      clearTimeout(timeout)
-    })
-  }
-
-  self.every = function (count = 1, units = 'seconds', callback) {
-    callback() // do it straight away
-    let time_ms = _units_to_ms(units, count)
-    let id = setInterval(callback, time_ms)
-    self.destructor.add( () => {
-      clearInterval(id)
-    })
-  }
-
-  self.check = function(times = 1, units = 'second', callback) {
-    let time = 1
-    if (units == 'minute') {
-      time = 60
-    } else if (units == 'hour') {
-      time = 60*60
-    } else if (units == 'day') {
-      time = 60*60*24
-    }
-    let count = time / times
-    self.every(count, 'seconds', callback)
-  }
-
   self.idle = function (time_secs, idle_fn, active_fn) {
     clearTimeout(self.idle_callback_id)
     self.idle_reset_secs = time_secs * 1000
@@ -349,12 +310,12 @@
       }
     }
     if (self.leap) {
-      self.every({count: 1/20}, handler)
+      self.time.every({count: 1/20}, handler)
     } else {
       self.leap = new Leap.Controller()
       self.leap.connect()
       self.leap.on('connect', function () {
-        self.every({count: 1/20}, handler)
+        self.time.every({count: 1/20}, handler)
       })
     }
   }
@@ -385,12 +346,12 @@
       }
     }
     if (self.leap) {
-      self.every({count: 1/20}, handler)
+      self.time.every({count: 1/20}, handler)
     } else {
       self.leap = new Leap.Controller()
       self.leap.connect()
       self.leap.on('connect', function () {
-        self.every({count: 1/20}, handler)
+        self.time.every({count: 1/20}, handler)
       })
     }
   }
