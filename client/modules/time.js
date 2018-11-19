@@ -5,7 +5,7 @@
   }
   let self = quando.time = {}
 
-  function _units_to_ms(units, count) {
+  self.units_to_ms = (units, count) => {
     let result = count
     if (units == "minutes")  {
       result *= 60
@@ -16,7 +16,7 @@
   }
 
   self.after = (count = 1, units = 'seconds', callback) => {
-    let time_ms = _units_to_ms(units, count)
+    let time_ms = self.units_to_ms(units, count)
     let timeout = setTimeout(callback, time_ms)
     quando.destructor.add( () => {
       clearTimeout(timeout)
@@ -25,7 +25,7 @@
 
   self.every = (count = 1, units = 'seconds', callback) => {
     callback() // do it straight away
-    let time_ms = _units_to_ms(units, count)
+    let time_ms = self.units_to_ms(units, count)
     let id = setInterval(callback, time_ms)
     quando.destructor.add( () => {
       clearInterval(id)

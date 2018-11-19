@@ -1,6 +1,6 @@
 (function () {
   var self = this['quando'] = {}
-  self.idle_reset_secs = 0
+  self.idle_reset_ms = 0
   self.idle_callback_id = 0
   self._displays = new Map()
   self.pinching = false
@@ -38,9 +38,9 @@
   }
 
   self.idle_reset = function () {
-    if (self.idle_reset_secs > 0) {
+    if (self.idle_reset_ms > 0) {
       clearTimeout(self.idle_callback_id)
-      self.idle_callback_id = setTimeout(self.idle_callback, self.idle_reset_secs)
+      self.idle_callback_id = setTimeout(self.idle_callback, self.idle_reset_ms)
     } else { // this means we are now idle and must wakeup
       if (self.idle_active_callback) {
         self.idle_active_callback()
@@ -186,23 +186,22 @@
   var Config = self.Config = {
   }
 
-  self.idle = function (time_secs, idle_fn, active_fn) {
+  self.idle = function (count, units, idle_fn, active_fn) {
     clearTimeout(self.idle_callback_id)
-    self.idle_reset_secs = time_secs * 1000
-    self.idle_callback = function () {
-      self.idle_reset_secs = 0 // why - surely I need to intercept self.idle_reset
+    let time_secs = self.idle_reset_ms = self.time.units_to_ms(units, count)
+    self.idle_callback = () => {
+      self.idle_reset_ms = 0 // why - surely I need to intercept self.idle_reset
             // actually - this will work to force self.idle_reset to call idle_active_callback instead
       idle_fn()
     }
-
-  self.idle_active_callback = function () {
+    self.idle_active_callback = () => {
       clearTimeout(self.idle_callback_id)
-      self.idle_reset_secs = time_secs * 1000 // resets to idle detection
-      self.idle_callback_id = setTimeout(self.idle_callback, self.idle_reset_secs)
+      self.idle_reset_ms = time_secs // resets to idle detection
+      self.idle_callback_id = setTimeout(self.idle_callback, self.idle_reset_ms)
             // so, restarts timeout when active
       active_fn()
     }
-    self.idle_callback_id = setTimeout(self.idle_callback, self.idle_reset_secs)
+    self.idle_callback_id = setTimeout(self.idle_callback, self.idle_reset_ms)
   }
 
   function _set_or_append_tag_text(txt, tag, append) {
