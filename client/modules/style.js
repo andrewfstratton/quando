@@ -63,91 +63,47 @@
         }
     }
 
-    function _colour (style, colour) {
-        self.set(style, '#body', 'background-color', colour)
-    }
-    self.colour = (colour) => {
-        _colour(self.DISPLAY, colour)
-    }
-    self.colourDefault = (colour) => {
-        _colour(self.DEFAULT, colour)
+    function createDefaultDisplay(name, fn) {
+        self[name] = (...args) => { fn(self.DISPLAY, ...args) }
+        self[name+'Default'] = (...args) => { fn(self.DEFAULT, ...args) }
     }
 
-    function _text (display_default, style, colour) {
+    createDefaultDisplay('colour', (display_default, colour) => {
+        self.set(display_default, '#body', 'background-color', colour)
+    })
+
+    createDefaultDisplay('text', (display_default, style, colour) => {
         colour = 'rgb('+colour+',0.8)'
         self.set(display_default, '#quando_text', style, colour)
-    }
-    self.text = (style, colour) => {
-        _text(self.DISPLAY, style, colour)
-    }
-    self.textDefault = (style, colour) => {
-        _text(self.DEFAULT, style, colour)
-    }
+    })
 
-    function _title (display_default, style, colour) {
+    createDefaultDisplay('title', (display_default, style, colour) => {
         colour = 'rgb('+colour+',0.8)'
         self.set(display_default, '#quando_title', style, colour)
-    }
-    self.title = (style, colour) => {
-        _title(self.DISPLAY, style, colour)
-    }
-    self.titleDefault = (style, colour) => {
-        _title(self.DEFAULT, style, colour)
-    }
+    })
 
-    function _label (display_default, style, colour) {
+    createDefaultDisplay('label', (display_default, style, colour) => {
         self.set(display_default, '.quando_label', style, 'rgb('+colour+',0.6)')
         self.set(display_default, '.quando_label.focus', style, 'rgb('+colour+',1)')
-    }
-    self.label = (style, colour) => {
-        _label(self.DISPLAY, style, colour)
-    }
-    self.labelDefault = (style, colour) => {
-        _label(self.DEFAULT, style, colour)
-    }
+    })
 
-    function _font_size (display_default, style, chars) {
+    createDefaultDisplay('font_size', (display_default, style, chars) => {
         let vw = Math.round(100/chars)
         self.set(display_default, style, 'font-size', vw + 'vw')
-    }
-    self.font_size = (style, chars) => {
-        _font_size(self.DISPLAY, style, chars)
-    }
-    self.font_sizeDefault = (style, chars) => {
-        _font_size(self.DEFAULT, style, chars)
-    }
+    })
 
-    function _font_type (display_default, style, font) {
+    createDefaultDisplay('font_type', (display_default, style, font) => {
         self.set(display_default, style, 'font-family', font, ',')
-    }
-    self.font_type = (style, font) => {
-        _font_type(self.DISPLAY, style, font)
-    }
-    self.font_typeDefault = (style, font) => {
-        _font_type(self.DEFAULT, style, font)
-    }
+    })
 
-    function _cursor_colour(style, colour, opacity) {
-        opacity /= 100
-        self.set(style, '#cursor', 'background-color', `rgba(${colour}, ${opacity})`)
-    }
-    self.cursor_colour = (colour, opacity) => {
-        _cursor_colour(self.DISPLAY, colour, opacity)
-    }
-    self.cursor_colourDefault = (colour, opacity) => {
-        _cursor_colour(self.DEFAULT, colour, opacity)
-    }
+    createDefaultDisplay('cursor_colour', (display_default, colour, opacity) => {
+        self.set(display_default, '#cursor', 'background-color', `rgba(${colour}, ${opacity/100})`)
+    })
 
-    function _cursor_size(style, percent) {
-        self.set(style, '#cursor', 'width', `${percent}vw`)
-        self.set(style, '#cursor', 'height', `${percent}vw`)
-        self.set(style, '#cursor', 'margin-left', `${percent/2}vw`)
-        self.set(style, '#cursor', 'margin-top', `${percent/2}vw`)
-    }
-    self.cursor_size = (percent) => {
-        _cursor_size(self.DEFAULT, percent)
-    }
-    self.cursor_sizeDefault = (percent) => {
-        _cursor_size(self.DISPLAY, percent)
-    }
+    createDefaultDisplay('cursor_size', (display_default, percent) => {
+        self.set(display_default, '#cursor', 'width', `${percent}vw`)
+        self.set(display_default, '#cursor', 'height', `${percent}vw`)
+        self.set(display_default, '#cursor', 'margin-left', `${percent/2}vw`)
+        self.set(display_default, '#cursor', 'margin-top', `${percent/2}vw`)
+    })
 })()
