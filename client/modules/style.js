@@ -106,4 +106,20 @@
         self.set(display_default, '#cursor', 'margin-left', `${percent/2}vw`)
         self.set(display_default, '#cursor', 'margin-top', `${percent/2}vw`)
     })
+
+    self.position = (type, direction, percent, display_default = self.DISPLAY) => {
+        self.set(display_default, `#quando_${type}`, direction, `${percent}%`)
+    }
+
+    self.positionDefault = (...args) => {
+        return self.position(...args, self.DEFAULT)
+    }
+
+    self.size = (type, direction, percent, display_default = self.DISPLAY) => {
+        self.set(display_default, `#quando_${type}`, direction, `${percent}%`)
+    }
+
+    self.sizeDefault = (...args) => {
+        return self.size(...args, self.DEFAULT)
+    }
 })()
