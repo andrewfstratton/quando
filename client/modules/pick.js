@@ -27,15 +27,25 @@
     _list[id] = arr
   }
 
-  self.one = (id) => {
+  self.one = (id, next) => {
     let arr = _list[id]
     if (arr.length > 0) {
       if (!arr.hasOwnProperty('index')) {
-        arr.index = 0
+        if (next) {
+          arr.index = 0 // Start at beginning
+        } else { // start at end
+          arr.index = arr.length-1
+        }
       }
       let fn = arr[arr.index]
-      if (++arr.index >= arr.length) {
-        arr.index = 0
+      if (next) {
+        if (++arr.index >= arr.length) {
+          arr.index = 0
+        }
+      } else {
+        if (--arr.index < 0) {
+          arr.index = arr.length-1
+        }
       }
       if (typeof fn === 'function') { fn() }
     }
