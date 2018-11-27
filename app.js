@@ -399,7 +399,7 @@ app.get('/blocks', (req, res) => {
         if (files) {
           let failed = false
           for(let file of files) {
-            if (!failed) {
+            if (!failed && file.endsWith('.htm')) {
               let block = {title:false}
               block.type = file.substring(file.indexOf('_') + 1).slice(0, -4) // drop the number, and the '.htm'
               block.type = block.type.replace(/_/g, '-') // turn _ based filename into - based attribute
