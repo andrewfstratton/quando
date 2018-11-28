@@ -63,63 +63,50 @@
         }
     }
 
-    function createDefaultDisplay(name, fn) {
-        self[name] = (...args) => { fn(self.DISPLAY, ...args) }
-        self[name+'Default'] = (...args) => { fn(self.DEFAULT, ...args) }
+    self.colour = (display, colour) => {
+        self.set(display, '#body', 'background-color', colour)
     }
 
-    createDefaultDisplay('colour', (display_default, colour) => {
-        self.set(display_default, '#body', 'background-color', colour)
-    })
+    self.text = (display, style, colour) => {
+        self.set(display, '#quando_text', style, 'rgb('+colour+',0.8)')
+    }
 
-    createDefaultDisplay('text', (display_default, style, colour) => {
-        colour = 'rgb('+colour+',0.8)'
-        self.set(display_default, '#quando_text', style, colour)
-    })
+    self.title = (display, style, colour) => {
+        self.set(display, '#quando_title', style, 'rgb('+colour+',0.8)')
+    }
 
-    createDefaultDisplay('title', (display_default, style, colour) => {
-        colour = 'rgb('+colour+',0.8)'
-        self.set(display_default, '#quando_title', style, colour)
-    })
+    self.label = (display, style, colour) => {
+        self.set(display, '.quando_label', style, 'rgb('+colour+',0.6)')
+        self.set(display, '.quando_label.focus', style, 'rgb('+colour+',1)')
+    }
 
-    createDefaultDisplay('label', (display_default, style, colour) => {
-        self.set(display_default, '.quando_label', style, 'rgb('+colour+',0.6)')
-        self.set(display_default, '.quando_label.focus', style, 'rgb('+colour+',1)')
-    })
-
-    createDefaultDisplay('font_size', (display_default, style, chars) => {
+    self.font_size = (display, style, chars) => {
         let vw = Math.round(100/chars)
-        self.set(display_default, style, 'font-size', vw + 'vw')
-    })
-
-    createDefaultDisplay('font_type', (display_default, style, font) => {
-        self.set(display_default, style, 'font-family', font, ',')
-    })
-
-    createDefaultDisplay('cursor_colour', (display_default, colour, opacity) => {
-        self.set(display_default, '#cursor', 'background-color', `rgba(${colour}, ${opacity/100})`)
-    })
-
-    createDefaultDisplay('cursor_size', (display_default, percent) => {
-        self.set(display_default, '#cursor', 'width', `${percent}vw`)
-        self.set(display_default, '#cursor', 'height', `${percent}vw`)
-        self.set(display_default, '#cursor', 'margin-left', `${percent/2}vw`)
-        self.set(display_default, '#cursor', 'margin-top', `${percent/2}vw`)
-    })
-
-    self.position = (type, direction, percent, display_default = self.DISPLAY) => {
-        self.set(display_default, `#quando_${type}`, direction, `${percent}%`)
+        self.set(display, style, 'font-size', vw + 'vw')
     }
 
-    self.positionDefault = (...args) => {
-        return self.position(...args, self.DEFAULT)
+    self.font_type = (display, style, font) => {
+        self.set(display, style, 'font-family', font, ',')
     }
 
-    self.size = (type, direction, percent, display_default = self.DISPLAY) => {
-        self.set(display_default, `#quando_${type}`, direction, `${percent}%`)
+    self.cursor_colour = (display, colour, opacity) => {
+        self.set(display, '#cursor', 'background-color', `rgba(${colour}, ${opacity/100})`)
     }
 
-    self.sizeDefault = (...args) => {
-        return self.size(...args, self.DEFAULT)
+    self.cursor_size = (display, percent) => {
+        self.set(display, '#cursor', 'width', `${percent}vw`)
+        self.set(display, '#cursor', 'height', `${percent}vw`)
+        self.set(display, '#cursor', 'margin-left', `${percent/2}vw`)
+        self.set(display, '#cursor', 'margin-top', `${percent/2}vw`)
+    }
+
+    self.position = (display, type, direction, percent) => {
+        let style = display?self.DISPLAY:self.DEFAULT
+        self.set(style, `#quando_${type}`, direction, `${percent}%`)
+    }
+
+    self.size = (display, type, direction, percent) => {
+        let style = display?self.DISPLAY:self.DEFAULT
+        self.set(style, `#quando_${type}`, direction, `${percent}%`)
     }
 })()

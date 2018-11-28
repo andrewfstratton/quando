@@ -7,7 +7,6 @@
     let self = quando.image = {}
     self.current = false
     
-
     function _get_image(display) {
         let def = document.getElementById('quando_image')
         let dis = document.getElementById('quando_image_display')
@@ -34,19 +33,11 @@
         _get_image(false)
     }
 
-    function _set(display, img_address) {
+    self.set = (display, img_address) => {
         img_address = '/client/media/' + encodeURI(img_address)
         quando.image_update_video(img_address)
         let elem = _get_image(display)
         elem.src = img_address
-    }
-
-    self.set = (img) => {
-        _set(true, img)
-    }
-
-    self.setDefault = (img) => {
-        _set(false, img)
     }
 
     function _rotate(display, axis, val, mid, range, inverted) {
@@ -69,28 +60,16 @@
         elem.style.transform = transform
     }
 
-    self.roll = (val, mid, range, inverted) => {
-        _rotate(true, 'Z', val, mid, range, inverted)
+    self.roll = (display, val, mid, range, inverted) => {
+        _rotate(display, 'Z', val, mid, range, inverted)
     }
 
-    self.rollDefault = (val, mid, range, inverted) => {
-        _rotate(false, 'Z', val, mid, range, inverted)
+    self.pitch = (display, val, mid, range, inverted) => {
+        _rotate(display, 'X', val, mid, range, inverted)
     }
 
-    self.pitch = (val, mid, range, inverted) => {
-        _rotate(true, 'X', val, mid, range, inverted)
-    }
-
-    self.pitchDefault = (val, mid, range, inverted) => {
-        _rotate(false, 'X', val, mid, range, inverted)
-    }
-
-    self.yaw = (val, mid, range, inverted) => {
-        _rotate(true, 'Y', val, mid, range, inverted)
-    }
-
-    self.yawDefault = (val, mid, range, inverted) => {
-        _rotate(false, 'Y', val, mid, range, inverted)
+    self.yaw = (display, val, mid, range, inverted) => {
+        _rotate(display, 'Y', val, mid, range, inverted)
     }
 
     function _convert_linear(val, mid, range, inverted) {
@@ -101,35 +80,19 @@
         return min + (val * (max-min))
     }
 
-    function _left_right(display, val, mid, range, inverted) {
+    self.left_right = (display, val, mid, range, inverted) => {
         let x = _convert_linear(val, mid, range, inverted)
         let elem = document.getElementById('quando_image' + (display?'_display':''))
         elem.style.left = (x-50)+'%'
     }
 
-    self.left_right = (val, mid, range, inverted) => {
-        _left_right(true, val, mid, range, inverted)
-    }
-
-    self.left_rightDefault = (val, mid, range, inverted) => {
-        _left_right(false, val, mid, range, inverted)
-    }
-
-    function _up_down(display, val, mid, range, inverted) {
+    self.up_down = (display, val, mid, range, inverted) => {
         let y = 100 - _convert_linear(val, mid, range, inverted)
         let elem = document.getElementById('quando_image' + (display?'_display':''))
         elem.style.top = (y-50)+'%'
     }
 
-    self.up_down = (val, mid, range, inverted) => {
-        _up_down(true, val, mid, range, inverted)
-    }
-
-    self.up_downDefault = (val, mid, range, inverted) => {
-        _up_down(false, val, mid, range, inverted)
-    }
-
-    function _zoom(display, val, min, max, inverted) {
+    self.zoom = (display, val, min, max, inverted) => {
         if (!val) {
             val = 0; // this forces the minimum value - not the middle
         }
@@ -138,13 +101,5 @@
         let scale = _convert_linear(val, mid, range, inverted)
         let elem = document.getElementById('quando_image' + (display?'_display':''))
         elem.style.transform = `scale(${scale})`
-    }
-
-    self.zoom = (val, min, max, inverted) => {
-        _zoom(true, val, min, max, inverted)
-    }
-
-    self.zoomDefault = (val, min, max, inverted) => {
-        _zoom(false, val, min, max, inverted)
     }
 })()

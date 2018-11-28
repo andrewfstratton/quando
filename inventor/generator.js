@@ -160,24 +160,22 @@ fn.displayTitle = (block, display_id) => {
     return result
 }
 
-fn.hasAncestorClass = (block, cls, txt, alt = '') => {
+fn.hasAncestorClass = (block, cls) => {
     let check = block
     let found = false
-    let result = alt // assume class isn't found
     while (!(found || (check==document))) {
         // i.e. continue until the class is found, or document is the ancestor
         check = check.parentNode
         let type = check && check.dataset && check.dataset.quandoBlockType
         if (type == cls) { // found it...
-            result = txt
             found = true
         }
     }
-    return result
+    return found
 }
 
-fn.inDisplay = (block, txt, alt) => {
-    return fn.hasAncestorClass(block, 'display-when-display', txt, alt)
+fn.inDisplay = (block) => {
+    return fn.hasAncestorClass(block, 'display-when-display')
 }
 
 fn.rgb = (block, colour, alpha) => {
@@ -191,5 +189,13 @@ fn.pre = (block, ...inserts) => {
         prefix += insert + '\n'
     }
     return ''
+}
+
+fn.eq = (block, str, val, gen) => {
+    let result = ''
+    if (str == val) {
+        result = gen
+    }
+    return result
 }
 })()
