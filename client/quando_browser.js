@@ -248,7 +248,9 @@
   }
 
   self.video = function (vid, loop = false) {
-    vid = '/client/media/' + encodeURI(vid)
+    if (vid) {
+      vid = '/client/media/' + encodeURI(vid)
+    }
     var video = document.getElementById('quando_video')
     video.loop = loop
     if (video.src != encodeURI(window.location.origin + vid)) { // i.e. ignore when already playing
@@ -272,7 +274,9 @@
   }
 
   self.audio = function (audio_in, loop = false) {
-    audio_in = '/client/media/' + encodeURI(audio_in)
+    if (audio_in) {
+      audio_in = '/client/media/' + encodeURI(audio_in)
+    }
     var audio = document.getElementById('quando_audio')
     audio.loop = loop
     if (audio.src != encodeURI(window.location.origin + audio_in)) { // src include http://127.0.0.1/
@@ -517,6 +521,16 @@
     let min = _degrees_to_radians(mid - range)
     let max = _degrees_to_radians(mid + range)
     return min + (val * (max-min))
+  }
+
+  self.clear = (display, title, text, image, video, audio, object3d, speech) => {
+    if (title) { self.title(display) }
+    if (text) { self.text(display) }
+    if (image) { self.image.set(display) }
+    if (video) { self.video('',false) }
+    if (audio) { self.audio('',false) }
+    if (object3d) { self.object3d.clear() }
+    if (speech) { self.speech.clear() }
   }
 })()
 

@@ -67,4 +67,7 @@
           }
       }
     }
+    self.clear = () => {
+        self.synth.cancel() // Cancel current thing being said
+    }
   })()
