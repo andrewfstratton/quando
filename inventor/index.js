@@ -358,9 +358,9 @@ function _setupDragula() {
 }
 
 self.setup = () => {
-  // window.onbeforeunload = () => {
-      // return 'Are you sure you want to leave the editor?' // Doesn't seem to show this message in Chrome?!
-  // }
+  window.onbeforeunload = () => {
+      return 'Are you sure you want to leave the editor?' // Sometimes didn't show this message in Chrome?!
+  }
 
   toastr.options = {
     closeButton: false,
