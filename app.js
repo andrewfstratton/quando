@@ -80,10 +80,6 @@ const MEDIA_MAP = {
 }
 
 app.use(morgan('dev'))
-// Static for Editor
-app.use('/editor', express.static(path.join(__dirname, 'editor')))
-app.use('/blockly', express.static(path.join(__dirname, 'blockly')))
-app.use('/closure-library', express.static(path.join(__dirname, 'closure-library')))
 
 app.use(session({
   secret: 'quando_secret',
