@@ -317,7 +317,6 @@ app.use('/client/client.css', express.static(path.join(client_dir, 'client.css')
 app.use('/client/setup.css', express.static(path.join(client_dir, 'setup.css')))
 app.use('/client/quando_browser.js', express.static(path.join(client_dir, 'quando_browser.js')))
 app.use('/client/transparent.png', express.static(path.join(client_dir, 'transparent.png')))
-app.use('/client/favicon.ico', express.static(path.join(client_dir, 'favicon.ico')))
 app.use('/client/deployed_js', express.static(path.join(client_dir, 'deployed_js')))
 
 app.get('/client/js/:filename', (req, res) => {
@@ -371,6 +370,7 @@ app.post('/socket/:id', (req, res) => {
 })
 
 app.use('/inventor', express.static(path.join(__dirname, 'inventor')))
+app.use('/favicon.ico', express.static(path.join(__dirname, 'inventor/favicon.ico')))
 app.use('/common', express.static(path.join(__dirname, 'common')))
 
 app.get('/blocks', (req, res) => {
