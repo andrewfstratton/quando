@@ -8,23 +8,27 @@ try {
 }
 // list serial ports:
 const find_microbit = (error, success) => {
-  serialport.list((err, ports) => {
-    if (err) {
-      error(err)
-    } else {
-      let comName = null
-      ports.forEach((port) => {
-        if ((port.vendorId == '0D28') && (port.productId == '0204')) {
-          comName = port.comName
-        }
-      })
-      if (comName != null) {
-        success(comName)
+  if (serialport) {
+    serialport.list((err, ports) => {
+      if (err) {
+        error(err)
       } else {
-        error('Could not find micro:bit.')
+        let comName = null
+        ports.forEach((port) => {
+          if ((port.vendorId == '0D28') && (port.productId == '0204')) {
+            comName = port.comName
+          }
+        })
+        if (comName != null) {
+          success(comName)
+        } else {
+          error('Could not find micro:bit.')
+        }
       }
-    }
-  })
+    })
+  } else {
+    error('SerialPort missing...')
+  }
 }
 
 exports.get_serial = (error, success) => {

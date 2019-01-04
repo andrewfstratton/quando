@@ -198,7 +198,7 @@ app.put('/script/deploy/:filename', (req, res) => {
 let reported = false
 function ubit_error (err) {
   if (!reported && err) {
-    console.log(err)
+    console.log("  Warning - " + err)
     reported = true
   }
   setTimeout(() => { ubit.get_serial(ubit_error, ubit_success) }, 1000)
