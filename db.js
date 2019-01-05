@@ -1,7 +1,7 @@
 'use strict'
 const PouchDB = require('pouchdb')
 PouchDB.plugin(require('pouchdb-find'))
-const fs = require('fs') // Used for dumping collection
+// const fs = require('fs') // Used for dumping collection
 const DB_LOCATION = 'http://127.0.0.1:5984/'
 
 function db(name) {
@@ -54,12 +54,12 @@ exports.remove = (db_name, query) => {
   })
 }
 
-exports.checkDB = () => {
-  PouchDB(DB_LOCATION + "_users").info((err, info)=>{
+exports.checkDB = (response) => {
+  PouchDB(DB_LOCATION + "_users").info((err)=>{
     let result = 'Database running...'
     if (err) {
       result = "Database Not running! ---  Use 'npm run pouchd' --- " + err.toString()
     }
-    return result
+    response(result)
   })
 }
