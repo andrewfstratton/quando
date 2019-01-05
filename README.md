@@ -4,18 +4,10 @@
 
 Prerequisites: Chrome browser, Node JS, (optional) git for windows install (https://gitforwindows.org/)
 
-
-
-1. Download the zip and extract into C;\quando, or Clone the repository in C: using git clone https://github.com/andrewfstratton/quando.git
+1. Download the zip and extract into C:\quando, or Clone the repository in C: using git clone https://github.com/andrewfstratton/quando.git
 2. In the command line, in C:\quando, npm update - this will likely take a while
-3. you may need to rebuild the serial-port (this is only necessary if you wish to use a micro:bit), if so, then:
-    1. (may need) npm install --global --production windows-build-tools
-    2. npm install serialport --build-from-source
-
-_Note: Chrome needs to be modified to allow video and audio to auto play:_
-
-1. _open chrome://flags/#autoplay-policy_
-2. _change to 'no user gesture is required'_
+3. You may see errors installing/building serialport - this should only happen with 'obscure' operating systems, e.g. non x64 windows.  The only missing feature will be (currently) USB micro:bit access - if you need this, then follow the relevant guide at https://serialport.io/docs/en/guide-installation
+  * Note: You may need to install windows developer tools - run an admin shell, then 'npm install -g windows-build-tools'
 
 ### Setting up Quando for first time use
 
@@ -27,9 +19,12 @@ _Note: Chrome needs to be modified to allow video and audio to auto play:_
     4. Ctrl-A -> Delete, then paste the next line in:
         1. {"_id": "test", "password": "test"}
     5. Then choose 'Create Document'
-3. Then open 127.0.0.1/inventor, login as test/test
+3. Chrome needs to be modified to allow video and audio to auto play:
+    1. _open chrome://flags/#autoplay-policy_
+    2. _change to 'no user gesture is required'_
+4. Then open 127.0.0.1/inventor, login as test/test
 
-### To add automatic *Server* startup - for deployed use - not for development
+### To add automatic Windows *Server* startup - for deployed use - not for development
 1. using Windows R, run gpedit.msc
 2. Choose Computer Configuration->Windows Settings->Scripts->Startup
     1. Then 'Add' C:\quando\quando.bat
@@ -52,25 +47,29 @@ The following setup can be done (by itself) on any client machine - though kiosk
     * Choose Computer Configuration->Windows Settings->Scripts->Startup
     * Then 'Add' C:\quando\kiosk.bat to autostart Chrome
 
-If everything is fine - then try restarting to see if everything boots correctly - and test remotely to be sure that you can edit remotely.
+If everything is fine - then try restarting to see if everything boots correctly.
 
 ### Optional - Leap Motion
 The standard Leap Motion (Orion) software needs to be installed on the Client PC, i.e. where the Leap motion is plugged in and where the browser will be run. The SDK is not needed.
 
 Optional - npm install -g nodemon
 
+### Updating using Git
 To update (assuming quando has changed), First kill the Node.js process in the task manager,
 then use:
-git pull origin master
-quando
+
+* git pull origin master
+* quando
 
 ## Editing as a Developer
 
 The instructions below assume that you are using Visual Studio Code, though specifics are generally avoided.
 
-Then run the editor, you need to:
-1. Run the pouchdb database, using `npm run pouchd`
-2. Run `node app.js`, e.g. through Launch
+You should run the pouchdb daemon, which is called 'pouchd', NOT 'pouchd**b**' 
+
+Run the editor, then:
+1. Run the pouchdb database, using `npm run pouchd`, e.g. from the terminal
+2. Run `node app.js`, e.g. through Launch, (or npm run quando)
 3. Open a Browser to 127.0.0.1/inventor
 
 To use a client, access 127.0.0.1/client from a browser. This will automatically re-open the last script. You can right click the display to go to a screen that allows you to select already deployed/created scripts - whichever one you open will be reopened next time you open 127.0.0.1/client.

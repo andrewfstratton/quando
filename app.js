@@ -1,7 +1,6 @@
 'use strict'
 const express = require('express')
 const session = require('express-session')
-require('./db').checkDB()
 const PouchSession = require('session-pouchdb-store')
 const app = express()
 const fs = require('fs')
@@ -12,6 +11,7 @@ const script = require('./script')
 const client_deploy = './client/deployed_js/'
 const user = require('./user')
 const path = require('path')
+console.log(require('./db').checkDB())
 
 const router = express.Router()
 

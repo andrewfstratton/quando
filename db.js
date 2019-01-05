@@ -56,8 +56,10 @@ exports.remove = (db_name, query) => {
 
 exports.checkDB = () => {
   PouchDB(DB_LOCATION + "_users").info((err, info)=>{
+    let result = 'Database running...'
     if (err) {
-      console.log("Database Not running!\n>> Use 'npm run pouchd'\n" + err.toString())
+      result = "Database Not running! ---  Use 'npm run pouchd' --- " + err.toString()
     }
+    return result
   })
 }
