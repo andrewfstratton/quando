@@ -11,12 +11,13 @@ const script = require('./script')
 const client_deploy = './client/deployed_js/'
 const user = require('./user')
 const path = require('path')
-require('./db').checkDB((response)=>{console.log(response)})
+require('./db').checkRunning((success)=>{console.log(success)},(err)=>{console.log(err)})
 
 const http = require('http').Server(app)
 const io = require('socket.io')(http)
 const ubit = require('./ubit')
 const net = require('net')
+const dns = require('dns')
 const SOCKET_PORT = 591
 let net_server = net.createServer( (socket)=>{
   let drop_socket = (socket) => {
@@ -97,6 +98,7 @@ app.use('/', (req, res, next) => {
     // console.log(">>" + JSON.stringify(req.session.user))
   next()
 })
+app.use('/', express.static(path.join(__dirname, 'hub')))
 app.get('/login', (req, res) => {
   if ((req.session) && (req.session.user)) {
     res.json({ 'success': true, 'userid': req.session.user.id })
@@ -332,7 +334,7 @@ app.get('/client/js/:filename', (req, res) => {
 app.get('/client/js', (req, res) => {
   fs.readdir(path.join(__dirname, 'client', 'deployed_js'), (err, files) => {
     if (!err) {
-      require('dns').lookup(require('os').hostname(), (err, add, fam) => {
+      dns.lookup(require('os').hostname(), (err, add) => {
         res.json({ 'success': true, ip: add, 'files': files })
       })
     } else {
@@ -427,4 +429,10 @@ app.post('/ubit/icon', (req, res) => {
   let val = req.body.val
   ubit.send('icon', val)
   res.json({})
+})
+
+app.get('/ip', (req, res) => {
+  dns.lookup(require('os').hostname(), (err, ip) => {
+    res.json({ 'success': true, 'ip': ip })
+  })
 })

@@ -1,0 +1,7 @@
+.qrcode {
+    width:160px;
+    height:160px;
+    padding:15px;
+    border: 10px solid #ddd;
+    margin: 15px;
+  }

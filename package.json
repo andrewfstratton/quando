@@ -1,35 +1,35 @@
 {
   "name": "quando",
-  "version": "0.7.20180513",
+  "version": "0.8.20190104",
   "description": "Quando Toolset",
-  "main": "app.js",
+  "main": "start.js",
   "scripts": {
     "test": "mocha --ui tdd test",
     "pouchd": "pouchdb-server --port 5984 --dir pouchdb --config pouchdb-config.json",
     "quando": "node app.js",
-    "start": "npm run pouchd && npm run quando",
+    "start": "node .",
     "standardize": "standard"
   },
-  "author": "",
+  "author": "Andrew Stratton",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.18.3",
-    "express": "^4.14.0",
+    "express": "^4.16.4",
     "express-session": "^1.14.2",
     "formidable": "^1.2.1",
     "graceful-fs": "4.1.10",
     "leapjs": "^0.6.4",
-    "morgan": "^1.7.0",
-    "npm": "^6.2.0",
+    "morgan": "^1.9.1",
+    "npm": "^6.5.0",
     "pouchdb": "^6.4.3",
     "pouchdb-find": "^6.4.3",
-    "pouchdb-server": "^4.0.1",
+    "pouchdb-server": "^4.1.0",
     "serialport": "^7.1.1",
     "session-pouchdb-store": "^0.2.1",
     "socket.io": "^1.7.0"
   },
   "devDependencies": {
-    "chai": "^4.1.2",
+    "chai": "^4.2.0",
     "mocha": "^4.1.0",
     "standard": "^10.0.3"
   }
