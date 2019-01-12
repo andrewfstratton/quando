@@ -75,4 +75,4 @@ Then use nodemon instead of node
 
 This is for deploying to IBM Cloud - not yet tested/working
 
-[![Deploy to IBM Cloud](https://cloud.ibm.com/devops/setup/deploy/button.png)](https://cloud.ibm.com/devops/setup/deploy?repository=<git_repository_URL>&branch=master)
+[![Deploy to IBM Cloud](https://cloud.ibm.com/devops/setup/deploy/button.png)](https://cloud.ibm.com/devops/setup/deploy?repository=https://github.com/andrewfstratton/quando.git&branch=master)
