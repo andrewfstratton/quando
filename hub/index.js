@@ -4,7 +4,30 @@ function set(id, val) {
   $('#'+id).html(val)
 }
 
+function add_user() {
+  let userid = document.getElementById('userid')
+  let password = document.getElementById('password')
+  $.ajax({
+    url: '/user',
+    type: 'POST',
+    data: { 'userid': userid.value, 'password': password.value },
+    success: (res) => {
+      if (res.success) {
+        set('add_user_message', "Added user '"+userid.value+"'...")
+        password.value = ''
+        userid.value = ''
+      } else {
+        set('add_user_message', "Failed to add: " + res.message)
+      }
+    },
+    error: () => {
+      set('add_user_message', "Failed to find server")
+    }
+  })
+}
+
 function onload() {
+  document.getElementById('add_user_button').onclick = add_user
   $.ajax({
     url: '/ip',
     success: (res) => {
@@ -21,6 +44,12 @@ function onload() {
         new QRCode(document.getElementById('client_qrcode'), {
           text: client_url, width:160, height:160, correctLevel : QRCode.CorrectLevel.L, colorDark : "#008800", colorLight : "#ffffff",
         })
+        set('local', (res.local?'Local':'Remote') + ' Access')
+        if (res.local) {
+          document.getElementById('local_panel').style.visibility = 'visible'
+          let pouchdb_url = `http://127.0.0.1:5984/_utils`
+          set('pouchdb_utils', `<a href='${pouchdb_url}' target='_blank'>${pouchdb_url}</a>`)
+        }
       } else {
         alert(res.message)
       }

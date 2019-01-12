@@ -11,7 +11,7 @@ const script = require('./script')
 const client_deploy = './client/deployed_js/'
 const user = require('./user')
 const path = require('path')
-require('./db').checkRunning((success)=>{console.log(success)},(err)=>{console.log(err)})
+require('./db').checkRunning((success)=>{},(err)=>{console.log(err)})
 
 const http = require('http').Server(app)
 const io = require('socket.io')(http)
@@ -432,7 +432,31 @@ app.post('/ubit/icon', (req, res) => {
 })
 
 app.get('/ip', (req, res) => {
-  dns.lookup(require('os').hostname(), (err, ip) => {
-    res.json({ 'success': true, 'ip': ip })
+  let client_ip = req.ip.replace('::ffff:', '')
+  dns.lookup(require('os').hostname(), (err, host_ip) => {
+    console.log('Access Server IP: ' + host_ip + ' from Client IP: ' + client_ip)
+    let local = (client_ip == host_ip) || (client_ip == '127.0.0.1')
+    res.json({ 'success': true, 'ip': host_ip, 'local': local})
   })
+})
+
+app.post('/user', (req, res) => {
+  let body = req.body
+  if (body.userid && body.password) {
+    let client_ip = req.ip.replace('::ffff:', '')
+    dns.lookup(require('os').hostname(), (err, host_ip) => {
+      let local = (client_ip == host_ip) || (client_ip == '127.0.0.1')
+      if (local) {
+        user.save(body.userid, body.password).then((result) => {
+          res.json({ 'success': true })
+        }, (err) => {
+          res.json({ 'success': false, 'message': 'Save Error - user probably already exists...' })
+        })
+      } else {
+        res.json({ 'success': false, 'message': 'Must be run from local server'})
+      }
+    })
+  } else {
+    res.json({ 'success': false, 'message': 'Need UserId and Password' })
+  }
 })
