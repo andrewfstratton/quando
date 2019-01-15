@@ -11,8 +11,8 @@ Prerequisites: Chrome browser, Node JS, (optional) git for windows install (http
 
 ### Setting up Quando for first time use
 
-1. Run quando (which opens two windows - one each for pouchdb and node+app.js)
-2. Pressing return should start chrome with the control panel - if it doesn't, then open http://127.0.0.1 in chrome
+1. Run quando (which runs the pouchdb server and the quando node server).  Note that the PouchDB log file is in pouchdb/log.txt
+2. Open the Control Panel through http://127.0.0.1 in chrome
 3. Create a new user, e.g. 'test' with password 'test' and 'Add User'.
     * Note: you can change a user's password (or delete a user) through the PouchDB Control Panel.
 4. Chrome needs to be modified to allow video and audio to auto play:
@@ -47,7 +47,7 @@ If everything is fine - then try restarting to see if everything boots correctly
 The standard Leap Motion (Orion) software needs to be installed on the Client PC, i.e. where the Leap motion is plugged in and where the browser will be run. The SDK is not needed.
 
 ### Updating using Git
-To update (assuming quando has changed), First kill the Node.js process in the task manager,
+To update (assuming quando has changed), first kill, or exit, the Node.js process in the task manager,
 then use:
 
 * git pull origin master

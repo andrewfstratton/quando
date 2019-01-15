@@ -1,1 +1,0 @@
-start /b npm run pouchd

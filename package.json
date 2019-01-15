@@ -1,12 +1,12 @@
 {
   "name": "quando",
-  "version": "0.8.20190104",
+  "version": "0.8.20190115",
   "description": "Quando Toolset",
   "main": "start.js",
   "scripts": {
     "test": "mocha --ui tdd test",
     "pouchd": "pouchdb-server --port 5984 --dir pouchdb --config pouchdb-config.json",
-    "quando": "node app.js",
+    "quando": "node server.js",
     "start": "node .",
     "standardize": "standard"
   },

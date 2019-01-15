@@ -7,7 +7,7 @@ The instructions below assume that you are using Visual Studio Code, though spec
 From the Visual Studio Code, you need to:
 
 1. Run the pouchdb database, using `npm run pouchd` from the Terminal
-2. Run `node app.js`, e.g. through Launch
+2. Run `node server.js`, e.g. through Launch
 3. Open a Browser to 127.0.0.1/inventor
 
 ## Block Development using Inventor Blocks
