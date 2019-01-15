@@ -52,10 +52,15 @@ net_server.broadcast = (msg) => {
   })
 }
 
-let server = http.listen(process.env.PORT || 80, () => {
+let port = process.env.PORT || 80
+let appEnv = require('cfenv').getAppEnv() // For IBM Cloud
+if (!appEnv.isLocal) {
+  port = appEnv.port
+}
+
+let server = http.listen(port, () => {
   let host = process.env.IP || server.address().address
-  let port = server.address().port
-  console.log('Quando Server listening at http://%s:%s', host, port)
+  console.log(`Quando Server listening at http://${host}:${server.address().port}`)
 })
 
 net_server.listen(SOCKET_PORT, '0.0.0.0', ()=>{

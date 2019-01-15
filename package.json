@@ -14,6 +14,7 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.18.3",
+    "cfenv": "^1.0.x",
     "express": "^4.16.4",
     "express-session": "^1.14.2",
     "formidable": "^1.2.1",
@@ -24,7 +25,7 @@
     "pouchdb": "^6.4.3",
     "pouchdb-find": "^6.4.3",
     "pouchdb-server": "^4.1.0",
-    "serialport": "^7.1.1",
+    "serialport": "^7.1.3",
     "session-pouchdb-store": "^0.2.1",
     "socket.io": "^1.7.0"
   },
