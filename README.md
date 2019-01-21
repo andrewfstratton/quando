@@ -61,7 +61,7 @@ Run the editor, then:
 1. Run 'node .' or 'npm start', e.g. from the terminal
 3. Open a Browser to 127.0.0.1
 
-N.B. The client can screen can be right clicked a screen that allows you to select already deployed/created scripts - whichever one you open will be reopened next time you open 127.0.0.1/client.  This can also be done form the kiosk boot, so that a different interaction is loaded next time the PC reboots.
+N.B. The client screen can be right clicked to allow you to select already deployed/created scripts - whichever one you open will be reopened next time you open 127.0.0.1/client.  This can also be done from the kiosk boot, so that a different interaction is loaded next time the PC reboots.
 
 ### Optional - auto reload
 npm install -g nodemon
