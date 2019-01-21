@@ -5,4 +5,10 @@
   }
   var self = quando.espruino = {}
 
+  self.display = (str, val) => {
+    fetch('/socket/' + encodeURI(str), { method: 'POST', 
+      body: JSON.stringify({'val':val}), 
+      headers: {"Content-Type": "application/json"}
+    })
+  }
 })()
