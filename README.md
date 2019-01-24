@@ -50,6 +50,9 @@ The standard Leap Motion (Orion) software needs to be installed on the Client PC
 To update (assuming quando has changed), first kill, or exit, the Node.js process in the task manager,
 then use:
 
+* once only:
+  * git update-index --assume-unchanged .\pouchdb\log.txt
+  * git update-index --assume-unchanged .\pouchdb-config.json
 * git pull origin master
 * quando
 
