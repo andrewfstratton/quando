@@ -34,12 +34,13 @@ const find_microbit = (error, success) => {
 exports.get_serial = (error, success) => {
   find_microbit(error, (comName) => {
     if (serialport) {
-      serial = new serialport(comName, {baudRate: 115200, parser: serialport.parsers.readline('\n')}, (err) => {
+      serial = new serialport(comName, {baudRate: 115200}, (err) => {
         if (err) { 
           serial = false
           error(err)
         } else {
-          success(serial)
+          let parser = serial.pipe(new serialport.parsers.Readline({ delimiter: '\r\n' }))
+          success(serial, parser)
         }
       })
     } else {

@@ -1,7 +1,7 @@
 'use strict'
 const express = require('express')
 const session = require('express-session')
-const PouchSession = require('session-pouchdb-store')
+const  MemoryStore = require('memorystore')(session)
 const app = express()
 const fs = require('fs')
 const formidable = require('formidable')
@@ -92,10 +92,8 @@ app.use(session({
         // name: may need this later - if sessions exist for clients...
     httpOnly: false
   },
-  store: new PouchSession('http://127.0.0.1:5984/session', {
-    maxIdle : 12*60*60*1000,
-    scavenge : 60*1000,
-    purge : 12*60*60*1000			
+  store: new MemoryStore({
+    checkPeriod: 7 * 24 * 60 * 60 * 1000
   })
 }))
 app.use('/', (req, res, next) => {
@@ -208,9 +206,9 @@ function ubit_error (err) {
   setTimeout(() => { ubit.get_serial(ubit_error, ubit_success) }, 1000)
     // Checks every second for plugged in micro:bit
 }
-function ubit_success (serial) {
+function ubit_success (serial, parser) {
   reported = false
-  serial.on('data', (data) => {
+  parser.on('data', (data) => {
     try {
       let ubit = JSON.parse(data.trim())
       if (ubit && io) {
@@ -243,7 +241,7 @@ function ubit_success (serial) {
       console.log(err + ':' + data)
     }
   })
-  serial.on('disconnect', ubit_error)
+  serial.on('close', ubit_error)
 }
 
 ubit.get_serial(ubit_error, ubit_success)
