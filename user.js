@@ -4,8 +4,7 @@ const COLLECTION = 'user'
 
 exports.getOnIdPassword = (id, password) => {
   return new Promise((success, fail) => {
-    const query = { _id:{$eq: id}, password:{$eq: password} }
-    db.find(COLLECTION, query).then(
+    db.find(COLLECTION, {_id: id, 'password': password}).then(
       (result) => {
         if (result.length == 1) {
           let user_doc = result[0]

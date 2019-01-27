@@ -12,10 +12,9 @@ exports.save = (db_name, doc) => {
   })
 }
 
-exports.find = (db_name, query) => {
+exports.find = (db_name, include, exclude = {}) => {
   return new Promise((success, fail) => {
-    const options = {selector: query}
-    db.find(db_name, options).then((doc) => {
+    db.find(db_name, include, exclude).then((doc) => {
       let results = []
       let rows = doc.docs.length
       for(let i=0; i<rows; i++) {
@@ -26,10 +25,9 @@ exports.find = (db_name, query) => {
   })
 }
 
-exports.remove = (db_name, query) => {
+exports.remove = (db_name, include, exclude = {}) => {
   return new Promise((success, fail) => {
-    const options = {selector: query}
-    db.find(db_name, options).then((result) => {
+    db.find(db_name, include, exclude).then((result) => {
       if (result.docs.length == 0) {
         fail('No Scripts to Remove')
       } else {

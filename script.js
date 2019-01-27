@@ -12,8 +12,7 @@ exports.save = (name, userid, script) => {
 
 exports.getNamesOnOwnerID = (userid) => {
   return new Promise((success, fail) => {
-    const query = {'ownerid': {$eq: userid}} // Note: option to sort on descending date removed due to runtime error
-    db.find(COLLECTION, query).then((result) => {
+    db.find(COLLECTION, {'ownerid':userid}).then((result) => {
       let list = []
       result.forEach((item) => { // get ready to sort
         list.push({ name: decodeURIComponent(item.name), date: new Date(item.date), id: item._id + '' })
@@ -34,8 +33,7 @@ exports.getNamesOnOwnerID = (userid) => {
 
 exports.getOnId = (id) => {
   return new Promise((success, fail) => {
-    const query = {_id: {$eq: id}}
-    db.find(COLLECTION, query).then((result) => {
+    db.find(COLLECTION, {_id: id}).then((result) => {
       if (result.length == 0) {
         fail('Failed to find script')
       } else {
@@ -53,21 +51,20 @@ exports.getOnId = (id) => {
 
 exports.deleteOnId = (id) => {
   return new Promise((success, fail) => {
-    const query = {_id: {$eq: id}}
-    db.remove(COLLECTION, query).then(success, fail)
+    db.remove(COLLECTION, {_id: id}).then(success, fail)
   })
 }
 
 exports.tidyOnIdName = (userid, id, name) => {
   return new Promise((success, fail) => {
-    const query = { name: name, _id: {$ne: id}, ownerid: userid}
-    db.remove(COLLECTION, query).then(success, fail)
+    const inc = {'name': name, 'ownerid': userid}
+    const ex = { _id: id}
+    db.remove(COLLECTION, inc, ex).then(success, fail)
   })
 }
 
 exports.deleteAllOnName = (userid, name) => {
   return new Promise((success, fail) => {
-    const query = { name: {$eq: name}, ownerid: userid}
-    db.remove(COLLECTION, query).then(success, fail)
+    db.remove(COLLECTION, {'name': name, 'ownerid': userid}).then(success, fail)
   })
 }
