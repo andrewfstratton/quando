@@ -47,13 +47,3 @@ exports.remove = (db_name, include, exclude = {}) => {
     })
   })
 }
-
-exports.checkRunning = (success, error) => {
-  PouchDB(DB_LOCATION + "_users").info((err)=>{
-    if (err) {
-      error("Database Not running!\n---  Use 'npm run pouchd'\n--- " + err.toString())
-    } else {
-      success('Database running...')
-    }
-  })
-}
