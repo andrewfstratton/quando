@@ -12,8 +12,8 @@ exports.save = (name, userid, script) => {
 
 exports.getNamesOnOwnerID = (userid) => {
   return new Promise((success, fail) => {
-    const options = {selector: {'ownerid': {$eq: userid}}} // Note: option to sort on descending date removed due to runtime error
-    db.find(COLLECTION, options).then((result) => {
+    const query = {'ownerid': {$eq: userid}} // Note: option to sort on descending date removed due to runtime error
+    db.find(COLLECTION, query).then((result) => {
       let list = []
       result.forEach((item) => { // get ready to sort
         list.push({ name: decodeURIComponent(item.name), date: new Date(item.date), id: item._id + '' })
@@ -34,8 +34,8 @@ exports.getNamesOnOwnerID = (userid) => {
 
 exports.getOnId = (id) => {
   return new Promise((success, fail) => {
-    const options = {selector: {_id: {$eq: id}}}
-    db.find(COLLECTION, options).then((result) => {
+    const query = {_id: {$eq: id}}
+    db.find(COLLECTION, query).then((result) => {
       if (result.length == 0) {
         fail('Failed to find script')
       } else {

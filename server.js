@@ -1,7 +1,7 @@
 'use strict'
 const express = require('express')
 const session = require('express-session')
-const  MemoryStore = require('memorystore')(session)
+const MemoryStore = require('memorystore')(session)
 const app = express()
 const fs = require('fs')
 const formidable = require('formidable')
@@ -54,8 +54,9 @@ net_server.broadcast = (msg) => {
 
 let port = process.env.PORT || 80
 let appEnv = require('cfenv').getAppEnv() // For IBM Cloud
-if (!appEnv.isLocal) {
-  port = appEnv.port
+if (appEnv.isLocal == false) { // i.e. if running on cloud server
+  port = appEnv.port // override the port
+  console.log("INFO: Running on IBM Cloud")
 }
 
 let server = http.listen(port, () => {

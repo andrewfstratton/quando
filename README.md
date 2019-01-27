@@ -54,7 +54,7 @@ then use:
   * git update-index --assume-unchanged .\pouchdb\log.txt
   * git update-index --assume-unchanged .\pouchdb-config.json
 * git pull origin master
-* quando
+* quando or npm start
 
 ## Editing as a Developer
 
