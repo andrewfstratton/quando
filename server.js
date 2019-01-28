@@ -55,8 +55,8 @@ net_server.broadcast = (msg) => {
 let port = process.env.PORT || 80
 let appEnv = require('cfenv').getAppEnv() // For IBM Cloud
 if (appEnv.isLocal == false) { // i.e. if running on cloud server
+  console.log("INFO: Running on IBM Cloud, port="+port+" >> "+appEnv.port)
   port = appEnv.port // override the port
-  console.log("INFO: Running on IBM Cloud")
 }
 
 let server = http.listen(port, () => {
