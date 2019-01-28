@@ -2,7 +2,7 @@
 let db = require("./modules/pouchdb")
 
 if (require('cfenv').getAppEnv().isLocal == false) {
-console.log("NYI - running on IBM Cloud")
+  console.log("Using Cloudant - i.e. running on IBM Cloud")
   db = require("./modules/cloudant")
 }
 
