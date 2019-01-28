@@ -57,6 +57,8 @@ let appEnv = require('cfenv').getAppEnv() // For IBM Cloud
 if (appEnv.isLocal == false) { // i.e. if running on cloud server
   console.log("INFO: Running on IBM Cloud, port="+port+" >> "+appEnv.port)
   port = appEnv.port // override the port
+} else {
+  console.log("INFO: Running as Hub, port="+port)
 }
 
 let server = http.listen(port, () => {
