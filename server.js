@@ -66,9 +66,13 @@ let server = http.listen(port, () => {
   console.log(`Quando Server listening at http://${host}:${server.address().port}`)
 })
 
-net_server.listen(SOCKET_PORT, '0.0.0.0', ()=>{
-  console.log('Net Socket started on port '+SOCKET_PORT)
-})
+try {
+  net_server.listen(SOCKET_PORT, '0.0.0.0', ()=>{
+    console.log('Net Socket started on port '+SOCKET_PORT)
+  })
+} catch (err) {
+  console.log('Socket IO sever failed - ' + err)
+}
 
 const MEDIA_FOLDER = path.join(__dirname, 'client', 'media')
 const MEDIA_MAP = {
@@ -367,7 +371,6 @@ app.get('/socket', (req, res) => {
 app.post('/socket/:id', (req, res) => {
   let id = req.params.id
   let val = req.body.val
-  let socket = net_server.socket
   let msg = JSON.stringify({id:id, val:val})
   net_server.broadcast(msg)
   res.json({})
