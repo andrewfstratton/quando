@@ -17,40 +17,6 @@ const io = require('socket.io')(http)
 const ubit = require('./ubit')
 const net = require('net')
 const dns = require('dns')
-const SOCKET_PORT = 591
-let net_server = net.createServer( (socket)=>{
-  let drop_socket = (socket) => {
-    let index = net_server.sockets.indexOf(socket)
-    if (index != -1) {
-      net_server.sockets.splice(index, 1)
-    }
-  }
-  console.log('Socket connected...')
-  net_server.sockets.push(socket)
-  socket.on('error', ()=>{
-  console.log('Socket error...')
-    drop_socket(socket)
-  })
-  socket.on('timeout', ()=>{
-  console.log('Socket timeout...')
-    drop_socket(socket)
-  })
-  socket.on('data', (data)=>{
-  console.log('Socket data...')
-    console.log(data.toString())
-    socket.write('Ok\n')
-  })
-  socket.on('end', ()=>{
-    drop_socket(socket)
-    console.log('...closed['+index+']')
-  })
-})
-net_server.sockets=[]
-net_server.broadcast = (msg) => {
-  net_server.sockets.forEach(socket => {
-    socket.write(msg + '\n')
-  })
-}
 
 let port = process.env.PORT || 80
 let appEnv = require('cfenv').getAppEnv() // For IBM Cloud
@@ -61,18 +27,44 @@ if (appEnv.isLocal == false) { // i.e. if running on cloud server
   console.log("INFO: Running as Hub, port="+port)
 }
 
+let drop_client = (client) => {
+  let index = io.clients.indexOf(client)
+  if (index != -1) {
+    io.clients.splice(index, 1) // unlike delete, remove the array entry, rather than set to null
+  }
+}
+
 let server = http.listen(port, () => {
   let host = process.env.IP || server.address().address
   console.log(`Quando Server listening at http://${host}:${server.address().port}`)
-})
-
-try {
-  net_server.listen(SOCKET_PORT, '0.0.0.0', ()=>{
-    console.log('Net Socket started on port '+SOCKET_PORT)
+  io.clients=[]
+  io.broadcast = (msg) => {
+    io.clients.forEach(client => {
+      client.write(msg + '\n')
+    })
+  }
+  io.on('connection', (client) => {
+    console.log('Socket connected...')
+    io.clients.push(client)
+    client.on('error', ()=>{
+      console.log('Socket error...')
+      drop_client(client)
+    })
+    client.on('timeout', ()=>{
+      console.log('Socket timeout...')
+      drop_client(client)
+    })
+    client.on('data', (data)=>{
+      console.log('Socket data...')
+      console.log(data.toString())
+      client.write('Ok\n')
+    })
+    client.on('end', ()=>{
+      drop_client(client)
+      console.log('...closed['+index+']')
+    })
   })
-} catch (err) {
-  console.log('Socket IO sever failed - ' + err)
-}
+})
 
 const MEDIA_FOLDER = path.join(__dirname, 'client', 'media')
 const MEDIA_MAP = {
@@ -364,15 +356,11 @@ app.post('/message/:id', (req, res) => {
   res.json({})
 })
 
-app.get('/socket', (req, res) => {
-  res.json({port:SOCKET_PORT})
-})
-
 app.post('/socket/:id', (req, res) => {
   let id = req.params.id
   let val = req.body.val
   let msg = JSON.stringify({id:id, val:val})
-  net_server.broadcast(msg)
+  io_server.broadcast(msg)
   res.json({})
 })
 
