@@ -16,7 +16,7 @@ function _build_query(include, exclude) {
 function _db(name) {
   if (connection == null) {
     // Derived from Cloudant package on GitHub
-    const appEnv = cfenv.getAppEnv()
+    const appEnv = require('cfenv').getAppEnv()
     if (appEnv.services['cloudantNoSQLDB']) {
       console.log("--appEnv service...")
     }
