@@ -4,12 +4,12 @@ let connection = null
 
 function _build_query(include, exclude) {
   let query = {}
-  Object.entries(include).forEach(([k,v])=> {
-    query[k] = {$eq:v}
-  })
-  Object.entries(exclude).forEach(([k,v])=> {
-    query[k] = {$ne:v}
-  })
+  for (let key in include) {
+    query[key] = {$eq:include[key]}
+  }
+  for (let key in exclude) {
+    query[key] = {$ne:exclude[key]}
+  }
   return query
 }
 
