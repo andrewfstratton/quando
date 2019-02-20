@@ -17,16 +17,13 @@ function _db(name) {
   if (connection == null) {
     // Derived from Cloudant package on GitHub
     const appEnv = require('cfenv').getAppEnv()
-    if (appEnv.services['cloudantNoSQLDB']) {
-      console.log("--appEnv service...")
+    let services = appEnv.services['cloudantNoSQLDB']
+    for(let service in services) {
+      if (service.name == 'Cloudant-quando-connection') {
+        connection = Cloudant(service.credentials)
+        console.log("credentials::"+service.credentials)
+      }
     }
-    // let credentials = {
-      // "url":"https://99a579ff-a253-4670-8141-c3162c969e52-bluemix:31a868f7a68cd0f9e717f2e5076b0ee083714d3c192fc95b0ebb55618e45e91e@99a579ff-a253-4670-8141-c3162c969e52-bluemix.cloudantnosqldb.appdomain.cloud"
-    // }
-    console.log("process.env::"+process.env)
-    let credentials = process.env.CLOUDANT_URL
-    console.log("credentials::"+credentials)
-    connection = Cloudant(credentials)
   }
   return connection.db.use(name)
 }
