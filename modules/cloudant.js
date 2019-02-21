@@ -15,17 +15,20 @@ function _build_query(include, exclude) {
 
 function _db(name) {
   if (connection == null) {
-    // Derived from Cloudant package on GitHub
     const appEnv = require('cfenv').getAppEnv()
     let services = appEnv.services['cloudantNoSQLDB']
-    for(let service in services) {
+    for(let service of services) {
       if (service.name == 'Cloudant-quando-connection') {
         connection = Cloudant(service.credentials)
-        console.log("credentials::"+service.credentials)
+        // console.log("credentials::"+service.credentials)
       }
     }
   }
-  return connection.db.use(name)
+  if (connection == null) {
+    console.log("Failed to find Cloudant service 'Cloudant-quando-connection'")
+  } else {
+    return connection.db.use(name)
+  }
 }
 
 exports.save = (db_name, doc) => {
