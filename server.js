@@ -280,6 +280,7 @@ app.post('/file/upload/*', (req, res) => {
   let media = path.basename(filename)
   let folder = filename.substring(0, filename.length - media.length)
   let form = new formidable.IncomingForm()
+  // form.encoding = 'utf-8'
   form.multiples = true
   form.uploadDir = path.join(MEDIA_FOLDER, folder)
   form.keepExtensions = true
@@ -296,7 +297,9 @@ app.post('/file/upload/*', (req, res) => {
   })
   form.on('file', (field, file) => {
     fs.rename(file.path, path.join(form.uploadDir, file.name), (err) => {
-      res.json({ 'success': false, 'message': 'an error has occured with form upload' + err })
+      if (!res.headersSent) { // Fix since first response is received
+        res.json({ 'success': false, 'message': 'an error has occured with form upload' + err })
+      }
     })
   })
   form.on('error', (err) => {
