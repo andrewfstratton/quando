@@ -43,3 +43,5 @@ ubit/tutorial
 .node_repl_history
 user
 pouchdb/*/*
+client/deployed_js/-.js
+pouchdb-config.json

@@ -1,3 +1,3 @@
 let exec = () => {
-quando.image.set(false,'green_light.png')
+quando.augReality.showGLTF('tests/wall.gltf', 100, false)
 }

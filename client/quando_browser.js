@@ -424,6 +424,8 @@
     self.style.reset()
     // Find display and execute...
     self._displays.get(id)()
+    //clear AR 
+    quando.augReality.clear()
   }
 
   self.addLabel = function (id, title) {
