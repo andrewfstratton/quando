@@ -9,7 +9,7 @@ if (appEnv.isLocal) { // i.e. not running on cloud server
   pouch_db_process.on('error', (err)=>{
     console.error('  PouchDB--' + err)
   })
-  console.log('To open Hub Control Panel - http://127.0.0.1) - or Ctrl-C to exit...')
+  console.log('To open Hub Control Panel - http://127.0.0.1 - or Ctrl-C to exit...')
 }
 
 console.log('Starting Quando server...')
