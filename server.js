@@ -434,7 +434,10 @@ app.get('/ip', (req, res) => {
   let client_ip = req.ip.replace('::ffff:', '')
   dns.lookup(require('os').hostname(), (err, host_ip) => {
     console.log('Access Server IP: ' + host_ip + ' from Client IP: ' + client_ip)
-    let local = (client_ip == host_ip) || (client_ip == '127.0.0.1')
+    let local = appEnv.isLocal // false when running on cloud server
+    if (local) {
+      local = (client_ip == host_ip) || (client_ip == '127.0.0.1')
+    }
     res.json({ 'success': true, 'ip': host_ip, 'local': local})
   })
 })
@@ -444,7 +447,10 @@ app.post('/user', (req, res) => {
   if (body.userid && body.password) {
     let client_ip = req.ip.replace('::ffff:', '')
     dns.lookup(require('os').hostname(), (err, host_ip) => {
-      let local = (client_ip == host_ip) || (client_ip == '127.0.0.1')
+      let local = appEnv.isLocal // false when running on cloud server
+      if (local) {
+        local = (client_ip == host_ip) || (client_ip == '127.0.0.1')
+      }
       if (local) {
         user.save(body.userid, body.password).then((result) => {
           res.json({ 'success': true })
