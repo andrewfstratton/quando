@@ -441,6 +441,32 @@
     div.onclick = fn
   }
 
+  self.addQuestion = function (answer, id) {
+    var elem = document.getElementById('quando_labels')
+    var div = document.createElement('div')
+    var input = document.createElement('input')
+    var button = document.createElement('button')
+
+    div.className = 'quando_label'
+    input.type = "text"
+    input.className = "quando_input"
+    button.innerHTML = "sumbit"
+
+    div.appendChild(input)
+    div.appendChild(button)
+    elem.appendChild(div)
+
+    //on submit button being pressed, check if user's answer is right
+    button.addEventListener("click", function(){
+      if (input.value == answer) {
+        //button.innerHTML = "You got it!"
+        setTimeout( () => { quando.showDisplay(id) }, 0) 
+      } else {
+        button.innerHTML = "Nah try again..."
+      }
+    })
+  } 
+
   self.pick = function(val, arr) {
     if (val === false) {
       val = 0.5

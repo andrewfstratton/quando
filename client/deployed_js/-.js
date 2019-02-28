@@ -1,3 +1,6 @@
 let exec = () => {
-quando.augReality.showGLTF('tests/wall.gltf', 100, false)
+quando.display(0,()=>{
+quando.title('')
+quando.addQuestion('turd', 0)
+})
 }

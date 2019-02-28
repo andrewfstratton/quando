@@ -24,7 +24,7 @@
       scene.setAttribute('embedded', '');
 
       //camera element - SINGLE HIRO MARKER
-      var cam = document.createElement('a-marker-camera');
+      var cam = document.createElement('a-marker');
       cam.setAttribute('preset', 'hiro');
 
       //user chosen model - GLTF 2.0 - uncompressed
