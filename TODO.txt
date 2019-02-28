@@ -1,17 +1,15 @@
 TODO:
 
 find out how to access phone camera w ar.js
-DONE!!!!!!!!!!!!!! I THINK clear a-frame from screen when moving to new window 
 
-find out why new quando install blackscreens
-then update all my stuff
+add puzzle building blocks - will take form of WHEN(event) blocks
+learn more about AR.js events and if they even exist
 
 add marker gen/choice system
     ---https://jeromeetienne.github.io/AR.js/three.js/examples/marker-training/examples/generator.html
 
 alter showGLTF methods to allow for multiple makers? - change camera element
 
-add puzzle blocks - will require alert passing?
 
 
 GEN NOTES:

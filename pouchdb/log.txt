@@ -10,3 +10,23 @@
 [Thu, 28 Feb 2019 15:15:15 GMT] [info] [<0.000.0>] pouchdb-server has started on http://127.0.0.1:5984/
 [Thu, 28 Feb 2019 15:15:15 GMT] [info] [<0.000.0>] database files will be saved to pouchdb
 [Thu, 28 Feb 2019 15:15:15 GMT] [info] [<0.000.0>] navigate to http://127.0.0.1:5984/_utils for the Fauxton UI.
+[Thu, 28 Feb 2019 16:18:59 GMT] [info] [<0.000.0>] pouchdb-server has started on http://127.0.0.1:5984/
+[Thu, 28 Feb 2019 16:18:59 GMT] [info] [<0.000.0>] database files will be saved to pouchdb
+[Thu, 28 Feb 2019 16:18:59 GMT] [info] [<0.000.0>] navigate to http://127.0.0.1:5984/_utils for the Fauxton UI.
+[Thu, 28 Feb 2019 18:14:22 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /user/ 200
+[Thu, 28 Feb 2019 18:14:22 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /user/_find 200
+[Thu, 28 Feb 2019 18:14:33 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /script/ 404
+[Thu, 28 Feb 2019 18:14:33 GMT] [info] [<0.000.0>] 127.0.0.1 - - PUT /script/ 201
+[Thu, 28 Feb 2019 18:14:33 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /script/_bulk_docs 201
+[Thu, 28 Feb 2019 18:14:43 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /script/ 200
+[Thu, 28 Feb 2019 18:14:43 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /script/_find 200
+[Thu, 28 Feb 2019 18:14:44 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /script/ 200
+[Thu, 28 Feb 2019 18:14:44 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /script/_find 200
+[Thu, 28 Feb 2019 18:14:45 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /script/ 200
+[Thu, 28 Feb 2019 18:14:45 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /script/_find 200
+[Thu, 28 Feb 2019 18:16:22 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /script/ 200
+[Thu, 28 Feb 2019 18:16:22 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /script/_find 200
+[Thu, 28 Feb 2019 18:16:23 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /script/ 200
+[Thu, 28 Feb 2019 18:16:23 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /script/_find 200
+[Thu, 28 Feb 2019 18:16:59 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /script/ 200
+[Thu, 28 Feb 2019 18:16:59 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /script/_bulk_docs 201
