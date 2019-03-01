@@ -26,6 +26,8 @@
       //camera element - SINGLE HIRO MARKER
       var cam = document.createElement('a-marker');
       cam.setAttribute('preset', 'hiro');
+      cam.setAttribute('id', 'hiro');
+      cam.setAttribute('registerevents', '');
 
       //user chosen model - GLTF 2.0 - uncompressed
       var model = document.createElement('a-gltf-model');
@@ -67,6 +69,18 @@
       if (arDebug != null) {
         body.removeChild(arDebug)
       }
+
+
+    }
+
+    self.onScan = function(fn) {
+
+      var marker = document.getElementById('hiro')
+			marker.addEventListener('markerFound', function() {
+				var markerId = marker.id;
+				console.log('markerFound', markerId);
+        fn()
+			});
 
     }
 

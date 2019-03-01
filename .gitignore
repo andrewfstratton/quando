@@ -45,3 +45,4 @@ user
 pouchdb/*/*
 client/deployed_js/-.js
 pouchdb-config.json
+client/deployed_js/-.js

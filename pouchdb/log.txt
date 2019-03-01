@@ -30,3 +30,32 @@
 [Thu, 28 Feb 2019 18:16:23 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /script/_find 200
 [Thu, 28 Feb 2019 18:16:59 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /script/ 200
 [Thu, 28 Feb 2019 18:16:59 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /script/_bulk_docs 201
+[Thu, 28 Feb 2019 18:28:32 GMT] [info] [<0.000.0>] pouchdb-server has started on http://127.0.0.1:5984/
+[Thu, 28 Feb 2019 18:28:32 GMT] [info] [<0.000.0>] database files will be saved to pouchdb
+[Thu, 28 Feb 2019 18:28:32 GMT] [info] [<0.000.0>] navigate to http://127.0.0.1:5984/_utils for the Fauxton UI.
+[Thu, 28 Feb 2019 18:32:54 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /user/ 200
+[Thu, 28 Feb 2019 18:32:54 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /user/ 200
+[Thu, 28 Feb 2019 18:32:54 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /user/_find 200
+[Thu, 28 Feb 2019 18:32:54 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /user/_find 200
+[Fri, 01 Mar 2019 19:41:09 GMT] [info] [<0.000.0>] pouchdb-server has started on http://127.0.0.1:5984/
+[Fri, 01 Mar 2019 19:41:09 GMT] [info] [<0.000.0>] database files will be saved to pouchdb
+[Fri, 01 Mar 2019 19:41:09 GMT] [info] [<0.000.0>] navigate to http://127.0.0.1:5984/_utils for the Fauxton UI.
+[Fri, 01 Mar 2019 19:41:23 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /user/ 200
+[Fri, 01 Mar 2019 19:41:23 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /user/_find 200
+[Fri, 01 Mar 2019 19:41:57 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /script/ 200
+[Fri, 01 Mar 2019 19:41:57 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /script/_find 200
+[Fri, 01 Mar 2019 19:41:58 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /script/ 200
+[Fri, 01 Mar 2019 19:41:58 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /script/_find 200
+[Fri, 01 Mar 2019 19:43:21 GMT] [info] [<0.000.0>] pouchdb-server has started on http://127.0.0.1:5984/
+[Fri, 01 Mar 2019 19:43:21 GMT] [info] [<0.000.0>] database files will be saved to pouchdb
+[Fri, 01 Mar 2019 19:43:21 GMT] [info] [<0.000.0>] navigate to http://127.0.0.1:5984/_utils for the Fauxton UI.
+[Fri, 01 Mar 2019 19:53:55 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /user/ 200
+[Fri, 01 Mar 2019 19:53:55 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /user/_find 200
+[Fri, 01 Mar 2019 19:53:59 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /script/ 200
+[Fri, 01 Mar 2019 19:53:59 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /script/_find 200
+[Fri, 01 Mar 2019 19:54:00 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /script/ 200
+[Fri, 01 Mar 2019 19:54:00 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /script/_find 200
+[Fri, 01 Mar 2019 19:54:24 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /script/ 200
+[Fri, 01 Mar 2019 19:54:24 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /script/_bulk_docs 201
+[Fri, 01 Mar 2019 20:18:05 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /user/ 200
+[Fri, 01 Mar 2019 20:18:05 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /user/_find 200
