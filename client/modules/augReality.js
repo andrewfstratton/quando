@@ -45,6 +45,7 @@
     self.showGLTF_TEST = function(modelURL, markerURL, scale=100, above=false) {
       //handle params
       modelURL = '/client/media/' + encodeURI(modelURL)
+      markerURL = '/client/media/' + encodeURI(markerURL)
       scale = scale/100; //scale supplied in %
       if (above) { //is model to be on or above marker?
         position = '0 1 0'
@@ -57,11 +58,14 @@
       scene.setAttribute('arjs', '');
       scene.setAttribute('embedded', '');
 
-      //camera element - SINGLE HIRO MARKER
+      //camera element
       var cam = document.createElement('a-marker');
-      cam.setAttribute('preset', 'hiro');
-      cam.setAttribute('id', 'hiro');
-      cam.setAttribute('registerevents', '');
+      cam.setAttribute('preset', 'custom');
+      cam.setAttribute('type', 'pattern');
+      cam.setAttribute('patternUrl', markerURL);
+      cam.setAttribute('emitevents', 'true');
+      cam.setAttribute('registerevents', 'true');
+
 
       //user chosen model - GLTF 2.0 - uncompressed
       var model = document.createElement('a-gltf-model');
@@ -107,7 +111,7 @@
       var marker = document.getElementById('hiro')
 			marker.addEventListener('markerFound', function() {
 				var markerId = marker.id;
-				console.log('markerFound', markerId);
+				alert('NICE')
         fn()
 			});
     }
