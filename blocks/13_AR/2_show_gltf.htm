@@ -1,0 +1,28 @@
+<div class="quando-block" data-quando-id="true" data-quando-javascript="quando.augReality.showGLTF_TEST('${file_name}', '${marker}', ${scale}, ${position})">
+    <div class="quando-left quando-AR"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-AR">
+          TEST
+            Put object: 
+            <input data-quando-media="objects" data-quando-name="file_name" type="text" readonly="true" value="" data-quando-encode="normal"/>
+            on marker:
+            <input data-quando-media="images" data-quando-name="marker" type="text" readonly="true" value="hiro" data-quando-encode="normal"/>
+            &nbsp;
+            <select data-quando-name='extras' class='quando-toggle'>
+              <option value='hidden'>...</option>
+              <option value='show'>...</option>
+            </select>
+            <span data-quando-toggle='extras=show'>
+              <br />
+                with size
+                <input data-quando-name="scale" type="text" value="100" data-quando-encode="normal" />
+                % and 
+                <select data-quando-name='position' class='quando-toggle'>
+                  <option value='false'>on</option>
+                  <option value='true'>above</option>
+                </select>
+                marker
+            </span>
+        </div>
+    </div>
+</div>

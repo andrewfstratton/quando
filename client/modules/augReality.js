@@ -8,7 +8,6 @@
     self.height = screen.height
 
     self.showGLTF = function(fileURL, scale=100, above=false) {
-
       //handle params
       fileURL = '/client/media/' + encodeURI(fileURL)
       scale = scale/100; //scale supplied in %
@@ -41,11 +40,44 @@
 
       //add to AR element of doc
       document.getElementById('quando_AR').append(scene);
+    }
 
+    self.showGLTF_TEST = function(modelURL, markerURL, scale=100, above=false) {
+      //handle params
+      modelURL = '/client/media/' + encodeURI(modelURL)
+      scale = scale/100; //scale supplied in %
+      if (above) { //is model to be on or above marker?
+        position = '0 1 0'
+      } else {
+        position = '0 0 0'
+      }
+
+      //initialize scene
+      var scene = document.createElement('a-scene');
+      scene.setAttribute('arjs', '');
+      scene.setAttribute('embedded', '');
+
+      //camera element - SINGLE HIRO MARKER
+      var cam = document.createElement('a-marker');
+      cam.setAttribute('preset', 'hiro');
+      cam.setAttribute('id', 'hiro');
+      cam.setAttribute('registerevents', '');
+
+      //user chosen model - GLTF 2.0 - uncompressed
+      var model = document.createElement('a-gltf-model');
+      model.setAttribute('gltf-model', 'url('+modelURL+')'); //id model from url
+      model.setAttribute('scale', scale.toString() + ' '+ scale.toString() +' '+ scale.toString());
+      model.setAttribute('position', position);
+      
+      //add to heirarchy
+      scene.appendChild(model);
+      scene.appendChild(cam);
+
+      //add to AR element of doc
+      document.getElementById('quando_AR').append(scene);
     }
 
     self.clear = function() {
-
       var arDiv = document.getElementById('quando_AR')
       var aScene = document.getElementById('a-scene')
       var arDebug = document.getElementById('arjsDebugUIContainer')
@@ -69,19 +101,15 @@
       if (arDebug != null) {
         body.removeChild(arDebug)
       }
-
-
     }
 
     self.onScan = function(fn) {
-
       var marker = document.getElementById('hiro')
 			marker.addEventListener('markerFound', function() {
 				var markerId = marker.id;
 				console.log('markerFound', markerId);
         fn()
 			});
-
     }
 
 }) ()
