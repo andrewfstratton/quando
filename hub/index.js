@@ -37,8 +37,8 @@ function onload() {
         let inventor_url = `http://${ip}/inventor`
         let client_url = `http://${ip}/client`
         if (res.local == false) { // remote access 
-          inventor_url = './inventor'
-          client_url = './client'
+          inventor_url = document.location + 'inventor'
+          client_url = document.location + 'client'
         }
         set('inventor_ip', `<a href='${inventor_url}' target='_blank'>${inventor_url}</a>`)
         set('client_ip', `<a href='${client_url}' target='_blank'>${client_url}</a>`)
