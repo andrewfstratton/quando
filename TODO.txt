@@ -1,19 +1,32 @@
 TODO:
 
-update diss log
-
-find out how to access phone camera w ar.js
-    ---think I was just using Firefox smh
-    ---need to sort HTTPS cert stuff
+!!!!update diss log
 
 add puzzle building blocks - will take form of WHEN(event) blocks
+    --- test currently added protoypes.
 
-add marker gen/choice system
-    ---https://jeromeetienne.github.io/AR.js/three.js/examples/marker-training/examples/generator.html
+NOTE: alright, so custom markers work now, but they must be referenced as
+live url's, not as relative files stored on the server.
+
+add stuff other than 3d models to marker - image (flat, vertical, facing camera??), video(sames), text(same actually damn)
+
+now need to create library of custom markers and pattern files,
+host them on github, then create a choose/print system within quando.
 
 alter showGLTF methods to allow for multiple makers? - change camera element
 
+add lerp smoothing??
+
 figure out how to not allow marker dependant puzzle blocks without having a marker??
+
+add loading icon?
+
+SESSIONS! users need to be able to use the same deployed file independantly of each other
+
+
 
 GEN NOTES:
 ask andy if save load icons should be switched
+npm install --unsafe-perm --global leveldown
+
+flag issue on ar.js about a-marker vs a-marker-camera

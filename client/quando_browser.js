@@ -420,12 +420,12 @@
     document.getElementById('quando_labels').innerHTML = ''
     self.title()
     self.text()
+    //clear AR 
+    quando.AR.clear()
 //        self.video() removed to make sure video can continue playing between displays
     self.style.reset()
     // Find display and execute...
     self._displays.get(id)()
-    //clear AR 
-    quando.augReality.clear()
   }
 
   self.addLabel = function (id, title) {
