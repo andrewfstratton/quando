@@ -1,4 +1,4 @@
-<div class="quando-block" data-quando-javascript="quando.AR.onScan('${marker}', ()=>{$(nl)$${box}})">
+<div class="quando-block" data-quando-javascript="quando.AR.onLoss('${marker}', ${delay}, ()=>{$(nl)$${box}})">
 <div class="quando-left quando-puzzle"></div>
 <div class="quando-right">
     <div class="quando-row quando-puzzle">
@@ -14,10 +14,20 @@
           <option value='F'>F</option>
           <option value='G'>G</option>
         </select>
-        is scanned
+        is lost
+        &nbsp;
+        <select data-quando-name='extras' class='quando-toggle'>
+          <option value='hidden'>...</option>
+          <option value='show'>...</option>
+        </select>
+        <span data-quando-toggle='extras=show'>
+          <br />
+            waiting for
+            <input data-quando-name="delay" type="text" value="0" data-quando-encode="normal" />
+            seconds
+        </span>
     </div>
     <div data-quando-name="box" class="quando-box"></div>
     <div class="quando-row quando-puzzle"></div>
 </div>
 </div>
-
