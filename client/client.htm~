@@ -1,0 +1,46 @@
+<html id="html">
+
+<head>
+    <title>[[TITLE]]</title>
+    <meta charset="UTF-8">
+    <link href="/client/client.css" rel="stylesheet" type="text/css" />
+    <script src="/socket.io/socket.io.js" type="text/javascript"></script>
+    <script src="/client/quando_browser.js" type="text/javascript"></script>
+    <script src="/client/modules/destructor.js" type="text/javascript"></script>
+    <script src="/client/modules/style.js" type="text/javascript"></script>
+    <script src="/client/modules/image.js" type="text/javascript"></script>
+    <script src="/client/modules/time.js" type="text/javascript"></script>
+    <script src="/client/modules/pick.js" type="text/javascript"></script>
+    <script src="/client/lib/leap-0.6.4.js" type="text/javascript"></script>
+    <script src="/client/lib/leap-plugins-0.1.11.js" type="text/javascript"></script>
+    <script src="/client/modules/leap.js" type="text/javascript"></script>
+    <script src="/client/modules/ubit.js" type="text/javascript"></script>
+    <script src="/client/modules/espruino.js" type="text/javascript"></script>
+    <script src="/client/modules/speech.js" type="text/javascript"></script>
+    <script src="/client/lib/three.js" type="text/javascript"></script>
+    <!-- <script src="/client/lib/objloader.js" type="text/javascript"></script> -->
+    <!-- <script src="/client/lib/mtlloader.js" type="text/javascript"></script> -->
+    <script src="/client/lib/gltfloader.js" type="text/javascript"></script>
+    <script src="/client/modules/object3d.js" type="text/javascript"></script>
+    <link rel="icon" href="/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body id="body" onload="quando.startDisplay();">
+    <div id="container">
+        <div id='quando_title'></div>
+        <div id="quando_3d"></div>
+        <svg id="quando_image_parent" viewBox="0 0 1 1">
+            <img id="quando_image"/>
+            <img id="quando_image_display"/>
+        </svg>
+        <video id="quando_video"></video>
+        <audio id="quando_audio"></audio>
+        <div id='quando_labels'></div>
+        <div id='quando_text'></div>
+        <div id="cursor"></div>
+    </div>
+    <script src="/client/deployed_js/[[DEPLOYED_JS]]" type="text/javascript"></script>
+</body>
+
+</html>
