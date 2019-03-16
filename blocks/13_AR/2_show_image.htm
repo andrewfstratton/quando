@@ -1,0 +1,39 @@
+<div class="quando-block" data-quando-id="true" data-quando-javascript="quando.AR.showImage('${file_name}', '${marker}', ${scale}, ${orientation})">
+    <div class="quando-left quando-AR"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-AR">
+            Put image
+            <input data-quando-media="objects" data-quando-name="file_name" type="text" readonly="true" value="" data-quando-encode="normal"/>
+            on marker
+            <select data-quando-name="marker">
+              <option value='hiro'>hiro</option>
+              <option value='scan me'>scan me!</option>
+              <option value='1'>1</option>
+              <option value='2'>2</option>
+              <option value='3'>3</option>
+              <option value='4'>4</option>
+              <option value='5'>5</option>
+              <option value='6'>6</option>
+              <option value='7'>7</option>
+              <option value='8'>8</option>
+            </select>
+            &nbsp;
+            <select data-quando-name='extras' class='quando-toggle'>
+              <option value='hidden'>...</option>
+              <option value='show'>...</option>
+            </select>
+            <span data-quando-toggle='extras=show'>
+              <br />
+                with size
+                <input data-quando-name="scale" type="text" value="100" data-quando-encode="normal" />
+                % and 
+                <select data-quando-name='orientation' class='quando-toggle'>
+                  <option value='flat'>flat</option>
+                  <option value='vertical'>vertical</option>
+                  <option value='facing'>facing camera?</option>
+                </select>
+                marker
+            </span>
+        </div>
+    </div>
+</div>

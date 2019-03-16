@@ -31,9 +31,7 @@ node_modules
 jspm_packages
 blockly
 closure-library
-client/images/dolls_house/*
 ubit/*.hex
-client/media/*/*
 ubit/tutorial
 
 # Optional npm cache directory
@@ -43,3 +41,4 @@ ubit/tutorial
 .node_repl_history
 user
 pouchdb/*/*
+client/deployed_js/-.js
