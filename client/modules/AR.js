@@ -85,6 +85,248 @@
       }
     }
 
+    self.showImage = function(imgURL, markerID, scale=100, above=false) {
+
+      //handle params
+      imgURL = '/client/media/' + encodeURI(imgURL)
+      scale = scale/100; //scale supplied in %
+
+      var scene = document.getElementById('scene')
+      if (scene == null) { 
+        //if scene doesn't exist
+
+        //init scene
+        scene = document.createElement('a-scene');
+        scene.setAttribute('arjs', 'debugUIEnabled: false;');
+        scene.setAttribute('embedded', '');
+        scene.setAttribute('id', 'scene');
+
+        //init marker
+        var marker = document.createElement('a-marker');
+        if (markerID == 'hiro') {
+          marker.setAttribute('preset', 'hiro');
+          marker.setAttribute('id', 'hiro');
+        } else { 
+          marker.setAttribute('preset', 'custom');
+          marker.setAttribute('type', 'pattern');
+          marker.setAttribute('id', markerID);
+          //NOTE: below URLs must be hosted online instead of relatively for some dumb reason
+          marker.setAttribute('url', 'https://raw.githubusercontent.com/andrewfstratton/quando/adventureGame2/client/media/letters/'+markerID+'.patt');
+        }
+
+        //init user chosen image
+        var img = document.createElement('a-image');
+        img.setAttribute('src', imgURL); //id model from url
+
+        //the below width and height settings are not relative, so will display the image in a 1:1 ratio
+        img.setAttribute('height', scale.toString());
+        img.setAttribute('width', scale.toString());
+        //img.setAttribute('position', position); position not handled yet
+
+        //init camera element
+        var cam = document.createElement('a-camera-static'); 
+        cam.setAttribute('id', 'camera')
+        
+        //add to heirarchy
+        marker.appendChild(img);
+        scene.appendChild(marker);
+        scene.appendChild(cam);
+
+        //add to AR element of doc
+        document.getElementById('quando_AR').append(scene);
+
+      } else { 
+        //scene already exists
+
+        //init marker
+        var marker = document.createElement('a-marker');
+        if (markerID == 'hiro') {
+          marker.setAttribute('preset', 'hiro');
+          marker.setAttribute('id', 'hiro');
+        } else { 
+          marker.setAttribute('preset', 'custom');
+          marker.setAttribute('type', 'pattern');
+          marker.setAttribute('id', markerID);
+          //NOTE: below URLs must be hosted online instead of relatively for some dumb reason
+          marker.setAttribute('url', 'https://raw.githubusercontent.com/andrewfstratton/quando/adventureGame2/client/media/letters/'+markerID+'.patt');
+        }
+
+        //init user chosen image
+        var img = document.createElement('a-image');
+        img.setAttribute('src', imgURL); //id model from url
+
+        //the below width and height settings are not relative, so will display the image in a 1:1 ratio
+        img.setAttribute('height', scale.toString());
+        img.setAttribute('width', scale.toString());
+        //img.setAttribute('position', position); position not handled yet
+
+        marker.appendChild(img)
+        scene.appendChild(marker)
+
+      }
+    }
+
+    self.showVideo = function(vidURL, markerID, scale=100, above=false) {
+
+      //handle params
+      vidURL = '/client/media/' + encodeURI(vidURL)
+      scale = scale/100; //scale supplied in %
+
+      var scene = document.getElementById('scene')
+      if (scene == null) { 
+        //if scene doesn't exist
+
+        //init scene
+        scene = document.createElement('a-scene');
+        scene.setAttribute('arjs', 'debugUIEnabled: false;');
+        scene.setAttribute('embedded', '');
+        scene.setAttribute('id', 'scene');
+
+        //init marker
+        var marker = document.createElement('a-marker');
+        if (markerID == 'hiro') {
+          marker.setAttribute('preset', 'hiro');
+          marker.setAttribute('id', 'hiro');
+        } else { 
+          marker.setAttribute('preset', 'custom');
+          marker.setAttribute('type', 'pattern');
+          marker.setAttribute('id', markerID);
+          //NOTE: below URLs must be hosted online instead of relatively for some dumb reason
+          marker.setAttribute('url', 'https://raw.githubusercontent.com/andrewfstratton/quando/adventureGame2/client/media/letters/'+markerID+'.patt');
+        }
+
+        //init user chosen video
+        var vid = document.createElement('a-video');
+        vid.setAttribute('src', vidURL); //id video from url
+
+        //the below width and height settings are not relative, so will display in a 1:1 ratio
+        vid.setAttribute('height', scale.toString());
+        vid.setAttribute('width', scale.toString());
+        //img.setAttribute('position', position); position not handled yet
+
+        //init camera element
+        var cam = document.createElement('a-camera-static'); 
+        cam.setAttribute('id', 'camera')
+        
+        //add to heirarchy
+        marker.appendChild(vid);
+        scene.appendChild(marker);
+        scene.appendChild(cam);
+
+        //add to AR element of doc
+        document.getElementById('quando_AR').append(scene);
+
+      } else { 
+        //scene already exists
+
+        //init marker
+        var marker = document.createElement('a-marker');
+        if (markerID == 'hiro') {
+          marker.setAttribute('preset', 'hiro');
+          marker.setAttribute('id', 'hiro');
+        } else { 
+          marker.setAttribute('preset', 'custom');
+          marker.setAttribute('type', 'pattern');
+          marker.setAttribute('id', markerID);
+          //NOTE: below URLs must be hosted online instead of relatively for some dumb reason
+          marker.setAttribute('url', 'https://raw.githubusercontent.com/andrewfstratton/quando/adventureGame2/client/media/letters/'+markerID+'.patt');
+        }
+
+        //init user chosen video
+        var vid = document.createElement('a-video');
+        vid.setAttribute('src', vidURL); //id video from url
+
+        //the below width and height settings are not relative, so will display in a 1:1 ratio
+        vid.setAttribute('height', scale.toString());
+        vid.setAttribute('width', scale.toString());
+        //img.setAttribute('position', position); position not handled yet
+
+        marker.appendChild(vid)
+        scene.appendChild(marker)
+
+      }
+    }
+
+    self.showText = function(text, markerID, scale=100, above=false) {
+
+      //handle params
+      scale = scale/100; //scale supplied in %
+
+      var scene = document.getElementById('scene')
+      if (scene == null) { 
+        //if scene doesn't exist
+
+        //init scene
+        scene = document.createElement('a-scene');
+        scene.setAttribute('arjs', 'debugUIEnabled: false;');
+        scene.setAttribute('embedded', '');
+        scene.setAttribute('id', 'scene');
+
+        //init marker
+        var marker = document.createElement('a-marker');
+        if (markerID == 'hiro') {
+          marker.setAttribute('preset', 'hiro');
+          marker.setAttribute('id', 'hiro');
+        } else { 
+          marker.setAttribute('preset', 'custom');
+          marker.setAttribute('type', 'pattern');
+          marker.setAttribute('id', markerID);
+          //NOTE: below URLs must be hosted online instead of relatively for some dumb reason
+          marker.setAttribute('url', 'https://raw.githubusercontent.com/andrewfstratton/quando/adventureGame2/client/media/letters/'+markerID+'.patt');
+        }
+
+        //init user text
+        var textElement = document.createElement('a-text');
+        textElement.setAttribute('value', text);
+
+        //the below width and height settings are bad
+        textElement.setAttribute('height', scale.toString());
+        textElement.setAttribute('width', scale.toString());
+        //img.setAttribute('position', position); position not handled yet
+
+        //init camera element
+        var cam = document.createElement('a-camera-static'); 
+        cam.setAttribute('id', 'camera')
+        
+        //add to heirarchy
+        marker.appendChild(textElement);
+        scene.appendChild(marker);
+        scene.appendChild(cam);
+
+        //add to AR element of doc
+        document.getElementById('quando_AR').append(scene);
+
+      } else { 
+        //scene already exists
+
+        //init marker
+        var marker = document.createElement('a-marker');
+        if (markerID == 'hiro') {
+          marker.setAttribute('preset', 'hiro');
+          marker.setAttribute('id', 'hiro');
+        } else { 
+          marker.setAttribute('preset', 'custom');
+          marker.setAttribute('type', 'pattern');
+          marker.setAttribute('id', markerID);
+          //NOTE: below URLs must be hosted online instead of relatively for some dumb reason
+          marker.setAttribute('url', 'https://raw.githubusercontent.com/andrewfstratton/quando/adventureGame2/client/media/letters/'+markerID+'.patt');
+        }
+
+        //init user text
+        var textElement = document.createElement('a-text');
+        textElement.setAttribute('value', text);
+
+        //the below width and height settings are bad
+        textElement.setAttribute('height', scale.toString());
+        textElement.setAttribute('width', scale.toString());
+        //img.setAttribute('position', position); position not handled yet        
+
+        marker.appendChild(textElement)
+        scene.appendChild(marker)
+
+      }
+    }
+
     self.clear = function() {
       var arDiv = document.getElementById('quando_AR')
 
