@@ -67,3 +67,6 @@
 [Fri, 15 Mar 2019 14:42:54 GMT] [info] [<0.000.0>] navigate to http://127.0.0.1:5984/_utils for the Fauxton UI.
 [Fri, 15 Mar 2019 14:59:27 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /user/ 200
 [Fri, 15 Mar 2019 14:59:28 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /user/_find 200
+[Mon, 18 Mar 2019 21:47:00 GMT] [info] [<0.000.0>] pouchdb-server has started on http://127.0.0.1:5984/
+[Mon, 18 Mar 2019 21:47:00 GMT] [info] [<0.000.0>] database files will be saved to pouchdb
+[Mon, 18 Mar 2019 21:47:00 GMT] [info] [<0.000.0>] navigate to http://127.0.0.1:5984/_utils for the Fauxton UI.

@@ -7,8 +7,7 @@
     self.width = screen.width
     self.height = screen.height
 
-    self.showGLTF = function(modelURL, markerID, scale=100, above=false) {
-
+    self.showGLTF = function(modelURL, markerID, flat=true, scale=100, above=false) {
       //handle params
       modelURL = '/client/media/' + encodeURI(modelURL)
       scale = scale/100; //scale supplied in %
@@ -19,8 +18,8 @@
       }
 
       var scene = document.getElementById('scene')
-      if (scene == null) { //if scene doesn't exist
-
+      if (scene == null) { 
+        //if scene doesn't exist
         //init scene
         scene = document.createElement('a-scene');
         scene.setAttribute('arjs', 'debugUIEnabled: false;');
@@ -45,6 +44,9 @@
         model.setAttribute('gltf-model', 'url('+modelURL+')'); //id model from url
         model.setAttribute('scale', scale.toString() + ' '+ scale.toString() +' '+ scale.toString());
         model.setAttribute('position', position);
+        if (flat == false) {
+          model.setAttribute('rotation', '0 0 90')
+        }
 
         //init camera element
         var cam = document.createElement('a-camera-static'); 
@@ -78,6 +80,9 @@
         model.setAttribute('gltf-model', 'url('+modelURL+')'); //id model from url
         model.setAttribute('scale', scale.toString() + ' '+ scale.toString() +' '+ scale.toString());
         model.setAttribute('position', position);
+        if (flat == false) {
+          model.setAttribute('rotation', '0 0 90')
+        }
 
         marker.appendChild(model)
         scene.appendChild(marker)
@@ -121,7 +126,14 @@
         //the below width and height settings are not relative, so will display the image in a 1:1 ratio
         img.setAttribute('height', scale.toString());
         img.setAttribute('width', scale.toString());
-        //img.setAttribute('position', position); position not handled yet
+        if (orientation == 'flat') {
+          img.setAttribute('rotation', '-90 0 90');
+        } else if (orientation == 'vertical') {
+          img.setAttribute('rotation', '0 0 90');
+        } else {
+          img.setAttribute('rotation', '0 0 90');
+          img.setAttribute('look-at', '#player')
+        }
 
         //init camera element
         var cam = document.createElement('a-camera-static'); 
@@ -158,7 +170,14 @@
         //the below width and height settings are not relative, so will display the image in a 1:1 ratio
         img.setAttribute('height', scale.toString());
         img.setAttribute('width', scale.toString());
-        //img.setAttribute('position', position); position not handled yet
+        if (orientation == 'flat') {
+          img.setAttribute('rotation', '-90 0 90');
+        } else if (orientation == 'vertical') {
+          img.setAttribute('rotation', '0 0 90');
+        } else {
+          img.setAttribute('rotation', '0 0 90');
+          img.setAttribute('look-at', '#player')
+        }
 
         marker.appendChild(img)
         scene.appendChild(marker)
@@ -166,7 +185,7 @@
       }
     }
 
-    self.showVideo = function(vidURL, markerID, scale=100, above=false) {
+    self.showVideo = function(vidURL, markerID, scale=100, orientation) {
 
       //handle params
       vidURL = '/client/media/' + encodeURI(vidURL)
@@ -202,7 +221,14 @@
         //the below width and height settings are not relative, so will display in a 1:1 ratio
         vid.setAttribute('height', scale.toString());
         vid.setAttribute('width', scale.toString());
-        //img.setAttribute('position', position); position not handled yet
+        if (orientation == 'flat') {
+          vid.setAttribute('rotation', '-90 0 90');
+        } else if (orientation == 'vertical') {
+          vid.setAttribute('rotation', '0 0 90');
+        } else {
+          vid.setAttribute('rotation', '0 0 90');
+          vid.setAttribute('look-at', '#player')
+        }
 
         //init camera element
         var cam = document.createElement('a-camera-static'); 
@@ -238,8 +264,16 @@
 
         //the below width and height settings are not relative, so will display in a 1:1 ratio
         vid.setAttribute('height', scale.toString());
-        vid.setAttribute('width', scale.toString());
-        //img.setAttribute('position', position); position not handled yet
+        vid.setAttribute('width', scale.toString());        
+        if (orientation == 'flat') {
+          vid.setAttribute('rotation', '-90 0 90');
+        } else if (orientation == 'vertical') {
+          vid.setAttribute('rotation', '0 0 90');
+        } else {
+          vid.setAttribute('rotation', '0 0 90');
+          vid.setAttribute('look-at', '#player')
+        }
+
 
         marker.appendChild(vid)
         scene.appendChild(marker)
@@ -247,10 +281,10 @@
       }
     }
 
-    self.showText = function(text, markerID, scale=100, above=false) {
+    self.showText = function(text, markerID, scale) {
 
       //handle params
-      scale = scale/100; //scale supplied in %
+      scale = scale/10; //scale supplied in %
 
       var scene = document.getElementById('scene')
       if (scene == null) { 
@@ -282,7 +316,15 @@
         //the below width and height settings are bad
         textElement.setAttribute('height', scale.toString());
         textElement.setAttribute('width', scale.toString());
-        //img.setAttribute('position', position); position not handled yet
+        if (orientation == 'flat') {
+          textElement.setAttribute('rotation', '-90 0 90');
+        } else if (orientation == 'vertical') {
+          textElement.setAttribute('rotation', '0 0 90');
+        } else {
+          textElement.setAttribute('rotation', '0 0 90');
+          textElement.setAttribute('look-at', '#player')
+        }
+
 
         //init camera element
         var cam = document.createElement('a-camera-static'); 
@@ -319,7 +361,14 @@
         //the below width and height settings are bad
         textElement.setAttribute('height', scale.toString());
         textElement.setAttribute('width', scale.toString());
-        //img.setAttribute('position', position); position not handled yet        
+        if (orientation == 'flat') {
+          textElement.setAttribute('rotation', '-90 0 90');
+        } else if (orientation == 'vertical') {
+          textElement.setAttribute('rotation', '0 0 90');
+        } else {
+          textElement.setAttribute('rotation', '0 0 90');
+          textElement.setAttribute('look-at', '#player')
+        }      
 
         marker.appendChild(textElement)
         scene.appendChild(marker)
