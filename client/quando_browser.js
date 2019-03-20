@@ -32,6 +32,17 @@
     return window.innerHeight
   }
 
+  self.call_tts = function(text) {
+    fetch('/watson/TTS_request', { method: 'POST', 
+      body: JSON.stringify({'text':text}), 
+      headers: {"Content-Type": "application/json"}
+    });
+    self.socket.on('TTS_return', function(data) { //wait for return
+      alert('TTS data recieved');
+      self.audio('tts.wav', false);
+    }); 
+  }
+
   //empty functions for inventory and puzzle tracking
   self.on_inv_match = function() {}
   self.on_puzz_success = function() {}

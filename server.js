@@ -18,6 +18,12 @@ const ubit = require('./ubit')
 const net = require('net')
 const dns = require('dns')
 
+const TextToSpeechV1 = require('watson-developer-cloud/text-to-speech/v1');
+const tts = new TextToSpeechV1({
+  iam_apikey: 'rRDUgzsh17bWWYS2VesXDCkHIanOQIuE42ccPOI7qivX',
+  url: 'https://gateway-lon.watsonplatform.net/text-to-speech/api'
+})
+
 let port = process.env.PORT || 80
 let appEnv = require('cfenv').getAppEnv() // For IBM Cloud
 if (appEnv.isLocal == false) { // i.e. if running on cloud server
@@ -62,6 +68,9 @@ let server = http.listen(port, () => {
     client.on('end', ()=>{
       drop_client(client)
       console.log('...closed['+index+']')
+    })
+    client.on('TTS_request', ()=> {
+      console.log('TTS requested...');
     })
   })
 })
@@ -356,6 +365,29 @@ app.post('/message/:id', (req, res) => {
   let id = req.params.id
   let val = req.body.val
   io.emit(id, {'val': val})
+  res.json({})
+})
+
+app.post('/watson/TTS_request', (req, res) => {
+  console.log('Text to Speech Requested...')
+  let text = req.body.text;
+  console.log('TTS Text is: ' + text);
+  let params = { //stuff sent to API
+    text: text,
+  accept: 'audio/wav'
+  } 
+  tts.synthesize(params,
+    function(err, audio) { //handling errors and file
+      if (err) {
+      console.log(err);
+      return;
+      }
+      tts.repairWavHeader(audio);
+      fs.writeFileSync(__dirname + '/client/media/tts.wav', audio); //save output file
+      console.log('TTS - audio written as tts.wav');
+    }
+    );
+  io.emit('TTS_return', {}) //send socket signal to client saying synthesis complete
   res.json({})
 })
 

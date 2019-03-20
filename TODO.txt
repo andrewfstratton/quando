@@ -1,0 +1,44 @@
+TODO:
+
+markers E & F may need to change, test this (SMALL)
+
+!!!!update diss log (SMALL)
+
+
+must add system to allow for failure states for puzzles (BIG)
+add stuff other than 3d models to marker - image (flat, vertical, facing camera??), video(sames), text(same actually damn) (BIG)
+
+switch save/load icons cause they're annoying me (SMALL)
+
+add lerp smoothing?? (MID)
+
+figure out how to not allow marker dependant puzzle blocks without having a marker?? (MID)
+
+add loading icon? (MID)
+
+SESSIONS! users need to be able to use the same deployed file independantly of each other (BIG)
+
+---DONE---- alter showGLTF methods to allow for multiple markers
+
+---KINDA DONE---- add puzzle building blocks - will take form of WHEN(event) blocks
+---DONE---- onScan, can't think of any other simple ones rn
+---DONE---- inventory system & tests added
+---DONE---- puzzle tracking system added
+---DONE---- deploy on IBM Cloud
+
+---DONE---- NOTE: alright, so custom markers work now, but they must be referenced as
+---DONE---- live url's, not as relative files stored on the server.
+
+
+---DONE---- now need to create library of custom markers and pattern files,
+---DONE---- letters chosen instead of numbers, mostly unique looking 
+
+---DONE---- host them on github, then create a choose/print system within quando.
+
+
+----------------WATSON---------------------------
+
+GEN NOTES:
+npm install --unsafe-perm --global leveldown
+
+a-marker vs a-marker-camera sorted, downgraded a-frame and it worked I guess, phew
