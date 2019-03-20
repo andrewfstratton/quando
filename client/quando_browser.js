@@ -33,16 +33,28 @@
   }
 
   self.call_tts = function(text) {
+    //send POST request to server
     fetch('/watson/TTS_request', { method: 'POST', 
       body: JSON.stringify({'text':text}), 
       headers: {"Content-Type": "application/json"}
     });
-    self.socket.on('TTS_return', function(data) { //wait for return
+    self.socket.on('TTS_return', function() { //wait for return
       alert('TTS data recieved');
       self.audio('tts.wav', false);
     }); 
   }
 
+  self.call_vis_rec = function(fileURL, goalClass) {
+    //send POST request to server
+    fetch('/watson/VISREC_request', { method: 'POST', 
+      body: JSON.stringify({'fileURL':fileURL}), 
+      headers: {"Content-Type": "application/json"}
+    });
+    self.socket.on('VISREC_return', function() { //wait for return
+      alert('VISREC data recieved');
+      //TODO - check if data passed in socket msg matches goal
+    }); 
+  }
   //empty functions for inventory and puzzle tracking
   self.on_inv_match = function() {}
   self.on_puzz_success = function() {}

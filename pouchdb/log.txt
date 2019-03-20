@@ -112,3 +112,9 @@
 [Wed, 20 Mar 2019 15:10:31 GMT] [info] [<0.000.0>] pouchdb-server has started on http://127.0.0.1:5984/
 [Wed, 20 Mar 2019 15:10:31 GMT] [info] [<0.000.0>] database files will be saved to pouchdb
 [Wed, 20 Mar 2019 15:10:31 GMT] [info] [<0.000.0>] navigate to http://127.0.0.1:5984/_utils for the Fauxton UI.
+[Wed, 20 Mar 2019 16:29:01 GMT] [info] [<0.000.0>] pouchdb-server has started on http://127.0.0.1:5984/
+[Wed, 20 Mar 2019 16:29:01 GMT] [info] [<0.000.0>] database files will be saved to pouchdb
+[Wed, 20 Mar 2019 16:29:01 GMT] [info] [<0.000.0>] navigate to http://127.0.0.1:5984/_utils for the Fauxton UI.
+[Wed, 20 Mar 2019 16:31:29 GMT] [info] [<0.000.0>] pouchdb-server has started on http://127.0.0.1:5984/
+[Wed, 20 Mar 2019 16:31:29 GMT] [info] [<0.000.0>] database files will be saved to pouchdb
+[Wed, 20 Mar 2019 16:31:29 GMT] [info] [<0.000.0>] navigate to http://127.0.0.1:5984/_utils for the Fauxton UI.

@@ -18,11 +18,19 @@ const ubit = require('./ubit')
 const net = require('net')
 const dns = require('dns')
 
+//Watson services
 const TextToSpeechV1 = require('watson-developer-cloud/text-to-speech/v1');
 const tts = new TextToSpeechV1({
   iam_apikey: 'rRDUgzsh17bWWYS2VesXDCkHIanOQIuE42ccPOI7qivX',
   url: 'https://gateway-lon.watsonplatform.net/text-to-speech/api'
-})
+});
+
+const VisualRecognitionV3 = require('watson-developer-cloud/visual-recognition/v3');
+const VisRec = new VisualRecognitionV3({
+  version: '2018-03-19',
+  iam_apikey: 'md2b1cDrwPHQC-a-hJovQnsgdvRyympAfBArw4niQCn9',
+  url: 'https://gateway.watsonplatform.net/visual-recognition/api'
+});
 
 let port = process.env.PORT || 80
 let appEnv = require('cfenv').getAppEnv() // For IBM Cloud
@@ -368,13 +376,16 @@ app.post('/message/:id', (req, res) => {
   res.json({})
 })
 
+//WATSON SERVICE ROUTES(?)
+
+//Text-To-Speech
 app.post('/watson/TTS_request', (req, res) => {
   console.log('Text to Speech Requested...')
   let text = req.body.text;
   console.log('TTS Text is: ' + text);
   let params = { //stuff sent to API
     text: text,
-  accept: 'audio/wav'
+    accept: 'audio/wav'
   } 
   tts.synthesize(params,
     function(err, audio) { //handling errors and file
@@ -389,7 +400,28 @@ app.post('/watson/TTS_request', (req, res) => {
     );
   io.emit('TTS_return', {}) //send socket signal to client saying synthesis complete
   res.json({})
-})
+});
+
+//Visual-Recognition
+app.post('/watson/VISREC_request', (req, res) => {
+  console.log('Visual Recognition Requested...');
+  let fileURL = req.body.fileURL;
+  console.log('File URL is: ' + fileURL);
+  let params = { //stuff sent to API
+    fileURL: fileURL
+  };
+  //call API
+  visRec.classify(params, function(err, res) {
+    if (err) {
+      console.log(err);
+    } else {
+      //TODO - need to parse out the classification here n pass it back with the socket signal
+      console.log(JSON.stringify(res, null, 2));
+    }
+  });
+  io.emit('VISREC_return', {}) //send socket signal to client saying rec complete
+  res.json({})
+});
 
 app.post('/socket/:id', (req, res) => {
   let id = req.params.id
