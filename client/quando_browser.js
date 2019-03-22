@@ -32,7 +32,7 @@
     return window.innerHeight
   }
 
-  self.call_tts = function(text) {
+  self.call_ttsOLD = function(text) {
     //send POST request to server
     fetch('/watson/TTS_request', { method: 'POST', 
       body: JSON.stringify({'text':text}), 
@@ -43,6 +43,16 @@
       self.audio('tts.wav', false);
     }); 
   }
+
+  self.call_tts = function(text) {
+    //send POST request to server
+    fetch('/watson/TTS_request', { method: 'POST', 
+        body: JSON.stringify({'text':text}), 
+        headers: {"Content-Type": "application/json"}
+    }).then(function() {
+      self.audio('tts.wav', false);
+    })
+  }; 
 
   self.call_vis_rec = function(fileURL, goalClass) {
     //send POST request to server
@@ -60,6 +70,37 @@
     )
   }
   
+  self.call_speech_to_text = function() {
+    //send POST request to server
+    fetch('/watson/VISREC_request', { method: 'POST', 
+      body: JSON.stringify({'fileURL':fileURL}), 
+      headers: {"Content-Type": "application/json"}
+    }).then(
+      function(response) {
+        response.json().then(
+          function(data) {
+            alert('cmon'+JSON.stringify(data))
+          }
+        )
+      }
+    )
+  }
+
+  self.call_tone_analyzer = function(text, goalClass) {
+    //send POST request to server
+    fetch('/watson/VISREC_request', { method: 'POST', 
+      body: JSON.stringify({'text':text}), 
+      headers: {"Content-Type": "application/json"}
+    }).then(
+      function(response) {
+        response.json().then(
+          function(data) {
+            alert('cmon'+JSON.stringify(data))
+          }
+        )
+      }
+    )
+  }
   //empty functions for inventory and puzzle tracking
   self.on_inv_match = function() {}
   self.on_puzz_success = function() {}

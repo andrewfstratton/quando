@@ -33,10 +33,16 @@ const visRec = new VisualRecognitionV3({
 });
 
 var ToneAnalyzerV3 = require('watson-developer-cloud/tone-analyzer/v3');
-var tone_analysis = new ToneAnalyzerV3({
+var toneAnalyzer = new ToneAnalyzerV3({
   version: '2017-09-21',
   iam_apikey: 'WcRnTs5agEpG9o_PKiTTQSJK1G7fUpcdodKWuVCJivUh',
   url: 'https://gateway-lon.watsonplatform.net/tone-analyzer/api'
+});
+
+var SpeechToTextV1 = require('watson-developer-cloud/speech-to-text/v1');
+var stt = new SpeechToTextV1({
+  iam_apikey: 'WiLEvMCQ1hPxKRYtpFo98jYg6jsc2QSnEHx2hfsYiseu',
+  url: 'https://gateway-lon.watsonplatform.net/speech-to-text/api'
 });
 
 let port = process.env.PORT || 80
@@ -434,22 +440,40 @@ app.post('/watson/VISREC_request', (req, res) => {
 //Visual-Recognition
 app.post('/watson/TONE_request', (req, res) => {
   console.log('Tone Analyzer Requested...');
+  let text = req.body.text;
   let params = { //stuff sent to API
-    images_file: file
+    tone_input: {'text': text},
+    content_type: 'application/json'
   };
-  var APIresult = 'yay'
-  //call API
-  visRec.classify(params, function(err, res) {
-    if (err) {
-      console.log(err);
+  toneAnalyzer.tone(params, function (error, toneAnalysis) {
+    if (error) {
+      console.log(error);
+    } else { 
+      console.log(JSON.stringify(toneAnalysis, null, 2));
+    }
+  })
+});
+
+//Visual-Recognition
+app.post('/watson/SPEECH_request', (req, res) => {
+  console.log('Speech to Text Requested...');
+  var combinedStream = CombinedStream.create();
+  combinedStream.append(fs.createReadStream(__dirname + 'audio-file1.wav'));
+  combinedStream.append(fs.createReadStream(__dirname + 'audio-file2.wav'));
+  
+  var params = {
+    audio: combinedStream,
+    content_type: 'audio/wav',
+    timestamps: true,
+    word_alternatives_threshold: 0.9
+  };
+  speechToText.recognize(recognizeParams, function(error, speechRecognitionResults) {
+    if (error) {
+      console.log(error);
     } else {
-      //TODO - need to parse out the classification here n pass it back with the socket signal
-      APIresult = JSON.stringify(res, null, 2)
-      console.log(JSON.stringify(res, null, 2));
+      console.log(JSON.stringify(speechRecognitionResults, null, 2));
     }
   });
-  res.json({result: APIresult})
-  //io.emit('VISREC_return', {}) //send socket signal to client saying rec complete
 });
 
 app.post('/socket/:id', (req, res) => {
