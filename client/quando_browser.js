@@ -49,12 +49,17 @@
     fetch('/watson/VISREC_request', { method: 'POST', 
       body: JSON.stringify({'fileURL':fileURL}), 
       headers: {"Content-Type": "application/json"}
-    });
-    self.socket.on('VISREC_return', function() { //wait for return
-      alert('VISREC data recieved');
-      //TODO - check if data passed in socket msg matches goal
-    }); 
+    }).then(
+      function(response) {
+        response.json().then(
+          function(data) {
+            alert('cmon'+JSON.stringify(data))
+          }
+        )
+      }
+    )
   }
+  
   //empty functions for inventory and puzzle tracking
   self.on_inv_match = function() {}
   self.on_puzz_success = function() {}

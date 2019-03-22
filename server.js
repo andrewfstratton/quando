@@ -26,10 +26,17 @@ const tts = new TextToSpeechV1({
 });
 
 const VisualRecognitionV3 = require('watson-developer-cloud/visual-recognition/v3');
-const VisRec = new VisualRecognitionV3({
+const visRec = new VisualRecognitionV3({
   version: '2018-03-19',
   iam_apikey: 'md2b1cDrwPHQC-a-hJovQnsgdvRyympAfBArw4niQCn9',
   url: 'https://gateway.watsonplatform.net/visual-recognition/api'
+});
+
+var ToneAnalyzerV3 = require('watson-developer-cloud/tone-analyzer/v3');
+var tone_analysis = new ToneAnalyzerV3({
+  version: '2017-09-21',
+  iam_apikey: 'WcRnTs5agEpG9o_PKiTTQSJK1G7fUpcdodKWuVCJivUh',
+  url: 'https://gateway-lon.watsonplatform.net/tone-analyzer/api'
 });
 
 let port = process.env.PORT || 80
@@ -405,22 +412,44 @@ app.post('/watson/TTS_request', (req, res) => {
 //Visual-Recognition
 app.post('/watson/VISREC_request', (req, res) => {
   console.log('Visual Recognition Requested...');
-  let fileURL = req.body.fileURL;
-  console.log('File URL is: ' + fileURL);
+  let file = fs.createReadStream(__dirname +'/client/media/tree.jpg');
   let params = { //stuff sent to API
-    fileURL: fileURL
+    images_file: file
   };
+  var APIresult = 'yay'
   //call API
   visRec.classify(params, function(err, res) {
     if (err) {
       console.log(err);
     } else {
       //TODO - need to parse out the classification here n pass it back with the socket signal
+      APIresult = JSON.stringify(res, null, 2)
       console.log(JSON.stringify(res, null, 2));
     }
   });
-  io.emit('VISREC_return', {}) //send socket signal to client saying rec complete
-  res.json({})
+  res.json({result: APIresult})
+  //io.emit('VISREC_return', {}) //send socket signal to client saying rec complete
+});
+
+//Visual-Recognition
+app.post('/watson/TONE_request', (req, res) => {
+  console.log('Tone Analyzer Requested...');
+  let params = { //stuff sent to API
+    images_file: file
+  };
+  var APIresult = 'yay'
+  //call API
+  visRec.classify(params, function(err, res) {
+    if (err) {
+      console.log(err);
+    } else {
+      //TODO - need to parse out the classification here n pass it back with the socket signal
+      APIresult = JSON.stringify(res, null, 2)
+      console.log(JSON.stringify(res, null, 2));
+    }
+  });
+  res.json({result: APIresult})
+  //io.emit('VISREC_return', {}) //send socket signal to client saying rec complete
 });
 
 app.post('/socket/:id', (req, res) => {

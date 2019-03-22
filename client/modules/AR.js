@@ -90,7 +90,7 @@
       }
     }
 
-    self.showImage = function(imgURL, markerID, scale=100, above=false) {
+    self.showImage = function(imgURL, markerID, scale=100, orientation) {
 
       //handle params
       imgURL = '/client/media/' + encodeURI(imgURL)
