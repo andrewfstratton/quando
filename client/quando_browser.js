@@ -32,18 +32,6 @@
     return window.innerHeight
   }
 
-  self.call_ttsOLD = function(text) {
-    //send POST request to server
-    fetch('/watson/TTS_request', { method: 'POST', 
-      body: JSON.stringify({'text':text}), 
-      headers: {"Content-Type": "application/json"}
-    });
-    self.socket.on('TTS_return', function() { //wait for return
-      alert('TTS data recieved');
-      self.audio('tts.wav', false);
-    }); 
-  }
-
   self.call_tts = function(text) {
     //send POST request to server
     fetch('/watson/TTS_request', { method: 'POST', 
@@ -54,24 +42,35 @@
     })
   }; 
 
-  self.call_vis_rec = function(fileURL, goalClass, fn) {
-    //send POST request to server
-    fetch('/watson/VISREC_request', { method: 'POST', 
-      body: JSON.stringify({'fileURL':fileURL}), 
-      headers: {"Content-Type": "application/json"}
-    }).then(
+  self.call_vis_rec_api = function(goalClass, fn) {
+        //send POST request to server
+        fetch('/watson/VISREC_request', { method: 'POST', 
+        body: JSON.stringify({'fileURL':fileURL}), 
+        headers: {"Content-Type": "application/json"}
+      }).then(
+  
+        //once POST request is done
+        function(response) {
+          response.json().then(function(data) {
+            //has it seen what it wants to?
+            if (data.includes(goalClass)) {
+              //execute box
+              fn();
+            };
+          })
+        }
+      )
+  }
 
-      //once POST request is done
-      function(response) {
-        response.json().then(function(data) {
-          //has it seen what it wants to?
-          if (data.includes(goalClass)) {
-            //execute box
-            fn();
-          };
-        })
-      }
-    )
+  self.call_vis_rec = function(fileURL, goalClass, fn) {
+    //prompt photo
+    var img_prompt = document.createElement('input')
+    img_prompt.setAttribute('type', 'file')
+    img_prompt.setAttribute('accept', 'image/*')
+    img_prompt.setAttribute('capture', 'camera')
+    document.getElementById('quando_AR').append(img_prompt);
+
+
   }
   
   self.call_speech_to_text = function() {
