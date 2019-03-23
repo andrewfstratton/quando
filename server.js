@@ -422,18 +422,16 @@ app.post('/watson/VISREC_request', (req, res) => {
   let params = { //stuff sent to API
     images_file: file
   };
-  var APIresult = 'yay'
   //call API
-  visRec.classify(params, function(err, res) {
+  visRec.classify(params, function(err, response) {
     if (err) {
       console.log(err);
     } else {
       //TODO - need to parse out the classification here n pass it back with the socket signal
-      APIresult = JSON.stringify(res, null, 2)
-      console.log(JSON.stringify(res, null, 2));
+      console.log(JSON.stringify(response, null, 2));
+      res.json(JSON.stringify(response, null, 2))
     }
   });
-  res.json({result: APIresult})
   //io.emit('VISREC_return', {}) //send socket signal to client saying rec complete
 });
 

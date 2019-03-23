@@ -54,18 +54,22 @@
     })
   }; 
 
-  self.call_vis_rec = function(fileURL, goalClass) {
+  self.call_vis_rec = function(fileURL, goalClass, fn) {
     //send POST request to server
     fetch('/watson/VISREC_request', { method: 'POST', 
       body: JSON.stringify({'fileURL':fileURL}), 
       headers: {"Content-Type": "application/json"}
     }).then(
+
+      //once POST request is done
       function(response) {
-        response.json().then(
-          function(data) {
-            alert('cmon'+JSON.stringify(data))
-          }
-        )
+        response.json().then(function(data) {
+          //has it seen what it wants to?
+          if (data.includes(goalClass)) {
+            //execute box
+            fn();
+          };
+        })
       }
     )
   }
