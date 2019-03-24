@@ -1,8 +1,10 @@
-<div class="quando-block" data-quando-javascript="quando.call_tone_analyzer('', '${goalTone}',  ()=>{$(nl)$${box}})">
+<div class="quando-block" data-quando-javascript="quando.call_tone_analyzer('${text}', '${goalTone}',  ()=>{$(nl)$${box}})">
 	<div class="quando-left quando-watson"></div>
 	<div class="quando-right">
 		<div class="quando-row quando-watson">
-			☁ When the player's typed something with tone 
+			TEST When 
+			<input data-quando-name="text" type="text" value="" data-quando-encode="normal"/>
+			 tone 
 			<select data-quando-name="goalTone">
 				<option value='anger'> Anger</option>
 				<option value='fear'> Fear</option>

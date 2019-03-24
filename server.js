@@ -429,13 +429,13 @@ app.post('/watson/VISREC_request', (req, res) => {
     } else {
       //TODO - need to parse out the classification here n pass it back with the socket signal
       console.log(JSON.stringify(response, null, 2));
-      res.json(JSON.stringify(response, null, 2))
-    }
+      res.json(JSON.stringify(response, null, 2));
+    };
   });
   //io.emit('VISREC_return', {}) //send socket signal to client saying rec complete
 });
 
-//Visual-Recognition
+//Tone Analyzer
 app.post('/watson/TONE_request', (req, res) => {
   console.log('Tone Analyzer Requested...');
   let text = req.body.text;
@@ -447,12 +447,13 @@ app.post('/watson/TONE_request', (req, res) => {
     if (error) {
       console.log(error);
     } else { 
-      console.log(JSON.stringify(toneAnalysis, null, 2));
+      //console.log(JSON.stringify(toneAnalysis, null, 2));
+      res.json(JSON.stringify(toneAnalysis, null, 2));
     }
   })
 });
 
-//Visual-Recognition
+//Speech to Text
 app.post('/watson/SPEECH_request', (req, res) => {
   console.log('Speech to Text Requested...');
   var combinedStream = CombinedStream.create();

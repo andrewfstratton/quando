@@ -42,7 +42,18 @@
     })
   }; 
 
-  self.call_vis_rec_api = function(goalClass, fn) {
+  self.call_vis_rec = function(fileURL, goalClass, fn) {
+    //prompt & save photo
+    var img_prompt = document.createElement('input');
+    img_prompt.setAttribute('type', 'file');
+    img_prompt.setAttribute('accept', 'image/*');
+    img_prompt.setAttribute('capture', 'camera');
+    document.getElementById('quando_AR').append(img_prompt);
+
+    self.call_vis_rec_api(fileURL, goalClass, fn);
+  }
+
+  self.call_vis_rec_api = function(fileURL, goalClass, fn) {
         //send POST request to server
         fetch('/watson/VISREC_request', { method: 'POST', 
         body: JSON.stringify({'fileURL':fileURL}), 
@@ -61,17 +72,6 @@
         }
       )
   }
-
-  self.call_vis_rec = function(fileURL, goalClass, fn) {
-    //prompt photo
-    var img_prompt = document.createElement('input')
-    img_prompt.setAttribute('type', 'file')
-    img_prompt.setAttribute('accept', 'image/*')
-    img_prompt.setAttribute('capture', 'camera')
-    document.getElementById('quando_AR').append(img_prompt);
-
-
-  }
   
   self.call_speech_to_text = function() {
     //send POST request to server
@@ -89,18 +89,21 @@
     )
   }
 
-  self.call_tone_analyzer = function(text, goalClass) {
+  self.call_tone_analyzer = function(text, goalTone, fn) {
     //send POST request to server
-    fetch('/watson/VISREC_request', { method: 'POST', 
+    fetch('/watson/TONE_request', { method: 'POST', 
       body: JSON.stringify({'text':text}), 
       headers: {"Content-Type": "application/json"}
     }).then(
       function(response) {
-        response.json().then(
-          function(data) {
-            alert('cmon'+JSON.stringify(data))
-          }
-        )
+        response.json().then(function(data) {
+          alert(data)
+          if (data.includes(goalTone)) {
+            alert('yes it does')
+            //execute box
+            fn();
+          };
+        })
       }
     )
   }
@@ -636,6 +639,22 @@
     div.innerHTML = title
     elem.appendChild(div)
     div.onclick = fn
+  }
+
+  self.promptInput = function() {
+    var elem = document.getElementById('quando_labels')
+    var div = document.createElement('div')
+    var input = document.createElement('input')
+    var button = document.createElement('button')
+
+    div.className = 'quando_label'
+    input.type = "text"
+    input.className = "quando_input"
+    button.innerHTML = "sumbit"
+
+    div.appendChild(input)
+    div.appendChild(button)
+    elem.appendChild(div)
   }
 
   self.addQuestion = function (answer, fn) {
