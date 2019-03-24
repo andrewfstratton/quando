@@ -1,6 +1,6 @@
 TODO:
 
-!!!!update diss log (BIG)
+                        !!!!UPDATE LOG!!!!
 
 VISREC pipe camera feed to API (BIG)
 
@@ -13,24 +13,18 @@ optimize ar model loading (BIG)
 
 add loading screen to AR bits (MID)
 
+SESSIONS! users need to be able to use the same deployed file independantly of each other (BIG)
+
 make TTS unique per user (MID)
     ---append the :userid to the filename
 
+redesign AR blocks (MID)
 
 markers E & F may need to change, test this (SMALL)
 
-
-
-
 switch save/load icons cause they're annoying me (SMALL)
 
-add lerp smoothing?? (MID)
-
 figure out how to not allow marker dependant puzzle blocks without having a marker?? (MID)
-
-add loading icon? (MID)
-
-SESSIONS! users need to be able to use the same deployed file independantly of each other (BIG)
 
 ---DONE---- alter showGLTF methods to allow for multiple markers
 ---DONE---- add stuff other than 3d models to marker - image (flat, vertical, facing camera??), video(sames), text(same actually damn) (BIG)

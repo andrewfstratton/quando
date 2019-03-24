@@ -34,25 +34,69 @@
     return window.innerHeight
   }
 
+  //WATSON methods to call API's
   self.call_tts = function(text) {
     //send POST request to server
     fetch('/watson/TTS_request', { method: 'POST', 
         body: JSON.stringify({'text':text}), 
         headers: {"Content-Type": "application/json"}
     }).then(function() {
+      //play audio
       self.audio('tts.wav', false);
     })
   }; 
 
   self.call_vis_rec = function(fileURL, goalClass, fn) {
-    //prompt & save photo
-    var img_prompt = document.createElement('input');
-    img_prompt.setAttribute('type', 'file');
-    img_prompt.setAttribute('accept', 'image/*');
-    img_prompt.setAttribute('capture', 'camera');
-    document.getElementById('quando_AR').append(img_prompt);
+    let count = 0;
+    const canvas = document.getElementById('hiddenCanvas');
+    alert('vis rec called')
+    if (canvas == null) {
+      alert('You need to be in AR to use Visual Recognition!')
+    } else {
+      const context = canvas.getContext('2d');  
+      let vid = null; //placeholder variable
+      let imgData = [0];
 
-    self.call_vis_rec_api(fileURL, goalClass, fn);
+      //add button to take photo
+      var elem = document.getElementById('quando_labels')
+      var div = document.createElement('div')
+      var button = document.createElement('button')
+      button.setAttribute('id', 'inpButton')
+
+      div.className = 'quando_label'
+      button.innerHTML = "Show Watson the fucking thing"
+
+      div.appendChild(button)
+      elem.appendChild(div)
+
+      const constraints = {
+        video: true,
+      };
+    
+      window.setTimeout(()=>{
+        /*Get all video elements, then find the one that's
+        direct parent is the body.*/
+        var videos = document.getElementsByTagName('video')
+        for (i=0; i<videos.length; i++){
+          if (videos[i].parentNode == body) {
+            vid =videos[i];
+          }
+        }
+
+        alert(vid)
+
+        button.addEventListener("click", function(){
+          count = count + 1;
+          alert(count)
+          context.drawImage(vid, 0, 0, self.width, self.height);
+          imgData.push = canvas.toDataURL("image/png");
+          alert(imgData[count-1] == imgData[count])
+        })
+
+        //call API
+        self.call_vis_rec_api(fileURL, goalClass, fn);
+      }, 3000);
+    }
   }
 
   self.call_vis_rec_api = function(fileURL, goalClass, fn) {
@@ -90,12 +134,12 @@
     )
   }
 
+
   self.addToneHandler = function(goalTone, fn) {
-    //add on click event listener to the input prompt
+    //adds 'onClick' event listener to the input prompt button
+    //which submits the prompts text to the tone analyzer
     let input = document.getElementById('inp');
     let button = document.getElementById('inpButton');
-
-    alert('test')
 
     button.addEventListener("click", function(){
       alert(input.value)
@@ -106,6 +150,7 @@
       }).then(
         function(response) {
           response.json().then(function(data) {
+            //if tone of input is goal
             if (data.includes(goalTone)) {
               //execute box
               fn();
@@ -114,23 +159,6 @@
         }
       )
     });
-  }
-
-  self.call_tone_analyzer = function(text, goalTone, fn) {
-    //send POST request to server
-    fetch('/watson/TONE_request', { method: 'POST', 
-      body: JSON.stringify({'text':text}), 
-      headers: {"Content-Type": "application/json"}
-    }).then(
-      function(response) {
-        response.json().then(function(data) {
-          if (data.includes(goalTone)) {
-            //execute box
-            fn();
-          };
-        })
-      }
-    )
   }
 
   //empty functions for inventory and puzzle tracking

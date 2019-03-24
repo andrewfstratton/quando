@@ -26,6 +26,11 @@
         scene.setAttribute('embedded', '');
         scene.setAttribute('id', 'scene');
 
+        let hiddenCanvas = document.createElement('canvas');
+        hiddenCanvas.setAttribute('id', 'hiddenCanvas');
+        hiddenCanvas.setAttribute('width', self.width);
+        hiddenCanvas.setAttribute('height', self.height);
+
         //init marker
         var marker = document.createElement('a-marker');
         if (markerID == 'hiro') {
@@ -56,6 +61,7 @@
         marker.appendChild(model);
         scene.appendChild(marker);
         scene.appendChild(cam);
+        scene.appendChild(hiddenCanvas);
 
         //add to AR element of doc
         document.getElementById('quando_AR').append(scene);
