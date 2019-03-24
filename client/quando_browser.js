@@ -20,6 +20,8 @@
   self.watching_puzz = false;
   self.puzzGoal = ''
   
+  self.input_onclick_functions = [];
+
   var _lookup = {} // holds run time arrays
 
   self.socket = io.connect('http://' + window.location.hostname)
@@ -82,11 +84,36 @@
       function(response) {
         response.json().then(
           function(data) {
-            alert('cmon'+JSON.stringify(data))
           }
         )
       }
     )
+  }
+
+  self.addToneHandler = function(goalTone, fn) {
+    //add on click event listener to the input prompt
+    let input = document.getElementById('inp');
+    let button = document.getElementById('inpButton');
+
+    alert('test')
+
+    button.addEventListener("click", function(){
+      alert(input.value)
+      //send POST request to server
+      fetch('/watson/TONE_request', { method: 'POST', 
+        body: JSON.stringify({'text':input.value}), 
+        headers: {"Content-Type": "application/json"}
+      }).then(
+        function(response) {
+          response.json().then(function(data) {
+            if (data.includes(goalTone)) {
+              //execute box
+              fn();
+            };
+          })
+        }
+      )
+    });
   }
 
   self.call_tone_analyzer = function(text, goalTone, fn) {
@@ -97,9 +124,7 @@
     }).then(
       function(response) {
         response.json().then(function(data) {
-          alert(data)
           if (data.includes(goalTone)) {
-            alert('yes it does')
             //execute box
             fn();
           };
@@ -107,6 +132,7 @@
       }
     )
   }
+
   //empty functions for inventory and puzzle tracking
   self.on_inv_match = function() {}
   self.on_puzz_success = function() {}
@@ -178,7 +204,6 @@
     //if we're watching the puzzle, and it is the goal, do what's in the block box
     if (self.watching_puzz == true) {
       if (self.get_puzzList() == self.puzzGoal) {
-        alert('yeet')
         self.on_puzz_success()
       }
     }
@@ -193,7 +218,6 @@
     }
 
     if (self.puzzList == self.puzzGoal) {
-      alert('yeet')
       self.on_puzz_success()
     }
   }
@@ -646,6 +670,8 @@
     var div = document.createElement('div')
     var input = document.createElement('input')
     var button = document.createElement('button')
+    button.setAttribute('id', 'inpButton')
+    input.setAttribute('id', 'inp')
 
     div.className = 'quando_label'
     input.type = "text"
@@ -655,33 +681,23 @@
     div.appendChild(input)
     div.appendChild(button)
     elem.appendChild(div)
-  }
+    
+  };
 
   self.addQuestion = function (answer, fn) {
-    var elem = document.getElementById('quando_labels')
-    var div = document.createElement('div')
-    var input = document.createElement('input')
-    var button = document.createElement('button')
+    //add on click event listener to the input prompt
+    let input = document.getElementById('inp');
+    let button = document.getElementById('inpButton');
 
-    div.className = 'quando_label'
-    input.type = "text"
-    input.className = "quando_input"
-    button.innerHTML = "sumbit"
-
-    div.appendChild(input)
-    div.appendChild(button)
-    elem.appendChild(div)
-
-    //on submit button being pressed, check if user's answer is right
     button.addEventListener("click", function(){
       if (input.value == answer) {
-        fn()
+        fn();
+        button.innerHTML = "You got it right!";
       } else {
-        button.innerHTML = "Nah try again..."
-      }
-    })
-    
-  } 
+        button.innerHTML = "Nah try again...";
+      };
+    });
+  };
 
   self.pick = function(val, arr) {
     if (val === false) {

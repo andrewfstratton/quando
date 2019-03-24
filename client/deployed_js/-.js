@@ -1,5 +1,9 @@
 let exec = () => {
-quando.call_tone_analyzer('im so happy goddamn I love the world rn', 'joy',  ()=>{
-quando.text('you fuckin moist', true)
+quando.promptInput()
+quando.addQuestion('balraj', ()=>{
+quando.image.set(false,'green_light.png')
+})
+quando.addToneHandler('anger',  ()=>{
+quando.image.set(false,'red_light.png')
 })
 }

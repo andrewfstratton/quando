@@ -1,12 +1,26 @@
 TODO:
 
-markers E & F may need to change, test this (SMALL)
+!!!!update diss log (BIG)
 
-!!!!update diss log (SMALL)
-
+VISREC pipe camera feed to API (BIG)
 
 must add system to allow for failure states for puzzles (BIG)
-add stuff other than 3d models to marker - image (flat, vertical, facing camera??), video(sames), text(same actually damn) (BIG)
+
+optimize ar model loading (BIG)
+    --- using Draco compression lib?
+        --- q - does user have to compress models, should quando do it on upload?
+        --- try optimizing Jupiter myself, see if it's worth doing
+
+add loading screen to AR bits (MID)
+
+make TTS unique per user (MID)
+    ---append the :userid to the filename
+
+
+markers E & F may need to change, test this (SMALL)
+
+
+
 
 switch save/load icons cause they're annoying me (SMALL)
 
@@ -19,6 +33,8 @@ add loading icon? (MID)
 SESSIONS! users need to be able to use the same deployed file independantly of each other (BIG)
 
 ---DONE---- alter showGLTF methods to allow for multiple markers
+---DONE---- add stuff other than 3d models to marker - image (flat, vertical, facing camera??), video(sames), text(same actually damn) (BIG)
+
 
 ---KINDA DONE---- add puzzle building blocks - will take form of WHEN(event) blocks
 ---DONE---- onScan, can't think of any other simple ones rn
