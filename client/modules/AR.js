@@ -9,7 +9,11 @@
 
     self.showGLTF = function(modelURL, markerID, flat=true, scale=100, above=false) {
       //handle params
+      if (modelURL == null) {
+        alert('No model selected!')
+      }
       modelURL = '/client/media/' + encodeURI(modelURL)
+      
       scale = scale/100; //scale supplied in %
       if (above) { //is model to be on or above marker?
         position = '0 1 0'

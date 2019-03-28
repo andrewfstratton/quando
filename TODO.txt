@@ -4,6 +4,9 @@ TODO:
 
 VISREC pipe camera feed to API (BIG)
 
+move Watson client methods from quando_browser to their own module
+move watson server methods from server.js """""""
+
 must add system to allow for failure states for puzzles (BIG)
 
 optimize ar model loading (BIG)
@@ -12,6 +15,8 @@ optimize ar model loading (BIG)
         --- try optimizing Jupiter myself, see if it's worth doing
 
 add loading screen to AR bits (MID)
+
+add animations
 
 SESSIONS! users need to be able to use the same deployed file independantly of each other (BIG)
 

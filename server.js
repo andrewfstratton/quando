@@ -7,6 +7,7 @@ const fs = require('fs')
 const formidable = require('formidable')
 const morgan = require('morgan')
 const body_parser = require('body-parser')
+const base64Img = require('base64-img');
 const script = require('./script')
 const client_deploy = './client/deployed_js/'
 const user = require('./user')
@@ -90,14 +91,12 @@ let server = http.listen(port, () => {
       drop_client(client)
       console.log('...closed['+index+']')
     })
-    client.on('TTS_request', ()=> {
-      console.log('TTS requested...');
-    })
   })
 })
 
 const MEDIA_FOLDER = path.join(__dirname, 'client', 'media')
 const MEDIA_MAP = {
+  //TODO - refactor to videos & images
   'video': ['ogg', 'ogv', 'mp4', 'webm'],
   'audio': ['mp3'],
   'images': ['bmp', 'jpg', 'jpeg', 'png'],
@@ -389,7 +388,7 @@ app.post('/message/:id', (req, res) => {
   res.json({})
 })
 
-//WATSON SERVICE ROUTES(?)
+//WATSON SERVICES
 
 //Text-To-Speech
 app.post('/watson/TTS_request', (req, res) => {
@@ -418,7 +417,9 @@ app.post('/watson/TTS_request', (req, res) => {
 //Visual-Recognition
 app.post('/watson/VISREC_request', (req, res) => {
   console.log('Visual Recognition Requested...');
-  let file = fs.createReadStream(__dirname +'/client/media/tree.jpg');
+  let imgData = req.body.imgData;
+  base64Img.img(imgData, __dirname + '/client/media', 'visrec', function(err, filepath) {});
+  let file = fs.createReadStream(__dirname +'/client/media/visrec.png');
   let params = { //stuff sent to API
     images_file: file
   };
