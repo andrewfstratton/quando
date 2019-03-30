@@ -676,7 +676,7 @@
     self.title()
     self.text()
     //clear AR 
-    quando.AR.clear()
+    quando.ar.clear()
 //        self.video() removed to make sure video can continue playing between displays
     self.style.reset()
     // Find display and execute...

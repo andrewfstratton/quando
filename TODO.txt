@@ -4,6 +4,8 @@ TODO:
 
 VISREC pipe camera feed to API (BIG)
 
+rename AR.js to ar.js
+
 move Watson client methods from quando_browser to their own module
 move watson server methods from server.js """""""
 

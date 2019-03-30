@@ -1,6 +1,5 @@
 let exec = () => {
-quando.AR.showGLTF('', 'hiro', true, 100, false)
-quando.call_vis_rec('black', ()=>{
-quando.text('b', false)
+quando.ar.whenMarker('hiro', 'flat', ()=>{
+quando.call_tts('Watson is doodoo')
 })
 }

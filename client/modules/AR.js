@@ -3,9 +3,117 @@
     if (!quando) {
       alert('Fatal Error: AR must be included after quando_browser')
     }
-    var self = quando.AR = {}
+    var self = quando.ar = {}
     self.width = screen.width
     self.height = screen.height
+
+    self.initScene = function() {
+      //init scene
+      scene = document.createElement('a-scene');
+      scene.setAttribute('arjs', 'debugUIEnabled: false;');
+      scene.setAttribute('embedded', '');
+      scene.setAttribute('id', 'scene');
+      return scene;
+    }
+
+    self.initHiddenCanvas = function() {
+      //init hidden canvas - used for drawing snapshot of webcam feed
+      let hiddenCanvas = document.createElement('canvas');
+      hiddenCanvas.setAttribute('id', 'hiddenCanvas');
+      hiddenCanvas.setAttribute('width', self.width);
+      hiddenCanvas.setAttribute('height', self.height);
+      return hiddenCanvas;
+    }
+
+    self.initMarker = function(markerID) {
+      let marker = document.getElementById(markerID);
+
+      if (marker!=null) {
+        alert('Marker '+markerID+' already exists!');
+      } else {
+        //init marker
+
+        marker = document.createElement('a-marker');
+        if (markerID == 'hiro') {
+          marker.setAttribute('preset', 'hiro');
+          marker.setAttribute('id', markerID);
+        } else { 
+          marker.setAttribute('preset', 'custom');
+          marker.setAttribute('type', 'pattern');
+          marker.setAttribute('id', markerID);
+          //NOTE: below URLs must be hosted online instead of relatively for some dumb reason
+          marker.setAttribute('url', 'https://raw.githubusercontent.com/andrewfstratton/quando/ar_dev/client/media/letters/'+markerID+'.patt');
+        }
+      }
+      return marker;
+    }
+
+    self.initCam = function() {
+      //init camera element
+      var cam = document.createElement('a-camera-static'); 
+      cam.setAttribute('id', 'camera');
+      return cam;
+    }
+
+    self.whenMarker = function(markerID, orientation, fn) {
+      let scene = document.getElementById('scene');
+
+      if (scene == null) { //if scene DOES NOT exist
+        let scene = self.initScene();
+        let hiddenCanvas = self.initHiddenCanvas();
+        let marker = self.initMarker(markerID);
+        let camera = self.initCam();
+
+        //add all elements to DOM
+        scene.appendChild(marker);
+        scene.appendChild(camera);
+        scene.appendChild(hiddenCanvas);
+        document.getElementById('quando_AR').append(scene);
+        
+        //add onScan eventListener
+        marker.addEventListener('markerFound', (e)=>{
+          fn();
+        });
+      } else { //scene DOES exist
+        let marker = self.initMarker(markerID);
+        //add all elements to DOM
+        scene.appendChild(marker);
+        document.getElementById('quando_AR').append(scene);
+
+        //add onScan eventListener
+        marker.addEventListener('markerFound', (e)=>{
+          fn();
+        });
+      }
+
+    }
+
+    self.showGLTFNew = function(modelURL, scale = 0.1) { //scale set to 0.1 for default
+      //handle params
+      if (modelURL == null) {
+        alert('No model selected!');
+      };
+      modelURL = '/client/media/' + encodeURI(modelURL);
+
+      let scene = document.getElementById('scene');
+      //TODO -- GET ANCESTOR MARKERID
+      let parentMarkerID = 'hiro';
+
+      if (scene == null) { //if scene DOES NOT exist
+        alert ('You need to be in AR to show this model!');
+      } else {
+        let model = document.getElementById(modelURL+parentMarkerID);
+        if (model != null) { //if model DOES already exist
+          alert('Model '+modelURL+' is already shown!');  
+        } else {
+          //init user chosen model - GLTF 2.0 - uncompressed
+          var model = document.createElement('a-gltf-model');
+          model.setAttribute('gltf-model', 'url('+modelURL+')'); //id model from url
+          model.setAttribute('scale', scale.toString() + ' '+ scale.toString() +' '+ scale.toString());
+          model.setAttribute('id', (modelURL+parentMarkerID);
+        }
+      }
+    }
 
     self.showGLTF = function(modelURL, markerID, flat=true, scale=100, above=false) {
       //handle params
@@ -408,21 +516,11 @@
 
     //adds event listener to marker that fires when the marker's scanned, executing the 
     //blocks in the box
-    self.onScan = function(markerID, fn) {
-      var marker = document.getElementById(markerID)
-			marker.addEventListener('markerFound', (e)=>{
-        fn()
-      });
-    }
-
-    //adds event listener to marker that fires when the marker's scanned, executing the 
-    //blocks in the box
     self.onLoss = function(markerID, delay, fn) {
       var marker = document.getElementById(markerID)
 			marker.addEventListener('markerLost', (e)=>{
         fn()
       });
     }
-
 
 }) ()
