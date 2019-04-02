@@ -9,7 +9,7 @@
   self.add = function (fn) {
     if (destructor_list != null) {
       destructor_list.push(fn)
-console.log(">fn")
+//console.log(">fn")
     }
   }
 
@@ -17,7 +17,7 @@ console.log(">fn")
     if (destructor_list != null) {
         while (destructor_list.length) {
             destructor_list.shift()()
-console.log("<fn()")
+//console.log("<fn()")
         }
     }
     destructor_list = []

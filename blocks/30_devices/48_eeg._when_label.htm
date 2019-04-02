@@ -1,0 +1,26 @@
+<div class="quando-block" data-quando-javascript="quando.eeg.onLabel(${labelId}, '${model}', ${isNewModel}, () => {${box}})">
+    <div class="quando-left quando-devices"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-devices">
+            When EEG label
+            <select data-quando-name='labelId' data-quando-list="eegLabel">
+                <option value='-1'>----</option>
+            </select>
+            <select data-quando-name='extras' class='quando-toggle'>
+                <option value='hidden'>+</option>
+                <option value='show'>-</option>
+            </select>
+            <span data-quando-toggle='extras=show'>
+                <br />
+                from
+                <select data-quando-name="isNewModel" type="text" class="quando-toggle">
+                    <option value='1'>New</option>
+                    <option value='0'>Saved</option>
+                </select>
+                model <input data-quando-name="model" type="text" value="default" />
+            </span>
+        </div>
+        <div data-quando-name="box" class="quando-box"></div>
+        <div class="quando-row quando-devices"></div>
+    </div>
+</div>
