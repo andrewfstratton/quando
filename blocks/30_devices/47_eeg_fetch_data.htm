@@ -1,0 +1,18 @@
+<div class="quando-block" data-quando-id="true" data-quando-javascript="quando.eeg.fetchDataForLabel(${data-quando-id}, ${seconds}, '${model}')">
+  <div class="quando-left quando-devices"></div>
+  <div class="quando-right">
+    <div class="quando-row quando-devices">
+      Fetch EEG data for label <input data-quando-name="label" type="text" value="" data-quando-list="eegLabel"/>
+      <select data-quando-name='extras' class='quando-toggle'>
+        <option value='hidden'>+</option>
+        <option value='show'>-</option>
+      </select>
+      <span data-quando-toggle='extras=show'>
+        <br />
+        <input data-quando-name="seconds" type="text" value="20" />
+        seconds for model
+        <input data-quando-name="model" type="text" value="default" />
+      </span>
+    </div>
+  </div>
+</div>

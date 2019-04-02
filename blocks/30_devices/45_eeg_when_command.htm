@@ -1,0 +1,24 @@
+<div class="quando-block" data-quando-javascript="quando.eeg.onCommand('${command}', ${minVal}, () => {${box}})">
+    <div class="quando-left quando-devices"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-devices">
+            When EEG command
+            <select data-quando-name="command">
+                <option value='Lift'>Lift</option>
+                <option value='Pull'>Pull</option>
+                <option value='RotateCounterClockwise'>Rotate Left</option>
+            </select>
+            <select data-quando-name='extras' class='quando-toggle'>
+                <option value='hidden'>+</option>
+                <option value='show'>-</option>
+            </select>
+            <span data-quando-toggle='extras=show'>
+                <br />
+                Min Value
+                <input data-quando-name="minVal" type="text" value="0.5" data-quando-encode="normal" />
+            </span>
+        </div>
+        <div data-quando-name="box" class="quando-box"></div>
+        <div class="quando-row quando-devices"></div>
+    </div>
+</div>
