@@ -42,7 +42,7 @@
           marker.setAttribute('type', 'pattern');
           marker.setAttribute('id', markerID);
           //NOTE: below URLs must be hosted online instead of relatively for some dumb reason
-          marker.setAttribute('url', 'https://raw.githubusercontent.com/andrewfstratton/quando/ar_dev/client/media/letters/'+markerID+'.patt');
+          marker.setAttribute('url', 'https://raw.githubusercontent.com/andrewfstratton/quando/ar_dev/client/media/markers/'+markerID+'.patt');
         }
       }
       return marker;
@@ -153,7 +153,7 @@
           marker.setAttribute('type', 'pattern');
           marker.setAttribute('id', markerID);
           //NOTE: below URLs must be hosted online instead of relatively for some dumb reason
-          marker.setAttribute('url', 'https://raw.githubusercontent.com/andrewfstratton/quando/ar_dev/client/media/letters/'+markerID+'.patt');
+          marker.setAttribute('url', 'https://raw.githubusercontent.com/andrewfstratton/quando/ar_dev/client/media/markers/'+markerID+'.patt');
         }
 
         //init user chosen model - GLTF 2.0 - uncompressed
@@ -190,7 +190,7 @@
           marker.setAttribute('type', 'pattern');
           marker.setAttribute('id', markerID);
           //NOTE: below URLs must be hosted online instead of relatively for some dumb reason
-          marker.setAttribute('url', 'https://raw.githubusercontent.com/andrewfstratton/quando/ar_dev/client/media/letters/'+markerID+'.patt');
+          marker.setAttribute('url', 'https://raw.githubusercontent.com/andrewfstratton/quando/ar_dev/client/media/markers/'+markerID+'.patt');
         }
 
         //user chosen model - GLTF 2.0 - uncompressed
@@ -305,7 +305,7 @@
           marker.setAttribute('type', 'pattern');
           marker.setAttribute('id', markerID);
           //NOTE: below URLs must be hosted online instead of relatively for some dumb reason
-          marker.setAttribute('url', 'https://raw.githubusercontent.com/andrewfstratton/quando/ar_dev/client/media/letters/'+markerID+'.patt');
+          marker.setAttribute('url', 'https://raw.githubusercontent.com/andrewfstratton/quando/ar_dev/client/media/markers/'+markerID+'.patt');
         }
 
         //init user chosen image
@@ -356,7 +356,7 @@
           marker.setAttribute('type', 'pattern');
           marker.setAttribute('id', markerID);
           //NOTE: below URLs must be hosted online instead of relatively for some dumb reason
-          marker.setAttribute('url', 'https://raw.githubusercontent.com/andrewfstratton/quando/ar_dev/client/media/letters/'+markerID+'.patt');
+          marker.setAttribute('url', 'https://raw.githubusercontent.com/andrewfstratton/quando/ar_dev/client/media/markers/'+markerID+'.patt');
         }
 
         //init user chosen video
@@ -400,7 +400,7 @@
           marker.setAttribute('type', 'pattern');
           marker.setAttribute('id', markerID);
           //NOTE: below URLs must be hosted online instead of relatively for some dumb reason
-          marker.setAttribute('url', 'https://raw.githubusercontent.com/andrewfstratton/quando/ar_dev/client/media/letters/'+markerID+'.patt');
+          marker.setAttribute('url', 'https://raw.githubusercontent.com/andrewfstratton/quando/ar_dev/client/media/markers/'+markerID+'.patt');
         }
 
         //init user chosen video
@@ -451,7 +451,7 @@
           marker.setAttribute('type', 'pattern');
           marker.setAttribute('id', markerID);
           //NOTE: below URLs must be hosted online instead of relatively for some dumb reason
-          marker.setAttribute('url', 'https://raw.githubusercontent.com/andrewfstratton/quando/ar_dev/client/media/letters/'+markerID+'.patt');
+          marker.setAttribute('url', 'https://raw.githubusercontent.com/andrewfstratton/quando/ar_dev/client/media/markers/'+markerID+'.patt');
         }
 
         //init user text
@@ -461,15 +461,6 @@
         //the below width and height settings are bad
         textElement.setAttribute('height', scale.toString());
         textElement.setAttribute('width', scale.toString());
-        if (orientation == 'flat') {
-          textElement.setAttribute('rotation', '-90 0 90');
-        } else if (orientation == 'vertical') {
-          textElement.setAttribute('rotation', '0 0 90');
-        } else {
-          textElement.setAttribute('rotation', '0 0 90');
-          textElement.setAttribute('look-at', '#player')
-        }
-
 
         //init camera element
         var cam = document.createElement('a-camera-static'); 
@@ -496,7 +487,7 @@
           marker.setAttribute('type', 'pattern');
           marker.setAttribute('id', markerID);
           //NOTE: below URLs must be hosted online instead of relatively for some dumb reason
-          marker.setAttribute('url', 'https://raw.githubusercontent.com/andrewfstratton/quando/ar_dev/client/media/letters/'+markerID+'.patt');
+          marker.setAttribute('url', 'https://raw.githubusercontent.com/andrewfstratton/quando/ar_dev/client/media/markers/'+markerID+'.patt');
         }
 
         //init user text
@@ -506,14 +497,6 @@
         //the below width and height settings are bad
         textElement.setAttribute('height', scale.toString());
         textElement.setAttribute('width', scale.toString());
-        if (orientation == 'flat') {
-          textElement.setAttribute('rotation', '-90 0 90');
-        } else if (orientation == 'vertical') {
-          textElement.setAttribute('rotation', '0 0 90');
-        } else {
-          textElement.setAttribute('rotation', '0 0 90');
-          textElement.setAttribute('look-at', '#player')
-        }      
 
         marker.appendChild(textElement)
         scene.appendChild(marker)

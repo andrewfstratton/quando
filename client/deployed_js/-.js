@@ -1,3 +1,3 @@
 let exec = () => {
-quando.ar.showImage('tree.jpg', 'A', 200, 'flat')
+quando.ar.showVideo('test.mp4', 'B', 100, 'flat')
 }
