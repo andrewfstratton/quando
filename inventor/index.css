@@ -169,6 +169,13 @@ input, #_hidden_width_element_ {
   .quando-style {
     background: #a0a0d0;
   }
+  .quando-eeg {
+    color: white;
+    background: #f75a00;
+  }
+  .quando-eeg input, .quando-eeg select {
+    color: black;
+  }
 
   /* .quando-separator {
     border-top-style:solid;

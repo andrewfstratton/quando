@@ -1,7 +1,8 @@
 <div class="quando-block" data-quando-javascript="quando.eeg.onRotation('${angle}', ${mid_degrees}, ${plus_minus}, ${inverted}, (val) => {${box}})">
-  <div class="quando-left quando-devices"></div>
+  <div class="quando-left quando-eeg"></div>
   <div class="quando-right">
-      <div class="quando-row quando-devices">
+      <div class="quando-row quando-eeg">
+          <span class="quando-info" title="Emotiv headset required">🧠</span>
           When EEG angle
           <select data-quando-name="angle">
               <option value='Yaw'>⇔ Yaw</option>
@@ -26,6 +27,6 @@
           </span>
       </div>
       <div data-quando-name="box" class="quando-box"></div>
-      <div class="quando-row quando-devices"></div>
+      <div class="quando-row quando-eeg"></div>
   </div>
 </div>

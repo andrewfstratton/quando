@@ -1,11 +1,15 @@
-<div class="quando-block" data-quando-javascript="quando.eeg.onUAct('${state}', ${minVal}, () => {${box}})">
-    <div class="quando-left quando-devices"></div>
+<div class="quando-block" data-quando-javascript="quando.eeg.onFaceExpression('${state}', ${minVal}, () => {${box}})">
+    <div class="quando-left quando-eeg"></div>
     <div class="quando-right">
-        <div class="quando-row quando-devices">
-            When EEG upper face
+        <div class="quando-row quando-eeg">
+            <span class="quando-info" title="Emotiv headset required">🧠</span>
+            When EEG face
             <select data-quando-name="state">
-                <option value='Neutral'>Neutral</option>
+                <option value='Smile'>Smile</option>
+                <option value='Laugh'>Laugh</option>
                 <option value='Surprise'>Surprised</option>
+                <option value='Frown'>Furrow</option>
+                <option value='Grimace'>Clench teeth</option>
             </select>
             <select data-quando-name='extras' class='quando-toggle'>
                 <option value='hidden'>+</option>
@@ -18,6 +22,6 @@
             </span>
         </div>
         <div data-quando-name="box" class="quando-box"></div>
-        <div class="quando-row quando-devices"></div>
+        <div class="quando-row quando-eeg"></div>
     </div>
 </div>

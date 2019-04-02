@@ -32,15 +32,9 @@
     });
   }
 
-  self.onUAct = (event, min, callback) => {
+  self.onFaceExpression = (event, min, callback) => {
     _requestData("fac").then(() => {
-      quando.add_scaled_handler('eegUAct' + event, callback, _minScaler(min));
-    });
-  }
-
-  self.onLAct = (event, min, callback) => {
-    _requestData("fac").then(() => {
-      quando.add_scaled_handler('eegLAct' + event, callback, _minScaler(min));
+      quando.add_scaled_handler('eegAct' + event, callback, _minScaler(min));
     });
   }
 
@@ -153,8 +147,8 @@
       quando.idle_reset();
 
       quando.dispatch_event('eegEye' + _capitalize(data.eyeAct));
-      quando.dispatch_event('eegUAct' + _capitalize(data.uAct), {'detail': data.uPow});
-      quando.dispatch_event('eegLAct' + _capitalize(data.lAct), {'detail': data.lPow});
+      quando.dispatch_event('eegAct' + _capitalize(data.uAct), {'detail': data.uPow});
+      quando.dispatch_event('eegAct' + _capitalize(data.lAct), {'detail': data.lPow});
     },
     "met" : function (data) {
       quando.idle_reset();
@@ -370,8 +364,13 @@
   /*///////////////////////////////////////////////////////////////////////*/
 
   client.ready
-    .then(() => client.init({username: 'directk'}))
+    .then(() => client.init({
+      username: "directk", 
+      password: "Eweagtmslon19", 
+      client_id: "8sfFMP0y2opXq6gmhNBAmcbdnDdBM06y6Y3RiJiL", 
+      client_secret: "cR8MKcueMdKDvYh33zUmnxHYfMqoi9nwD5VuM0lzZt1Z5iBxP7JDovZ0n96dONYvUgDM8mB9IRsw7tjX2o8oS5IehDsLpOrXKKL2HvePWrYwhdWW8Q6W9ynD75uohikw"
+    }))
     .then(() => client.createSession({ status: 'open' }))
-    .then(() => client.emit("connected", {}, true));
+    .then(() => client.emit("connected", unique = true));
 
 })();
