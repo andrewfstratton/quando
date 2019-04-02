@@ -83,7 +83,7 @@
         var videos = document.getElementsByTagName('video')
         for (i=0; i<videos.length; i++){
           if (videos[i].parentNode == body) {
-            vid =videos[i];
+            vid = videos[i];
           }
         }
 

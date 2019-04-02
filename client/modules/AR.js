@@ -110,7 +110,7 @@
           var model = document.createElement('a-gltf-model');
           model.setAttribute('gltf-model', 'url('+modelURL+')'); //id model from url
           model.setAttribute('scale', scale.toString() + ' '+ scale.toString() +' '+ scale.toString());
-          model.setAttribute('id', (modelURL+parentMarkerID);
+          model.setAttribute('id', (modelURL+parentMarkerID));
         }
       }
     }
@@ -153,7 +153,7 @@
           marker.setAttribute('type', 'pattern');
           marker.setAttribute('id', markerID);
           //NOTE: below URLs must be hosted online instead of relatively for some dumb reason
-          marker.setAttribute('url', 'https://raw.githubusercontent.com/andrewfstratton/quando/adventureGame2/client/media/letters/'+markerID+'.patt');
+          marker.setAttribute('url', 'https://raw.githubusercontent.com/andrewfstratton/quando/ar_dev/client/media/letters/'+markerID+'.patt');
         }
 
         //init user chosen model - GLTF 2.0 - uncompressed
@@ -190,7 +190,7 @@
           marker.setAttribute('type', 'pattern');
           marker.setAttribute('id', markerID);
           //NOTE: below URLs must be hosted online instead of relatively for some dumb reason
-          marker.setAttribute('url', 'https://raw.githubusercontent.com/andrewfstratton/quando/adventureGame2/client/media/letters/'+markerID+'.patt');
+          marker.setAttribute('url', 'https://raw.githubusercontent.com/andrewfstratton/quando/ar_dev/client/media/letters/'+markerID+'.patt');
         }
 
         //user chosen model - GLTF 2.0 - uncompressed
@@ -205,6 +205,33 @@
         marker.appendChild(model)
         scene.appendChild(marker)
 
+      }
+    }
+
+    self.showImageNew = function(modelURL, scale = 0.1) { //scale set to 0.1 for default
+      //handle params
+      if (modelURL == null) {
+        alert('No model selected!');
+      };
+      modelURL = '/client/media/' + encodeURI(modelURL);
+
+      let scene = document.getElementById('scene');
+      //TODO -- GET ANCESTOR MARKERID
+      let parentMarkerID = 'hiro';
+
+      if (scene == null) { //if scene DOES NOT exist
+        alert ('You need to be in AR to show this model!');
+      } else {
+        let model = document.getElementById(modelURL+parentMarkerID);
+        if (model != null) { //if model DOES already exist
+          alert('Model '+modelURL+' is already shown!');  
+        } else {
+          //init user chosen model - GLTF 2.0 - uncompressed
+          var model = document.createElement('a-gltf-model');
+          model.setAttribute('gltf-model', 'url('+modelURL+')'); //id model from url
+          model.setAttribute('scale', scale.toString() + ' '+ scale.toString() +' '+ scale.toString());
+          model.setAttribute('id', (modelURL+parentMarkerID));
+        }
       }
     }
 
@@ -234,7 +261,7 @@
           marker.setAttribute('type', 'pattern');
           marker.setAttribute('id', markerID);
           //NOTE: below URLs must be hosted online instead of relatively for some dumb reason
-          marker.setAttribute('url', 'https://raw.githubusercontent.com/andrewfstratton/quando/adventureGame2/client/media/letters/'+markerID+'.patt');
+          marker.setAttribute('url', 'https://raw.githubusercontent.com/andrewfstratton/quando/ar_dev/client/media/markers/'+markerID+'.patt');
         }
 
         //init user chosen image
@@ -245,11 +272,11 @@
         img.setAttribute('height', scale.toString());
         img.setAttribute('width', scale.toString());
         if (orientation == 'flat') {
-          img.setAttribute('rotation', '-90 0 90');
+          img.setAttribute('rotation', '-90 0 0');
         } else if (orientation == 'vertical') {
-          img.setAttribute('rotation', '0 0 90');
+          img.setAttribute('rotation', '0 0 0');
         } else {
-          img.setAttribute('rotation', '0 0 90');
+          img.setAttribute('rotation', '0 0 0');
           img.setAttribute('look-at', '#player')
         }
 
@@ -278,7 +305,7 @@
           marker.setAttribute('type', 'pattern');
           marker.setAttribute('id', markerID);
           //NOTE: below URLs must be hosted online instead of relatively for some dumb reason
-          marker.setAttribute('url', 'https://raw.githubusercontent.com/andrewfstratton/quando/adventureGame2/client/media/letters/'+markerID+'.patt');
+          marker.setAttribute('url', 'https://raw.githubusercontent.com/andrewfstratton/quando/ar_dev/client/media/letters/'+markerID+'.patt');
         }
 
         //init user chosen image
@@ -329,7 +356,7 @@
           marker.setAttribute('type', 'pattern');
           marker.setAttribute('id', markerID);
           //NOTE: below URLs must be hosted online instead of relatively for some dumb reason
-          marker.setAttribute('url', 'https://raw.githubusercontent.com/andrewfstratton/quando/adventureGame2/client/media/letters/'+markerID+'.patt');
+          marker.setAttribute('url', 'https://raw.githubusercontent.com/andrewfstratton/quando/ar_dev/client/media/letters/'+markerID+'.patt');
         }
 
         //init user chosen video
@@ -373,7 +400,7 @@
           marker.setAttribute('type', 'pattern');
           marker.setAttribute('id', markerID);
           //NOTE: below URLs must be hosted online instead of relatively for some dumb reason
-          marker.setAttribute('url', 'https://raw.githubusercontent.com/andrewfstratton/quando/adventureGame2/client/media/letters/'+markerID+'.patt');
+          marker.setAttribute('url', 'https://raw.githubusercontent.com/andrewfstratton/quando/ar_dev/client/media/letters/'+markerID+'.patt');
         }
 
         //init user chosen video
@@ -424,7 +451,7 @@
           marker.setAttribute('type', 'pattern');
           marker.setAttribute('id', markerID);
           //NOTE: below URLs must be hosted online instead of relatively for some dumb reason
-          marker.setAttribute('url', 'https://raw.githubusercontent.com/andrewfstratton/quando/adventureGame2/client/media/letters/'+markerID+'.patt');
+          marker.setAttribute('url', 'https://raw.githubusercontent.com/andrewfstratton/quando/ar_dev/client/media/letters/'+markerID+'.patt');
         }
 
         //init user text
@@ -469,7 +496,7 @@
           marker.setAttribute('type', 'pattern');
           marker.setAttribute('id', markerID);
           //NOTE: below URLs must be hosted online instead of relatively for some dumb reason
-          marker.setAttribute('url', 'https://raw.githubusercontent.com/andrewfstratton/quando/adventureGame2/client/media/letters/'+markerID+'.patt');
+          marker.setAttribute('url', 'https://raw.githubusercontent.com/andrewfstratton/quando/ar_dev/client/media/letters/'+markerID+'.patt');
         }
 
         //init user text
