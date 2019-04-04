@@ -1,0 +1,24 @@
+<div class="quando-block" data-quando-id="true" data-quando-javascript="quando.ar.showGLTF(markerID, '${file_name}', ${scale}, ${above})">
+    <div class="quando-left quando-AR"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-AR">
+            <span class='iconify'>AR</span>
+            Show 3D Object
+            <input data-quando-media="objects" data-quando-name="file_name" type="text" readonly="true" value="" data-quando-encode="normal"/>
+            <select data-quando-name='extras' class='quando-toggle'>
+              <option value='hidden'>...</option>
+              <option value='show'>...</option>
+            </select>
+            <span data-quando-toggle='extras=show'>
+                 with size
+                <input data-quando-name="scale" type="text" value="100" data-quando-encode="normal" />
+                % and 
+                <select data-quando-name='above' class='quando-toggle'>
+                  <option value='false'>on</option>
+                  <option value='true'>above</option>
+                </select>
+                marker
+            </span>
+        </div>
+    </div>
+</div>

@@ -57,7 +57,6 @@
 
     self.whenMarker = function(markerID, orientation, fn) {
       let scene = document.getElementById('scene');
-
       if (scene == null) { //if scene DOES NOT exist
         let scene = self.initScene();
         let hiddenCanvas = self.initHiddenCanvas();
@@ -88,34 +87,41 @@
 
     }
 
-    self.showGLTFNew = function(modelURL, scale = 0.1) { //scale set to 0.1 for default
+    self.showGLTF = function(markerID, modelURL, scale = 100, above) { //scale set to 10 for default
       //handle params
+      scale = scale/100      
+      if (above) { //is model to be on or above marker?
+        position = '0 1 0'
+      } else {
+        position = '0 0 0'
+      }
       if (modelURL == null) {
         alert('No model selected!');
       };
       modelURL = '/client/media/' + encodeURI(modelURL);
 
       let scene = document.getElementById('scene');
-      //TODO -- GET ANCESTOR MARKERID
-      let parentMarkerID = 'hiro';
 
       if (scene == null) { //if scene DOES NOT exist
         alert ('You need to be in AR to show this model!');
       } else {
-        let model = document.getElementById(modelURL+parentMarkerID);
+        let model = document.getElementById(modelURL+markerID);
+        let marker = document.getElementById(markerID);
         if (model != null) { //if model DOES already exist
-          alert('Model '+modelURL+' is already shown!');  
         } else {
           //init user chosen model - GLTF 2.0 - uncompressed
-          var model = document.createElement('a-gltf-model');
+          model = document.createElement('a-gltf-model');
           model.setAttribute('gltf-model', 'url('+modelURL+')'); //id model from url
           model.setAttribute('scale', scale.toString() + ' '+ scale.toString() +' '+ scale.toString());
-          model.setAttribute('id', (modelURL+parentMarkerID));
+          model.setAttribute('position', position);
+          model.setAttribute('id', (modelURL+markerID));
+          //add to heirarchy
+          marker.appendChild(model);
         }
       }
     }
 
-    self.showGLTF = function(modelURL, markerID, flat=true, scale=100, above=false) {
+    self.showGLTFOLD = function(modelURL, markerID, flat=true, scale=100, above=false) {
       //handle params
       if (modelURL == null) {
         alert('No model selected!')
@@ -208,29 +214,39 @@
       }
     }
 
-    self.showImageNew = function(modelURL, scale = 0.1) { //scale set to 0.1 for default
+    self.showImageNew = function(markerID, imgURL, scale = 100, orientation) { //scale set to 0.1 for default
       //handle params
-      if (modelURL == null) {
-        alert('No model selected!');
+      if (imgURL == null) {
+        alert('No image selected!');
       };
-      modelURL = '/client/media/' + encodeURI(modelURL);
+      imgURL = '/client/media/' + encodeURI(imgURL);
 
       let scene = document.getElementById('scene');
       //TODO -- GET ANCESTOR MARKERID
-      let parentMarkerID = 'hiro';
 
       if (scene == null) { //if scene DOES NOT exist
-        alert ('You need to be in AR to show this model!');
+        alert ('You need to be in AR to show this image!');
       } else {
-        let model = document.getElementById(modelURL+parentMarkerID);
-        if (model != null) { //if model DOES already exist
-          alert('Model '+modelURL+' is already shown!');  
+        let img = document.getElementById(imgURL+markerID);
+        if (img != null) { //if model DOES already exist
+          alert('Image '+imgURL+' is already shown!');  
         } else {
-          //init user chosen model - GLTF 2.0 - uncompressed
-          var model = document.createElement('a-gltf-model');
-          model.setAttribute('gltf-model', 'url('+modelURL+')'); //id model from url
-          model.setAttribute('scale', scale.toString() + ' '+ scale.toString() +' '+ scale.toString());
-          model.setAttribute('id', (modelURL+parentMarkerID));
+          //init user chosen image
+          var img = document.createElement('a-image');
+          img.setAttribute('src', imgURL); //id model from url
+  
+          //the below width and height settings are not relative, so will display the image in a 1:1 ratio
+          img.setAttribute('height', scale.toString());
+          img.setAttribute('width', scale.toString());
+          if (orientation == 'flat') {
+            img.setAttribute('rotation', '-90 0 0');
+          } else if (orientation == 'vertical') {
+            img.setAttribute('rotation', '0 0 0');
+          } else {
+            img.setAttribute('rotation', '0 0 0');
+            img.setAttribute('look-at', '#player')
+          }
+  
         }
       }
     }
@@ -262,22 +278,6 @@
           marker.setAttribute('id', markerID);
           //NOTE: below URLs must be hosted online instead of relatively for some dumb reason
           marker.setAttribute('url', 'https://raw.githubusercontent.com/andrewfstratton/quando/ar_dev/client/media/markers/'+markerID+'.patt');
-        }
-
-        //init user chosen image
-        var img = document.createElement('a-image');
-        img.setAttribute('src', imgURL); //id model from url
-
-        //the below width and height settings are not relative, so will display the image in a 1:1 ratio
-        img.setAttribute('height', scale.toString());
-        img.setAttribute('width', scale.toString());
-        if (orientation == 'flat') {
-          img.setAttribute('rotation', '-90 0 0');
-        } else if (orientation == 'vertical') {
-          img.setAttribute('rotation', '0 0 0');
-        } else {
-          img.setAttribute('rotation', '0 0 0');
-          img.setAttribute('look-at', '#player')
         }
 
         //init camera element

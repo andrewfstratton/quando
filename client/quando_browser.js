@@ -171,7 +171,7 @@
   //add/remove elements to inventory
   self.change_inv = function(changeType, item) {
 
-    if (changeType == 'add') {
+    if (changeType == 'add' && !self.inventory.includes(item)) {
       self.inventory.push(item);
       alert(item + ' added to inventory!')
     } else { //must be remove
