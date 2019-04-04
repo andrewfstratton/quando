@@ -4,7 +4,6 @@ TODO:
 
 VISREC pipe camera feed to API (BIG)
 
-rename AR.js to ar.js
 
 move Watson client methods from quando_browser to their own module
 move watson server methods from server.js """""""
@@ -18,9 +17,7 @@ optimize ar model loading (BIG)
 
 add loading screen to AR bits (MID)
 
-add animations
-
-SESSIONS! users need to be able to use the same deployed file independantly of each other (BIG)
+add animations (NOPE)
 
 make TTS unique per user (MID)
     ---append the :userid to the filename

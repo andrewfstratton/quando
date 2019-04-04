@@ -1,26 +1,23 @@
-<div class="quando-block" data-quando-id="true" data-quando-javascript="quando.ar.showImageNew('${file_name}', '${marker}', ${scale}, '${orientation}')">
+<div class="quando-block" data-quando-id="true" data-quando-javascript="quando.ar.showImage(markerID, '${file_name}', ${scale}, '${orientation}')">
     <div class="quando-left quando-AR"></div>
     <div class="quando-right">
         <div class="quando-row quando-AR">
-            Show image
-            <input data-quando-media="images" data-quando-name="file_name" type="text" readonly="true" value="" data-quando-encode="normal"/>
-            &nbsp;
-            <select data-quando-name='extras' class='quando-toggle'>
-              <option value='hidden'>...</option>
-              <option value='show'>...</option>
-            </select>
-            <span data-quando-toggle='extras=show'>
-              <br />
-                with size
-                <input data-quando-name="scale" type="text" value="100" data-quando-encode="normal" />
-                % and 
-                <select data-quando-name='orientation'>
-                  <option value='flat'>flat</option>
-                  <option value='vertical'>vertical</option>
-                  <option value='facing'>facing camera?</option>
-                </select>
-                marker
-            </span>
+          <span class='iconify'>AR</span>
+          Show image
+          <input data-quando-media="images" data-quando-name="file_name" type="text" readonly="true" value="" data-quando-encode="normal"/>
+          <select data-quando-name='extras' class='quando-toggle'>
+            <option value='hidden'>...</option>
+            <option value='show'>...</option>
+          </select>
+          <span data-quando-toggle='extras=show'>
+              with size
+              <input data-quando-name="scale" type="text" value="100" data-quando-encode="normal" />
+              % and 
+              <select data-quando-name='orientation'>
+                <option value='flat'>flush on marker</option>
+                <option value='vertical'>vertical on marker</option>
+              </select>
+          </span>
         </div>
     </div>
 </div>
