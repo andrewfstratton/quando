@@ -49,8 +49,7 @@
   self.call_vis_rec = function(goalClass, fn) {
 
     const canvas = document.getElementById('hiddenCanvas');
-    const context = canvas.getContext('2d');  
-    alert('canvas is: '+ canvas)
+    const context = canvas.getContext('2d');
 
     if (canvas == null) {
       alert('You need to be in AR to use Visual Recognition!')
@@ -68,6 +67,7 @@
         var elem = document.getElementById('quando_labels')
         var div = document.createElement('div')
         var button = document.createElement('button')
+        var input = document.createElement('input')
         button.setAttribute('id', 'inpButton')
   
         div.className = 'quando_label'
@@ -92,7 +92,7 @@
         }
 
         button.addEventListener("click", function(){
-          context.drawImage(vid, 10, 10, self.width, self.height);
+          context.drawImage(vid, 0, 0);
           imgData = canvas.toDataURL("image/png");
           alert(imgData)
           self.call_vis_rec_api(imgData, goalClass, fn);

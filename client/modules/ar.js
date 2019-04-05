@@ -20,8 +20,8 @@
       //init hidden canvas - used for drawing snapshot of webcam feed
       let hiddenCanvas = document.createElement('canvas');
       hiddenCanvas.setAttribute('id', 'hiddenCanvas');
-      hiddenCanvas.setAttribute('width', self.width);
-      hiddenCanvas.setAttribute('height', self.height);
+      hiddenCanvas.setAttribute('width', 400);
+      hiddenCanvas.setAttribute('height', 400);
       return hiddenCanvas;
     }
 
@@ -66,8 +66,8 @@
         //add all elements to DOM
         scene.appendChild(marker);
         scene.appendChild(camera);
-        scene.appendChild(hiddenCanvas);
         document.getElementById('quando_AR').append(scene);
+        document.body.appendChild(hiddenCanvas);
         
         //add onScan eventListener
         marker.addEventListener('markerFound', (e)=>{

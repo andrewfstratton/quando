@@ -15,6 +15,11 @@ body {
     background-color: rgba(224, 119, 0, 0.6);
     border: 0px;  /* solid grey; */
 }
+
+#hiddenCanvas {
+    z-index: 2;
+}
+
 .quando_label::before {
     content: '\25b6\0020';
 }
