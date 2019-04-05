@@ -92,7 +92,7 @@
         }
 
         button.addEventListener("click", function(){
-          context.drawImage(vid, 0, 0);
+          context.drawImage(vid, 0, 0, 250, 200);
           imgData = canvas.toDataURL("image/png");
           alert(imgData)
           self.call_vis_rec_api(imgData, goalClass, fn);

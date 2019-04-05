@@ -136,7 +136,11 @@ app.get('/login', (req, res) => {
     res.json({ 'success': false, 'message': 'Not Logged In' })
   }
 })
-app.use(body_parser.urlencoded({ extended: true }))
+
+//increased limit of bp to allow for visrec 
+app.use(body_parser.json({ limit: '10mb' }));
+app.use(body_parser.urlencoded({ extended: true, limit:'10mb' }))
+
 app.use(body_parser.json())
 app.post('/login', (req, res) => {
   let body = req.body
@@ -418,20 +422,23 @@ app.post('/watson/TTS_request', (req, res) => {
 app.post('/watson/VISREC_request', (req, res) => {
   console.log('Visual Recognition Requested...');
   let imgData = req.body.imgData;
-  base64Img.img(imgData, __dirname + '/client/media', 'visrec', function(err, filepath) {});
-  let file = fs.createReadStream(__dirname +'/client/media/visrec.png');
-  let params = { //stuff sent to API
-    images_file: file
-  };
-  //call API
-  visRec.classify(params, function(err, response) {
-    if (err) {
-      console.log(err);
-    } else {
-      //TODO - need to parse out the classification here n pass it back with the socket signal
-      console.log(JSON.stringify(response, null, 2));
-      res.json(JSON.stringify(response, null, 2));
+  base64Img.img(imgData, __dirname + '/client/media', 'visrec', function(err, filepath) {
+
+    let file = fs.createReadStream(__dirname +'/client/media/visrec.png');
+    let params = { //stuff sent to API
+      images_file: file
     };
+    //call API
+    visRec.classify(params, function(err, response) {
+      if (err) {
+        console.log(err);
+      } else {
+        //TODO - need to parse out the classification here n pass it back with the socket signal
+        console.log(JSON.stringify(response, null, 2));
+        res.json(JSON.stringify(response, null, 2));
+      };
+    });
+
   });
   //io.emit('VISREC_return', {}) //send socket signal to client saying rec complete
 });

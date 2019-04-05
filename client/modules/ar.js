@@ -20,8 +20,8 @@
       //init hidden canvas - used for drawing snapshot of webcam feed
       let hiddenCanvas = document.createElement('canvas');
       hiddenCanvas.setAttribute('id', 'hiddenCanvas');
-      hiddenCanvas.setAttribute('width', 400);
-      hiddenCanvas.setAttribute('height', 400);
+      hiddenCanvas.setAttribute('width', 250);
+      hiddenCanvas.setAttribute('height', 200);
       return hiddenCanvas;
     }
 
