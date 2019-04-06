@@ -70,7 +70,7 @@ const MEDIA_FOLDER = path.join(__dirname, 'client', 'media')
 const MEDIA_MAP = {
   'video': ['ogg', 'ogv', 'mp4', 'webm'],
   'audio': ['mp3'],
-  'images': ['bmp', 'jpg', 'jpeg', 'png'],
+  'images': ['bmp', 'jpg', 'jpeg', 'png', 'gif'],
   'objects': ['gltf', 'glb'], 
   // 'objects': ['obj', 'mtl'],
 }

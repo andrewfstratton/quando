@@ -54,11 +54,12 @@
     _requestData("pow").then(() => {
       const model = quandoML.buildModel(model_name);
 
-      model.training.loadAndRun(isNewModel).then(accuracy => {
+      model.training.loadAndRun(isNewModel).then(() => {
         quando.add_handler("eegML" + model_name + "Label" + labelId, callback);
         model.classifier.setTracking(true);
 
         quando.destructor.add(() => {
+          model.classifier.counter = 0;
           model.classifier.setTracking(false);
         });
       });
@@ -369,8 +370,8 @@
       password: "Eweagtmslon19", 
       client_id: "8sfFMP0y2opXq6gmhNBAmcbdnDdBM06y6Y3RiJiL", 
       client_secret: "cR8MKcueMdKDvYh33zUmnxHYfMqoi9nwD5VuM0lzZt1Z5iBxP7JDovZ0n96dONYvUgDM8mB9IRsw7tjX2o8oS5IehDsLpOrXKKL2HvePWrYwhdWW8Q6W9ynD75uohikw"
-    }))
+    })) 
     .then(() => client.createSession({ status: 'open' }))
-    .then(() => client.emit("connected", unique = true));
+    .then(() => client.emit("connected", {}, true));
 
 })();

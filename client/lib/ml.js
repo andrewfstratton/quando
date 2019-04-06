@@ -1,5 +1,5 @@
 (function () {
-  ML_URL = "http://127.0.0.1:5000"
+  ML_URL = "https://eeg-ml.eu-gb.mybluemix.net"
 
   class Training {
     constructor(model, options = {}) {
@@ -32,45 +32,27 @@
       this.data.push(data);
     }
     loadAndRun(isNewModel) {
-      if (this.trained) return Promise.resolve();
+      if (this.trained || !this.data.length) return Promise.resolve();
       this.trained = true;
 
       const endpoint = "/train-model";
 
       let cols = this.model.ml.cols.slice();
       cols.push("label");
-      const msg = JSON.stringify({ 
+      const msg = { 
         cols,
         data: this.data, 
         new_model: isNewModel,
         model: this.model.model_name
-      });
-      // const msg = JSON.stringify({ csv: this._buildCSV() });
+      };
 
-      const xhttp = new XMLHttpRequest();
-      xhttp.open("POST", ML_URL + endpoint);
-      xhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
-      xhttp.setRequestHeader("Content-Type", "application/json");
-      xhttp.send(msg);
-
-      return new Promise((resolve, reject) => {
-        xhttp.onreadystatechange = function() {
-          if (this.readyState == 4) {
-            if (this.status == 200) {
-              return resolve(this.responseText);
-            } else {
-              this.trained = false;
-              return reject(this.response.error);
-            }
-          }
-        };
-      })
-    }
-    _buildCSV() {
-      let cols = this.model.ml.cols.slice();
-      cols.push("label");
-
-      return Papa.unparse({ "fields": cols, "data": this.data }, { newline: "\n" });
+      return fetch(ML_URL + endpoint, {
+        method: 'post',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(msg)
+      }).then(response => response.text);
     }
   }
 
@@ -82,7 +64,7 @@
       this.cols = [];
       this.tracking = false;
       this.counter = 0;
-      this.dataPerPrediction = 20;
+      this.dataPerPrediction = 10;
     }
     setTracking(val) {
       this.tracking = val;
@@ -99,34 +81,27 @@
     }
     predict() {
       const endpoint = "/predict-from-model";
-      const msg = JSON.stringify({ 
+      const msg = { 
         cols: this.model.ml.cols,
         data: this.data, 
         model: this.model.model_name
-      });
-
-      const xhttp = new XMLHttpRequest();
-      xhttp.open("POST", ML_URL + endpoint);
-      xhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
-      xhttp.setRequestHeader("Content-Type", "application/json");
-      xhttp.send(msg);
+      };
 
       this.setTracking(false);
-      self.counter = 0;
+      this.counter = 0;
       
-      self = this;
-      return new Promise(resolve => {
-        xhttp.onreadystatechange = function() {
-          if (this.readyState == 4 && this.status == 200) {
-            resolve(this.responseText);
-            self.data = [];
-            self.setTracking(true);
-          }
-        };
-      })
-    }
-    _buildCSV() {
-      return Papa.unparse({ "fields": this.model.ml.cols, "data": this.data }, { newline: "\n" });
+      return fetch(ML_URL + endpoint, {
+        method: 'post',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(msg)
+      }).then(response => {
+        this.data = [];
+        this.setTracking(true);
+
+        return response.text;
+      });
     }
   }
 
