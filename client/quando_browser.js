@@ -47,35 +47,27 @@
   }; 
 
   self.call_vis_rec = function(goalClass, fn) {
-
     const canvas = document.getElementById('hiddenCanvas');
     const context = canvas.getContext('2d');
-
     if (canvas == null) {
-      alert('You need to be in AR to use Visual Recognition!')
+      alert('You need to be in AR to use Visual Recognition!');
     } else {
-      let vid = null; //placeholder variable
+      //placeholder variables
+      let vid = null;
       let imgData = null;
 
-      const constraints = {
-        video: true,
-      };
-    
-      //timeout to wait for webcam feed to load in
+      //timeout of 3 seconds to wait for webcam feed to load in
       window.setTimeout(()=>{
-        //add button to take photo
-        var elem = document.getElementById('quando_labels')
-        var div = document.createElement('div')
-        var button = document.createElement('button')
-        var input = document.createElement('input')
-        button.setAttribute('id', 'inpButton')
-  
-        div.className = 'quando_label'
-        //rename
-        div.innerHTML = "Show Watson the thing"
-  
-        div.appendChild(button)
-        elem.appendChild(div)
+        let div = document.getElementById('visrec_label');
+        let elem = document.getElementById('quando_labels');
+
+        //if label doesn't already exist, create label
+        if (div == null) {
+          div = document.createElement('div');
+          div.className = 'quando_label';
+          div.innerHTML = "Found the thing?";
+          div.setAttribute('id', 'visrec_label');
+        }
 
         /*Get all video elements, then find the one that's
         direct parent is the body, which must be the webcam
@@ -84,23 +76,23 @@
         for (i=0; i<videos.length; i++){
           if (videos[i].parentNode == body) {
             vid = videos[i];
-          }
-        }
-
+          };
+        };
         if (vid == null) {
-          alert('Webcam feed not available!')
-        }
+          alert('Webcam feed not available!');
+        };
 
-        button.addEventListener("click", function(){
+        div.addEventListener("click", function(){
+          //save snapshot of webcam feed as dataURL
           context.drawImage(vid, 0, 0, 250, 200);
           imgData = canvas.toDataURL("image/png");
-          alert(imgData)
+          //call api using this snapshot as input
           self.call_vis_rec_api(imgData, goalClass, fn);
-        })
-
+        });
+        elem.appendChild(div);
       }, 3000);
-    }
-  }
+    };
+  };
 
   self.call_vis_rec_api = function(imgData, goalClass, fn) {
         //send POST request to server

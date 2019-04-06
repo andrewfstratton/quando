@@ -1,10 +1,5 @@
 TODO:
 
-                        !!!!UPDATE LOG!!!!
-
-VISREC pipe camera feed to API (BIG)
-
-
 move Watson client methods from quando_browser to their own module
 move watson server methods from server.js """""""
 
@@ -17,22 +12,16 @@ optimize ar model loading (BIG)
 
 add loading screen to AR bits (MID)
 
-add animations (NOPE)
-
 make TTS unique per user (MID)
     ---append the :userid to the filename
 
-redesign AR blocks (MID)
+---DONE---- redesign AR blocks (MID)
 
-markers E & F may need to change, test this (SMALL)
-
-switch save/load icons cause they're annoying me (SMALL)
-
-figure out how to not allow marker dependant puzzle blocks without having a marker?? (MID)
+---DONE---- VISREC pipe camera feed to API (BIG)
+---NOT GONNA DO---- add animations (NOPE)
 
 ---DONE---- alter showGLTF methods to allow for multiple markers
 ---DONE---- add stuff other than 3d models to marker - image (flat, vertical, facing camera??), video(sames), text(same actually damn) (BIG)
-
 
 ---KINDA DONE---- add puzzle building blocks - will take form of WHEN(event) blocks
 ---DONE---- onScan, can't think of any other simple ones rn
@@ -43,16 +32,9 @@ figure out how to not allow marker dependant puzzle blocks without having a mark
 ---DONE---- NOTE: alright, so custom markers work now, but they must be referenced as
 ---DONE---- live url's, not as relative files stored on the server.
 
-
 ---DONE---- now need to create library of custom markers and pattern files,
 ---DONE---- letters chosen instead of numbers, mostly unique looking 
-
----DONE---- host them on github, then create a choose/print system within quando.
-
-
-----------------WATSON---------------------------
+---DONE---- host them on github
 
 GEN NOTES:
 npm install --unsafe-perm --global leveldown
-
-a-marker vs a-marker-camera sorted, downgraded a-frame and it worked I guess, phew

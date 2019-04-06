@@ -67,7 +67,7 @@
         scene.appendChild(marker);
         scene.appendChild(camera);
         document.getElementById('quando_AR').append(scene);
-        document.body.appendChild(hiddenCanvas);
+        document.getElementById('quando_AR').appendChild(hiddenCanvas);
         
         //add onScan eventListener
         marker.addEventListener('markerFound', (e)=>{
@@ -121,140 +121,42 @@
       }
     }
 
-    self.showGLTFOLD = function(modelURL, markerID, flat=true, scale=100, above=false) {
-      //handle params
-      if (modelURL == null) {
-        alert('No model selected!')
-      }
-      modelURL = '/client/media/' + encodeURI(modelURL)
-      
-      scale = scale/100; //scale supplied in %
-      if (above) { //is model to be on or above marker?
-        position = '0 1 0'
-      } else {
-        position = '0 0 0'
-      }
-
-      var scene = document.getElementById('scene')
-      if (scene == null) { 
-        //if scene doesn't exist
-        //init scene
-        scene = document.createElement('a-scene');
-        scene.setAttribute('arjs', 'debugUIEnabled: false;');
-        scene.setAttribute('embedded', '');
-        scene.setAttribute('id', 'scene');
-
-        let hiddenCanvas = document.createElement('canvas');
-        hiddenCanvas.setAttribute('id', 'hiddenCanvas');
-        hiddenCanvas.setAttribute('width', self.width);
-        hiddenCanvas.setAttribute('height', self.height);
-
-        //init marker
-        var marker = document.createElement('a-marker');
-        if (markerID == 'hiro') {
-          marker.setAttribute('preset', 'hiro');
-          marker.setAttribute('id', 'hiro');
-        } else { 
-          marker.setAttribute('preset', 'custom');
-          marker.setAttribute('type', 'pattern');
-          marker.setAttribute('id', markerID);
-          //NOTE: below URLs must be hosted online instead of relatively for some dumb reason
-          marker.setAttribute('url', 'https://raw.githubusercontent.com/andrewfstratton/quando/ar_dev/client/media/markers/'+markerID+'.patt');
-        }
-
-        //init user chosen model - GLTF 2.0 - uncompressed
-        var model = document.createElement('a-gltf-model');
-        model.setAttribute('gltf-model', 'url('+modelURL+')'); //id model from url
-        model.setAttribute('scale', scale.toString() + ' '+ scale.toString() +' '+ scale.toString());
-        model.setAttribute('position', position);
-        if (flat == false) {
-          model.setAttribute('rotation', '0 0 90')
-        }
-
-        //init camera element
-        var cam = document.createElement('a-camera-static'); 
-        cam.setAttribute('id', 'camera')
-        
-        //add to heirarchy
-        marker.appendChild(model);
-        scene.appendChild(marker);
-        scene.appendChild(cam);
-        scene.appendChild(hiddenCanvas);
-
-        //add to AR element of doc
-        document.getElementById('quando_AR').append(scene);
-
-      } else { //scene already exists
-
-        //init marker
-        var marker = document.createElement('a-marker');
-        if (markerID == 'hiro') {
-          marker.setAttribute('preset', 'hiro');
-          marker.setAttribute('id', 'hiro');
-        } else { 
-          marker.setAttribute('preset', 'custom');
-          marker.setAttribute('type', 'pattern');
-          marker.setAttribute('id', markerID);
-          //NOTE: below URLs must be hosted online instead of relatively for some dumb reason
-          marker.setAttribute('url', 'https://raw.githubusercontent.com/andrewfstratton/quando/ar_dev/client/media/markers/'+markerID+'.patt');
-        }
-
-        //user chosen model - GLTF 2.0 - uncompressed
-        var model = document.createElement('a-gltf-model');
-        model.setAttribute('gltf-model', 'url('+modelURL+')'); //id model from url
-        model.setAttribute('scale', scale.toString() + ' '+ scale.toString() +' '+ scale.toString());
-        model.setAttribute('position', position);
-        if (flat == false) {
-          model.setAttribute('rotation', '0 0 90')
-        }
-
-        marker.appendChild(model)
-        scene.appendChild(marker)
-
-      }
-    }
 
     self.showImage = function(markerID, imgURL, scale = 100, orientation) { //scale set to 0.1 for default
-      scale = scale/100; //scale supplied in %
-
       //handle params
+      scale = (scale+5)/100; //scale supplied in %
       if (imgURL == null) {
         alert('No image selected!');
       };
       imgURL = '/client/media/' + encodeURI(imgURL);
 
       let scene = document.getElementById('scene');
-
       if (scene == null) { //if scene DOES NOT exist
         alert ('You need to be in AR to show this image!');
       } else {
         let img = document.getElementById(imgURL+markerID);
         let marker = document.getElementById(markerID);
-        if (img != null) { //if model DOES already exist
-          alert('Image '+imgURL+' is already shown!');  
-        } else {
-          //init user chosen image
+
+        if (img == null) { //if image DOES NOT already exist
           img = document.createElement('a-image');
-          img.setAttribute('src', imgURL); //id model from url
+          img.setAttribute('src', imgURL); //point at image file
+          img.setAttribute('id', imgURL+markerID); //set image id
   
-          //the below width and height settings are not relative, so will display the image in a 1:1 ratio
+          /* the below width and height settings do not retain 
+          source aspect ratio, so will display the image in a 1:1 ratio */
           img.setAttribute('height', scale.toString());
           img.setAttribute('width', scale.toString());
-          if (orientation == 'flat') {
-            img.setAttribute('rotation', '-90 0 0');
-          } else if (orientation == 'vertical') {
-            img.setAttribute('rotation', '0 0 0');
-          } else {
-            img.setAttribute('rotation', '0 0 0');
-            img.setAttribute('look-at', '#player')
-          }
+          
+          img.setAttribute('rotation', '-90 0 0');
+          marker.appendChild(img);
         }
-        marker.appendChild(img);
       }
+
     }
 
-    self.showVideo = function(markerID, vidURL, scale = 100, orientation) { //scale set to 0.1 for default
-      scale = scale/100; //scale supplied in %
+    self.showVideo = function(markerID, vidURL, scale = 100, orientation) { 
+      scale = (scale+5)/100; /* scale supplied in %, 5 added on to give video some
+      overlap around the marker, so it's less visible behind the video */
 
       //handle params
       if (vidURL == null) {
@@ -269,27 +171,23 @@
       } else {
         let vid = document.getElementById(vidURL+markerID);
         let marker = document.getElementById(markerID);
-        if (vid != null) { //if model DOES already exist
-          alert('Image '+vidURL+' is already shown!');  
+
+        if (vid == null) { //if model DOES already exist
         } else {
           //init user chosen image
           vid = document.createElement('a-video');
           vid.setAttribute('src', vidURL); //id model from url
-  
-          //the below width and height settings are not relative, so will display the image in a 1:1 ratio
+          vid.setAttribute('id', vidURL+markerID)
+
+          /* the below width and height settings do not retain 
+          source aspect ratio, so will display the image in a 1:1 ratio */
           vid.setAttribute('height', scale.toString());
           vid.setAttribute('width', scale.toString());
-          if (orientation == 'flat') {
-            vid.setAttribute('rotation', '-90 0 90');
-          } else if (orientation == 'vertical') {
-            vid.setAttribute('rotation', '0 0 0');
-          } else {
-            vid.setAttribute('rotation', '0 0 0');
-            vid.setAttribute('look-at', '#player')
-          }
+          vid.setAttribute('rotation', '-90 0 90');
+          marker.appendChild(vid);
         }
-        marker.appendChild(vid);
       }
+
     }
 
 
@@ -310,6 +208,7 @@
           //init user text
           textElem = document.createElement('a-text');
           textElem.setAttribute('value', text);
+          textElem.setAttribute('id',text+markerID);
   
           //the below width and height settings are bad
           textElem.setAttribute('height', scale.toString());
