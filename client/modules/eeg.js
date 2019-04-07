@@ -142,6 +142,7 @@
 
       if (data.nodding) {
         quando.dispatch_event('eegNodding' + data.nodding);
+        _nodding.reset();
       }
     },
     "fac" : function (data) {
@@ -287,8 +288,8 @@
 
   const _nodding = {
 
-    diffNod: 5,
-    swingDataLimit: 50,
+    diffLimit: 30,
+    swingDataLimit: 15,
     swingsLimit: 3,
     nod: {x: 0, y: 0},
     maxNod: {x: 0, y: 0},
@@ -296,17 +297,21 @@
     swingDir: {x: 0, y: 0},
 
     update: function (data, offset) {
-      this._update("x", data, offset);
-      this._update("y", data, offset);
+      if (Math.abs(offset.GYROX - data.GYROX) > Math.abs(offset.GYROY - data.GYROY)) {
+        this._update("x", data, offset);
+      } else {
+        this._update("y", data, offset);
+      }
     },
     get: function () {
-      if (this._get("x")) return "Yes";
-      if (this._get("y")) return "No";
+      if (this._get("x")) return "No";
+      if (this._get("y")) return "Yes";
 
       return null;
     },
     _update: function (dir, data, offset) {
-      const diff = (dir == "y") ? offset.GYROX - data.GYROX : offset.GYROY - data.GYROY;
+      let diff = (dir == "x") ? offset.GYROX - data.GYROX : offset.GYROY - data.GYROY;
+      diff = Math.abs(diff) >= this.diffLimit ? diff : 0;
       this.nod[dir] += Math.sign(diff);
 
       if (Math.abs(this.nod[dir]) == this.swingDataLimit) {
