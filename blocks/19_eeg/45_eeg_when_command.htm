@@ -1,9 +1,9 @@
-<div class="quando-block" data-quando-javascript="quando.eeg.onCommand('${command}', ${minVal}, () => {${box}})">
+<div class="quando-block" data-quando-javascript="quando.eeg.onCommand('${command}', ${min}, ${max}, () => {${box}})">
     <div class="quando-left quando-eeg"></div>
     <div class="quando-right">
         <div class="quando-row quando-eeg">
-            <span class="quando-info" title="Emotiv headset required">🧠</span>
-            When EEG command
+            <span class="quando-info" title="Emotiv headset and EmotivBCI training required">🧠</span>
+            When mental command
             <select data-quando-name="command">
                 <option value='Push'>Push</option>
                 <option value='Pull'>Pull</option>
@@ -11,8 +11,8 @@
                 <option value='Drop'>Drop</option>
                 <option value='Left'>Left</option>
                 <option value='Right'>Right</option>
-                <option value='RotateCounterClockwise'>Rotate Anti-Clockwise</option>
-                <option value='RotateClockwise'>Rotate Clockwise</option>
+                <!-- <option value='RotateCounterClockwise'>Rotate Anti-Clockwise</option>
+                <option value='RotateClockwise'>Rotate Clockwise</option> -->
                 <option value='RotateForwards'>Rotate Forwards</option>
                 <option value='RotateBackwards'>Rotate Backwards</option>
                 <option value='RotateLeft'>Rotate Left</option>
@@ -25,8 +25,10 @@
             </select>
             <span data-quando-toggle='extras=show'>
                 <br />
-                Min Value
-                <input data-quando-name="minVal" type="text" value="0.5" data-quando-encode="normal" />
+                with intensity between
+                <input data-quando-name="min" type="text" value="0.5" data-quando-encode="normal" />
+                and
+                <input data-quando-name="max" type="text" value="1" data-quando-encode="normal" />
             </span>
         </div>
         <div data-quando-name="box" class="quando-box"></div>

@@ -1,9 +1,9 @@
-<div class="quando-block" data-quando-javascript="quando.eeg.onEmotion('${state}', ${minVal}, () => {${box}})">
+<div class="quando-block" data-quando-javascript="quando.eeg.onEmotion('${state}', ${min}, ${max}, () => {${box}})">
     <div class="quando-left quando-eeg"></div>
     <div class="quando-right">
         <div class="quando-row quando-eeg">
             <span class="quando-info" title="Emotiv headset required">🧠</span>
-            When EEG emotion
+            When emotional state
             <select data-quando-name="state">
                 <option value='Int'>Interested</option>
                 <option value='Str'>Stressed</option>
@@ -19,8 +19,10 @@
             </select>
             <span data-quando-toggle='extras=show'>
                 <br />
-                Min Value
-                <input data-quando-name="minVal" type="text" value="0.5" data-quando-encode="normal" />
+                with intensity between
+                <input data-quando-name="min" type="text" value="0.5" data-quando-encode="normal" />
+                and
+                <input data-quando-name="max" type="text" value="1" data-quando-encode="normal" />
             </span>
         </div>
         <div data-quando-name="box" class="quando-box"></div>

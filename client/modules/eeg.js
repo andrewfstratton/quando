@@ -5,11 +5,11 @@
   }
   const self = quando.eeg = {};
 
-  const verbose = 2;
-  const client = new Cortex({verbose});
+  const client = new Cortex({ verbose: 2 });
   const quandoML = new QuandoML();
 
-  self._labels = []
+  self._labels = [];        // set of labels used for ml classification
+  self._subs = [];          // set of Emotiv device data subscriptions
 
   /*///////////////////////////////////////////////////////////////////////*/
   /* --------------------- Quando Block Functions ------------------------ */
@@ -33,21 +33,21 @@
     });
   }
 
-  self.onFaceExpression = (event, min, callback) => {
+  self.onFaceExpression = (event, min, max, callback) => {
     _requestData("fac").then(() => {
-      quando.add_scaled_handler('eegAct' + event, callback, _minScaler(min));
+      quando.add_scaled_handler('eegAct' + event, callback, _minMaxScaler(min, max));
     });
   }
 
-  self.onEmotion = (state, min, callback) => {
+  self.onEmotion = (state, min, max, callback) => {
     _requestData("met").then(() => {
-      quando.add_scaled_handler('eegMet' + state, callback, _minScaler(min));
+      quando.add_scaled_handler('eegMet' + state, callback, _minMaxScaler(min, max));
     });
   }
 
-  self.onCommand = (command, min, callback) => {
+  self.onCommand = (command, min, max, callback) => {
     _requestData("com").then(() => {
-      quando.add_scaled_handler('eegCom' + command, callback, _minScaler(min));
+      quando.add_scaled_handler('eegCom' + command, callback, _minMaxScaler(min, max));
     });
   }
 
@@ -87,12 +87,10 @@
   /* ---------------------- Data Request Functions ----------------------- */
   /*///////////////////////////////////////////////////////////////////////*/
 
-  const subscriptions = [];
-
   function _requestData(type) {
     return new Promise((resolve) => {
-      if (subscriptions.includes(type)) return resolve();
-      subscriptions.push(type);
+      if (self._subs.includes(type)) return resolve();
+      self._subs.push(type);
 
       client.on("connected", () => {
         return client.subscribe({ streams: [type] })
@@ -364,8 +362,8 @@
     return txt.replace(/^\w/, c => c.toUpperCase());
   }
 
-  function _minScaler(min) {
-    return (value) => value >= min ? value : null;
+  function _minMaxScaler(min, max) {
+    return value => (value >= min && value <= max) ? value : null;
   }
 
 
