@@ -1,5 +1,5 @@
 (function () {
-  ML_URL = "https://eeg-ml.eu-gb.mybluemix.net"
+  ML_URL = "http://localhost:8000" // "http://localhost:8000"
 
   class Training {
     constructor(model, options = {}) {
@@ -53,7 +53,10 @@
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(msg)
-      }).then(response => response.json());
+      }).then(response => response.json()).then(json => {
+        this.model.classifier.getLabels = this.model.classifier._getLabels()
+        return json;
+      });
     }
   }
 
@@ -63,6 +66,7 @@
       this.options = options;
       this.data = [];
       this.cols = [];
+      this.getLabels = this._getLabels();
       this.tracking = false;
       this.counter = 0;
       this.dataPerPrediction = 10;
@@ -104,6 +108,11 @@
 
         return response.json();
       });
+    }
+    _getLabels() {
+      return fetch(ML_URL + '/get_model_labels?model_name=' + encodeURIComponent(this.model.model_name))
+        .then(res => res.json())
+        .then(json => (json.success == 'true') ? json.labels : [])
     }
   }
 

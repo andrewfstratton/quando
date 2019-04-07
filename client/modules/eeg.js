@@ -9,9 +9,10 @@
   const client = new Cortex({verbose});
   const quandoML = new QuandoML();
 
+  self._labels = []
 
   /*///////////////////////////////////////////////////////////////////////*/
-  /* ---------------------- Quando Box Functions ------------------------- */
+  /* --------------------- Quando Block Functions ------------------------ */
   /*///////////////////////////////////////////////////////////////////////*/
 
   self.onRotation = (type, mid_angle, plus_minus, inverted, callback) => {
@@ -50,15 +51,17 @@
     });
   }
 
-  self.onLabel = (labelId, model_name, isNewModel, callback) => {
+  self.onLabel = (label, model_name, isNewModel, callback) => {
     _requestData("pow").then(() => {
+      if (!(self._labels.includes(label))) self._labels.push(label);
       const model = quandoML.buildModel(model_name);
 
       model.training.loadAndRun(isNewModel).then(() => {
-        quando.add_handler("eegML" + model_name + "Label" + labelId, callback);
+        quando.add_handler("eegML" + model_name + "Label" + self._labels.indexOf(label), callback);
         model.classifier.setTracking(true);
 
         quando.destructor.add(() => {
+          self._labels = [];
           model.classifier.counter = 0;
           model.classifier.setTracking(false);
         });
@@ -66,10 +69,11 @@
     });
   }
 
-  self.fetchDataForLabel = (labelId, seconds, model_name) => {
+  self.fetchDataForLabel = (label, seconds, model_name) => {
     _requestData("pow").then(() => {
       const model = quandoML.buildModel(model_name);
-      model.training.setTrackingLabel(labelId);
+
+      model.training.setTrackingLabel(label);
       model.training.setTrackingTimeout(seconds);
 
       quando.destructor.add(() => {
@@ -169,8 +173,8 @@
       quando.idle_reset();
 
       quandoML.fetchData(data);
-      quandoML.predictFromModels((model_name, labelId) => {
-        quando.dispatch_event("eegML" + model_name + "Label" + labelId);
+      quandoML.predictFromModels((model_name, label) => {
+        quando.dispatch_event("eegML" + model_name + "Label" + self._labels.indexOf(label));
       });
     }
   }

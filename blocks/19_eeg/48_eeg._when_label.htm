@@ -1,12 +1,9 @@
-<div class="quando-block" data-quando-javascript="quando.eeg.onLabel(${labelId}, '${model}', ${isNewModel}, () => {${box}})">
+<div class="quando-block" data-quando-javascript="quando.eeg.onLabel('${label}', '${model}', ${isNewModel}, () => {${box}})">
     <div class="quando-left quando-eeg"></div>
     <div class="quando-right">
         <div class="quando-row quando-eeg">
             <span class="quando-info" title="Emotiv headset required">🧠</span>
-            When thinking about
-            <select data-quando-name='labelId' data-quando-list="eegLabel">
-                <option value='-1'>----</option>
-            </select>
+            When thinking about <input data-quando-name="label" type="text" value="" />
             <select data-quando-name='extras' class='quando-toggle'>
                 <option value='hidden'>+</option>
                 <option value='show'>-</option>
