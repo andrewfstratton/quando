@@ -48,11 +48,12 @@
 
       return fetch(ML_URL + endpoint, {
         method: 'post',
+        mode: "cors",
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(msg)
-      }).then(response => response.text);
+      }).then(response => response.json());
     }
   }
 
@@ -92,6 +93,7 @@
       
       return fetch(ML_URL + endpoint, {
         method: 'post',
+        mode: "cors",
         headers: {
           'Content-Type': 'application/json'
         },
@@ -100,7 +102,7 @@
         this.data = [];
         this.setTracking(true);
 
-        return response.text;
+        return response.json();
       });
     }
   }
@@ -136,7 +138,13 @@
     predictFromModels(callback) {
       for (const model_name of Object.keys(this.models)) {
         if (this.models[model_name].classifier.readyForPrediction()) {
-          this.models[model_name].classifier.predict().then(labelId => callback(model_name, labelId));
+          this.models[model_name].classifier.predict().then(res => {
+            if (res.success == 'true') {
+              callback(model_name, res.prediction);
+            } else {
+              console.error("Error: " + res.error);
+            }
+          });
         }
       }
     }

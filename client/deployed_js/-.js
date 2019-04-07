@@ -1,39 +1,37 @@
 let exec = () => {
 quando.display(0,()=>{
 quando.title('Main display')
-quando.addLabel(3, 'Train Active Visual Stimuli')
-quando.addLabel(1, 'Train Passive Visual Stimuli')
+quando.addLabel(3, 'Train eyes open')
+quando.addLabel(1, 'Train eyes closed')
 quando.addLabel(2, 'Predict state')
 })
 quando.display(3,()=>{
-quando.title('Train Active Visual Stimuli')
-quando.eeg.fetchDataForLabel(4, 10, 'visualstimuli')
-quando.image.set(true,'illusion.gif')
-quando.time.after(10, 'seconds', ()=>{
-quando.text('Finished,,, leave this page as soon as you can', false)
+quando.title('Train eyes open')
+quando.eeg.fetchDataForLabel(4, 5, 'andrei')
+quando.time.after(5, 'seconds', ()=>{
+quando.text('Training done... blink to go back', false)
+quando.eeg.onEye('Blink', () => {quando.showDisplay(0)
+})
 quando.addLabel(0, 'Main display')
 })
 })
 quando.display(1,()=>{
-quando.title('Train Passive Visual Stimuli')
-quando.eeg.fetchDataForLabel(5, 10, 'visualstimuli')
-quando.image.set(true,'blue.jpg')
-quando.time.after(10, 'seconds', ()=>{
-quando.text('Training complete', false)
+quando.title('Train eyes closed')
+quando.eeg.fetchDataForLabel(5, 5, 'andrei')
+quando.time.after(5, 'seconds', ()=>{
+quando.text('Training done... smile to go back', false)
+quando.eeg.onFaceExpression('Smile', 0.5, () => {quando.showDisplay(0)
+})
 quando.addLabel(0, 'Main display')
 })
 })
 quando.display(2,()=>{
 quando.title('Predict state')
-quando.eeg.onLabel(4, 'visualstimuli', 0, () => {quando.text('Spooky...', false)
+quando.eeg.onLabel(4, 'andrei', 1, () => {quando.text('Eyes open', false)
+quando.image.set(true,'eyesopen.jpg')
 })
-quando.eeg.onLabel(5, 'visualstimuli', 0, () => {quando.text('Meh...', false)
-})
-quando.addLabelStatement('Show active', ()=>{
-quando.image.set(true,'illusion.gif')
-})
-quando.addLabelStatement('Show passive', ()=>{
-quando.image.set(true,'blue.jpg')
+quando.eeg.onLabel(5, 'andrei', 1, () => {quando.text('Eyes closed', false)
+quando.image.set(true,'eyesclosed.jpg')
 })
 quando.addLabel(0, 'Main display')
 })
