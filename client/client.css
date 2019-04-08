@@ -29,6 +29,17 @@ body {
     padding: 5px;
     margin: 2px 2px 5px 2px;
 }
+
+#inp {
+    height: 1.9vw;
+    width: 80%;
+    padding: 5px;
+}
+
+#inpButton {
+    height: 1.9vw;
+}
+
 #quando_labels {
     position: absolute;
     z-index: 100;

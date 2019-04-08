@@ -1,5 +1,17 @@
 TODO:
 
+Make examples! :D
+
+FIX ALL BUGS IN IBM CLOUD DEPLOY
+
+make QR code marker
+
+add when click
+
+api call unit tests
+
+move marker files & watson files (i.e. tts.wav & visrec.png) to their own folder
+
 move Watson client methods from quando_browser to their own module
 move watson server methods from server.js """""""
 
@@ -8,12 +20,18 @@ must add system to allow for failure states for puzzles (BIG)
 optimize ar model loading (BIG)
     --- using Draco compression lib?
         --- q - does user have to compress models, should quando do it on upload?
-        --- try optimizing Jupiter myself, see if it's worth doing
+        --- try optimizing Jupiter myself, see if it's worth doing ????????????????
 
 add loading screen to AR bits (MID)
 
-make TTS unique per user (MID)
+!!!!!make TTS unique per user (MID)
     ---append the :userid to the filename
+
+INteractive Model Sizing & Position initialisation
+
+
+
+
 
 ---DONE---- redesign AR blocks (MID)
 

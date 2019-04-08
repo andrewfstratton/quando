@@ -12,7 +12,7 @@ const script = require('./script')
 const client_deploy = './client/deployed_js/'
 const user = require('./user')
 const path = require('path')
-
+const promise = require('promise');
 const http = require('http').Server(app)
 const io = require('socket.io')(http)
 const ubit = require('./ubit')
@@ -98,7 +98,7 @@ const MEDIA_FOLDER = path.join(__dirname, 'client', 'media')
 const MEDIA_MAP = {
   //TODO - refactor to videos & images
   'video': ['ogg', 'ogv', 'mp4', 'webm'],
-  'audio': ['mp3'],
+  'audio': ['mp3', 'wav'],
   'images': ['bmp', 'jpg', 'jpeg', 'png'],
   'objects': ['gltf', 'glb'], 
   // 'objects': ['obj', 'mtl'],
@@ -403,19 +403,17 @@ app.post('/watson/TTS_request', (req, res) => {
     text: text,
     accept: 'audio/wav'
   } 
-  tts.synthesize(params,
-    function(err, audio) { //handling errors and file
-      if (err) {
+  tts.synthesize(params, function(err, audio) { //handling errors and file
+    if (err) {
       console.log(err);
       return;
-      }
-      tts.repairWavHeader(audio);
-      fs.writeFileSync(__dirname + '/client/media/tts.wav', audio); //save output file
-      console.log('TTS - audio written as tts.wav');
-    }
-    );
-  io.emit('TTS_return', {}) //send socket signal to client saying synthesis complete
-  res.json({})
+    } 
+    //save output file
+    tts.repairWavHeader(audio);
+    fs.writeFileSync(__dirname + '/client/media/tts.wav', audio);
+    console.log('TTS - audio written as tts.wav');
+    res.json({});
+  });
 });
 
 //Visual-Recognition

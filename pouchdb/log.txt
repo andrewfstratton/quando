@@ -337,3 +337,135 @@
 [Sat, 06 Apr 2019 12:11:40 GMT] [info] [<0.000.0>] pouchdb-server has started on http://127.0.0.1:5984/
 [Sat, 06 Apr 2019 12:11:40 GMT] [info] [<0.000.0>] database files will be saved to pouchdb
 [Sat, 06 Apr 2019 12:11:40 GMT] [info] [<0.000.0>] navigate to http://127.0.0.1:5984/_utils for the Fauxton UI.
+[Sun, 07 Apr 2019 13:01:46 GMT] [info] [<0.000.0>] pouchdb-server has started on http://127.0.0.1:5984/
+[Sun, 07 Apr 2019 13:01:46 GMT] [info] [<0.000.0>] database files will be saved to pouchdb
+[Sun, 07 Apr 2019 13:01:46 GMT] [info] [<0.000.0>] navigate to http://127.0.0.1:5984/_utils for the Fauxton UI.
+[Sun, 07 Apr 2019 13:16:23 GMT] [info] [<0.000.0>] pouchdb-server has started on http://127.0.0.1:5984/
+[Sun, 07 Apr 2019 13:16:23 GMT] [info] [<0.000.0>] database files will be saved to pouchdb
+[Sun, 07 Apr 2019 13:16:23 GMT] [info] [<0.000.0>] navigate to http://127.0.0.1:5984/_utils for the Fauxton UI.
+[Sun, 07 Apr 2019 21:10:19 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /user/ 200
+[Sun, 07 Apr 2019 21:10:19 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /user/_find 200
+[Sun, 07 Apr 2019 21:10:33 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /script/ 200
+[Sun, 07 Apr 2019 21:10:33 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /script/_bulk_docs 201
+[Sun, 07 Apr 2019 21:14:38 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /script/ 200
+[Sun, 07 Apr 2019 21:14:38 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /script/_bulk_docs 201
+[Sun, 07 Apr 2019 21:15:31 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /script/ 200
+[Sun, 07 Apr 2019 21:15:31 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /script/_bulk_docs 201
+[Sun, 07 Apr 2019 21:17:09 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /script/ 200
+[Sun, 07 Apr 2019 21:17:09 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /script/_bulk_docs 201
+[Sun, 07 Apr 2019 21:22:00 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /script/ 200
+[Sun, 07 Apr 2019 21:22:00 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /script/_bulk_docs 201
+[Sun, 07 Apr 2019 21:27:51 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /script/ 200
+[Sun, 07 Apr 2019 21:27:51 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /script/_bulk_docs 201
+[Sun, 07 Apr 2019 21:29:50 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /script/ 200
+[Sun, 07 Apr 2019 21:29:50 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /script/_bulk_docs 201
+[Sun, 07 Apr 2019 21:50:36 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /script/ 200
+[Sun, 07 Apr 2019 21:50:36 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /script/_bulk_docs 201
+[Sun, 07 Apr 2019 22:09:01 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /script/ 200
+[Sun, 07 Apr 2019 22:09:01 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /script/_bulk_docs 201
+[Sun, 07 Apr 2019 22:10:08 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /script/ 200
+[Sun, 07 Apr 2019 22:10:08 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /script/_bulk_docs 201
+[Sun, 07 Apr 2019 22:12:26 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /script/ 200
+[Sun, 07 Apr 2019 22:12:26 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /script/_bulk_docs 201
+[Sun, 07 Apr 2019 22:14:31 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /script/ 200
+[Sun, 07 Apr 2019 22:14:31 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /script/_bulk_docs 201
+[Mon, 08 Apr 2019 12:28:41 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /script/ 200
+[Mon, 08 Apr 2019 12:28:41 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /script/_bulk_docs 201
+[Mon, 08 Apr 2019 13:22:55 GMT] [info] [<0.000.0>] pouchdb-server has started on http://127.0.0.1:5984/
+[Mon, 08 Apr 2019 13:22:55 GMT] [info] [<0.000.0>] database files will be saved to pouchdb
+[Mon, 08 Apr 2019 13:22:55 GMT] [info] [<0.000.0>] navigate to http://127.0.0.1:5984/_utils for the Fauxton UI.
+[Mon, 08 Apr 2019 13:23:00 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /script/ 200
+[Mon, 08 Apr 2019 13:23:00 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /script/_bulk_docs 201
+[Mon, 08 Apr 2019 13:34:07 GMT] [info] [<0.000.0>] pouchdb-server has started on http://127.0.0.1:5984/
+[Mon, 08 Apr 2019 13:34:07 GMT] [info] [<0.000.0>] database files will be saved to pouchdb
+[Mon, 08 Apr 2019 13:34:07 GMT] [info] [<0.000.0>] navigate to http://127.0.0.1:5984/_utils for the Fauxton UI.
+[Mon, 08 Apr 2019 13:34:54 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /user/ 200
+[Mon, 08 Apr 2019 13:34:55 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /user/_find 200
+[Mon, 08 Apr 2019 13:34:57 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /script/ 200
+[Mon, 08 Apr 2019 13:34:57 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /script/_find 200
+[Mon, 08 Apr 2019 13:34:59 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /script/ 200
+[Mon, 08 Apr 2019 13:34:59 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /script/_find 200
+[Mon, 08 Apr 2019 13:36:29 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /script/ 200
+[Mon, 08 Apr 2019 13:36:29 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /script/_find 200
+[Mon, 08 Apr 2019 13:36:31 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /script/ 200
+[Mon, 08 Apr 2019 13:36:31 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /script/_find 200
+[Mon, 08 Apr 2019 14:24:57 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /script/ 200
+[Mon, 08 Apr 2019 14:24:57 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /script/_bulk_docs 201
+[Mon, 08 Apr 2019 14:29:55 GMT] [info] [<0.000.0>] pouchdb-server has started on http://127.0.0.1:5984/
+[Mon, 08 Apr 2019 14:29:55 GMT] [info] [<0.000.0>] database files will be saved to pouchdb
+[Mon, 08 Apr 2019 14:29:55 GMT] [info] [<0.000.0>] navigate to http://127.0.0.1:5984/_utils for the Fauxton UI.
+[Mon, 08 Apr 2019 14:30:22 GMT] [info] [<0.000.0>] pouchdb-server has started on http://127.0.0.1:5984/
+[Mon, 08 Apr 2019 14:30:22 GMT] [info] [<0.000.0>] database files will be saved to pouchdb
+[Mon, 08 Apr 2019 14:30:22 GMT] [info] [<0.000.0>] navigate to http://127.0.0.1:5984/_utils for the Fauxton UI.
+[Mon, 08 Apr 2019 14:30:54 GMT] [info] [<0.000.0>] pouchdb-server has started on http://127.0.0.1:5984/
+[Mon, 08 Apr 2019 14:30:54 GMT] [info] [<0.000.0>] database files will be saved to pouchdb
+[Mon, 08 Apr 2019 14:30:54 GMT] [info] [<0.000.0>] navigate to http://127.0.0.1:5984/_utils for the Fauxton UI.
+[Mon, 08 Apr 2019 14:34:06 GMT] [info] [<0.000.0>] pouchdb-server has started on http://127.0.0.1:5984/
+[Mon, 08 Apr 2019 14:34:06 GMT] [info] [<0.000.0>] database files will be saved to pouchdb
+[Mon, 08 Apr 2019 14:34:06 GMT] [info] [<0.000.0>] navigate to http://127.0.0.1:5984/_utils for the Fauxton UI.
+[Mon, 08 Apr 2019 14:36:35 GMT] [info] [<0.000.0>] pouchdb-server has started on http://127.0.0.1:5984/
+[Mon, 08 Apr 2019 14:36:35 GMT] [info] [<0.000.0>] database files will be saved to pouchdb
+[Mon, 08 Apr 2019 14:36:35 GMT] [info] [<0.000.0>] navigate to http://127.0.0.1:5984/_utils for the Fauxton UI.
+[Mon, 08 Apr 2019 14:42:15 GMT] [info] [<0.000.0>] pouchdb-server has started on http://127.0.0.1:5984/
+[Mon, 08 Apr 2019 14:42:15 GMT] [info] [<0.000.0>] database files will be saved to pouchdb
+[Mon, 08 Apr 2019 14:42:15 GMT] [info] [<0.000.0>] navigate to http://127.0.0.1:5984/_utils for the Fauxton UI.
+[Mon, 08 Apr 2019 15:07:24 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /script/ 200
+[Mon, 08 Apr 2019 15:07:24 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /script/_bulk_docs 201
+[Mon, 08 Apr 2019 15:07:27 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /script/ 200
+[Mon, 08 Apr 2019 15:07:27 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /script/_find 200
+[Mon, 08 Apr 2019 15:07:29 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /script/ 200
+[Mon, 08 Apr 2019 15:07:29 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /script/_find 200
+[Mon, 08 Apr 2019 15:11:32 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /script/ 200
+[Mon, 08 Apr 2019 15:11:32 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /script/_bulk_docs 201
+[Mon, 08 Apr 2019 15:21:44 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /script/ 200
+[Mon, 08 Apr 2019 15:21:44 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /script/_bulk_docs 201
+[Mon, 08 Apr 2019 15:22:32 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /script/ 200
+[Mon, 08 Apr 2019 15:22:32 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /script/_bulk_docs 201
+[Mon, 08 Apr 2019 15:25:31 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /script/ 200
+[Mon, 08 Apr 2019 15:25:31 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /script/_bulk_docs 201
+[Mon, 08 Apr 2019 15:29:21 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /script/ 200
+[Mon, 08 Apr 2019 15:29:21 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /script/_bulk_docs 201
+[Mon, 08 Apr 2019 19:55:09 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /script/ 200
+[Mon, 08 Apr 2019 19:55:09 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /script/_bulk_docs 201
+[Mon, 08 Apr 2019 20:39:21 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /script/ 200
+[Mon, 08 Apr 2019 20:39:21 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /script/_bulk_docs 201
+[Mon, 08 Apr 2019 21:19:04 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /script/ 200
+[Mon, 08 Apr 2019 21:19:04 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /script/_find 200
+[Mon, 08 Apr 2019 21:19:05 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /script/ 200
+[Mon, 08 Apr 2019 21:19:05 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /script/_find 200
+[Mon, 08 Apr 2019 21:27:28 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /user/ 200
+[Mon, 08 Apr 2019 21:27:28 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /user/_find 200
+[Mon, 08 Apr 2019 21:29:55 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /script/ 200
+[Mon, 08 Apr 2019 21:29:55 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /script/_bulk_docs 201
+[Mon, 08 Apr 2019 21:48:04 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /script/ 200
+[Mon, 08 Apr 2019 21:48:04 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /script/_bulk_docs 201
+[Mon, 08 Apr 2019 21:48:16 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /script/ 200
+[Mon, 08 Apr 2019 21:48:16 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /script/_find 200
+[Mon, 08 Apr 2019 21:48:19 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /script/ 200
+[Mon, 08 Apr 2019 21:48:19 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /script/_find 200
+[Mon, 08 Apr 2019 21:48:42 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /script/ 200
+[Mon, 08 Apr 2019 21:48:42 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /script/_bulk_docs 201
+[Mon, 08 Apr 2019 21:48:44 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /script/ 200
+[Mon, 08 Apr 2019 21:48:45 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /script/_find 200
+[Mon, 08 Apr 2019 21:48:49 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /script/ 200
+[Mon, 08 Apr 2019 21:48:49 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /script/_find 200
+[Mon, 08 Apr 2019 21:48:50 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /script/ 200
+[Mon, 08 Apr 2019 21:48:50 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /script/_find 200
+[Mon, 08 Apr 2019 21:48:57 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /script/ 200
+[Mon, 08 Apr 2019 21:48:57 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /script/_find 200
+[Mon, 08 Apr 2019 21:48:59 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /script/ 200
+[Mon, 08 Apr 2019 21:48:59 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /script/_find 200
+[Mon, 08 Apr 2019 22:03:16 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /script/ 200
+[Mon, 08 Apr 2019 22:03:16 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /script/_bulk_docs 201
+[Mon, 08 Apr 2019 22:09:58 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /script/ 200
+[Mon, 08 Apr 2019 22:09:58 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /script/_bulk_docs 201
+[Mon, 08 Apr 2019 22:10:10 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /script/ 200
+[Mon, 08 Apr 2019 22:10:10 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /script/_find 200
+[Mon, 08 Apr 2019 22:10:12 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /script/ 200
+[Mon, 08 Apr 2019 22:10:12 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /script/_find 200
+[Mon, 08 Apr 2019 22:10:43 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /script/ 200
+[Mon, 08 Apr 2019 22:10:43 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /script/_bulk_docs 201
+[Mon, 08 Apr 2019 22:10:53 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /script/ 200
+[Mon, 08 Apr 2019 22:10:53 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /script/_find 200
+[Mon, 08 Apr 2019 22:10:57 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /script/ 200
+[Mon, 08 Apr 2019 22:10:57 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /script/_find 200

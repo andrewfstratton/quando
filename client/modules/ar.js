@@ -27,12 +27,9 @@
 
     self.initMarker = function(markerID) {
       let marker = document.getElementById(markerID);
-
       if (marker!=null) {
-        alert('Marker '+markerID+' already exists!');
       } else {
         //init marker
-
         marker = document.createElement('a-marker');
         if (markerID == 'hiro') {
           marker.setAttribute('preset', 'hiro');
@@ -95,6 +92,7 @@
       } else {
         position = '0 0 0'
       }
+
       if (modelURL == null) {
         alert('No model selected!');
       };
@@ -167,7 +165,7 @@
       let scene = document.getElementById('scene');
 
       if (scene == null) { //if scene DOES NOT exist
-        alert ('You need to be in AR to show this image!');
+        alert ('You need to be in AR to show this video!');
       } else {
         let vid = document.getElementById(vidURL+markerID);
         let marker = document.getElementById(markerID);
@@ -237,15 +235,6 @@
       }
 
       //TODO -- delete VR button w attribute 'AR-injected'
-    }
-
-    //adds event listener to marker that fires when the marker's scanned, executing the 
-    //blocks in the box
-    self.onLoss = function(markerID, delay, fn) {
-      var marker = document.getElementById(markerID)
-			marker.addEventListener('markerLost', (e)=>{
-        fn()
-      });
     }
 
 }) ()

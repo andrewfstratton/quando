@@ -29,6 +29,7 @@
     "pouchdb": "^6.4.3",
     "pouchdb-find": "^6.4.3",
     "pouchdb-server": "^4.1.0",
+    "promise": "^8.0.3",
     "serialport": "^7.1.4",
     "socket.io": "^2.2.0",
     "watson-developer-cloud": "^3.18.3"
