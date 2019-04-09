@@ -469,3 +469,11 @@
 [Mon, 08 Apr 2019 22:10:53 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /script/_find 200
 [Mon, 08 Apr 2019 22:10:57 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /script/ 200
 [Mon, 08 Apr 2019 22:10:57 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /script/_find 200
+[Tue, 09 Apr 2019 12:15:33 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /script/ 200
+[Tue, 09 Apr 2019 12:15:33 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /script/_bulk_docs 201
+[Tue, 09 Apr 2019 12:15:36 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /script/ 200
+[Tue, 09 Apr 2019 12:15:36 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /script/_find 200
+[Tue, 09 Apr 2019 12:15:42 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /script/ 200
+[Tue, 09 Apr 2019 12:15:42 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /script/_find 200
+[Tue, 09 Apr 2019 12:16:27 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /script/ 200
+[Tue, 09 Apr 2019 12:16:27 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /script/_bulk_docs 201

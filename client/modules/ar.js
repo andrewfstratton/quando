@@ -29,6 +29,7 @@
       let marker = document.getElementById(markerID);
       if (marker!=null) {
       } else {
+        alert('generating marker.')
         //init marker
         marker = document.createElement('a-marker');
         if (markerID == 'hiro') {
@@ -56,30 +57,34 @@
       let scene = document.getElementById('scene');
       if (scene == null) { //if scene DOES NOT exist
         let scene = self.initScene();
-        let hiddenCanvas = self.initHiddenCanvas();
         let marker = self.initMarker(markerID);
         let camera = self.initCam();
 
         //add all elements to DOM
-        scene.appendChild(marker);
+        scene.prepend(marker);
         scene.appendChild(camera);
         document.getElementById('quando_AR').append(scene);
-        document.getElementById('quando_AR').appendChild(hiddenCanvas);
         
         //add onScan eventListener
         marker.addEventListener('markerFound', (e)=>{
           fn();
         });
       } else { //scene DOES exist
-        let marker = self.initMarker(markerID);
-        //add all elements to DOM
-        scene.appendChild(marker);
-        document.getElementById('quando_AR').append(scene);
+        let marker = document.getElementById(markerID);
+        if (marker == null) {
+          marker = self.initMarker(markerID);
+          //add all elements to DOM
+          scene.prepend(marker);
+          document.getElementById('quando_AR').append(scene);
 
-        //add onScan eventListener
-        marker.addEventListener('markerFound', (e)=>{
-          fn();
-        });
+          //add onScan eventListener
+          marker.addEventListener('markerFound', (e)=>{
+            fn();
+          });
+        } else {
+          alert('Marker exists.')
+        }
+
       }
 
     }
