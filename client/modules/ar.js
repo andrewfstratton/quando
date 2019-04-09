@@ -26,10 +26,12 @@
     }
 
     self.initMarker = function(markerID) {
+      alert('initMarker called.')
       let marker = document.getElementById(markerID);
       if (marker!=null) {
+        alert('marker '+markerID+'already exists.')
       } else {
-        alert('generating marker.')
+        alert('generating marker.'+ markerID)
         //init marker
         marker = document.createElement('a-marker');
         if (markerID == 'hiro') {
@@ -54,8 +56,10 @@
     }
 
     self.whenMarker = function(markerID, orientation, fn) {
+      alert('When marker called.')
       let scene = document.getElementById('scene');
       if (scene == null) { //if scene DOES NOT exist
+        alert('scene doesnt exist.')
         let scene = self.initScene();
         let marker = self.initMarker(markerID);
         let camera = self.initCam();
@@ -70,8 +74,10 @@
           fn();
         });
       } else { //scene DOES exist
+        alert('scene does exist.')
         let marker = document.getElementById(markerID);
         if (marker == null) {
+          alert('marker '+markerID+' doesnt EEXIST.')
           marker = self.initMarker(markerID);
           //add all elements to DOM
           scene.prepend(marker);
@@ -192,7 +198,6 @@
       }
 
     }
-
 
     self.showText = function(markerID, text, scale) {
       scale = scale/10; //scale supplied in %
