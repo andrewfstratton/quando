@@ -80,7 +80,7 @@ const MEDIA_MAP = {
   MEDIA_MAP['UPLOAD'] = upload
 }
 
-app.use(morgan('dev'))
+// app.use(morgan('dev'))
 
 app.use(session({
   secret: 'quando_secret',
@@ -427,6 +427,12 @@ app.post('/ubit/display', (req, res) => {
 app.post('/ubit/icon', (req, res) => {
   let val = req.body.val
   ubit.send('icon', val)
+  res.json({})
+})
+
+app.post('/ubit/turn', (req, res) => {
+  let val = req.body.val
+  ubit.send('turn', val)
   res.json({})
 })
 
