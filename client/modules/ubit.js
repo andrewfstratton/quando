@@ -132,7 +132,7 @@
     let last_angle = self.last_servo[servo]
     if (last_angle != angle) {
       self.last_servo[servo] = angle
-      let snd = [servo, angle]
+      let snd = [angle, servo] // trying putting angle first, so failures just try to send to servo 0...
       _ubit_send('turn', snd) 
     }
   }
