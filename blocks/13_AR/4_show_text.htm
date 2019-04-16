@@ -1,9 +1,9 @@
-<div class="quando-block" data-quando-id="true" data-quando-javascript="quando.AR.showImage('${file_name}', '${marker}', ${scale}, ${orientation})">
+<div class="quando-block" data-quando-id="true" data-quando-javascript="quando.AR.showText('${text}', '${marker}', ${scale})">
     <div class="quando-left quando-AR"></div>
     <div class="quando-right">
         <div class="quando-row quando-AR">
             Put text
-            <input data-quando-media="objects" data-quando-name="file_name" type="text" readonly="true" value="" data-quando-encode="normal"/>
+            <input data-quando-name="text" type="text" value="" data-quando-encode="normal"/>
             on marker
             <select data-quando-name="marker">
               <option value='hiro'>hiro</option>
@@ -26,13 +26,7 @@
               <br />
                 with size
                 <input data-quando-name="scale" type="text" value="100" data-quando-encode="normal" />
-                % and 
-                <select data-quando-name='orientation' class='quando-toggle'>
-                  <option value='flat'>flat</option>
-                  <option value='vertical'>vertical</option>
-                  <option value='facing'>facing camera?</option>
-                </select>
-                marker
+                % 
             </span>
         </div>
     </div>

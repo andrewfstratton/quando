@@ -7,8 +7,7 @@
     self.width = screen.width
     self.height = screen.height
 
-    self.showGLTF = function(modelURL, markerID, scale=100, above=false) {
-
+    self.showGLTF = function(modelURL, markerID, flat=true, scale=100, above=false) {
       //handle params
       modelURL = '/client/media/' + encodeURI(modelURL)
       scale = scale/100; //scale supplied in %
@@ -19,8 +18,8 @@
       }
 
       var scene = document.getElementById('scene')
-      if (scene == null) { //if scene doesn't exist
-
+      if (scene == null) { 
+        //if scene doesn't exist
         //init scene
         scene = document.createElement('a-scene');
         scene.setAttribute('arjs', 'debugUIEnabled: false;');
@@ -45,6 +44,9 @@
         model.setAttribute('gltf-model', 'url('+modelURL+')'); //id model from url
         model.setAttribute('scale', scale.toString() + ' '+ scale.toString() +' '+ scale.toString());
         model.setAttribute('position', position);
+        if (flat == false) {
+          model.setAttribute('rotation', '0 0 90')
+        }
 
         //init camera element
         var cam = document.createElement('a-camera-static'); 
@@ -78,8 +80,297 @@
         model.setAttribute('gltf-model', 'url('+modelURL+')'); //id model from url
         model.setAttribute('scale', scale.toString() + ' '+ scale.toString() +' '+ scale.toString());
         model.setAttribute('position', position);
+        if (flat == false) {
+          model.setAttribute('rotation', '0 0 90')
+        }
 
         marker.appendChild(model)
+        scene.appendChild(marker)
+
+      }
+    }
+
+    self.showImage = function(imgURL, markerID, scale=100, above=false) {
+
+      //handle params
+      imgURL = '/client/media/' + encodeURI(imgURL)
+      scale = scale/100; //scale supplied in %
+
+      var scene = document.getElementById('scene')
+      if (scene == null) { 
+        //if scene doesn't exist
+
+        //init scene
+        scene = document.createElement('a-scene');
+        scene.setAttribute('arjs', 'debugUIEnabled: false;');
+        scene.setAttribute('embedded', '');
+        scene.setAttribute('id', 'scene');
+
+        //init marker
+        var marker = document.createElement('a-marker');
+        if (markerID == 'hiro') {
+          marker.setAttribute('preset', 'hiro');
+          marker.setAttribute('id', 'hiro');
+        } else { 
+          marker.setAttribute('preset', 'custom');
+          marker.setAttribute('type', 'pattern');
+          marker.setAttribute('id', markerID);
+          //NOTE: below URLs must be hosted online instead of relatively for some dumb reason
+          marker.setAttribute('url', 'https://raw.githubusercontent.com/andrewfstratton/quando/adventureGame2/client/media/letters/'+markerID+'.patt');
+        }
+
+        //init user chosen image
+        var img = document.createElement('a-image');
+        img.setAttribute('src', imgURL); //id model from url
+
+        //the below width and height settings are not relative, so will display the image in a 1:1 ratio
+        img.setAttribute('height', scale.toString());
+        img.setAttribute('width', scale.toString());
+        if (orientation == 'flat') {
+          img.setAttribute('rotation', '-90 0 90');
+        } else if (orientation == 'vertical') {
+          img.setAttribute('rotation', '0 0 90');
+        } else {
+          img.setAttribute('rotation', '0 0 90');
+          img.setAttribute('look-at', '#player')
+        }
+
+        //init camera element
+        var cam = document.createElement('a-camera-static'); 
+        cam.setAttribute('id', 'camera')
+        
+        //add to heirarchy
+        marker.appendChild(img);
+        scene.appendChild(marker);
+        scene.appendChild(cam);
+
+        //add to AR element of doc
+        document.getElementById('quando_AR').append(scene);
+
+      } else { 
+        //scene already exists
+
+        //init marker
+        var marker = document.createElement('a-marker');
+        if (markerID == 'hiro') {
+          marker.setAttribute('preset', 'hiro');
+          marker.setAttribute('id', 'hiro');
+        } else { 
+          marker.setAttribute('preset', 'custom');
+          marker.setAttribute('type', 'pattern');
+          marker.setAttribute('id', markerID);
+          //NOTE: below URLs must be hosted online instead of relatively for some dumb reason
+          marker.setAttribute('url', 'https://raw.githubusercontent.com/andrewfstratton/quando/adventureGame2/client/media/letters/'+markerID+'.patt');
+        }
+
+        //init user chosen image
+        var img = document.createElement('a-image');
+        img.setAttribute('src', imgURL); //id model from url
+
+        //the below width and height settings are not relative, so will display the image in a 1:1 ratio
+        img.setAttribute('height', scale.toString());
+        img.setAttribute('width', scale.toString());
+        if (orientation == 'flat') {
+          img.setAttribute('rotation', '-90 0 90');
+        } else if (orientation == 'vertical') {
+          img.setAttribute('rotation', '0 0 90');
+        } else {
+          img.setAttribute('rotation', '0 0 90');
+          img.setAttribute('look-at', '#player')
+        }
+
+        marker.appendChild(img)
+        scene.appendChild(marker)
+
+      }
+    }
+
+    self.showVideo = function(vidURL, markerID, scale=100, orientation) {
+
+      //handle params
+      vidURL = '/client/media/' + encodeURI(vidURL)
+      scale = scale/100; //scale supplied in %
+
+      var scene = document.getElementById('scene')
+      if (scene == null) { 
+        //if scene doesn't exist
+
+        //init scene
+        scene = document.createElement('a-scene');
+        scene.setAttribute('arjs', 'debugUIEnabled: false;');
+        scene.setAttribute('embedded', '');
+        scene.setAttribute('id', 'scene');
+
+        //init marker
+        var marker = document.createElement('a-marker');
+        if (markerID == 'hiro') {
+          marker.setAttribute('preset', 'hiro');
+          marker.setAttribute('id', 'hiro');
+        } else { 
+          marker.setAttribute('preset', 'custom');
+          marker.setAttribute('type', 'pattern');
+          marker.setAttribute('id', markerID);
+          //NOTE: below URLs must be hosted online instead of relatively for some dumb reason
+          marker.setAttribute('url', 'https://raw.githubusercontent.com/andrewfstratton/quando/adventureGame2/client/media/letters/'+markerID+'.patt');
+        }
+
+        //init user chosen video
+        var vid = document.createElement('a-video');
+        vid.setAttribute('src', vidURL); //id video from url
+
+        //the below width and height settings are not relative, so will display in a 1:1 ratio
+        vid.setAttribute('height', scale.toString());
+        vid.setAttribute('width', scale.toString());
+        if (orientation == 'flat') {
+          vid.setAttribute('rotation', '-90 0 90');
+        } else if (orientation == 'vertical') {
+          vid.setAttribute('rotation', '0 0 90');
+        } else {
+          vid.setAttribute('rotation', '0 0 90');
+          vid.setAttribute('look-at', '#player')
+        }
+
+        //init camera element
+        var cam = document.createElement('a-camera-static'); 
+        cam.setAttribute('id', 'camera')
+        
+        //add to heirarchy
+        marker.appendChild(vid);
+        scene.appendChild(marker);
+        scene.appendChild(cam);
+
+        //add to AR element of doc
+        document.getElementById('quando_AR').append(scene);
+
+      } else { 
+        //scene already exists
+
+        //init marker
+        var marker = document.createElement('a-marker');
+        if (markerID == 'hiro') {
+          marker.setAttribute('preset', 'hiro');
+          marker.setAttribute('id', 'hiro');
+        } else { 
+          marker.setAttribute('preset', 'custom');
+          marker.setAttribute('type', 'pattern');
+          marker.setAttribute('id', markerID);
+          //NOTE: below URLs must be hosted online instead of relatively for some dumb reason
+          marker.setAttribute('url', 'https://raw.githubusercontent.com/andrewfstratton/quando/adventureGame2/client/media/letters/'+markerID+'.patt');
+        }
+
+        //init user chosen video
+        var vid = document.createElement('a-video');
+        vid.setAttribute('src', vidURL); //id video from url
+
+        //the below width and height settings are not relative, so will display in a 1:1 ratio
+        vid.setAttribute('height', scale.toString());
+        vid.setAttribute('width', scale.toString());        
+        if (orientation == 'flat') {
+          vid.setAttribute('rotation', '-90 0 90');
+        } else if (orientation == 'vertical') {
+          vid.setAttribute('rotation', '0 0 90');
+        } else {
+          vid.setAttribute('rotation', '0 0 90');
+          vid.setAttribute('look-at', '#player')
+        }
+
+
+        marker.appendChild(vid)
+        scene.appendChild(marker)
+
+      }
+    }
+
+    self.showText = function(text, markerID, scale) {
+
+      //handle params
+      scale = scale/10; //scale supplied in %
+
+      var scene = document.getElementById('scene')
+      if (scene == null) { 
+        //if scene doesn't exist
+
+        //init scene
+        scene = document.createElement('a-scene');
+        scene.setAttribute('arjs', 'debugUIEnabled: false;');
+        scene.setAttribute('embedded', '');
+        scene.setAttribute('id', 'scene');
+
+        //init marker
+        var marker = document.createElement('a-marker');
+        if (markerID == 'hiro') {
+          marker.setAttribute('preset', 'hiro');
+          marker.setAttribute('id', 'hiro');
+        } else { 
+          marker.setAttribute('preset', 'custom');
+          marker.setAttribute('type', 'pattern');
+          marker.setAttribute('id', markerID);
+          //NOTE: below URLs must be hosted online instead of relatively for some dumb reason
+          marker.setAttribute('url', 'https://raw.githubusercontent.com/andrewfstratton/quando/adventureGame2/client/media/letters/'+markerID+'.patt');
+        }
+
+        //init user text
+        var textElement = document.createElement('a-text');
+        textElement.setAttribute('value', text);
+
+        //the below width and height settings are bad
+        textElement.setAttribute('height', scale.toString());
+        textElement.setAttribute('width', scale.toString());
+        if (orientation == 'flat') {
+          textElement.setAttribute('rotation', '-90 0 90');
+        } else if (orientation == 'vertical') {
+          textElement.setAttribute('rotation', '0 0 90');
+        } else {
+          textElement.setAttribute('rotation', '0 0 90');
+          textElement.setAttribute('look-at', '#player')
+        }
+
+
+        //init camera element
+        var cam = document.createElement('a-camera-static'); 
+        cam.setAttribute('id', 'camera')
+        
+        //add to heirarchy
+        marker.appendChild(textElement);
+        scene.appendChild(marker);
+        scene.appendChild(cam);
+
+        //add to AR element of doc
+        document.getElementById('quando_AR').append(scene);
+
+      } else { 
+        //scene already exists
+
+        //init marker
+        var marker = document.createElement('a-marker');
+        if (markerID == 'hiro') {
+          marker.setAttribute('preset', 'hiro');
+          marker.setAttribute('id', 'hiro');
+        } else { 
+          marker.setAttribute('preset', 'custom');
+          marker.setAttribute('type', 'pattern');
+          marker.setAttribute('id', markerID);
+          //NOTE: below URLs must be hosted online instead of relatively for some dumb reason
+          marker.setAttribute('url', 'https://raw.githubusercontent.com/andrewfstratton/quando/adventureGame2/client/media/letters/'+markerID+'.patt');
+        }
+
+        //init user text
+        var textElement = document.createElement('a-text');
+        textElement.setAttribute('value', text);
+
+        //the below width and height settings are bad
+        textElement.setAttribute('height', scale.toString());
+        textElement.setAttribute('width', scale.toString());
+        if (orientation == 'flat') {
+          textElement.setAttribute('rotation', '-90 0 90');
+        } else if (orientation == 'vertical') {
+          textElement.setAttribute('rotation', '0 0 90');
+        } else {
+          textElement.setAttribute('rotation', '0 0 90');
+          textElement.setAttribute('look-at', '#player')
+        }      
+
+        marker.appendChild(textElement)
         scene.appendChild(marker)
 
       }
