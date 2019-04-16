@@ -1,12 +1,15 @@
+/* Need to create .hex file with makecode - using javascript code tab */
 basic.showLeds(`
-    . # # . .
-    # . . . .
-    # . . # .
+    # # # . .
+    . # . . .
+    . . . . .
     . . # . #
-    . . . # .
+    . . . # #
     `)
-basic.pause(750)
+//basic.pause(750)
 let icons = [IconNames.Happy, IconNames.Sad]
+
+//serial.writeLine("ubit started...")
 
 while (true) {
     let txt = serial.readLine()
@@ -18,7 +21,21 @@ while (true) {
     } else if (key == 'icon') {
         basic.showIcon(icons[parseInt(val)])
     } else if (key == 'turn') {
-      // N.B. Display includes delay - so don't do....
-        angle = parseInt(val)
+        // N.B. Display includes delay - so don't do....
+        let comma = val.indexOf(',')
+        let servo = parseInt(val.substr(0, comma))
+        let angle = parseInt(val.substr(comma + 1))
+        serial.writeLine("msg=" + angle + ", val=" + val)
+        switch (servo) {
+            case 1: {
+                pins.servoWritePin(AnalogPin.P1, angle)
+                break;
+            }
+            case 2: {
+                pins.servoWritePin(AnalogPin.P2, angle)
+                break;
+            }
+        }
+        //        basic.pause(50)
     }
 }

@@ -210,6 +210,7 @@ function ubit_success (serial, parser) {
   parser.on('data', (data) => {
     try {
       let ubit = JSON.parse(data.trim())
+// console.log(JSON.stringify(ubit))
       if (ubit && io) {
         if (ubit.button_a) {
           io.emit('ubit', {button: 'a'})
@@ -369,7 +370,6 @@ app.post('/socket/:id', (req, res) => {
 
 app.use('/inventor', express.static(path.join(__dirname, 'inventor')))
 app.use('/favicon.ico', express.static(path.join(__dirname, 'inventor/favicon.ico')))
-app.use('/common', express.static(path.join(__dirname, 'common')))
 
 app.get('/blocks', (req, res) => {
   fs.readdir(path.join(__dirname, 'blocks'), (err, folders) => {
@@ -432,7 +432,7 @@ app.post('/ubit/icon', (req, res) => {
 
 app.post('/ubit/turn', (req, res) => {
   let val = req.body.val
-  ubit.send('turn', val)
+  ubit.send('T', val)
   res.json({})
 })
 

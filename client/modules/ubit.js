@@ -127,12 +127,13 @@
     if (inverted) {
       val = 1-val
     }
-    let angle = Math.round(((max - min) * val) + min)
+    let angle = 90 + Math.round(((max - min) * val) + min)
+    // angle becomes 0..180
     let last_angle = self.last_servo[servo]
     if (last_angle != angle) {
       self.last_servo[servo] = angle
-      // _ubit_send('turn', servo+','+angle)
-      _ubit_send('turn', angle)
+      let snd = [servo, angle]
+      _ubit_send('turn', snd) 
     }
   }
 })()
