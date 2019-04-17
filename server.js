@@ -243,7 +243,6 @@ function ubit_success (serial, parser) {
   parser.on('data', (data) => {
     try {
       let ubit = JSON.parse(data.trim())
-// console.log(JSON.stringify(ubit))
       if (ubit && io) {
         if (ubit.button_a) {
           io.emit('ubit', {button: 'a'})
@@ -554,7 +553,7 @@ app.post('/ubit/icon', (req, res) => {
 
 app.post('/ubit/turn', (req, res) => {
   let val = req.body.val
-  ubit.send('T', val)
+  ubit.send('T', `${val.angle},${val.servo}`)
   res.json({})
 })
 

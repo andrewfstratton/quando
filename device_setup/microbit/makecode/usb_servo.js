@@ -8,7 +8,7 @@ basic.showLeds(`
     `)
 //basic.pause(750)
 let icons = [IconNames.Happy, IconNames.Sad]
-
+let pin_arr = [AnalogPin.P0, AnalogPin.P1, AnalogPin.P2]
 serial.writeLine("ubit started...")
 
 while (true) {
@@ -28,15 +28,13 @@ while (true) {
             let comma = val.indexOf(',')
             let angle = parseInt(val.substr(0, comma))
             let servo = parseInt(val.substr(comma + 1))
-//        serial.writeLine("angle=" + angle + ", servo=" + servo + ", val=" + val)
-            let pin = AnalogPin.P20
-            if (servo == 1) {
-                pin = AnalogPin.P1
-            } else if (servo == 2) {
-                pin = AnalogPin.P2
-            }
-            if (pin != AnalogPin.P20) {
-                pins.servoWritePin(pin, angle)
+            if ((angle > 0) && (servo > 0)) {
+                angle--
+                servo--
+                // serial.writeLine("angle=" + angle + ", servo=" + servo + ", val=" + val)
+                if (servo <= 2) {
+                    pins.servoWritePin(pin_arr[servo], angle)
+                }
             }
             break;
     }
