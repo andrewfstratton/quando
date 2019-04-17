@@ -7,16 +7,44 @@ const fs = require('fs')
 const formidable = require('formidable')
 const morgan = require('morgan')
 const body_parser = require('body-parser')
+const base64Img = require('base64-img');
 const script = require('./script')
 const client_deploy = './client/deployed_js/'
 const user = require('./user')
 const path = require('path')
-
+const promise = require('promise');
 const http = require('http').Server(app)
 const io = require('socket.io')(http)
 const ubit = require('./ubit')
 const net = require('net')
 const dns = require('dns')
+
+//Watson services
+const TextToSpeechV1 = require('watson-developer-cloud/text-to-speech/v1');
+const tts = new TextToSpeechV1({
+  iam_apikey: 'rRDUgzsh17bWWYS2VesXDCkHIanOQIuE42ccPOI7qivX',
+  url: 'https://gateway-lon.watsonplatform.net/text-to-speech/api'
+});
+
+const VisualRecognitionV3 = require('watson-developer-cloud/visual-recognition/v3');
+const visRec = new VisualRecognitionV3({
+  version: '2018-03-19',
+  iam_apikey: 'md2b1cDrwPHQC-a-hJovQnsgdvRyympAfBArw4niQCn9',
+  url: 'https://gateway.watsonplatform.net/visual-recognition/api'
+});
+
+var ToneAnalyzerV3 = require('watson-developer-cloud/tone-analyzer/v3');
+var toneAnalyzer = new ToneAnalyzerV3({
+  version: '2017-09-21',
+  iam_apikey: 'WcRnTs5agEpG9o_PKiTTQSJK1G7fUpcdodKWuVCJivUh',
+  url: 'https://gateway-lon.watsonplatform.net/tone-analyzer/api'
+});
+
+var SpeechToTextV1 = require('watson-developer-cloud/speech-to-text/v1');
+var stt = new SpeechToTextV1({
+  iam_apikey: 'WiLEvMCQ1hPxKRYtpFo98jYg6jsc2QSnEHx2hfsYiseu',
+  url: 'https://gateway-lon.watsonplatform.net/speech-to-text/api'
+});
 
 let port = process.env.PORT || 80
 let appEnv = require('cfenv').getAppEnv() // For IBM Cloud
@@ -68,8 +96,9 @@ let server = http.listen(port, () => {
 
 const MEDIA_FOLDER = path.join(__dirname, 'client', 'media')
 const MEDIA_MAP = {
+  //TODO - refactor to videos & images
   'video': ['ogg', 'ogv', 'mp4', 'webm'],
-  'audio': ['mp3'],
+  'audio': ['mp3', 'wav'],
   'images': ['bmp', 'jpg', 'jpeg', 'png'],
   'objects': ['gltf', 'glb'], 
   // 'objects': ['obj', 'mtl'],
@@ -107,7 +136,11 @@ app.get('/login', (req, res) => {
     res.json({ 'success': false, 'message': 'Not Logged In' })
   }
 })
-app.use(body_parser.urlencoded({ extended: true }))
+
+//increased limit of bp to allow for visrec 
+app.use(body_parser.json({ limit: '10mb' }));
+app.use(body_parser.urlencoded({ extended: true, limit:'10mb' }))
+
 app.use(body_parser.json())
 app.post('/login', (req, res) => {
   let body = req.body
@@ -210,7 +243,6 @@ function ubit_success (serial, parser) {
   parser.on('data', (data) => {
     try {
       let ubit = JSON.parse(data.trim())
-// console.log(JSON.stringify(ubit))
       if (ubit && io) {
         if (ubit.button_a) {
           io.emit('ubit', {button: 'a'})
@@ -360,6 +392,95 @@ app.post('/message/:id', (req, res) => {
   res.json({})
 })
 
+//WATSON SERVICES
+
+//Text-To-Speech
+app.post('/watson/TTS_request', (req, res) => {
+  console.log('Text to Speech Requested...')
+  let text = req.body.text;
+  console.log('TTS Text is: ' + text);
+  let params = { //stuff sent to API
+    text: text,
+    accept: 'audio/wav'
+  } 
+  tts.synthesize(params, function(err, audio) { //handling errors and file
+    if (err) {
+      console.log(err);
+      return;
+    } 
+    //save output file
+    tts.repairWavHeader(audio);
+    fs.writeFileSync(__dirname + '/client/media/tts.wav', audio);
+    console.log('TTS - audio written as tts.wav');
+    res.json({});
+  });
+});
+
+//Visual-Recognition
+app.post('/watson/VISREC_request', (req, res) => {
+  console.log('Visual Recognition Requested...');
+  let imgData = req.body.imgData;
+  base64Img.img(imgData, __dirname + '/client/media', 'visrec', function(err, filepath) {
+
+    let file = fs.createReadStream(__dirname +'/client/media/visrec.png');
+    let params = { //stuff sent to API
+      images_file: file
+    };
+    //call API
+    visRec.classify(params, function(err, response) {
+      if (err) {
+        console.log(err);
+      } else {
+        //TODO - need to parse out the classification here n pass it back with the socket signal
+        console.log(JSON.stringify(response, null, 2));
+        res.json(JSON.stringify(response, null, 2));
+      };
+    });
+
+  });
+  //io.emit('VISREC_return', {}) //send socket signal to client saying rec complete
+});
+
+//Tone Analyzer
+app.post('/watson/TONE_request', (req, res) => {
+  console.log('Tone Analyzer Requested...');
+  let text = req.body.text;
+  let params = { //stuff sent to API
+    tone_input: {'text': text},
+    content_type: 'application/json'
+  };
+  toneAnalyzer.tone(params, function (error, toneAnalysis) {
+    if (error) {
+      console.log(error);
+    } else { 
+      //console.log(JSON.stringify(toneAnalysis, null, 2));
+      res.json(JSON.stringify(toneAnalysis, null, 2));
+    }
+  })
+});
+
+//Speech to Text
+app.post('/watson/SPEECH_request', (req, res) => {
+  console.log('Speech to Text Requested...');
+  var combinedStream = CombinedStream.create();
+  combinedStream.append(fs.createReadStream(__dirname + 'audio-file1.wav'));
+  combinedStream.append(fs.createReadStream(__dirname + 'audio-file2.wav'));
+  
+  var params = {
+    audio: combinedStream,
+    content_type: 'audio/wav',
+    timestamps: true,
+    word_alternatives_threshold: 0.9
+  };
+  speechToText.recognize(recognizeParams, function(error, speechRecognitionResults) {
+    if (error) {
+      console.log(error);
+    } else {
+      console.log(JSON.stringify(speechRecognitionResults, null, 2));
+    }
+  });
+});
+
 app.post('/socket/:id', (req, res) => {
   let id = req.params.id
   let val = req.body.val
@@ -432,7 +553,7 @@ app.post('/ubit/icon', (req, res) => {
 
 app.post('/ubit/turn', (req, res) => {
   let val = req.body.val
-  ubit.send('T', val)
+  ubit.send('T', `${val.angle},${val.servo}`)
   res.json({})
 })
 
