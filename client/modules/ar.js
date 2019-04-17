@@ -63,11 +63,13 @@
         let scene = self.initScene();
         let marker = self.initMarker(markerID);
         let camera = self.initCam();
+        let canvas = self.initHiddenCanvas();
 
         //add all elements to DOM
         scene.prepend(marker);
         scene.appendChild(camera);
         document.getElementById('quando_AR').append(scene);
+        document.body.append(canvas)
         
         //add onScan eventListener
         marker.addEventListener('markerFound', (e)=>{
