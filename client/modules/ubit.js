@@ -1,10 +1,11 @@
 (function () {
-  var quando = this['quando']
+  let quando = this['quando']
   if (!quando) {
     alert('Fatal Error: ubit must be included after quando_browser')
   }
-  var self = quando.ubit = {}
+  let self = quando.ubit = {}
   self.last_gesture = ''
+  self.last_servo = []
 
   function dispatch_gesture (gesture_name) {
     if (gesture_name != self.last_gesture) {
@@ -80,7 +81,7 @@
       } else if (data.orientation == 'right') {
         dispatch_gesture('ubitRight')
       } else if (data.orientation == '') { // this is the micro bit started
-          last_gesture = ''
+          self.last_gesture = ''
         }
     } else if (data.button) {
       quando.idle_reset()
@@ -104,7 +105,7 @@
     }
   })
 
-  function _ubit_fetch(key, val) {
+  function _ubit_send(key, val) {
     fetch('/ubit/'+key, { method: 'POST', 
       body: JSON.stringify({'val':val}), 
       headers: {"Content-Type": "application/json"}
@@ -112,10 +113,26 @@
   }
 
   self.display = (str) => {
-    _ubit_fetch('display', str)
+    _ubit_send('display', str)
   }
 
   self.icon = (index) => {
-    _ubit_fetch('icon', index)
+    _ubit_send('icon', index)
+  }
+
+  self.turn = (val, servo, middle, plus_minus, inverted) => {
+    if (val === false) { val = 0.5 }
+    let min = middle - plus_minus
+    let max = middle + plus_minus
+    if (inverted) {
+      val = 1-val
+    }
+    let angle = 91 + Math.round(((max - min) * val) + min)
+    // angle becomes 1..181 - to allow 0 to be no number
+    let last_angle = self.last_servo[servo]
+    if (last_angle != angle) {
+      self.last_servo[servo] = angle
+      _ubit_send('turn', {'servo':servo+1, 'angle':angle}) // also add 1 to servo for no number aswell
+    }
   }
 })()
