@@ -22,7 +22,7 @@
   
   var _lookup = {} // holds run time arrays
 
-  self.socket = io.connect('https://' + window.location.hostname)
+  self.socket = io.connect('http://' + window.location.hostname)
 
   function _displayWidth() {
     return window.innerWidth
