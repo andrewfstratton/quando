@@ -56,10 +56,10 @@
     }
 
     self.whenMarker = function(markerID, orientation, fn) {
-      alert('When marker called.')
+      //alert('When marker called.')
       let scene = document.getElementById('scene');
       if (scene == null) { //if scene DOES NOT exist
-        alert('scene doesnt exist.')
+        //alert('scene doesnt exist.')
         let scene = self.initScene();
         let marker = self.initMarker(markerID);
         let camera = self.initCam();
@@ -76,10 +76,10 @@
           fn();
         });
       } else { //scene DOES exist
-        alert('scene does exist.')
+        //alert('scene does exist.')
         let marker = document.getElementById(markerID);
         if (marker == null) {
-          alert('marker '+markerID+' doesnt EEXIST.')
+          //alert('marker '+markerID+' doesnt EEXIST.')
           marker = self.initMarker(markerID);
           //add all elements to DOM
           scene.prepend(marker);
@@ -90,7 +90,10 @@
             fn();
           });
         } else {
-          alert('Marker exists.')
+          //alert('Marker exists.')
+          marker.addEventListener('markerFound', (e)=>{
+            fn();
+          });
         }
 
       }
@@ -118,8 +121,8 @@
       } else {
         let model = document.getElementById(modelURL+markerID);
         let marker = document.getElementById(markerID);
-        if (model != null) { //if model DOES already exist
-        } else {
+        if (model == null) { //if model DOES NOT already exist
+          self.clearMarkerChildren(markerID)
           //init user chosen model - GLTF 2.0 - uncompressed
           model = document.createElement('a-gltf-model');
           model.setAttribute('gltf-model', 'url('+modelURL+')'); //id model from url
@@ -128,7 +131,7 @@
           model.setAttribute('id', (modelURL+markerID));
           //add to heirarchy
           marker.appendChild(model);
-        }
+        } 
       }
     }
 
@@ -149,6 +152,7 @@
         let marker = document.getElementById(markerID);
 
         if (img == null) { //if image DOES NOT already exist
+          self.clearMarkerChildren(markerID)
           img = document.createElement('a-image');
           img.setAttribute('src', imgURL); //point at image file
           img.setAttribute('id', imgURL+markerID); //set image id
@@ -183,15 +187,15 @@
         let vid = document.getElementById(vidURL+markerID);
         let marker = document.getElementById(markerID);
 
-        if (vid == null) { //if model DOES already exist
-        } else {
-          //init user chosen image
+        if (vid == null) { //if video DOES NOT already exist
+          self.clearMarkerChildren(markerID)
+          //init user chosen viceo
           vid = document.createElement('a-video');
           vid.setAttribute('src', vidURL); //id model from url
           vid.setAttribute('id', vidURL+markerID)
 
           /* the below width and height settings do not retain 
-          source aspect ratio, so will display the image in a 1:1 ratio */
+          source aspect ratio, so will display the video in a 1:1 ratio */
           vid.setAttribute('height', scale.toString());
           vid.setAttribute('width', scale.toString());
           vid.setAttribute('rotation', '-90 0 90');
@@ -213,8 +217,8 @@
       } else {
         let textElem = document.getElementById(text+markerID);
         let marker = document.getElementById(markerID);
-        if (textElem != null) {
-        } else {
+        if (textElem == null) {
+          self.clearMarkerChildren(markerID)
           //init user text
           textElem = document.createElement('a-text');
           textElem.setAttribute('value', text);
@@ -247,6 +251,14 @@
       }
 
       //TODO -- delete VR button w attribute 'AR-injected'
+    }
+
+    self.clearMarkerChildren = function(markerID) {
+      let marker = document.getElementById(markerID)
+
+      while (marker.hasChildNodes()) {
+        marker.removeChild(marker.lastChild)
+      }
     }
 
 }) ()
