@@ -554,6 +554,7 @@ app.post('/ubit/icon', (req, res) => {
 app.post('/ubit/turn', (req, res) => {
   let val = req.body.val
   ubit.send('T', `${val.angle},${val.servo}`)
+  // ubit.turn(val.servo, val.angle)
   res.json({})
 })
 
