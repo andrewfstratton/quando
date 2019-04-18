@@ -1,4 +1,5 @@
 let serialport = null, serial = null
+let servo_angles = false
 try {
   serialport = require('serialport')
 } catch (e) {
@@ -31,6 +32,31 @@ const find_microbit = (error, success) => {
   }
 }
 
+function check_send() {
+  if (serial  && servo_angles) {
+    // there is at least one angle that's been set - and there's a micro:bit connected?!
+    let i=0
+    let finished = false
+    // let msg = '' // may use to concatenate servo angle changes...
+    while (!finished) { // look for the first changed servo angle
+      // This should be the 'most' changed angle...or oldest change...
+      if (servo_angle[i] != undefined) {
+        let servo = i
+        let angle = servo_angles[i]
+        if (servo_angles.length == 1) {
+          servo_angles = false
+        } else {
+          delete servo_angles[i]
+        }
+        ubit.send('T', `${angle},${servo}`)
+        finished = true
+      } else if (i++ >= servo_angles.length) {
+        finished = true
+      }
+    }
+  }
+}
+
 exports.get_serial = (error, success) => {
   find_microbit(error, (comName) => {
     if (serialport) {
@@ -40,6 +66,7 @@ exports.get_serial = (error, success) => {
           error(err)
         } else {
           let parser = serial.pipe(new serialport.parsers.Readline({ delimiter: '\r\n' }))
+          setTimeout(check_send, 1000/50) // i.e. 50 times a second
           success(serial, parser)
         }
       })
@@ -59,20 +86,10 @@ exports.send = (key, val) => {
     })
   }
 }
-/* e.g.
-get_serial((err)=>{console.log("Error:" + err)},
-    (serial)=>{
-        serial.on('data', (data) => {
-            let ubit = JSON.parse(data)
-            if (ubit.button == 'a') {
-                console.log('Button A Pressed')
-            }
-            if (ubit.button == 'b') {
-                console.log('Button B Pressed')
-            }
-            if (ubit.ir) {
-                console.log('Visitor detected')
-            }
-        })
-    })
-  */
+
+exports.turn = (servo, angle) => {
+  if (servo_angles === false) {
+    servo_angles = []
+  }
+  servo_angles[servo] = angle
+}
