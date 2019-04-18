@@ -34,11 +34,13 @@ function onload() {
       if (res.success) {
         ip = res.ip
         set('ip', ip)
-        let inventor_url = `http://${ip}/inventor`
-        let client_url = `http://${ip}/client`
+        let inventor_url = `https://${ip}/inventor`
+        let client_url = `https://${ip}/client`
         if (res.local == false) { // remote access 
           inventor_url = document.location + 'inventor'
+          inventor_url.replace('http:','https:')
           client_url = document.location + 'client'
+          client_url.replace('http:','https:')
         }
         set('inventor_ip', `<a href='${inventor_url}' target='_blank'>${inventor_url}</a>`)
         set('client_ip', `<a href='${client_url}' target='_blank'>${client_url}</a>`)

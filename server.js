@@ -64,7 +64,7 @@ let drop_client = (client) => {
 
 let server = http.listen(port, () => {
   let host = process.env.IP || server.address().address
-  console.log(`Quando Server listening at http://${host}:${server.address().port}`)
+  console.log(`Quando Server listening at https://${host}:${server.address().port}`)
   io.clients=[]
   io.broadcast = (msg) => {
     io.clients.forEach(client => {
@@ -554,6 +554,7 @@ app.post('/ubit/icon', (req, res) => {
 app.post('/ubit/turn', (req, res) => {
   let val = req.body.val
   ubit.send('T', `${val.angle},${val.servo}`)
+  // ubit.turn(val.servo, val.angle)
   res.json({})
 })
 
