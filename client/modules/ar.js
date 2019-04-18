@@ -199,6 +199,7 @@
           vid.setAttribute('height', scale.toString());
           vid.setAttribute('width', scale.toString());
           vid.setAttribute('rotation', '-90 0 90');
+          vid.setAttribute('loop', 'false');
           marker.appendChild(vid);
         }
       }
