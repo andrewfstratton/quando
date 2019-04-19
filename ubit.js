@@ -1,5 +1,5 @@
 let serialport = null, serial = null
-let servo_angles = false
+let servo_angles = []
 try {
   serialport = require('serialport')
 } catch (e) {
@@ -33,25 +33,18 @@ const find_microbit = (error, success) => {
 }
 
 function check_send() {
-  if (serial  && servo_angles) {
-    // there is at least one angle that's been set - and there's a micro:bit connected?!
-    let i=0
-    let finished = false
+  if (serial) {
+    // there is a micro:bit connected...
+    for (let servo=1; servo<=3; servo++) {
     // let msg = '' // may use to concatenate servo angle changes...
-    while (!finished) { // look for the first changed servo angle
       // This should be the 'most' changed angle...or oldest change...
-      if (servo_angle[i] != undefined) {
-        let servo = i
-        let angle = servo_angles[i]
-        if (servo_angles.length == 1) {
-          servo_angles = false
-        } else {
-          delete servo_angles[i]
-        }
-        ubit.send('T', `${angle},${servo}`)
-        finished = true
-      } else if (i++ >= servo_angles.length) {
-        finished = true
+      if (servo_angles[servo]) {
+        let angle = servo_angles[servo]
+// console.log("send servo="+servo+", angle ="+angle)
+        servo_angles[servo] = false // indicate that it's been sent
+        console.log("send"+servo)
+        exports.send('T', `${angle},${servo}`)
+        break;
       }
     }
   }
@@ -66,7 +59,7 @@ exports.get_serial = (error, success) => {
           error(err)
         } else {
           let parser = serial.pipe(new serialport.parsers.Readline({ delimiter: '\r\n' }))
-          setTimeout(check_send, 1000/50) // i.e. 50 times a second
+          setInterval(check_send, 1000/20) // i.e. 50 times a second
           success(serial, parser)
         }
       })
@@ -88,8 +81,6 @@ exports.send = (key, val) => {
 }
 
 exports.turn = (servo, angle) => {
-  if (servo_angles === false) {
-    servo_angles = []
-  }
+  // console.log("store "+servo+":"+angle)
   servo_angles[servo] = angle
 }

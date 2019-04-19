@@ -12,7 +12,6 @@ const script = require('./script')
 const client_deploy = './client/deployed_js/'
 const user = require('./user')
 const path = require('path')
-const promise = require('promise');
 const http = require('http').Server(app)
 const io = require('socket.io')(http)
 const ubit = require('./ubit')
@@ -553,8 +552,7 @@ app.post('/ubit/icon', (req, res) => {
 
 app.post('/ubit/turn', (req, res) => {
   let val = req.body.val
-  ubit.send('T', `${val.angle},${val.servo}`)
-  // ubit.turn(val.servo, val.angle)
+  ubit.turn(val.servo, val.angle)
   res.json({})
 })
 
