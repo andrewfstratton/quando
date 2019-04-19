@@ -1,11 +1,11 @@
 'use strict'
 const db = require('./db')
-const COLLECTION = 'script'
+const COLLECTION = 'watson'
 
-exports.save = (name, userid, script) => {
+exports.save = (text) => {
   return new Promise((success, fail) => {
     let now = new Date().toJSON()
-    let doc = { ownerid: userid, name: name, date: now, script: script}
+    let doc = { text: text, time: now }
     db.save(COLLECTION, doc).then(success, fail)
   })
 }

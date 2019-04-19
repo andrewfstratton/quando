@@ -5,10 +5,10 @@
   self._displays = new Map();
   self.pinching = false;
 
-  //ok, so these following variables attempt to track the inventory and puzzList
-  //lists as they change, by performing success checks on initalization of when
-  //blocks/calls of the change methods. If the success checks are valid, then
-  //the code supplied in the block's boxes are called.
+  //ok, so these following variables  track the inventory and puzzList
+  //lists as they change, by performing success checks on both initalization of
+  //blocks and changes to the lists. If the success checks are valid, then
+  //the code in the block's boxes are called.
 
   //inventory management variables
   self.inventory = [];
@@ -39,24 +39,16 @@
     //send POST request to server
     fetch('/watson/TTS_request', { method: 'POST', 
         body: JSON.stringify({'text':text}), 
-        headers: {"Content-Type": "application/json"}
-    }).then(function() {
-
-      let wAudio = document.createElement('audio');
-      wAudio.setAttribute('id', 'wAudio');
-      wAudio.loop = false;
-      wAudio.src = '/client/media/' + encodeURI('tts.wav');
-      wAudio.autoplay = true;
-      wAudio.addEventListener('ended', ()=>{
-        document.body.removeChild(wAudio);
-      });
-      document.body.append(wAudio);
-
-      /*play audio after a second
-      self.clear_audio()
-      window.setTimeout(()=> {
-        self.audio('tts.wav', false);
-      }, 500)*/
+        headers: {"Content-Type": "application/json",
+                  Accept: 'application/json'}
+    }).then(function(response) {
+      response.json().then(function(data) {
+        console.log(data)
+        //play audio after 
+        window.setTimeout(()=> {
+          self.audio(data+'.wav', false);
+        }, 50)
+      })
     })
   }; 
 

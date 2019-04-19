@@ -1,7 +1,7 @@
 let exec = () => {
-quando.ar.whenMarker('hiro', 'flat', (markerID = 'hiro')=>{
-quando.text('hiro', true)
+quando.call_tts('suck m y toes')
+quando.addLabelStatement('', ()=>{
+quando.call_tts('fuc')
 })
-quando.ar.whenMarker('B', 'flat', (markerID = 'B')=>{
-})
+quando.call_tts('yerrr')
 }

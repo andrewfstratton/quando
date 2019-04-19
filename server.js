@@ -7,8 +7,9 @@ const fs = require('fs')
 const formidable = require('formidable')
 const morgan = require('morgan')
 const body_parser = require('body-parser')
-const base64Img = require('base64-img');
+const base64Img = require('base64-img')
 const script = require('./script')
+const watson_db = require('./watson_db')
 const client_deploy = './client/deployed_js/'
 const user = require('./user')
 const path = require('path')
@@ -396,24 +397,33 @@ app.post('/message/:id', (req, res) => {
 
 //Text-To-Speech
 app.post('/watson/TTS_request', (req, res) => {
+  let filename = 'boobs';
   console.log('Text to Speech Requested...')
   let text = req.body.text;
   console.log('TTS Text is: ' + text);
-  let params = { //stuff sent to API
-    text: text,
-    accept: 'audio/wav'
-  } 
-  tts.synthesize(params, function(err, audio) { //handling errors and file
-    if (err) {
-      console.log(err);
-      return;
-    } 
-    //save output file
-    tts.repairWavHeader(audio);
-    fs.writeFileSync(__dirname + '/client/media/tts.wav', audio);
-    console.log('TTS - audio written as tts.wav');
-    res.json({});
-  });
+  watson_db.save(text).then(
+    (success) => { 
+      console.log(success)
+      let params = { //stuff sent to API
+        text: text,
+        accept: 'audio/wav',
+      } 
+      tts.synthesize(params, function(err, audio) { //handling errors and file
+        if (err) {
+          console.log(err);
+          return;
+        } 
+        //save output file
+        tts.repairWavHeader(audio);
+        fs.writeFileSync(__dirname + '/client/media/'+success.id+'.wav', audio);
+        console.log('TTS - audio written as '+success.id+'.wav');
+        filename = success.id
+        console.log(filename)
+        console.log(JSON.stringify({filename: filename}))
+        res.json(filename)
+      })
+    },
+    (err) => { console.log(err) })
 });
 
 //Visual-Recognition
@@ -421,7 +431,6 @@ app.post('/watson/VISREC_request', (req, res) => {
   console.log('Visual Recognition Requested...');
   let imgData = req.body.imgData;
   base64Img.img(imgData, __dirname + '/client/media', 'visrec', function(err, filepath) {
-
     let file = fs.createReadStream(__dirname +'/client/media/visrec.png');
     let params = { //stuff sent to API
       images_file: file
@@ -431,14 +440,11 @@ app.post('/watson/VISREC_request', (req, res) => {
       if (err) {
         console.log(err);
       } else {
-        //TODO - need to parse out the classification here n pass it back with the socket signal
         console.log(JSON.stringify(response, null, 2));
         res.json(JSON.stringify(response, null, 2));
       };
     });
-
   });
-  //io.emit('VISREC_return', {}) //send socket signal to client saying rec complete
 });
 
 //Tone Analyzer
