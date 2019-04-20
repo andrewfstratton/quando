@@ -9,91 +9,91 @@
 
     self.initScene = function() {
       //init scene
-      scene = document.createElement('a-scene');
-      scene.setAttribute('arjs', 'debugUIEnabled: false;');
-      scene.setAttribute('embedded', '');
-      scene.setAttribute('id', 'scene');
-      return scene;
+      scene = document.createElement('a-scene')
+      scene.setAttribute('arjs', 'debugUIEnabled: false')
+      scene.setAttribute('embedded', '')
+      scene.setAttribute('id', 'scene')
+      return scene
     }
 
     self.initHiddenCanvas = function() {
       //init hidden canvas - used for drawing snapshot of webcam feed
-      let hiddenCanvas = document.createElement('canvas');
-      hiddenCanvas.setAttribute('id', 'hiddenCanvas');
-      hiddenCanvas.setAttribute('width', 250);
-      hiddenCanvas.setAttribute('height', 200);
-      return hiddenCanvas;
+      let hiddenCanvas = document.createElement('canvas')
+      hiddenCanvas.setAttribute('id', 'hiddenCanvas')
+      hiddenCanvas.setAttribute('width', 250)
+      hiddenCanvas.setAttribute('height', 200)
+      return hiddenCanvas
     }
 
     self.initMarker = function(markerID) {
       alert('initMarker called.')
-      let marker = document.getElementById(markerID);
+      let marker = document.getElementById(markerID)
       if (marker!=null) {
         alert('marker '+markerID+'already exists.')
       } else {
         alert('generating marker.'+ markerID)
         //init marker
-        marker = document.createElement('a-marker');
+        marker = document.createElement('a-marker')
         if (markerID == 'hiro') {
-          marker.setAttribute('preset', 'hiro');
-          marker.setAttribute('id', markerID);
+          marker.setAttribute('preset', 'hiro')
+          marker.setAttribute('id', markerID)
         } else { 
-          marker.setAttribute('preset', 'custom');
-          marker.setAttribute('type', 'pattern');
-          marker.setAttribute('id', markerID);
+          marker.setAttribute('preset', 'custom')
+          marker.setAttribute('type', 'pattern')
+          marker.setAttribute('id', markerID)
           //NOTE: below URLs must be hosted online instead of relatively for some dumb reason
-          marker.setAttribute('url', 'https://raw.githubusercontent.com/andrewfstratton/quando/ar_dev/client/media/markers/'+markerID+'.patt');
+          marker.setAttribute('url', 'https://raw.githubusercontent.com/andrewfstratton/quando/ar_dev/client/media/markers/'+markerID+'.patt')
         }
       }
-      return marker;
+      return marker
     }
 
     self.initCam = function() {
       //init camera element
-      var cam = document.createElement('a-camera-static'); 
-      cam.setAttribute('id', 'camera');
-      return cam;
+      var cam = document.createElement('a-camera-static') 
+      cam.setAttribute('id', 'camera')
+      return cam
     }
 
     self.whenMarker = function(markerID, orientation, fn) {
       //alert('When marker called.')
-      let scene = document.getElementById('scene');
+      let scene = document.getElementById('scene')
       if (scene == null) { //if scene DOES NOT exist
         //alert('scene doesnt exist.')
-        let scene = self.initScene();
-        let marker = self.initMarker(markerID);
-        let camera = self.initCam();
-        let canvas = self.initHiddenCanvas();
+        let scene = self.initScene()
+        let marker = self.initMarker(markerID)
+        let camera = self.initCam()
+        let canvas = self.initHiddenCanvas()
 
         //add all elements to DOM
-        scene.prepend(marker);
-        scene.appendChild(camera);
-        document.getElementById('quando_AR').append(scene);
+        scene.prepend(marker)
+        scene.appendChild(camera)
+        document.getElementById('quando_AR').append(scene)
         document.body.append(canvas)
         
         //add onScan eventListener
         marker.addEventListener('markerFound', (e)=>{
-          fn();
-        });
+          fn()
+        })
       } else { //scene DOES exist
         //alert('scene does exist.')
-        let marker = document.getElementById(markerID);
+        let marker = document.getElementById(markerID)
         if (marker == null) {
           //alert('marker '+markerID+' doesnt EEXIST.')
-          marker = self.initMarker(markerID);
+          marker = self.initMarker(markerID)
           //add all elements to DOM
-          scene.prepend(marker);
-          document.getElementById('quando_AR').append(scene);
+          scene.prepend(marker)
+          document.getElementById('quando_AR').append(scene)
 
           //add onScan eventListener
           marker.addEventListener('markerFound', (e)=>{
-            fn();
-          });
+            fn()
+          })
         } else {
           //alert('Marker exists.')
           marker.addEventListener('markerFound', (e)=>{
-            fn();
-          });
+            fn()
+          })
         }
 
       }
@@ -110,27 +110,27 @@
       }
 
       if (modelURL == null) {
-        alert('No model selected!');
-      };
-      modelURL = '/client/media/' + encodeURI(modelURL);
+        alert('No model selected!')
+      }
+      modelURL = '/client/media/' + encodeURI(modelURL)
 
-      let scene = document.getElementById('scene');
+      let scene = document.getElementById('scene')
 
       if (scene == null) { //if scene DOES NOT exist
-        alert ('You need to be in AR to show this model!');
+        alert ('You need to be in AR to show this model!')
       } else {
-        let model = document.getElementById(modelURL+markerID);
-        let marker = document.getElementById(markerID);
+        let model = document.getElementById(modelURL+markerID)
+        let marker = document.getElementById(markerID)
         if (model == null) { //if model DOES NOT already exist
           self.clearMarkerChildren(markerID)
           //init user chosen model - GLTF 2.0 - uncompressed
-          model = document.createElement('a-gltf-model');
-          model.setAttribute('gltf-model', 'url('+modelURL+')'); //id model from url
-          model.setAttribute('scale', scale.toString() + ' '+ scale.toString() +' '+ scale.toString());
-          model.setAttribute('position', position);
-          model.setAttribute('id', (modelURL+markerID));
+          model = document.createElement('a-gltf-model')
+          model.setAttribute('gltf-model', 'url('+modelURL+')') //id model from url
+          model.setAttribute('scale', scale.toString() + ' '+ scale.toString() +' '+ scale.toString())
+          model.setAttribute('position', position)
+          model.setAttribute('id', (modelURL+markerID))
           //add to heirarchy
-          marker.appendChild(model);
+          marker.appendChild(model)
         } 
       }
     }
@@ -138,98 +138,98 @@
 
     self.showImage = function(markerID, imgURL, scale = 100, orientation) { //scale set to 0.1 for default
       //handle params
-      scale = (scale+5)/100; //scale supplied in %
+      scale = (scale+5)/100 //scale supplied in %
       if (imgURL == null) {
-        alert('No image selected!');
-      };
-      imgURL = '/client/media/' + encodeURI(imgURL);
+        alert('No image selected!')
+      }
+      imgURL = '/client/media/' + encodeURI(imgURL)
 
-      let scene = document.getElementById('scene');
+      let scene = document.getElementById('scene')
       if (scene == null) { //if scene DOES NOT exist
-        alert ('You need to be in AR to show this image!');
+        alert ('You need to be in AR to show this image!')
       } else {
-        let img = document.getElementById(imgURL+markerID);
-        let marker = document.getElementById(markerID);
+        let img = document.getElementById(imgURL+markerID)
+        let marker = document.getElementById(markerID)
 
         if (img == null) { //if image DOES NOT already exist
           self.clearMarkerChildren(markerID)
-          img = document.createElement('a-image');
-          img.setAttribute('src', imgURL); //point at image file
-          img.setAttribute('id', imgURL+markerID); //set image id
+          img = document.createElement('a-image')
+          img.setAttribute('src', imgURL) //point at image file
+          img.setAttribute('id', imgURL+markerID) //set image id
   
           /* the below width and height settings do not retain 
           source aspect ratio, so will display the image in a 1:1 ratio */
-          img.setAttribute('height', scale.toString());
-          img.setAttribute('width', scale.toString());
+          img.setAttribute('height', scale.toString())
+          img.setAttribute('width', scale.toString())
           
-          img.setAttribute('rotation', '-90 0 0');
-          marker.appendChild(img);
+          img.setAttribute('rotation', '-90 0 0')
+          marker.appendChild(img)
         }
       }
 
     }
 
     self.showVideo = function(markerID, vidURL, scale = 100, orientation) { 
-      scale = (scale+5)/100; /* scale supplied in %, 5 added on to give video some
+      scale = (scale+5)/100 /* scale supplied in %, 5 added on to give video some
       overlap around the marker, so it's less visible behind the video */
 
       //handle params
       if (vidURL == null) {
-        alert('No image selected!');
-      };
-      vidURL = '/client/media/' + encodeURI(vidURL);
+        alert('No image selected!')
+      }
+      vidURL = '/client/media/' + encodeURI(vidURL)
 
-      let scene = document.getElementById('scene');
+      let scene = document.getElementById('scene')
 
       if (scene == null) { //if scene DOES NOT exist
-        alert ('You need to be in AR to show this video!');
+        alert ('You need to be in AR to show this video!')
       } else {
-        let vid = document.getElementById(vidURL+markerID);
-        let marker = document.getElementById(markerID);
+        let vid = document.getElementById(vidURL+markerID)
+        let marker = document.getElementById(markerID)
 
         if (vid == null) { //if video DOES NOT already exist
           self.clearMarkerChildren(markerID)
           //init user chosen viceo
-          vid = document.createElement('a-video');
-          vid.setAttribute('src', vidURL); //id model from url
+          vid = document.createElement('a-video')
+          vid.setAttribute('src', vidURL) //id model from url
           vid.setAttribute('id', vidURL+markerID)
 
           /* the below width and height settings do not retain 
           source aspect ratio, so will display the video in a 1:1 ratio */
-          vid.setAttribute('height', scale.toString());
-          vid.setAttribute('width', scale.toString());
-          vid.setAttribute('rotation', '-90 0 90');
-          vid.setAttribute('loop', 'false');
-          marker.appendChild(vid);
+          vid.setAttribute('height', scale.toString())
+          vid.setAttribute('width', scale.toString())
+          vid.setAttribute('rotation', '-90 0 90')
+          vid.setAttribute('loop', 'false')
+          marker.appendChild(vid)
         }
       }
 
     }
 
     self.showText = function(markerID, text, scale) {
-      scale = scale/10; //scale supplied in %
+      scale = scale/10 //scale supplied in %
 
       //handle params
 
-      let scene = document.getElementById('scene');
+      let scene = document.getElementById('scene')
 
       if (scene == null) { //if scene DOES NOT exist
-        alert ('You need to be in AR to show this image!');
+        alert ('You need to be in AR to show this image!')
       } else {
-        let textElem = document.getElementById(text+markerID);
-        let marker = document.getElementById(markerID);
+        let textElem = document.getElementById(text+markerID)
+        let marker = document.getElementById(markerID)
         if (textElem == null) {
           self.clearMarkerChildren(markerID)
           //init user text
-          textElem = document.createElement('a-text');
-          textElem.setAttribute('value', text);
-          textElem.setAttribute('id',text+markerID);
+          textElem = document.createElement('a-text')
+          textElem.setAttribute('value', text)
+          textElem.setAttribute('id',text+markerID)
   
           //the below width and height settings are bad
-          textElem.setAttribute('height', scale.toString());
-          textElem.setAttribute('width', scale.toString());
+          textElem.setAttribute('height', scale.toString())
+          textElem.setAttribute('width', scale.toString())
   
-        marker.appendChild(textElem);
+        marker.appendChild(textElem)
         }
       }
     }
@@ -248,7 +248,7 @@
 
       //clear AR div
       while (arDiv.firstChild) {
-        arDiv.removeChild(arDiv.firstChild);
+        arDiv.removeChild(arDiv.firstChild)
       }
 
       //TODO -- delete VR button w attribute 'AR-injected'
