@@ -28,10 +28,9 @@ while (true) {
             let comma = val.indexOf(',')
             let angle = parseInt(val.substr(0, comma))
             let servo = parseInt(val.substr(comma + 1))
-            if ((angle > 0) && (servo > 0)) {
+            if (angle && servo) {
                 angle--
                 servo--
-                // serial.writeLine("angle=" + angle + ", servo=" + servo + ", val=" + val)
                 if (servo <= 2) {
                     pins.servoWritePin(pin_arr[servo], angle)
                 }

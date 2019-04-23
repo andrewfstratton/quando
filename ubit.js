@@ -7,6 +7,10 @@ try {
     throw e
   }
 }
+
+// Set the check for sending USB messages going - once only
+setInterval(check_send, 1000/24) // i.e. 24 times a second
+
 // list serial ports:
 const find_microbit = (error, success) => {
   if (serialport) {
@@ -40,9 +44,7 @@ function check_send() {
       // This should be the 'most' changed angle...or oldest change...
       if (servo_angles[servo]) {
         let angle = servo_angles[servo]
-// console.log("send servo="+servo+", angle ="+angle)
         servo_angles[servo] = false // indicate that it's been sent
-        console.log("send"+servo)
         exports.send('T', `${angle},${servo}`)
         break;
       }
@@ -59,7 +61,6 @@ exports.get_serial = (error, success) => {
           error(err)
         } else {
           let parser = serial.pipe(new serialport.parsers.Readline({ delimiter: '\r\n' }))
-          setInterval(check_send, 1000/20) // i.e. 50 times a second
           success(serial, parser)
         }
       })
