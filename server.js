@@ -14,7 +14,7 @@ const user = require('./user')
 const path = require('path')
 const http = require('http').Server(app)
 const io = require('socket.io')(http)
-const ubit = require('./ubit')
+const ubit = require('./modules/ubit')
 const net = require('net')
 const dns = require('dns')
 
@@ -227,55 +227,6 @@ app.put('/script/deploy/:filename', (req, res) => {
     }
   })
 })
-
-let reported = false
-function ubit_error (err) {
-  if (!reported && err) {
-    console.log("  Warning - " + err)
-    reported = true
-  }
-  setTimeout(() => { ubit.get_serial(ubit_error, ubit_success) }, 1000)
-    // Checks every second for plugged in micro:bit
-}
-function ubit_success (serial, parser) {
-  reported = false
-  parser.on('data', (data) => {
-    try {
-      let ubit = JSON.parse(data.trim())
-      if (ubit && io) {
-        if (ubit.button_a) {
-          io.emit('ubit', {button: 'a'})
-        }
-        if (ubit.button_b) {
-          io.emit('ubit', {button: 'b'})
-        }
-        if (ubit.button_ab) {
-          io.emit('ubit', {button: 'a'})
-          io.emit('ubit', {button: 'b'})
-        }
-        if (ubit.ir) {
-          io.emit('ubit', {ir: true})
-        }
-        if (ubit.orientation) {
-          io.emit('ubit', {'orientation': ubit.orientation})
-        }
-        if (ubit.heading) {
-          io.emit('ubit', {'heading': ubit.heading})
-        }
-        if (ubit.roll_pitch) {
-          let roll = ubit.roll_pitch[0] *180/Math.PI
-          let pitch = ubit.roll_pitch[1] *180/Math.PI
-          io.emit('ubit', {'roll': roll, 'pitch': pitch})
-        }
-      }
-    } catch (err) {
-      console.log(err + ':' + data)
-    }
-  })
-  serial.on('close', ubit_error)
-}
-
-ubit.get_serial(ubit_error, ubit_success)
 
 app.get('/file/type/*', (req, res) => {
   let filename = req.params[0]
@@ -538,15 +489,15 @@ app.get('/blocks', (req, res) => {
   })
 })
 
+ubit.usb(io) // sets up all the usb based micro:bit handling...
+
 app.post('/ubit/display', (req, res) => {
-  let val = req.body.val
-  ubit.send('display', val)
+  ubit.display(req.body.val)
   res.json({})
 })
 
 app.post('/ubit/icon', (req, res) => {
-  let val = req.body.val
-  ubit.send('icon', val)
+  ubit.icon(req.body.val)
   res.json({})
 })
 
