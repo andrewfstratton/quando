@@ -1,7 +1,4 @@
 let exec = () => {
-quando.call_tts('suck m y toes')
-quando.addLabelStatement('', ()=>{
-quando.call_tts('fuc')
+quando.watson.call_vis_rec('', ()=>{
 })
-quando.call_tts('yerrr')
 }
