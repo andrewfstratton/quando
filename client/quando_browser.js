@@ -20,7 +20,10 @@
   self.watching_puzz = false
   self.puzzGoal = ''
   
-  self.input_onclick_functions = []
+  //empty functions for inventory and puzzle tracking
+  self.on_inv_match = function() {}
+  self.on_puzz_success = function() {}
+  self.on_puzz_failure = function() {}
 
   var _lookup = {} // holds run time arrays
 
@@ -174,10 +177,6 @@
     })
   }
 
-  //empty functions for inventory and puzzle tracking
-  self.on_inv_match = function() {}
-  self.on_puzz_success = function() {}
-
   //add/remove elements to inventory
   self.change_inv = function(changeType, item) {
     //if we need to add and the player does NOT already have the item
@@ -185,7 +184,7 @@
       //add the item
       self.inventory.push(item)
       //wait a little bit before alerting, just feels better
-      window.setTimeout(alert(item + ' added to inventory!'), 500)
+      window.setTimeout(alert(item + ' added to inventory!'), 700)
     //if we need to remove and the player DOES have the item
     } else if (changeType == 'remove' && self.inventory.includes(item)) {
       //remove item from wherever it is in array
@@ -235,15 +234,19 @@
   }
 
   //initialize puzzle tracker
-  self.init_puzz = function(goal, fn) {
+  self.init_puzz = function(goal, success, failure) {
     self.puzzGoal = goal
     self.watching_puzz = true
-    self.on_puzz_success = fn
+    self.on_puzz_success = success
+    self.on_puzz_failure = failure
 
     //if we're watching the puzzle, and it is the goal, do what's in the block box
     if (self.watching_puzz == true) {
       if (self.get_puzzList() == self.puzzGoal) {
         self.on_puzz_success()
+        self.watching_puzz = false
+      } else if (self.get_puzzList().length >= self.puzzGoal.length) {
+        self.on_puzz_failure()
       }
     }
   }
@@ -256,9 +259,13 @@
       self.puzzList.splice(self.puzzList.indexOf(data), 1)
     }
 
-    if (self.puzzList == self.puzzGoal) {
+    if (self.get_puzzList() == self.puzzGoal) {
       self.on_puzz_success()
+      self.watching_puzz = false
+    } else if (self.get_puzzList().length >= self.puzzGoal.length) {
+      self.on_puzz_failure()
     }
+
   }
 
   self.get_puzzList = function() {
@@ -267,8 +274,8 @@
   }
 
   self.clear_puzzList = function() {
-    self.puzzList = ''
-    alert('puzzle tracker cleared...')
+    self.puzzList = []
+    alert('puzzle failed...')
   }
 
   //stop puzzle tracking, resetting params
