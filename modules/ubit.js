@@ -15,7 +15,7 @@ try {
 setInterval(check_send, 1000/24) // i.e. 24 times a second
 
 // list serial ports:
-const find_microbit = (error, success) => {
+function find_microbit(error, success) {
   if (serialport) {
     serialport.list((err, ports) => {
       if (err) {
@@ -56,7 +56,6 @@ function check_send() {
     }
     if (msg != "") {
       send_buffer = {angle:[]} // Must reset
-console.log("send:"+msg)
       serial.write(msg, (err) => {
         if (err) {
           console.log('Error on write: ', err.message)
