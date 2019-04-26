@@ -1,6 +1,8 @@
 import math
 from microbit import *
 
+# N.B. Must flash with https://python.microbit.org/v/1.1 to get a working version or else micro:bit will hang
+
 class Servo:
 
     """
@@ -24,22 +26,24 @@ class Servo:
         self.angle = angle
         self.analog_period = 0
         self.pin = pin
-        analog_period = round((1/self.freq) * 1000)  # hertz to miliseconds
+        analog_period = round((1 / self.freq) * 1000)  # hertz to miliseconds
         self.pin.set_analog_period(analog_period)
 
     def write_us(self, us):
         us = min(self.max_us, max(self.min_us, us))
         duty = round(us * 1024 * self.freq // 1000000)
-        print('{"message":"duty='+str(duty)+'"}')
+        print('{"message":"duty=' + str(duty) + '"}')
         self.pin.write_analog(duty)
-#        sleep(50)
-#        self.pin.write_digital(0)  # turn the pin off
+
+    #        sleep(50)
+    #        self.pin.write_digital(0)  # turn the pin off
 
     def write_angle(self, degrees=None):
         degrees = degrees % 360
         total_range = self.max_us - self.min_us
         us = self.min_us + total_range * degrees // self.angle
         self.write_us(us)
+
 
 def go():
     print('{"msg":"started"}')
@@ -48,22 +52,23 @@ def go():
     while True:
         if uart.any():
             try:
-                x = str(uart.readline(), 'utf-8')[:-1]
-                eq = x.find('=')
+                x = str(uart.readline(), "utf-8")[:-1]
+                eq = x.find("=")
                 key = x[:eq]
-                val = x[eq+1:]
-                if key == 'D':
+                val = x[eq + 1 :]
+                if key == "D":
                     display.scroll(val, wait=False)
-                elif key == 'I':
+                elif key == "I":
                     display.show(icons[int(val)])
-                elif key == 'T':
-                    comma = val.find(',')
+                elif key == "T":
+                    comma = val.find(",")
                     angle = int(val[:comma])
-                    servo = int(val[comma+1:])
+                    servo = int(val[comma + 1 :])
                     if angle > 0 and servo > 0:
-                        Servo(pins[servo-1]).write_angle(angle-1)
+                        Servo(pins[servo - 1]).write_angle(angle - 1)
             except Exception as ex:
-                print('{"message":"Exception:'+str(ex)+'"}')
-    #Never finish...
+                print('{"message":"Exception:' + str(ex) + '"}')
+    # Never finish...
+
 
 go()
