@@ -95,23 +95,21 @@
         self.watching_puzz = false
       } else if (self.get_puzzList().length >= self.puzz_goal.length) {
         self.on_puzz_failure()
+        self.puzzList = []
       }
     }
   }
 
   //add/remove elements to puzzle list
-  self.change_puzzList = function(changeType, data) {
-    if (changeType == 'add') {
-      self.puzzList.push(data)
-    } else {
-      self.puzzList.splice(self.puzzList.indexOf(data), 1)
-    }
+  self.change_puzzList = function(data) {
+    self.puzzList.push(data)
 
     if (self.get_puzzList() == self.puzz_goal) {
       self.on_puzz_success()
       self.watching_puzz = false
     } else if (self.get_puzzList().length >= self.puzz_goal.length) {
       self.on_puzz_failure()
+      self.puzzList = []
     }
 
   }

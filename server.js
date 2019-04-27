@@ -8,6 +8,8 @@ const formidable = require('formidable')
 const morgan = require('morgan')
 const body_parser = require('body-parser')
 const base64Img = require('base64-img')
+const base64 = require('file-base64');
+const ffmpeg = require('ffmpeg')
 const script = require('./script')
 const watson_db = require('./watson_db')
 const client_deploy = './client/deployed_js/'
@@ -467,22 +469,30 @@ app.post('/watson/TONE_request', (req, res) => {
 //Speech to Text
 app.post('/watson/SPEECH_request', (req, res) => {
   console.log('Speech to Text Requested...')
-  var combinedStream = CombinedStream.create()
-  combinedStream.append(fs.createReadStream(__dirname + 'audio-file1.wav'))
-  combinedStream.append(fs.createReadStream(__dirname + 'audio-file2.wav'))
+  let data = req.body.data
+  watson_db.save(data).then((success) => {
+    base64.decode(data, success.id+".webm", function(err, output){
+      console.log('success!')
+      var params = {
+        objectMode: false,
+        content_type: 'audio/webm',
+        model: 'en-GB_BroadbandModel'
+      }
+      
+      var recognizeStream = stt.recognizeUsingWebSocket(params);
+      recognizeStream.setEncoding('utf8')
+      
+      // Pipe in the audio.
+      fs.createReadStream(success.id+".webm").pipe(recognizeStream)
+      recognizeStream.on('data', function(event) { onEvent('Data:', event); });
+      
   
-  var params = {
-    audio: combinedStream,
-    content_type: 'audio/wav',
-    timestamps: true,
-    word_alternatives_threshold: 0.9
-  }
-  speechToText.recognize(recognizeParams, function(error, speechRecognitionResults) {
-    if (error) {
-      console.log(error)
-    } else {
-      console.log(JSON.stringify(speechRecognitionResults, null, 2))
-    }
+      // Display events on the console.
+      function onEvent(name, event) {
+          console.log(name, "written to "+success.id+".webm: "+JSON.stringify(event, null, 2));
+          res.json(JSON.stringify(event, null, 2))
+      };
+    })
   })
 })
 

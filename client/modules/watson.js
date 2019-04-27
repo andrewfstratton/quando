@@ -4,8 +4,6 @@
     alert('Fatal Error: Watson must be included after quando_browser')
   }
   var self = quando.watson = {}
-  self.width = screen.width
-  self.height = screen.height
 
   self.call_tts = function(text) {
     //send POST request to server
