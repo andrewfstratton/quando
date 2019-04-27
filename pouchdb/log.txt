@@ -777,3 +777,8 @@
 [Thu, 25 Apr 2019 16:05:22 GMT] [info] [<0.000.0>] pouchdb-server has started on http://127.0.0.1:5984/
 [Thu, 25 Apr 2019 16:05:22 GMT] [info] [<0.000.0>] database files will be saved to pouchdb
 [Thu, 25 Apr 2019 16:05:22 GMT] [info] [<0.000.0>] navigate to http://127.0.0.1:5984/_utils for the Fauxton UI.
+[Sat, 27 Apr 2019 12:48:03 GMT] [info] [<0.000.0>] pouchdb-server has started on http://127.0.0.1:5984/
+[Sat, 27 Apr 2019 12:48:03 GMT] [info] [<0.000.0>] database files will be saved to pouchdb
+[Sat, 27 Apr 2019 12:48:03 GMT] [info] [<0.000.0>] navigate to http://127.0.0.1:5984/_utils for the Fauxton UI.
+[Sat, 27 Apr 2019 14:55:43 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /watson/ 200
+[Sat, 27 Apr 2019 14:55:43 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /watson/_bulk_docs 201

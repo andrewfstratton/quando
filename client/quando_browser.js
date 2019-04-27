@@ -82,7 +82,7 @@
         self.call_vis_rec_api(imgData, goalClass, fn)
       })
       elem.appendChild(div)
-    }, 2000)
+    }, 2500)
   }
 
   self.call_vis_rec_api = function(imgData, goalClass, fn) {
@@ -145,6 +145,7 @@
                   console.log(data.replace(/"/g, ""))
                   let input = document.getElementById('inp')
                   input.value = data.replace(/"/g, "")
+                  input.click()
                   div.innerHTML = "Click to start listening..."
                 })
               })

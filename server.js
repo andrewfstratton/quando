@@ -398,10 +398,9 @@ app.post('/message/:id', (req, res) => {
 
 //Text-To-Speech
 app.post('/watson/TTS_request', (req, res) => {
-  let filename = 'boobs'
+  let filename = null
   console.log('Text to Speech Requested...')
   let text = req.body.text
-  console.log('TTS Text is: ' + text)
   watson_db.save(text).then(
     (success) => { 
       console.log(success)
@@ -419,8 +418,6 @@ app.post('/watson/TTS_request', (req, res) => {
         fs.writeFileSync(__dirname + '/client/media/'+success.id+'.wav', audio)
         console.log('TTS - audio written as '+success.id+'.wav')
         filename = success.id
-        console.log(filename)
-        console.log(JSON.stringify({filename: filename}))
         res.json(filename)
       })
     },
@@ -486,7 +483,6 @@ app.post('/watson/SPEECH_request', (req, res) => {
       fs.createReadStream(success.id+".webm").pipe(recognizeStream)
       recognizeStream.on('data', function(event) { onEvent('Data:', event); });
       
-  
       // Display events on the console.
       function onEvent(name, event) {
           console.log(name, "written to "+success.id+".webm: "+JSON.stringify(event, null, 2));
