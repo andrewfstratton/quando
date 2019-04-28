@@ -144,8 +144,7 @@ input, #_hidden_width_element_ {
     /* border-right: 6px double rgba(255, 255, 255, 0.6); */
     /* border-right: 3px double rgba(255, 255, 255, 0.6); */
     /* border-right: 4px solid rgba(255, 0, 0, 0.3); */
-    border-right: 4px dotted rgba(128, 64, 64, 0.8);
-    font-family: "Courier New", "Courier", monospaced;
+    border-left: 3px solid rgba(128, 64, 64, 0.5);
   }
 
   .quando-inventor { background: black; }
@@ -159,11 +158,11 @@ input, #_hidden_width_element_ {
   .quando-devices { background: #81d4fa; }
   .quando-misc { background: #6bac5e; }
   .quando-style { background: #a0a0d0; }
-  .quando-inventor-control { background: hsl(0, 50%, 80%); }
-  .quando-inventor-input { background: hsl(112, 50%, 80%); }
-  .quando-inventor-display { background: hsl(194, 50%, 80%); }
-  .quando-inventor-collection { background: hsl(274, 50%, 80%); }
-  .quando-inventor-picker { background: hsl(80, 50%, 80%); }
+  .quando-inventor-control { background: hsl(0, 50%, 90%); }
+  .quando-inventor-input { background: hsl(112, 50%, 90%); }
+  .quando-inventor-display { background: hsl(194, 50%, 90%); }
+  .quando-inventor-collection { background: hsl(274, 50%, 90%); }
+  .quando-inventor-picker { background: hsl(80, 50%, 90%); }
 
   /* .quando-separator {
     border-top-style:solid;
