@@ -90,12 +90,14 @@
 
     //if we're watching the puzzle, and it is the goal, do what's in the block box
     if (self.watching_puzz == true) {
-      if (self.get_puzzList() == self.puzz_goal) {
-        self.on_puzz_success()
-        self.watching_puzz = false
-      } else if (self.get_puzzList().length >= self.puzz_goal.length) {
+      if (self.get_puzzList().length >= self.puzz_goal.length) {
+        if (self.get_puzzList() == self.puzz_goal) {
+          self.on_puzz_success()
+          self.watching_puzz = false
+        } else {
         self.on_puzz_failure()
         self.puzzList = []
+        }
       }
     }
   }
