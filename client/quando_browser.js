@@ -47,7 +47,7 @@
     let vid = null
     let imgData = null
 
-    //timeout of 2 seconds to wait for webcam feed to load in
+    //timeout of 3 seconds to wait for webcam feed to load in
     window.setTimeout(()=>{
       let div = document.getElementById('visrec_label')
       let elem = document.getElementById('quando_labels')
@@ -82,7 +82,7 @@
         self.call_vis_rec_api(imgData, goalClass, fn)
       })
       elem.appendChild(div)
-    }, 2500)
+    }, 3000)
   }
 
   self.call_vis_rec_api = function(imgData, goalClass, fn) {
