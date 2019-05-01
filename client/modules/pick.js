@@ -27,10 +27,22 @@
     _list[id] = arr
   }
 
+  self.reset = (id) => {
+    let arr = _list[id]
+    if (arr.hasOwnProperty('index')) {
+      if (arr.next) {
+        arr.index = 0
+      } else {
+        arr.index = arr.length-1
+      }
+    }
+  }
+
   self.one = (id, next) => {
     let arr = _list[id]
     if (arr.length > 0) {
       if (!arr.hasOwnProperty('index')) {
+        arr.next = next
         if (next) {
           arr.index = 0 // Start at beginning
         } else { // start at end

@@ -51,13 +51,13 @@
     });
   }
 
-  self.onLabel = (label, model_name, isNewModel, callback) => {
+  self.onLabel = (label, modelName, isNewModel, callback) => {
     _requestData("pow").then(() => {
       if (!(self._labels.includes(label))) self._labels.push(label);
-      const model = quandoML.buildModel(model_name);
+      const model = quandoML.buildModel(modelName);
 
       model.training.loadAndRun(isNewModel).then(() => {
-        quando.add_handler("eegML" + model_name + "Label" + self._labels.indexOf(label), callback);
+        quando.add_handler("eegML" + modelName + "Label" + self._labels.indexOf(label), callback);
         model.classifier.setTracking(true);
 
         quando.destructor.add(() => {
@@ -69,9 +69,9 @@
     });
   }
 
-  self.fetchDataForLabel = (label, seconds, model_name) => {
+  self.fetchDataForLabel = (label, seconds, modelName) => {
     _requestData("pow").then(() => {
-      const model = quandoML.buildModel(model_name);
+      const model = quandoML.buildModel(modelName);
 
       model.training.setTrackingLabel(label);
       model.training.setTrackingTimeout(seconds);
@@ -126,7 +126,7 @@
   self.handlers = {
     "mot" : function (data) {
       quando.idle_reset();
-      
+
       if (data.yaw != self.last_yaw) {
         quando.dispatch_event('eegYaw', {'detail': data.yaw});
         self.last_yaw = data.yaw
@@ -171,8 +171,8 @@
       quando.idle_reset();
 
       quandoML.fetchData(data);
-      quandoML.predictFromModels((model_name, label) => {
-        quando.dispatch_event("eegML" + model_name + "Label" + self._labels.indexOf(label));
+      quandoML.predictFromModels((modelName, label) => {
+        quando.dispatch_event("eegML" + modelName + "Label" + self._labels.indexOf(label));
       });
     }
   }
@@ -294,7 +294,6 @@
     swingDataLimit: 15,
     swingsLimit: 3,
     nod: {x: 0, y: 0},
-    maxNod: {x: 0, y: 0},
     swings: {x: 0, y: 0},
     swingDir: {x: 0, y: 0},
 
@@ -345,7 +344,6 @@
     },
     resetNod(dir) {
       this.nod[dir] = 0;
-      this.maxNod[dir] = 0;
     },
     resetSwings(dir) {
       this.swings[dir] = 0;
@@ -373,7 +371,7 @@
 
   client.ready
     .then(() => client.init({
-      username: "directk", 
+      username: "directk",
       password: "Eweagtmslon19", 
       client_id: "8sfFMP0y2opXq6gmhNBAmcbdnDdBM06y6Y3RiJiL", 
       client_secret: "cR8MKcueMdKDvYh33zUmnxHYfMqoi9nwD5VuM0lzZt1Z5iBxP7JDovZ0n96dONYvUgDM8mB9IRsw7tjX2o8oS5IehDsLpOrXKKL2HvePWrYwhdWW8Q6W9ynD75uohikw"

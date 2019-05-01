@@ -1,11 +1,10 @@
 (function () {
-  ML_URL = "https://eeg-ml.eu-gb.mybluemix.net" // "http://localhost:8000"
+  ML_URL = "http://localhost:5000" // "https://eeg-ml.eu-gb.mybluemix.net"
 
   class Training {
     constructor(model, options = {}) {
       this.model = model;
       this.options = options;
-      this.cols = [];
       this.data = [];
       this.label = -1;
       this.tracking = false;
@@ -41,7 +40,7 @@
       cols.push("label");
       const msg = { 
         cols,
-        data: this.data, 
+        data: this.data,
         new_model: isNewModel,
         model: this.model.model_name
       };
@@ -65,7 +64,6 @@
       this.model = model;
       this.options = options;
       this.data = [];
-      this.cols = [];
       this.getLabels = this._getLabels();
       this.tracking = false;
       this.counter = 0;
@@ -88,7 +86,7 @@
       const endpoint = "/predict-from-model";
       const msg = { 
         cols: this.model.ml.cols,
-        data: this.data, 
+        data: this.data,
         model: this.model.model_name
       };
 

@@ -114,7 +114,7 @@
     init({ username, password, client_id, client_secret, debit } = {}) {
       return this.getUserLogin()
         .then(users => {
-          if (users[0] && users[0] !== username) {
+          if (users[0]) {
             this._log("init: Logging out other user", users[0]);
             return this.logout({ username: users[0] }).then(() => []);
           }
