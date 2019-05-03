@@ -21,9 +21,45 @@ self.getScriptAsObject = () => {
    return json.scriptToArray(document.getElementById('script'))
 }
 
-self.handleRightClick = function(event) {
+self.handleRightClick = (event) => {
     event.preventDefault()
+    _show_right_menu(event.target)
     return false
+}
+
+function _show_right_menu(elem) {
+  let menu = document.getElementById('right-click-menu')
+  let clone = menu.cloneNode(true)
+  menu.parentNode.replaceChild(clone, menu)
+  menu = clone
+  menu.style.visibility = "visible"
+  menu.style.left = event.pageX-8 + "px"
+  menu.style.top = event.pageY-8 + "px"
+  menu.addEventListener('mouseleave', (e) => {
+    menu.style.visibility = "hidden"
+  })
+  document.getElementById('block-clone-all').addEventListener('click', (ev) => {
+    menu.style.visibility = "hidden"
+    let containing_block = elem
+    if (!elem.classList.contains("quando-block")) {
+      containing_block = _getAncestor(elem, "quando-block")
+    }
+    if (containing_block)  {
+      let parent = containing_block.parentNode
+      if (parent) {
+        let clone = containing_block.cloneNode(true)
+        if (containing_block.nextSibling) {
+          parent.insertBefore(clone, containing_block.nextSibling)
+        } else {
+          parent.appendChild(clone)
+        }
+        clone.addEventListener('contextmenu', self.handleRightClick, false)
+        self.copyBlock(containing_block, clone)
+        _populateLists()
+        self.setElementHandlers(clone)
+      }
+    }
+  }, false)
 }
 
 function _leftClickTitle(open_elem) {
@@ -204,10 +240,10 @@ self.setElementHandlers = (block) => {
     }
   }
   for (let elem of block.querySelectorAll("input[data-quando-media]")) {
-    elem.addEventListener('click', index.handleFile, false)
+    elem.addEventListener('click', self.handleFile, false)
   }
   for (let elem of block.querySelectorAll("select.quando-toggle")) {
-    elem.addEventListener('click', index.handleToggle, true)
+    elem.addEventListener('click', self.handleToggle, true)
     self.toggleRelativesOnElement(elem)
     elem.addEventListener('mousedown', (ev)=>{ev.preventDefault();return false})
   }
@@ -307,7 +343,7 @@ function _setupDragula() {
     } else if (target === menu) {
       accept = false
     } else if (target.classList.contains('quando-box')) { // i.e. a valid container
-      if (index.hasAncestor(target, menu)) {
+      if (self.hasAncestor(target, menu)) {
         accept = false
       } else {
         let limited = elem.dataset.quandoDropValid
@@ -345,13 +381,13 @@ function _setupDragula() {
     return elem.classList.contains("quando-title")
   }
   dragula(collections, options).on('drop', function (elem) {
-    index.setElementHandlers(elem)
+    self.setElementHandlers(elem)
   }).on('cloned', function (clone, old, type) {
     if (type == 'copy') {
-      index.copyBlock(old, clone)
+      self.copyBlock(old, clone)
     }
   }).on('remove', (elem) => {
-    index.removeBlock(elem)
+    self.removeBlock(elem)
   // }).on('over', (elem, container) => {
   // }).on('out', (elem, container) => {
   })
