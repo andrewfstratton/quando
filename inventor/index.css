@@ -15,6 +15,10 @@
   white-space: pre;
 }
 
+.quando-block {
+  user-select: none;
+}
+
 #_hidden_width_element_,
 .quando-block input,
 .quando-block select {
