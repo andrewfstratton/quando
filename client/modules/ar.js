@@ -9,7 +9,7 @@
 
     self.initScene = function() {
       //init scene
-      scene = document.createElement('a-scene')
+      let scene = document.createElement('a-scene')
       scene.setAttribute('arjs', 'debugUIEnabled: false')
       scene.setAttribute('embedded', '')
       scene.setAttribute('id', 'scene')
@@ -83,7 +83,6 @@
           marker = self.initMarker(markerID)
           //add all elements to DOM
           scene.prepend(marker)
-          document.getElementById('quando_AR').append(scene)
 
           //add onScan eventListener
           marker.addEventListener('markerFound', (e)=>{
@@ -115,7 +114,6 @@
       modelURL = '/client/media/' + encodeURI(modelURL)
 
       let scene = document.getElementById('scene')
-
       if (scene == null) { //if scene DOES NOT exist
         alert ('You need to be in AR to show this model!')
       } else {
@@ -134,7 +132,6 @@
         } 
       }
     }
-
 
     self.showImage = function(markerID, imgURL, scale = 100, orientation) { //scale set to 0.1 for default
       //handle params
