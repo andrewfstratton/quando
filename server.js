@@ -14,8 +14,8 @@ const watson_db = require('./watson_db')
 const client_deploy = './client/deployed_js/'
 const user = require('./user')
 const path = require('path')
-const http = require('http').Server(app)
-const io = require('socket.io')(http)
+const http = require('https').Server(app)
+const io = require('socket.io')(https)
 const ubit = require('./modules/ubit')
 const net = require('net')
 const dns = require('dns')
@@ -65,7 +65,7 @@ let drop_client = (client) => {
 
 let server = http.listen(port, () => {
   let host = process.env.IP || server.address().address
-  console.log(`Quando Server listening at http://${host}:${server.address().port}`)
+  console.log(`Quando Server listening at https://${host}:${server.address().port}`)
   io.clients=[]
   io.broadcast = (msg) => {
     io.clients.forEach(client => {

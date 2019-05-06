@@ -7,7 +7,7 @@
 
   var _lookup = {} // holds run time arrays
 
-  self.socket = io.connect('http://' + window.location.hostname)
+  self.socket = io.connect('https://' + window.location.hostname)
   
   self.call_tts = function(text) {
     //send POST request to server

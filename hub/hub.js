@@ -34,8 +34,8 @@ function onload() {
       if (res.success) {
         ip = res.ip
         set('ip', ip)
-        let inventor_url = `http://${ip}/inventor`
-        let client_url = `http://${ip}/client`
+        let inventor_url = `https://${ip}/inventor`
+        let client_url = `https://${ip}/client`
         if (res.local == false) { // remote access 
           inventor_url = document.location + 'inventor'
           client_url = document.location + 'client'
@@ -51,7 +51,7 @@ function onload() {
         set('local', (res.local?'Local':'Remote') + ' Access')
         if (res.local) {
           document.getElementById('local_panel').style.visibility = 'visible'
-          let pouchdb_url = `http://127.0.0.1:5984/_utils`
+          let pouchdb_url = `https://127.0.0.1:5984/_utils`
           set('pouchdb_utils', `<a href='${pouchdb_url}' target='_blank'>${pouchdb_url}</a>`)
         }
       } else {
