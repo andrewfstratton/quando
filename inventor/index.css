@@ -150,14 +150,15 @@ input, #_hidden_width_element_ {
     /* border-right: 4px solid rgba(255, 0, 0, 0.3); */
     border-left: 3px solid rgba(128, 64, 64, 0.5);
   }
+  
 
   .quando-inventor { background: black; }
   .quando-display { background: #EEBB70; }
   .quando-media { background: #C5E1A5; }
   .quando-time { background: #ddd47c; }
-  .quando-watson { background: #6495ed	; }
-  .quando-AR { background: #9acd32; }
-  .quando-puzzle { background: #f788a2; }
+  .quando-watson { background: #97b8f3	; }
+  .quando-AR { background: #b0d95e; }
+  .quando-game { background: #f78da6; }
   .quando-advanced { background: #ef9a9a; }
   .quando-devices { background: #81d4fa; }
   .quando-misc { background: #6bac5e; }
