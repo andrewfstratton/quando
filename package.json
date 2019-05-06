@@ -26,7 +26,6 @@
     "leapjs": "^0.6.4",
     "memorystore": "^1.6.1",
     "morgan": "^1.9.1",
-    "node": "^10.15.3",
     "npm": "^6.9.0",
     "pouchdb": "^6.4.3",
     "pouchdb-find": "^6.4.3",
