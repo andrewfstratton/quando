@@ -45,8 +45,8 @@
     //we fire the function specified in the handler
     if (self.watching_inv == true) {
       if (self.inventory.includes(self.goal_item)) {
-        self.on_inv_match()
-        self.stop_inv_watch()
+        //self.on_inv_match()
+        //self.stop_inv_watch()
       }
     }
   }
