@@ -26,12 +26,9 @@
     }
 
     self.initMarker = function(markerID) {
-      alert('initMarker called.')
       let marker = document.getElementById(markerID)
       if (marker!=null) {
-        alert('marker '+markerID+'already exists.')
       } else {
-        alert('generating marker.'+ markerID)
         //init marker
         marker = document.createElement('a-marker')
         if (markerID == 'hiro') {
@@ -211,7 +208,7 @@
       let scene = document.getElementById('scene')
 
       if (scene == null) { //if scene DOES NOT exist
-        alert ('You need to be in AR to show this image!')
+        alert ('You need to be in AR to show this text!')
       } else {
         let textElem = document.getElementById(text+markerID)
         let marker = document.getElementById(markerID)
