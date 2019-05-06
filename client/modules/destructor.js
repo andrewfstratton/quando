@@ -1,7 +1,7 @@
 (function () {
   var quando = this['quando']
   if (!quando) {
-    alert('Fatal Error: destructor.js must be included after quando_browser')
+    alert('Fatal Error: destructor.js must be included after client.js')
   }
   var self = quando.destructor = {}
   var destructor_list = null

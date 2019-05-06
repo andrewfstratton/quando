@@ -1,7 +1,7 @@
 (function () {
     var quando = this['quando']
     if (!quando) {
-      alert('Fatal Error: speech.js must be included after quando_browser')
+      alert('Fatal Error: speech.js must be included after client.js')
     }
     var self = quando.speech = {}
     self.synth = window.speechSynthesis

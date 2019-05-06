@@ -1,7 +1,7 @@
 (function () {
     var quando = this['quando']
     if (!quando) {
-      alert('Fatal Error: AR must be included after quando_browser')
+      alert('Fatal Error: AR must be included after client.js')
     }
     var self = quando.AR = {}
     self.width = screen.width
