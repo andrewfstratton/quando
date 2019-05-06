@@ -136,39 +136,33 @@ input, #_hidden_width_element_ {
 
  /* Colours for block backgrounds and title */
 
-  .quando-display {
-    background: #EEBB70;
+  .quando-inventor-input.quando-left,
+  .quando-inventor-collection.quando-left,
+  .quando-inventor-picker.quando-left,
+  .quando-inventor-display.quando-left,
+  .quando-inventor-control.quando-left {
+    /* border-right: 6px double rgba(255, 255, 255, 0.6); */
+    /* border-right: 3px double rgba(255, 255, 255, 0.6); */
+    /* border-right: 4px solid rgba(255, 0, 0, 0.3); */
+    border-left: 3px solid rgba(128, 64, 64, 0.5);
   }
-  .quando-media {
-    background: #C5E1A5;
-  }
-  .quando-time {
-    background: #ddd47c;
-  }
-  .quando-inventor {
-    background: #c3adeb;
-  }
-  .quando-watson {
-    background: #6495ed	;
-  }
-  .quando-AR {
-    background: #9acd32;
-  }
-  .quando-puzzle {
-    background: #f788a2;
-  }
-  .quando-advanced {
-    background: #ef9a9a;
-  }
-  .quando-devices {
-    background: #81d4fa;
-  }
-  .quando-misc {
-    background: #6bac5e;
-  }
-  .quando-style {
-    background: #a0a0d0;
-  }
+
+  .quando-inventor { background: black; }
+  .quando-display { background: #EEBB70; }
+  .quando-media { background: #C5E1A5; }
+  .quando-time { background: #ddd47c; }
+  .quando-watson { background: #6495ed	; }
+  .quando-AR { background: #9acd32; }
+  .quando-puzzle { background: #f788a2; }
+  .quando-advanced { background: #ef9a9a; }
+  .quando-devices { background: #81d4fa; }
+  .quando-misc { background: #6bac5e; }
+  .quando-style { background: #a0a0d0; }
+  .quando-inventor-control { background: hsl(0, 50%, 90%); }
+  .quando-inventor-input { background: hsl(112, 50%, 90%); }
+  .quando-inventor-display { background: hsl(194, 50%, 90%); }
+  .quando-inventor-collection { background: hsl(274, 50%, 90%); }
+  .quando-inventor-picker { background: hsl(80, 50%, 90%); }
 
   /* .quando-separator {
     border-top-style:solid;
@@ -201,25 +195,4 @@ input, #_hidden_width_element_ {
     font-weight: bold;
     text-shadow: 1px 1px 3px #222222;
   }
-  /* the 200 value colours from https://www.materialui.co/colors
--- red ef9a9a
-   Pink F48FB1
-   purple CE93D8
-   Deep Purple B39DDB
-   Indigo 9FA8DA
-   Blue 90CAF9
-   Light Blue 81D4FA
-   Cyan 80DEEA
-   Teal 80CBC4
-   Green A5D6A7
--- Light Green C5E1A5
-   Lime E6EE9C
-   Yellow FFF59D
-   Amber FFE082
--- Orange FFCC80
-   Deep orange FFAB91
-   Brown BCAAA4
-   Grey EEEEEE
-   Blue Grey B0BEC5
-  */
 

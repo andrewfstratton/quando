@@ -4,12 +4,12 @@
     alert('Fatal Error: ubit must be included after quando_browser')
   }
   let self = quando.ubit = {}
-  self.last_gesture = ''
+  let last_gesture = ''
   self.last_servo = []
 
   function dispatch_gesture (gesture_name) {
-    if (gesture_name != self.last_gesture) {
-      self.last_gesture = gesture_name
+    if (gesture_name != last_gesture) {
+      last_gesture = gesture_name
       quando.dispatch_event(gesture_name)
     }
   }
@@ -81,8 +81,8 @@
       } else if (data.orientation == 'right') {
         dispatch_gesture('ubitRight')
       } else if (data.orientation == '') { // this is the micro bit started
-          self.last_gesture = ''
-        }
+        last_gesture = ''
+      }
     } else if (data.button) {
       quando.idle_reset()
       if (data.button == 'a') {
