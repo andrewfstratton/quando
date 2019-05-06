@@ -42,3 +42,8 @@ ubit/tutorial
 user
 pouchdb/*/*
 client/deployed_js/-.js
+package.json
+pouchdb/log.txt
+package-lock.json
+client/deployed_js/-.js
+.gitignore

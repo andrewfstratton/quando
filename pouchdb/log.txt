@@ -582,3 +582,31 @@
 [Tue, 30 Apr 2019 20:49:17 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /script/_find 200
 [Tue, 30 Apr 2019 21:14:07 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /script/ 200
 [Tue, 30 Apr 2019 21:14:08 GMT] [info] [<0.000.0>] 127.0.0.1 - - POST /script/_bulk_docs 201
+[Mon, 06 May 2019 07:08:26 GMT] [info] [<0.000.0>] pouchdb-server has started on http://127.0.0.1:5984/
+[Mon, 06 May 2019 07:08:26 GMT] [info] [<0.000.0>] database files will be saved to pouchdb
+[Mon, 06 May 2019 07:08:26 GMT] [info] [<0.000.0>] navigate to http://127.0.0.1:5984/_utils for the Fauxton UI.
+[Mon, 06 May 2019 22:31:59 GMT] [info] [<0.000.0>] pouchdb-server has started on http://127.0.0.1:5984/
+[Mon, 06 May 2019 22:31:59 GMT] [info] [<0.000.0>] database files will be saved to pouchdb
+[Mon, 06 May 2019 22:31:59 GMT] [info] [<0.000.0>] navigate to http://127.0.0.1:5984/_utils for the Fauxton UI.
+[Mon, 06 May 2019 22:32:14 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /user/ 500
+[Mon, 06 May 2019 22:32:17 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /user/ 500
+[Mon, 06 May 2019 22:32:21 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /user/ 500
+[Mon, 06 May 2019 22:32:32 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /user/ 500
+[Mon, 06 May 2019 22:32:41 GMT] [info] [<0.000.0>] pouchdb-server has started on http://127.0.0.1:5984/
+[Mon, 06 May 2019 22:32:41 GMT] [info] [<0.000.0>] database files will be saved to pouchdb
+[Mon, 06 May 2019 22:32:41 GMT] [info] [<0.000.0>] navigate to http://127.0.0.1:5984/_utils for the Fauxton UI.
+[Mon, 06 May 2019 22:32:50 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /user/ 500
+[Mon, 06 May 2019 22:33:00 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /user/ 500
+[Mon, 06 May 2019 22:33:06 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /user/ 500
+[Mon, 06 May 2019 22:34:21 GMT] [info] [<0.000.0>] pouchdb-server has started on http://127.0.0.1:5984/
+[Mon, 06 May 2019 22:34:21 GMT] [info] [<0.000.0>] database files will be saved to pouchdb
+[Mon, 06 May 2019 22:34:21 GMT] [info] [<0.000.0>] navigate to http://127.0.0.1:5984/_utils for the Fauxton UI.
+[Mon, 06 May 2019 22:34:29 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /user/ 500
+[Mon, 06 May 2019 22:37:33 GMT] [info] [<0.000.0>] pouchdb-server has started on http://127.0.0.1:5984/
+[Mon, 06 May 2019 22:37:33 GMT] [info] [<0.000.0>] database files will be saved to pouchdb
+[Mon, 06 May 2019 22:37:33 GMT] [info] [<0.000.0>] navigate to http://127.0.0.1:5984/_utils for the Fauxton UI.
+[Mon, 06 May 2019 22:37:51 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /user/ 500
+[Mon, 06 May 2019 22:38:15 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /user/ 500
+[Mon, 06 May 2019 22:42:51 GMT] [info] [<0.000.0>] pouchdb-server has started on http://127.0.0.1:5984/
+[Mon, 06 May 2019 22:42:51 GMT] [info] [<0.000.0>] database files will be saved to pouchdb
+[Mon, 06 May 2019 22:42:51 GMT] [info] [<0.000.0>] navigate to http://127.0.0.1:5984/_utils for the Fauxton UI.

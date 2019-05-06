@@ -14,10 +14,10 @@
   "license": "ISC",
   "dependencies": {
     "@cloudant/cloudant": "^2.3.0",
-    "body-parser": "^1.18.3",
+    "body-parser": "^1.19.0",
     "cfenv": "^1.0.x",
     "express": "^4.16.4",
-    "express-session": "^1.14.2",
+    "express-session": "^1.16.1",
     "formidable": "^1.2.1",
     "graceful-fs": "4.1.10",
     "leapjs": "^0.6.4",
@@ -27,7 +27,7 @@
     "pouchdb": "^6.4.3",
     "pouchdb-find": "^6.4.3",
     "pouchdb-server": "^4.1.0",
-    "serialport": "^7.1.4",
+    "serialport": "^7.1.5",
     "socket.io": "^2.2.0"
   },
   "devDependencies": {
