@@ -20,6 +20,7 @@
     "cfenv": "^1.2.0",
     "express": "^4.16.4",
     "express-session": "^1.16.1",
+    "file-base64": "^1.0.0",
     "formidable": "^1.2.1",
     "graceful-fs": "4.1.10",
     "leapjs": "^0.6.4",
