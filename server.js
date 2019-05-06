@@ -321,8 +321,14 @@ app.get('/client/js/:filename', (req, res) => {
 app.get('/client/js', (req, res) => {
   fs.readdir(path.join(__dirname, 'client', 'deployed_js'), (err, files) => {
     if (!err) {
+      let js_files = []
+      for(let i=0; i<files.length; i++) {
+        if (files[i].endsWith(".js")) {
+          js_files.push(files[i])
+        }
+      }
       dns.lookup(require('os').hostname(), (err, add) => {
-        res.json({ 'success': true, ip: add, 'files': files })
+        res.json({ 'success': true, ip: add, 'files': js_files })
       })
     } else {
       res.json({
