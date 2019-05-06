@@ -1,7 +1,7 @@
 (function () {
   let quando = this['quando']
   if (!quando) {
-    alert('Fatal Error: ubit must be included after quando_browser')
+    alert('Fatal Error: ubit must be included after client.js')
   }
   let self = quando.ubit = {}
   let last_gesture = ''

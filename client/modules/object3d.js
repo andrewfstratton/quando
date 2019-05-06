@@ -1,7 +1,7 @@
 (function () {
     var quando = this['quando']
     if (!quando) {
-      alert('Fatal Error: object3d must be included after quando_browser')
+      alert('Fatal Error: object3d must be included after client.js')
     }
     var self = quando.object3d = {}
     self.width = screen.width

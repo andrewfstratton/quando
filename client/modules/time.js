@@ -1,7 +1,7 @@
 (() => {
   let quando = this['quando']
   if (!quando) {
-    alert('Fatal Error: time.js must be included after quando_browser')
+    alert('Fatal Error: time.js must be included after client.js')
   }
   let self = quando.time = {}
 

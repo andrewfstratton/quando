@@ -1,7 +1,7 @@
 (()=>{
   let quando = this['quando']
   if (!quando) {
-    alert('Fatal Error: espruino must be included after quando_browser')
+    alert('Fatal Error: espruino must be included after client.js')
   }
   var self = quando.espruino = {}
 
