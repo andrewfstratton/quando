@@ -38,21 +38,29 @@ function _show_right_menu(elem) {
   menu.addEventListener('mouseleave', (e) => {
     menu.style.visibility = "hidden"
   })
-  document.getElementById('block-clone-all').addEventListener('click', (ev) => {
+  document.getElementById('block-clone').addEventListener('click', (ev) => {
     menu.style.visibility = "hidden"
     let containing_block = elem
     if (!elem.classList.contains("quando-block")) {
       containing_block = _getAncestor(elem, "quando-block")
     }
     if (containing_block)  {
-      let parent = containing_block.parentNode
-      if (parent) {
-        let clone = containing_block.cloneNode(true)
-        if (containing_block.nextSibling) {
-          parent.insertBefore(clone, containing_block.nextSibling)
+      let clone = containing_block.cloneNode(true)
+      if (self.hasAncestor(containing_block, document.getElementById('menu'))) { // in the menu - so copy to script
+        document.getElementById('script').appendChild(clone)
+      } else {
+        let parent = containing_block.parentNode
+        if (parent) {
+          if (containing_block.nextSibling) {
+            parent.insertBefore(clone, containing_block.nextSibling)
+          } else {
+            parent.appendChild(clone)
+          }
         } else {
-          parent.appendChild(clone)
+          clone = false
         }
+      }
+      if (clone) {
         clone.addEventListener('contextmenu', self.handleRightClick, false)
         self.copyBlock(containing_block, clone)
         _populateLists()
