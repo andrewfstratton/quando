@@ -1,5 +1,5 @@
 (function () {
-  ML_URL = "http://localhost:5000" // "https://eeg-ml.eu-gb.mybluemix.net"
+  ML_URL = "https://eeg-ml.eu-gb.mybluemix.net" // "http://localhost:5000"
 
   class Training {
     constructor(model, options = {}) {
