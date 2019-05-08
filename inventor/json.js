@@ -55,34 +55,45 @@ self.addObjectToElement = (obj, elem) => {
   if (obj) {
     for(let block of obj) {
       let id = block.id
+      if (block.block_type == 'devices-rotate-object3d') {
+        block.block_type = 'media-rotate-object3d'
+      }
+      if (block.block_type == 'devices-move-object3d') {
+        block.block_type = 'media-move-object3d'
+      }
       // find block_type
       let src_block = document.getElementById("menu").querySelector("[data-quando-block-type='"+ block.block_type +"']")
-      // clone to script
-      elem.appendChild(src_block.cloneNode(true))
-      let clone = elem.lastChild
-      for(let elem of clone.querySelectorAll("input, select")) {
-        elem.disabled = false
+      if (!src_block) {  // Block is most likely out of date...
+        alert('Failed to create:'+block.block_type)
+        console.log('Unknown Block: '+JSON.stringify(block))
       }
-      clone.dataset.quandoId = id
-      clone.style.display = "" // removes display none ?!
-      for (let key in block.values) {
-        let element = clone.querySelector("[data-quando-name='"+ key +"']")
-        if (element) {
-          if (element.nodeName.toLowerCase() == 'select') {
-            element.dataset.quandoTmpValue = block.values[key]
-          } else {
-            element.value = block.values[key]
-          }
-        } else {
-          console.log("Failed to set block '" + block.block_type + "', key '" + key + "' to:")
-          console.log(block.values[key])
+      if (src_block) { // clone to script
+        elem.appendChild(src_block.cloneNode(true))
+        let clone = elem.lastChild
+        for(let elem of clone.querySelectorAll("input, select")) {
+          elem.disabled = false
         }
-      }
-      for (let key in block.boxes) {
-        let obj = block.boxes[key]
-        let element = clone.querySelector(".quando-box[data-quando-name='"+ obj.id +"']")
-        if (element && obj.box) {
-          self.addObjectToElement(obj.box, element)
+        clone.dataset.quandoId = id
+        clone.style.display = "" // removes display none ?!
+        for (let key in block.values) {
+          let element = clone.querySelector("[data-quando-name='"+ key +"']")
+          if (element) {
+            if (element.nodeName.toLowerCase() == 'select') {
+              element.dataset.quandoTmpValue = block.values[key]
+            } else {
+              element.value = block.values[key]
+            }
+          } else {
+            console.log("Failed to set block '" + block.block_type + "', key '" + key + "' to:")
+            console.log(block.values[key])
+          }
+        }
+        for (let key in block.boxes) {
+          let obj = block.boxes[key]
+          let element = clone.querySelector(".quando-box[data-quando-name='"+ obj.id +"']")
+          if (element && obj.box) {
+            self.addObjectToElement(obj.box, element)
+          }
         }
       }
     }
