@@ -403,7 +403,11 @@ function _setupDragula() {
 
 self.setup = () => {
   window.onbeforeunload = () => {
+    if (self.getScriptAsObject().length) {
       return 'Are you sure you want to leave the editor?' // Sometimes didn't show this message in Chrome?!
+    } else { 
+      return;
+    }
   }
 
   toastr.options = {
