@@ -2,6 +2,19 @@
   font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
 }
 
+html,
+body,
+#editor {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+    padding-top: 70px;
+    padding-bottom: 60px;
+}
+
 #show_modal_code {
   width:100%;
   height:60%;
@@ -35,8 +48,21 @@ input, #_hidden_width_element_ {
   width: auto;
 }
 
+#editor,
+#editor * {
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+#editor .ui-content {
+  height: inherit; /* inherit height without padding nor border */
+}
+
+
 #editor_content {
     display:flex;
+    background-color: #ddffff;
 }
 
   #menu {
