@@ -388,7 +388,7 @@ function _setupDragula() {
   options.invalid = (elem, handle) => {
     return elem.classList.contains("quando-title")
   }
-  dragula(collections, options).on('drop', function (elem) {
+  self.drake = dragula(collections, options).on('drop', function (elem) {
     self.setElementHandlers(elem)
   }).on('cloned', function (clone, old, type) {
     if (type == 'copy') {
@@ -396,8 +396,13 @@ function _setupDragula() {
     }
   }).on('remove', (elem) => {
     self.removeBlock(elem)
-  // }).on('over', (elem, container) => {
-  // }).on('out', (elem, container) => {
+  })
+  collections.forEach((collection)=>{
+    collection.addEventListener('touchmove', (event) => {
+      if (self.drake.dragging) {
+        event.preventDefault()
+      }
+    })
   })
 }
 
