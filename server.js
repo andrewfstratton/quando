@@ -304,6 +304,7 @@ app.use('/client/setup.css', express.static(path.join(client_dir, 'setup.css')))
 app.use('/client/client.js', express.static(path.join(client_dir, 'client.js')))
 app.use('/client/transparent.png', express.static(path.join(client_dir, 'transparent.png')))
 app.use('/client/deployed_js', express.static(path.join(client_dir, 'deployed_js')))
+app.use('/client/client.htm', express.static(path.join(client_dir, 'client.htm')))
 
 app.get('/client/js/:filename', (req, res) => {
   let filename = req.params.filename

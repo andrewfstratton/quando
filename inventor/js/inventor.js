@@ -5,6 +5,7 @@ let _userid = null
 let _deploy = ''
 let _remote_list = []
 let PREFIX = 'quando_' // used for key to save/load to/from browser
+let client_script = ""
 
 self.showObject = (obj) => {
   let script = document.getElementById('script')
@@ -719,15 +720,20 @@ self.handle_login = () => {
     })
 }
 
+self.clientScript = () => {
+  return client_script
+}
+
 self.testCreator = (code) => {
   let filename = '-'
+  client_script = code
   $.ajax({
     url: '/script/deploy/' + encodeURI(filename),
     type: 'PUT',
     data: { javascript: code },
     success: () => {
       _success('Opening Test...')
-      let deploy_window = window.open('/client/js/' + filename + '.js', 'quando_deployed_test', 'left=0,top=0,width=9999,height=9999');
+      let deploy_window = window.open('/client/client.htm', 'quando_deployed_test', 'left=0,top=0,width=9999,height=9999');
       deploy_window.focus() // moveTo(0,0);
     },
     error: () => {
@@ -750,7 +756,6 @@ self.handle_test = () => {
         self.setElementHandlers(tmp.firstChild)
         document.getElementById('menu').appendChild(tmp.firstChild)
       } else {
-        code = "let exec = () => {\n" + code + "}"
         self.testCreator(code)
       }
     } else {

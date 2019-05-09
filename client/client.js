@@ -688,3 +688,13 @@
 })()
 
 var val = false // force handler to manage when not embedded
+
+if (document.title == "[[TITLE]]") { // this was opened by Inventor >> Test
+  document.title = "TEST"
+  let script = document.getElementById("quando_script")
+  if (script) {
+    script.parentNode.removeChild(script)
+  }
+  let exec = window.opener.index.clientScript()
+  eval("this['exec'] =  () => {\n" + exec + "\n}")
+}
