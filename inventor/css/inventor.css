@@ -63,6 +63,9 @@ input, #_hidden_width_element_ {
 #editor_content {
     display:flex;
     background-color: #ddffff;
+    margin:0px;
+    padding:0px;
+    height:100%;
 }
 
   #menu {
@@ -74,7 +77,6 @@ input, #_hidden_width_element_ {
 
   #script {
     position:relative;
-    margin-left: 35%;
     width:100%;
     background-color: #ffeeee;
   }
@@ -87,12 +89,16 @@ input, #_hidden_width_element_ {
     border-color: #808080;
     border-style: solid;
     overflow: auto;
+    z-index: 0;
+  }
+
+  .quando-box {
+    z-index:1;
   }
 
   #menu, #script, .quando-box {
     display: flex;
     flex-flow: column nowrap;
-    z-index: 1;
   }
 
   .quando-title {
@@ -124,6 +130,7 @@ input, #_hidden_width_element_ {
   .quando-left {
     position:relative;
     float:left;
+    z-index:1;
     width: 8px;
     height:100%;
     border-radius: 6px 0px 0px 6px;
