@@ -68,182 +68,198 @@ input, #_hidden_width_element_ {
     height:100%;
 }
 
-  #menu {
-    position:relative;
-    float: left;
-    width: 35%;
-    background-color: #ffffff;
-  }
+#menu {
+  position:relative;
+  float: left;
+  width: 35%;
+  background-color: #ffffff;
+}
 
-  #script {
-    position:relative;
-    width:100%;
-    background-color: #ffeeee;
-  }
+#script {
+  position:relative;
+  width:100%;
+  background-color: #ffeeee;
+}
 
-  #menu, #script {
-    padding: 4px;
-    height: 100%;
-    margin: 0 auto;
-    border-right: 4px;
-    border-color: #808080;
-    border-style: solid;
-    overflow: auto;
-    z-index: 0;
-  }
+#menu, #script {
+  padding: 4px;
+  height: 100%;
+  margin: 0 auto;
+  border-right: 4px;
+  border-color: #808080;
+  border-style: solid;
+  overflow: auto;
+  z-index: 0;
+}
 
-  .quando-box {
-    z-index:1;
-  }
+.quando-box {
+  z-index:1;
+}
 
-  #menu, #script, .quando-box {
-    display: flex;
-    flex-flow: column nowrap;
-  }
+#menu, #script, .quando-box {
+  display: flex;
+  flex-flow: column nowrap;
+}
 
-  .quando-title {
-    color: white;
-    font-size: large;
-    left: 0px;
-    margin-bottom: 4px;
-    background: #888888;
-    text-align: center;
-    float: left;
-    z-index: 1;
-  }
+.quando-title {
+  color: white;
+  font-size: large;
+  left: 0px;
+  margin-bottom: 4px;
+  background: #888888;
+  text-align: center;
+  float: left;
+  z-index: 1;
+}
 
-  .quando-block {
-    width: max-content;
-    height: max-content;
-    margin: 0px 0px 4px 0px;
-  }
+.quando-block {
+  width: max-content;
+  height: max-content;
+  margin: 0px 0px 4px 0px;
+}
 
-  .quando-block:hover {
-    cursor: move;
-  }
+.quando-block:hover {
+  cursor: move;
+}
 
-  .quando-block:hover>.quando-left,
-  .quando-block:hover>*>.quando-row {
-    box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.7);
-  }
+.quando-block:hover>.quando-left,
+.quando-block:hover>*>.quando-row {
+  box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.7);
+}
 
-  .quando-left {
-    position:relative;
-    float:left;
-    z-index:1;
-    width: 8px;
-    height:100%;
-    border-radius: 6px 0px 0px 6px;
-  }
+.quando-left {
+  position:relative;
+  float:left;
+  z-index:1;
+  width: 8px;
+  height:100%;
+  border-radius: 6px 0px 0px 6px;
+}
 
-  .quando-right {
-    position:relative;
-    z-index:1;
-    border-radius: 0px 6px 6px 0px;
-    margin-left:8px;
-    width:100%;
-  }
+.quando-right {
+  position:relative;
+  z-index:1;
+  border-radius: 0px 6px 6px 0px;
+  margin-left:8px;
+  width:100%;
+}
 
-  .quando-row {
-    padding: 4px;
-    border-radius: 0px 6px 6px 0px;
-  }
+.quando-row {
+  padding: 4px;
+  border-radius: 0px 6px 6px 0px;
+}
 
-  .quando-block, .quando-box {
-    text-align: left;
-    transition: all .3s ease;
-  }
+.quando-block, .quando-box {
+  text-align: left;
+  transition: all .3s ease;
+}
 
-  .quando-box {
-    margin: 0px 8px 0px 4px;
-    padding: 4px 0px 0px 0px;
-    min-height: 10px;
-    width: 100%;
-  }
+.quando-box {
+  margin: 0px 8px 0px 4px;
+  padding: 4px 0px 0px 0px;
+  min-height: 10px;
+  width: 100%;
+}
 
-  input[type="color"] {
-    border: none;
-    margin: none;
-    width: 22px;
-    padding: 0px;
-  }
-  /* #script .quando-box {
-    min-height: 24px;
-  } */
+input[type="color"] {
+  border: none;
+  margin: none;
+  width: 22px;
+  padding: 0px;
+}
+/* #script .quando-box {
+  min-height: 24px;
+} */
 
- /* Colours for block backgrounds and title */
+/* Colours for block backgrounds and title */
 
-  .quando-inventor-input.quando-left,
-  .quando-inventor-collection.quando-left,
-  .quando-inventor-picker.quando-left,
-  .quando-inventor-display.quando-left,
-  .quando-inventor-control.quando-left {
-    /* border-right: 6px double rgba(255, 255, 255, 0.6); */
-    /* border-right: 3px double rgba(255, 255, 255, 0.6); */
-    /* border-right: 4px solid rgba(255, 0, 0, 0.3); */
-    border-left: 3px solid rgba(128, 64, 64, 0.5);
-  }
+.quando-inventor-input.quando-left,
+.quando-inventor-collection.quando-left,
+.quando-inventor-picker.quando-left,
+.quando-inventor-display.quando-left,
+.quando-inventor-control.quando-left {
+  /* border-right: 6px double rgba(255, 255, 255, 0.6); */
+  /* border-right: 3px double rgba(255, 255, 255, 0.6); */
+  /* border-right: 4px solid rgba(255, 0, 0, 0.3); */
+  border-left: 3px solid rgba(128, 64, 64, 0.5);
+}
 
-  .quando-inventor { background: black; }
-  .quando-display { background: #EEBB70; }
-  .quando-media { background: #C5E1A5; }
-  .quando-time { background: #ddd47c; }
-  .quando-watson { background: #6495ed	; }
-  .quando-AR { background: #9acd32; }
-  .quando-puzzle { background: #f788a2; }
-  .quando-advanced { background: #ef9a9a; }
-  .quando-devices { background: #81d4fa; }
-  .quando-misc { background: #6bac5e; }
-  .quando-style { background: #a0a0d0; }
-  .quando-inventor-control { background: hsl(0, 50%, 90%); }
-  .quando-inventor-input { background: hsl(112, 50%, 90%); }
-  .quando-inventor-display { background: hsl(194, 50%, 90%); }
-  .quando-inventor-collection { background: hsl(274, 50%, 90%); }
-  .quando-inventor-picker { background: hsl(80, 50%, 90%); }
+.quando-inventor { background: black; }
+.quando-display { background: #EEBB70; }
+.quando-media { background: #C5E1A5; }
+.quando-time { background: #ddd47c; }
+.quando-watson { background: #6495ed	; }
+.quando-AR { background: #9acd32; }
+.quando-puzzle { background: #f788a2; }
+.quando-advanced { background: #ef9a9a; }
+.quando-devices { background: #81d4fa; }
+.quando-misc { background: #6bac5e; }
+.quando-style { background: #a0a0d0; }
+.quando-inventor-control { background: hsl(0, 50%, 90%); }
+.quando-inventor-input { background: hsl(112, 50%, 90%); }
+.quando-inventor-display { background: hsl(194, 50%, 90%); }
+.quando-inventor-collection { background: hsl(274, 50%, 90%); }
+.quando-inventor-picker { background: hsl(80, 50%, 90%); }
 
-  /* .quando-separator {
-    border-top-style:solid;
-    border-top-width:10px;
-    border-top-color: rgba(196,0,0,0.5);
-    margin-top: 12px;
-  } */
+/* .quando-separator {
+  border-top-style:solid;
+  border-top-width:10px;
+  border-top-color: rgba(196,0,0,0.5);
+  margin-top: 12px;
+} */
 
-  select.quando-toggle {
-    -webkit-appearance:none;
-    appearance:none;
-    padding-left: 4px;
-    padding-right: 4px;
-  }
+select.quando-toggle {
+  -webkit-appearance:none;
+  appearance:none;
+  padding-left: 4px;
+  padding-right: 4px;
+}
 
-  .quando-info {
-    padding-left: 6px;
-    padding-right: 6px;
-    border-radius: 6px 6px 6px 6px;
-    background-color: rgba(255,255,255, 0.4);
-  }
+.quando-info {
+  padding-left: 6px;
+  padding-right: 6px;
+  border-radius: 6px 6px 6px 6px;
+  background-color: rgba(255,255,255, 0.4);
+}
 
-  .quando-comment {
-    filter: grayscale(75%);
-  }
+.quando-comment {
+  filter: grayscale(75%);
+}
 
-  .iconify {
-    padding:1px;
-    color: #000;
-    font-weight: bold;
-    text-shadow: 1px 1px 3px #222222;
-  }
+.iconify {
+  padding:1px;
+  color: #000;
+  font-weight: bold;
+  text-shadow: 1px 1px 3px #222222;
+}
 
-  #right-click-menu {
-    visibility:hidden;
-    position: absolute;
-    left: 0px;
-    top: 0px;
-    z-index: 1;
-    background-color: white;
-    padding: 8px;
-    box-shadow: 0 0 2px 4px  rgb(0, 0, 0, 0.7);
-  }
+#right-click-menu {
+  visibility:hidden;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  z-index: 1;
+  background-color: white;
+  padding: 8px;
+  box-shadow: 0 0 2px 4px  rgb(0, 0, 0, 0.7);
+}
 
-  .right-click-menu-item:hover {
-    background-color: lightblue;
-  }
+.right-click-menu-item:hover {
+  background-color: lightblue;
+}
+
+::-webkit-scrollbar {
+    width: 15px;
+    height: 15px;
+    border-bottom: 1px solid #eee; 
+    border-top: 1px solid #eee;
+}
+::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+    background-color: #C3C3C3;
+    border: 2px solid #eee;
+}
+
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.2); 
+} 
