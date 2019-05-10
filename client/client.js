@@ -155,9 +155,9 @@
     })
   }
 
-  self.send_message = function(message, val) {
+  self.send_message = function(message, val, host='') {
     fetch('/message/' + message, { method: 'POST', 
-      body: JSON.stringify({'val':val}), 
+      body: JSON.stringify({'val':val, 'host':host}), 
       headers: {"Content-Type": "application/json"}
     })
   }

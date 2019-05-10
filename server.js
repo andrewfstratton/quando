@@ -13,6 +13,7 @@ const client_deploy = './client/deployed_js/'
 const user = require('./user')
 const path = require('path')
 const http = require('http').Server(app)
+const https = require('https')
 const io = require('socket.io')(http)
 const ubit = require('./modules/ubit')
 const net = require('net')
@@ -345,7 +346,25 @@ app.use('/client', express.static(path.join(client_dir, 'index.html')))
 app.post('/message/:id', (req, res) => {
   let id = req.params.id
   let val = req.body.val
-  io.emit(id, {'val': val})
+  let host = req.body.host
+  if (host) {
+    let data = JSON.stringify({'val':val})
+    let options = { hostname: host, port: 443, path: '/message/'+id, method: 'POST',
+      headers: {
+        'Content-Type': 'application/json', 'Content-Length': data.length
+      }
+    }
+    let req = https.request(options, (res) => {
+      res.on('data', (d) => {})
+    })
+    req.on('error', (error) => {
+      console.error(error)
+    })
+    req.write(data)
+    req.end()
+  } else {
+    io.emit(id, {'val': val})
+  }
   res.json({})
 })
 
