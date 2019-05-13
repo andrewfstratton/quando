@@ -189,12 +189,14 @@ input[type="color"] {
 .quando-media { background: #C5E1A5; }
 .quando-time { background: #ddd47c; }
 .quando-watson { background: #6495ed	; }
-.quando-AR { background: #9acd32; }
 .quando-puzzle { background: #f788a2; }
 .quando-advanced { background: #ef9a9a; }
 .quando-devices { background: #81d4fa; }
 .quando-misc { background: #6bac5e; }
 .quando-style { background: #a0a0d0; }
+.quando-watson { background: #97b8f3	; }
+.quando-AR { background: #b0d95e; }
+.quando-game { background: #ffc88c; }
 .quando-inventor-control { background: hsl(0, 50%, 90%); }
 .quando-inventor-input { background: hsl(112, 50%, 90%); }
 .quando-inventor-display { background: hsl(194, 50%, 90%); }
