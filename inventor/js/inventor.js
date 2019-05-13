@@ -4,6 +4,7 @@ let self = this['index'] = {}
 let _userid = null
 let _deploy = ''
 let _remote_list = []
+let AUTOSAVE = 'quandoAutosave' // used for key to save/load to/from browser
 let PREFIX = 'quando_' // used for key to save/load to/from browser
 let client_script = ""
 
@@ -409,10 +410,11 @@ function _setupDragula() {
 
 self.setup = () => {
   window.onbeforeunload = () => {
-    if (self.getScriptAsObject().length) {
-      return 'Are you sure you want to leave the editor?' // Sometimes didn't show this message in Chrome?!
-    } else { 
-      return;
+    let obj = self.getScriptAsObject()
+    if (obj.length) {
+      local_save(AUTOSAVE, obj)
+    } else {
+      localStorage.removeItem(AUTOSAVE)
     }
   }
 
@@ -507,15 +509,11 @@ self.setup = () => {
       for (let item of document.getElementsByClassName("quando-block")) {
         self.setElementHandlers(item)
       }
-      // document.getElementById('menu').querySelectorAll('.quando-row, .quando-left').forEach(
-      //   (elem) => elem.addEventListener('click',
-      //   (ev)=>{console.log(".")})
-      // )
-
       let first_title = document.getElementsByClassName("quando-title")[0]
       if (first_title) {
         _leftClickTitle(first_title)
       }
+      local_load(AUTOSAVE) // load last edit from localstorage
     },
     error: () => {
       _error('Failed to find server blocks')
@@ -680,19 +678,19 @@ function _warning (message) {
     return result
   }
 
-self.generateCode = function(elem) {
-    let children = elem.children
-    let result = ""
-    for (let child of children) {
-      result += generator.getCode(child)
-    }
-    let prefix = generator.prefix()
-    if (prefix) {
-      result = prefix + result
-    }
-    result = result.replace(/(\r\n|\n|\r)+/gm, '\n')
-    return result
+self.generateCode = (elem) => {
+  let children = elem.children
+  let result = ""
+  for (let child of children) {
+    result += generator.getCode(child)
   }
+  let prefix = generator.prefix()
+  if (prefix) {
+    result = prefix + result
+  }
+  result = result.replace(/(\r\n|\n|\r)+/gm, '\n')
+  return result
+}
 
 self.handle_login = () => {
     let userid = $('#userid').val()
@@ -778,12 +776,16 @@ self.handle_test = () => {
   
   self.handle_local_save = () => {
     let key = $('#local_save_key').val()
-    localStorage.setItem(PREFIX + key, JSON.stringify({
-      deploy: _deploy,
-      script: self.getScriptAsObject(),
-    }))
+    local_save(PREFIX + key, self.getScriptAsObject())
     $('#local_save_modal').modal('hide')
     _saved(key)
+  }
+
+  function local_save(key, _script) {
+    localStorage.setItem(key, JSON.stringify({
+      deploy: _deploy,
+      script: _script
+    }))
   }
   
   self.handle_remote_save = () => {
@@ -828,10 +830,25 @@ self.handle_test = () => {
     $('#local_save_modal').modal('show')
   }
 
+  function local_load(key) {
+    self.local_load(key)
+  }
+
   self.local_load = (key) => {
     let obj = JSON.parse(localStorage.getItem(key))
-    let name = key.slice(PREFIX.length)
-    self.loaded(obj, '#local_load_modal', name)
+    if (obj) {
+      let name = ''
+      if (key.startsWith(PREFIX)) {
+        name = key.slice(PREFIX.length)
+      }
+      self.loaded(obj, '#local_load_modal', name)
+    } else {
+      if (key == AUTOSAVE) {
+        _warning('No Autosave...')
+      } else {
+        _warning("Failed to load local")
+      }
+    }
   }
   
   self.remote_load = (index) => {
@@ -937,6 +954,7 @@ self.handle_test = () => {
   self.handle_clear = () => {
     _info('Cleared...')
     _deploy = ''
+    localStorage.removeItem(AUTOSAVE)
     $('#file_name').html('[no file]')
     $('#local_save_key').val('')
     $('#remote_save_key').val('')
@@ -1148,4 +1166,4 @@ self.handle_test = () => {
   }
 })(this['generator'], this['json'])
 
-window.onload = index.setup()
+window.onload = index.setup() // FIX - this should be inventor - but generated html/javascript refers to index
