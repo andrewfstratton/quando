@@ -4,7 +4,9 @@ let self = this['index'] = {}
 let _userid = null
 let _deploy = ''
 let _remote_list = []
+let AUTOSAVE = 'quandoAutosave' // used for key to save/load to/from browser
 let PREFIX = 'quando_' // used for key to save/load to/from browser
+let client_script = ""
 
 self.showObject = (obj) => {
   let script = document.getElementById('script')
@@ -388,7 +390,7 @@ function _setupDragula() {
   options.invalid = (elem, handle) => {
     return elem.classList.contains("quando-title")
   }
-  dragula(collections, options).on('drop', function (elem) {
+  self.drake = dragula(collections, options).on('drop', function (elem) {
     self.setElementHandlers(elem)
   }).on('cloned', function (clone, old, type) {
     if (type == 'copy') {
@@ -396,14 +398,24 @@ function _setupDragula() {
     }
   }).on('remove', (elem) => {
     self.removeBlock(elem)
-  // }).on('over', (elem, container) => {
-  // }).on('out', (elem, container) => {
+  })
+  collections.forEach((collection)=>{
+    collection.addEventListener('touchmove', (event) => {
+      if (self.drake.dragging) {
+        event.preventDefault()
+      }
+    })
   })
 }
 
 self.setup = () => {
   window.onbeforeunload = () => {
-      return 'Are you sure you want to leave the editor?' // Sometimes didn't show this message in Chrome?!
+    let obj = self.getScriptAsObject()
+    if (obj.length) {
+      local_save(AUTOSAVE, obj)
+    } else {
+      localStorage.removeItem(AUTOSAVE)
+    }
   }
 
   toastr.options = {
@@ -497,15 +509,11 @@ self.setup = () => {
       for (let item of document.getElementsByClassName("quando-block")) {
         self.setElementHandlers(item)
       }
-      // document.getElementById('menu').querySelectorAll('.quando-row, .quando-left').forEach(
-      //   (elem) => elem.addEventListener('click',
-      //   (ev)=>{console.log(".")})
-      // )
-
       let first_title = document.getElementsByClassName("quando-title")[0]
       if (first_title) {
         _leftClickTitle(first_title)
       }
+      local_load(AUTOSAVE) // load last edit from localstorage
     },
     error: () => {
       _error('Failed to find server blocks')
@@ -670,19 +678,19 @@ function _warning (message) {
     return result
   }
 
-self.generateCode = function(elem) {
-    let children = elem.children
-    let result = ""
-    for (let child of children) {
-      result += generator.getCode(child)
-    }
-    let prefix = generator.prefix()
-    if (prefix) {
-      result = prefix + result
-    }
-    result = result.replace(/(\r\n|\n|\r)+/gm, '\n')
-    return result
+self.generateCode = (elem) => {
+  let children = elem.children
+  let result = ""
+  for (let child of children) {
+    result += generator.getCode(child)
   }
+  let prefix = generator.prefix()
+  if (prefix) {
+    result = prefix + result
+  }
+  result = result.replace(/(\r\n|\n|\r)+/gm, '\n')
+  return result
+}
 
 self.handle_login = () => {
     let userid = $('#userid').val()
@@ -710,15 +718,20 @@ self.handle_login = () => {
     })
 }
 
+self.clientScript = () => {
+  return client_script
+}
+
 self.testCreator = (code) => {
   let filename = '-'
+  client_script = code
   $.ajax({
     url: '/script/deploy/' + encodeURI(filename),
     type: 'PUT',
     data: { javascript: code },
     success: () => {
       _success('Opening Test...')
-      let deploy_window = window.open('/client/js/' + filename + '.js', 'quando_deployed_test', 'left=0,top=0,width=9999,height=9999');
+      let deploy_window = window.open('/client/client.htm', 'quando_deployed_test', 'left=0,top=0,width=9999,height=9999');
       deploy_window.focus() // moveTo(0,0);
     },
     error: () => {
@@ -741,7 +754,6 @@ self.handle_test = () => {
         self.setElementHandlers(tmp.firstChild)
         document.getElementById('menu').appendChild(tmp.firstChild)
       } else {
-        code = "let exec = () => {\n" + code + "}"
         self.testCreator(code)
       }
     } else {
@@ -764,12 +776,16 @@ self.handle_test = () => {
   
   self.handle_local_save = () => {
     let key = $('#local_save_key').val()
-    localStorage.setItem(PREFIX + key, JSON.stringify({
-      deploy: _deploy,
-      script: self.getScriptAsObject(),
-    }))
+    local_save(PREFIX + key, self.getScriptAsObject())
     $('#local_save_modal').modal('hide')
     _saved(key)
+  }
+
+  function local_save(key, _script) {
+    localStorage.setItem(key, JSON.stringify({
+      deploy: _deploy,
+      script: _script
+    }))
   }
   
   self.handle_remote_save = () => {
@@ -814,10 +830,25 @@ self.handle_test = () => {
     $('#local_save_modal').modal('show')
   }
 
+  function local_load(key) {
+    self.local_load(key)
+  }
+
   self.local_load = (key) => {
     let obj = JSON.parse(localStorage.getItem(key))
-    let name = key.slice(PREFIX.length)
-    self.loaded(obj, '#local_load_modal', name)
+    if (obj) {
+      let name = ''
+      if (key.startsWith(PREFIX)) {
+        name = key.slice(PREFIX.length)
+      }
+      self.loaded(obj, '#local_load_modal', name)
+    } else {
+      if (key == AUTOSAVE) {
+        _warning('No Autosave...')
+      } else {
+        _warning("Failed to load local")
+      }
+    }
   }
   
   self.remote_load = (index) => {
@@ -923,6 +954,7 @@ self.handle_test = () => {
   self.handle_clear = () => {
     _info('Cleared...')
     _deploy = ''
+    localStorage.removeItem(AUTOSAVE)
     $('#file_name').html('[no file]')
     $('#local_save_key').val('')
     $('#remote_save_key').val('')
@@ -1134,4 +1166,4 @@ self.handle_test = () => {
   }
 })(this['generator'], this['json'])
 
-window.onload = index.setup()
+window.onload = index.setup() // FIX - this should be inventor - but generated html/javascript refers to index
