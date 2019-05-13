@@ -1139,9 +1139,7 @@ self.handle_test = () => {
     if (code) {
       code = "let exec = () => {\n" + code + "}"
       let filename = 'guest'
-      if (_userid) {
         filename = prompt('Please enter the deployment filename \n(without a suffix)', _deploy)
-      }
       if (filename !== null) {
         if (filename == '') {
           alert('Filename cannot be blank')
