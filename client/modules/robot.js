@@ -310,11 +310,6 @@
         self.listen(session, list, fullList, confidence, blockID, callback, destruct);
     }
 
-
-    self.touchSensor = function (sensor, blockID, callback, destruct = true) {
-        self.touchEvent(session, sensor, blockID, callback, destruct)
-    }
-
     self.changePosture = (pose, speed) => {
         if (speed <= 0) {
             speed = 1
@@ -336,7 +331,7 @@
 
 
     /**
-   * Class instace to store event disconnector
+   * Class instance to store event disconnector
    * @param {function} disconnect Stores the function used to sidconnect the event
    */
     var disEvent = class {
@@ -437,45 +432,6 @@
         })
     }
 
-    /** Stores the disconnect events for the touchEvents */
-    touchEvents = []
-    let disconnectTouch = false
-    /**
-     * Sets up the listener for the touch events
-     * Also sets up the disconnector
-     * @param {object} session Stores the connection to the robot
-     * @param {string} sensor Name of the sensor
-     * @param {function} callback Function to execute
-     * @param {string} blockID The ID of the block it was created from
-     */
-    function _start_touchEvents(session, sensor, callback, blockID) {
-        session.service("ALMemory").then(function (ALMemory) {
-            ALMemory.subscriber(sensor).then(function (sub) {
-                console.log(sub.signal);
-                sub.signal.connect(function (state) {
-                    if (state == 1) {
-                        callback()
-                    }
-                }).then(function (processID) {
-                    disconnectTouch = () => {
-                        sub.signal.disconnect(processID)
-                    }
-                    TE = new disEvent(disconnectTouch)
-                    touchEvents.push(TE)
-                })
-            })
-        })
-    }
-
-    /**
-     * Destroys the touch events by executing the disconnectors
-     */
-    function _destroy_touchEvents() {
-        touchEvents.forEach(function (TE) {
-            TE.disconnect()
-        })
-    }
-
     /**
      * 
      * @param {object} session Stores the connection to the robot
@@ -524,20 +480,54 @@
         }
     }
 
+    /** Stores the disconnect events for the touchEvents */
+    touchEvents = []
+    let disconnectTouch = false
+    /**
+     * Sets up the listener for the touch events
+     * Also sets up the disconnector
+     * @param {object} session Stores the connection to the robot
+     * @param {string} sensor Name of the sensor
+     * @param {function} callback Function to execute
+     */
+    function _start_touchEvents(session, sensor, callback) {
+        session.service("ALMemory").then((ALMemory) => {
+            ALMemory.subscriber(sensor).then((sub) => {
+                // console.log(sub.signal)
+                sub.signal.connect((state) => {
+                    if (state == 1) {
+                        callback()
+                    }
+                }).then((processID) => {
+                    disconnectTouch = () => {
+                        sub.signal.disconnect(processID)
+                    }
+                    let touchEvent = new disEvent(disconnectTouch)
+                    touchEvents.push(touchEvent)
+                })
+            })
+        })
+    }
+
+    /**
+     * Destroys the touch events by executing the disconnectors
+     */
+    function _destroy_touchEvents() {
+        touchEvents.forEach((touchEvent) => {
+            touchEvent.disconnect()
+        })
+        touchEvents = []
+    }
+
     /**
      * Starts the touch events listener
-     * @param {object} session Stores the connection to the robot
      * @param {string} sensor Stores the sensor to listen to
-     * @param {string} blockID Stores the blockID for disconnection later
      * @param {function} callback Stores the function to execute
-     * @param {boolean} destruct Whether a destructor is needed
      */
-    self.touchEvent = function (session, sensor, blockID, callback, destruct = true) {
-        _start_touchEvents(session, sensor, callback, blockID)
-        if (destruct) {
-            self.addDestructor(function () {
-                _destroy_touchEvents()
-            })
-        }
+    self.touchSensor = (sensor, callback) => {
+        _start_touchEvents(session, sensor, callback)
+        quando.destructor.add(() => {
+            _destroy_touchEvents()
+        })
     }
 })()
