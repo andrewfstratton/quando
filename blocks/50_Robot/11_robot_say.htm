@@ -1,0 +1,19 @@
+<div class="quando-block" data-quando-javascript="quando.robot.say('${say}', ${interrupt})">
+  <div class="quando-left quando-robot"></div>
+  <div class="quando-right">
+    <div class="quando-row quando-robot">🤖 Robot 💬
+      <input data-quando-name="say" type="text" value="" data-quando-encode="normal" />
+      <select data-quando-name="extras" class="quando-toggle">
+        <option value="hidden">+</option>
+        <option value="show">-</option>
+      </select>
+      <span data-quando-toggle="extras=show">
+        <br>
+        <select data-quando-name='interrupt' class='quando-toggle'>
+          <option value='true'>Interrupt</option>
+          <option value='false'>Buffer</option>
+        </select>
+      </span>
+    </div>
+  </div>
+</div>
