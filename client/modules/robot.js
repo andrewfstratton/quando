@@ -3,7 +3,7 @@
     if (!quando) {
         alert('Fatal Error: Robot must be included after quando_browser')
     }
-    var self = quando.robot = {}
+    let self = quando.robot = {}
 
     class vocabList {
         constructor(listName, vocab) {
@@ -12,7 +12,7 @@
         }
     }
 
-    var robot = {
+    let robot = {
         TextToSpeech: {
             CurrentWord: null,
             CurrentSentence: null,
@@ -21,13 +21,10 @@
         }
     }
 
-    self._list = [];
-    self._armActionsList = {};
+    self._list = []
+    self._armActionsList = {}
 
-    var lastHeight = null;
-    var leapActionStarted = false;
-
-    var ARM_LOOKUP = {
+    let ARM_LOOKUP = {
         "left": {
             "up": {
                 "joint": "LShoulderPitch",
@@ -94,9 +91,9 @@
                     session.service("ALTextToSpeech").then(function (tts) {
                         //tts.say("Please wait whilst I set up. I only do this once after being turned on, or if you have changed my autonomous life state.");
                     }).fail(function (error) {
-                        console.log("An error occurred:", error);
-                    });
-                    al.setState("disabled");
+                        console.log("An error occurred:", error)
+                    })
+                    // al.setState("disabled") // See if this leaves Robot 'alive'
                 }
             })
 
@@ -274,12 +271,12 @@
         self.lookForPerson(session, callback, destruct)
     }
 
-    self.changeAutonomousLife = function (state) {
-        session.service("ALAutonomousLife").then(function (al) {
-            al.setState(state);
-        }).fail(function (error) {
-            console.log("An error occurred:", error);
-        });
+    self.changeAutonomousLife = (state) => {
+        session.service("ALAutonomousLife").then((al) => {
+            al.setState(state)
+        }).fail((error) => {
+            console.log("An error occurred:", error)
+        })
     }
 
     self.createWordList = function (listName) {
@@ -318,10 +315,15 @@
         self.touchEvent(session, sensor, blockID, callback, destruct)
     }
 
-    self.changePosture = function (p) {
-        session.service("ALRobotPosture").then(function (posture) {
-            posture.goToPosture(p, 1.0)
-        }).fail(function (error) {
+    self.changePosture = (pose, speed) => {
+        if (speed <= 0) {
+            speed = 1
+        } else {
+            speed = speed/100
+        }
+        session.service("ALRobotPosture").then((posture) => {
+            posture.goToPosture(pose, speed)
+        }).fail((error) => {
             console.log("An error occurred:", error)
         })
     }
