@@ -255,16 +255,17 @@
         });
     }
 
-    self.motionHand = function (hand, open) {
-        session.service("ALMotion").then(function (motion) {
-            if (open == 'Open') {
-                motion.openHand(hand);
+    self.changeHand = (left, open) => {
+        let hand = left?'LHand':'RHand'
+        session.service("ALMotion").then((motion) => {
+            if (open) {
+                motion.openHand(hand)
             } else {
-                motion.closeHand(hand);
+                motion.closeHand(hand)
             }
-        }).fail(function (error) {
-            console.log("An error occurred:", error);
-        });
+        }).fail((error) => {
+            console.log("An error occurred:", error)
+        })
     }
 
     self.personPerception = function (callback, destruct = true) {
@@ -524,7 +525,23 @@
      * @param {string} sensor Stores the sensor to listen to
      * @param {function} callback Stores the function to execute
      */
-    self.touchSensor = (sensor, callback) => {
+    self.touchHead = (location, callback) => {
+        _start_touchEvents(session, location + 'TactilTouched', callback)
+        quando.destructor.add(() => {
+            _destroy_touchEvents()
+        })
+    }
+
+    self.touchHand = (left, location, callback) => {
+        let sensor = 'Hand' + (left?'Left':'Right')
+        if (location == 'front') {
+            sensor += left?'Right':'Left'
+        } else if (location == 'back') {
+            sensor += left?'Left':'Right'
+        } else { // must be 'plate'
+            sensor += 'Back'
+        }
+        sensor += 'Touched'
         _start_touchEvents(session, sensor, callback)
         quando.destructor.add(() => {
             _destroy_touchEvents()
