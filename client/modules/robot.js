@@ -4,6 +4,9 @@
         alert('Fatal Error: Robot must be included after quando_browser')
     }
     let self = quando.robot = {}
+    let state = { // holds the requested state
+        hand : {}
+    }
 
     class vocabList {
         constructor(listName, vocab) {
@@ -80,6 +83,10 @@
         }
     };
 
+    function log_error(err) {
+        console.log("Error: " + err)
+    }
+
     function helper_ConvertAngle(angle) {
         return angle * (Math.PI / 180)
     }
@@ -90,9 +97,7 @@
                 if (!value) {
                     session.service("ALTextToSpeech").then(function (tts) {
                         //tts.say("Please wait whilst I set up. I only do this once after being turned on, or if you have changed my autonomous life state.");
-                    }).fail(function (error) {
-                        console.log("An error occurred:", error)
-                    })
+                    }).fail(log_error)
                     // al.setState("disabled") // See if this leaves Robot 'alive'
                 }
             })
@@ -106,15 +111,11 @@
                                     rp.goToPosture("Stand", 1.0);
                                 }
                             })
-                        }).fail(function (error) {
-                            console.log("An error occurred:", error);
+                        }).fail(log_error)
                         });
                     });
                 });
-            });
-        }).fail(function (error) {
-            console.log("An error occurred:", error);
-        });
+        }).fail(log_error)
     }
 
     function nao_disconnect(robotIp) {
@@ -169,9 +170,7 @@
     function armJointMovement(joint, angle, speed = 0.5) {
         session.service("ALMotion").then(function (motion) {
             motion.setAngles(joint, angle, speed);
-        }).fail(function (error) {
-            console.log("An error occurred:", error);
-        });
+        }).fail(log_error)
     }
 
     function conditional(value) {
@@ -200,9 +199,7 @@
                 }
                 tts.say(text)
             }
-        }).fail(function (error) {
-            console.log("An error occurred:", error)
-        })
+        }).fail(log_error)
     }
 
     self.moveHead = function (direction, angle) {
@@ -241,31 +238,34 @@
         session.service("ALMotion").then(function (motion) {
             newAngle = helper_ConvertAngle(finalAngle);
             motion.setAngles(armJoint, newAngle, 0.5);
-        }).fail(function (error) {
-            console.log("An error occurred:", error);
-        });
+        }).fail(log_error)
     }
 
     self.moveMotor = function (val, motor, direction) {
         session.service("ALMotion").then(function (motion) {
             newAngle = helper_ConvertAngle(finalAngle);
             motion.setAngles(armJoint, (2 + ((val - 0) * (-2 - 2)) / (1 - 0)), 0.5);
-        }).fail(function (error) {
-            console.log("An error occurred:", error);
-        });
+        }).fail(log_error)
     }
 
     self.changeHand = (left, open) => {
+        if (left) {
+            if (state.hand.left === open) { return }
+            state.hand.left = open
+        } else { // right
+            if (state.hand.right === open) { return }
+            state.hand.right = open
+        }
         let hand = left?'LHand':'RHand'
         session.service("ALMotion").then((motion) => {
+            // Kill any current motions
+            motion.killTasksUsingResources([hand])
             if (open) {
                 motion.openHand(hand)
             } else {
                 motion.closeHand(hand)
             }
-        }).fail((error) => {
-            console.log("An error occurred:", error)
-        })
+        }).fail(log_error)
     }
 
     self.personPerception = function (callback, destruct = true) {
@@ -275,9 +275,7 @@
     self.changeAutonomousLife = (state) => {
         session.service("ALAutonomousLife").then((al) => {
             al.setState(state)
-        }).fail((error) => {
-            console.log("An error occurred:", error)
-        })
+        }).fail(log_error)
     }
 
     self.createWordList = function (listName) {
@@ -319,9 +317,7 @@
         }
         session.service("ALRobotPosture").then((posture) => {
             posture.goToPosture(pose, speed)
-        }).fail((error) => {
-            console.log("An error occurred:", error)
-        })
+        }).fail(log_error)
     }
 
     self.stopListening = function (callback) {
@@ -384,9 +380,7 @@
     function _destroy_robot_listen(session, blockID) {
         session.service("ALSpeechRecognition").then(function (sr) {
             sr.unsubscribe(blockID)
-        }).fail(function (error) {
-            console.log("An error occurred:", error)
-        })
+        }).fail(log_error)
         speechRecognitionEvents.forEach(function (SRE) {
             SRE.disconnect()
         })
@@ -428,9 +422,7 @@
         session.service("ALBasicAwareness").then(function (ba) {
             ba.stopAwareness()
             _start_perception(session, callback, ba)
-        }).fail(function (error) {
-            console.log("An error occurred:", error)
-        })
+        }).fail(log_error)
     }
 
     /**
@@ -451,9 +443,7 @@
 
             _start_word_recognition(session, list, confidence, callback, sr)
 
-        }).fail(function (error) {
-            console.log("An error occurred:", error);
-        });
+        }).fail(log_error)
         if (destruct) {
             self.addDestructor(function () {
                 _destroy_robot_listen(session, blockID) //create the destructor
@@ -471,9 +461,7 @@
         session.service("ALBasicAwareness").then(function (ba) {
             ba.startAwareness()
             _start_perception(session, callback, ba)
-        }).fail(function (error) {
-            console.log("An error occurred:", error)
-        })
+        }).fail(log_error)
         if (destruct) {
             self.addDestructor(function () {
                 _destroy_perception(session)
