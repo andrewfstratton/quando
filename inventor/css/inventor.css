@@ -249,6 +249,7 @@ select.quando-toggle {
   background-color: lightblue;
 }
 
+/* Fix for iOS */
 ::-webkit-scrollbar {
     width: 15px;
     height: 15px;
@@ -264,3 +265,8 @@ select.quando-toggle {
 ::-webkit-scrollbar-track {
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.2); 
 } 
+
+/* Fix for Firefox */
+input[type=number] { 
+  -moz-appearance: textfield;
+}
