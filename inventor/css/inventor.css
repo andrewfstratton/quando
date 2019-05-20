@@ -116,6 +116,7 @@ input, #_hidden_width_element_ {
   width: max-content;
   height: max-content;
   margin: 0px 0px 4px 0px;
+  position:relative;
 }
 
 .quando-block:hover {
@@ -128,7 +129,9 @@ input, #_hidden_width_element_ {
 }
 
 .quando-left {
-  position:relative;
+  position:absolute;
+  top:0px;
+  left:0px;
   float:left;
   z-index:1;
   width: 8px;
