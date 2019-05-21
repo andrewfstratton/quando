@@ -5,7 +5,8 @@
     }
     let self = quando.robot = {}
     let state = { // holds the requested state
-        hand : {}
+        hand : { left:{}, right:{}},
+        head : { yaw: {}, pitch: {}}
     }
 
     class vocabList {
@@ -72,19 +73,12 @@
                 "halfway": "-30",
                 "maximum": "-60",
             }
-        },
-        "head": {
-            "up": {
-                "joint": "HeadPitch",
-            },
-            "out": {
-                "joint": "HeadYaw",
-            }
         }
     };
 
     function log_error(err) {
         console.log("Error: " + err)
+        setTimeout(updateRobot, 1000) // Try again in a second...
     }
 
     function helper_ConvertAngle(angle) {
@@ -112,14 +106,14 @@
                                 }
                             })
                         }).fail(log_error)
-                        });
                     });
                 });
+            });
         }).fail(log_error)
     }
 
-    function nao_disconnect(robotIp) {
-        setTimeout(() => { self.connect(robotIp) }, 1000);
+    function nao_reconnect(robotIp) {
+        setTimeout(() => { self.connect(robotIp) }, 1000)
     }
 
     function waitForSayFinish() {
@@ -177,18 +171,19 @@
         if (value == "disabled" || value == "Stand")
             return true;
     }
-
-    self.connect = function (robotIp) {
-        session = new QiSession(robotIp);
-        globalIP = robotIp;
-        session.socket().on('connect', function () {
-            console.log('QiSession connected!');
-            set_up();
-            execute_event_listeners();
-        }).on('disconnect', function () {
-            console.log('QiSession disconnected!');
-            nao_disconnect(globalIP);
-        });
+    
+    self.connect = (robotIP) => {
+        session = new QiSession(robotIP)
+        session.socket().on('connect', () => {
+            console.log('QiSession connected!')
+            set_up()
+            execute_event_listeners()
+        }).on('disconnect', () => {
+            console.log('QiSession disconnected!')
+            nao_reconnect(robotIP)
+        }).on('connect_error', () => {
+            nao_reconnect(robotIP)
+        })
     }
 
     self.say = (text, interrupt=false) => {
@@ -202,30 +197,37 @@
         }).fail(log_error)
     }
 
-    self.moveHead = function (direction, angle) {
-        var head;
-        switch (direction) {
-            case 'down':
-                head = 'HeadPitch';
-                break;
-            case 'up':
-                head = 'HeadPitch';
-                angle = -angle;
-                break;
-            case 'left':
-                head = 'HeadYaw';
-                break;
-            case 'right':
-                head = 'HeadYaw';
-                angle = -angle;
-                break;
+    self.turnHead = (left_right, middle, range, speed, normal_inverted, val) => {
+        let min = helper_ConvertAngle(middle - range)
+        let max = helper_ConvertAngle(middle + range)
+        if (!normal_inverted) { val = 1-val }
+        let radians = min + (val * (max-min))
+        if (left_right) { // Yaw
+            state.head.yaw.angle = radians
+            state.head.yaw.speed = speed
+        } else { // Pitch
+            state.head.pitch.angle = radians
+            state.head.pitch.speed = speed
         }
-        session.service("ALMotion").then(function (motion) {
-            newAngle = helper_ConvertAngle(angle);
-            motion.setAngles(head, newAngle, 0.5);
-        }).fail(function (error) {
-            console.log("An error occurred:", error);
-        });
+    }
+
+    function updateYawPitch(motion, direction, yaw_pitch) {
+        if (yaw_pitch.angle && (yaw_pitch.angle !== yaw_pitch.last_angle)) { // update yaw
+            motion.killTasksUsingResources([direction]) // Kill any current motions
+            motion.setAngles(direction, yaw_pitch.angle, yaw_pitch.speed/100)
+            yaw_pitch.last_angle = yaw_pitch.angle
+            yaw_pitch.angle = false
+        }
+    }
+
+    function updateRobot() {
+        session.service("ALMotion").then((motion) => {
+            updateYawPitch(motion, 'HeadYaw', state.head.yaw)
+            updateYawPitch(motion, 'HeadPitch', state.head.pitch)
+            updateHand(motion, 'LHand', state.hand.left)
+            updateHand(motion, 'RHand', state.hand.right)
+            setTimeout(updateRobot, 1000/25) // i.e. x times per second
+        }).fail(log_error)
     }
 
     self.moveArm = function (arm, direction, angle) {
@@ -250,22 +252,24 @@
 
     self.changeHand = (left, open) => {
         if (left) {
-            if (state.hand.left === open) { return }
-            state.hand.left = open
+            state.hand.left.open = open
         } else { // right
-            if (state.hand.right === open) { return }
-            state.hand.right = open
+            state.hand.right.open = open
         }
-        let hand = left?'LHand':'RHand'
-        session.service("ALMotion").then((motion) => {
-            // Kill any current motions
-            motion.killTasksUsingResources([hand])
-            if (open) {
+    }
+
+    function updateHand(motion, hand, left_right) {
+        if ((typeof left_right.open === "boolean")
+            && (left_right.open !=  left_right.last_open)) { // update
+            motion.killTasksUsingResources([hand]) // Kill any current motions
+            if (left_right.open) {
                 motion.openHand(hand)
             } else {
                 motion.closeHand(hand)
             }
-        }).fail(log_error)
+            left_right.last_open = left_right.open
+            left_right.open = null // clear it...
+        }
     }
 
     self.personPerception = function (callback, destruct = true) {
@@ -535,4 +539,6 @@
             _destroy_touchEvents()
         })
     }
+
+    setTimeout(updateRobot, 1000) // Start in a second
 })()
