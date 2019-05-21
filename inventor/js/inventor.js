@@ -511,7 +511,8 @@ self.setup = () => {
       for (let item of document.getElementsByClassName("quando-block")) {
         self.setElementHandlers(item)
       }
-      let first_title = document.getElementsByClassName("quando-title")[0]
+      let first_title = document.getElementsByClassName("quando-title")[2]
+      // the third title is after scratch pad and the hidden (copied) title
       if (first_title) {
         _leftClickTitle(first_title)
       }
