@@ -335,20 +335,22 @@ function _setupDragula() {
     elem.disabled = true
   }
   let script = document.getElementById('script')
+  let scratch = document.getElementById('scratch')
   let collections = []
   collections.push(script)
   collections.push(menu)
+  collections.push(scratch)
   let options = {}
   options.removeOnSpill = true
-  options.copy = function (elem, source) {
+  options.copy = (elem, source) => {
     return source === menu
   }
-  options.isContainer = function (el) {
+  options.isContainer = (el) => {
     return el.classList.contains('quando-box')
   }
-  options.accepts = function (elem, target) {
+  options.accepts = (elem, target) => {
     let accept = true
-    if (target === script) {
+    if ((target === script) || (target === scratch)) {
       // accept = true
     } else if (target === menu) {
       accept = false
@@ -390,9 +392,9 @@ function _setupDragula() {
   options.invalid = (elem, handle) => {
     return elem.classList.contains("quando-title")
   }
-  self.drake = dragula(collections, options).on('drop', function (elem) {
+  self.drake = dragula(collections, options).on('drop', (elem) => {
     self.setElementHandlers(elem)
-  }).on('cloned', function (clone, old, type) {
+  }).on('cloned', (clone, old, type) => {
     if (type == 'copy') {
       self.copyBlock(old, clone)
     }
@@ -476,10 +478,10 @@ self.setup = () => {
             title = block.class
             elem.classList.add('quando-' + title)
             elem.innerHTML = block.name
+            elem.style.display = ''
             if (title == 'test') {
               elem.id = "inventor_test"
             }
-            elem.style.display = ''
           } else {
             let tmp = document.createElement('div')
             tmp.innerHTML = block.html

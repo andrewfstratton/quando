@@ -69,19 +69,20 @@ input, #_hidden_width_element_ {
 }
 
 #menu {
-  position:relative;
   float: left;
   width: 35%;
   background-color: #ffffff;
 }
 
 #script {
-  position:relative;
-  width:100%;
   background-color: #ffeeee;
 }
 
-#menu, #script {
+#script, #scratch {
+  width:100%;
+}
+
+#menu, #script, #scratch {
   padding: 4px;
   height: 100%;
   margin: 0 auto;
@@ -96,7 +97,8 @@ input, #_hidden_width_element_ {
   z-index:1;
 }
 
-#menu, #script, .quando-box {
+#menu, #script, #scratch, .quando-box {
+  position:relative;
   display: flex;
   flex-flow: column nowrap;
 }
@@ -199,6 +201,8 @@ input[type="color"] {
 .quando-robot { background: #bbbbdd; }
 .quando-misc { background: #6bac5e; }
 .quando-style { background: #a0a0d0; }
+.quando-test { background: #555555; }
+.quando-scratch, #scratch { background: #888888; }
 .quando-inventor-control { background: hsl(0, 50%, 90%); }
 .quando-inventor-input { background: hsl(112, 50%, 90%); }
 .quando-inventor-display { background: hsl(194, 50%, 90%); }
