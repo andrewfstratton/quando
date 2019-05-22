@@ -591,13 +591,17 @@ function _warning (message) {
     }
   }
 
-  self.loaded = (obj, modal_id, name) => {
+  self.loaded = (obj, modal_id) => {
     self.showObject(obj.script)
     _deploy = obj.deploy
+    name = obj.filename
     $(modal_id).modal('hide')
     _success('Loaded...')
     $('#local_save_key').val(name)
     $('#remote_save_key').val(name)
+    if (name == '') {
+      name = '[no file]'
+    }
     $('#file_name').html(name)
   }
 
@@ -787,6 +791,7 @@ self.handle_test = () => {
   function local_save(key, _script) {
     localStorage.setItem(key, JSON.stringify({
       deploy: _deploy,
+      filename: $('#local_save_key').val(),
       script: _script
     }))
   }
@@ -840,11 +845,7 @@ self.handle_test = () => {
   self.local_load = (key) => {
     let obj = JSON.parse(localStorage.getItem(key))
     if (obj) {
-      let name = ''
-      if (key.startsWith(PREFIX)) {
-        name = key.slice(PREFIX.length)
-      }
-      self.loaded(obj, '#local_load_modal', name)
+      self.loaded(obj, '#local_load_modal')
     } else {
       if (key == AUTOSAVE) {
         _warning('No Autosave...')
@@ -860,7 +861,8 @@ self.handle_test = () => {
       success: (res) => {
         if (res.success) {
           let script = JSON.parse(res.doc.script)
-          self.loaded(script, '#remote_load_modal', res.doc.name)
+          script.filename = res.doc.name
+          self.loaded(script, '#remote_load_modal')
         } else {
           alert('Failed to find script')
         }
