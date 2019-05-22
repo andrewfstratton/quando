@@ -127,7 +127,7 @@ input, #_hidden_width_element_ {
 
 .quando-block:hover>.quando-left,
 .quando-block:hover>*>.quando-row {
-  box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.7);
+  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.7);
 }
 
 .quando-left {
