@@ -5,7 +5,6 @@ const MemoryStore = require('memorystore')(session)
 const app = express()
 const fs = require('fs')
 const formidable = require('formidable')
-const morgan = require('morgan')
 const body_parser = require('body-parser')
 const base64Img = require('base64-img');
 const script = require('./script')
@@ -109,7 +108,7 @@ const MEDIA_MAP = {
   MEDIA_MAP['UPLOAD'] = upload
 }
 
-// app.use(morgan('dev'))
+// app.use(require('morgan')('dev'))
 
 app.use(session({
   secret: 'quando_secret',
@@ -294,6 +293,10 @@ app.post('/file/upload/*', (req, res) => {
   })
 })
 
+// Static for inventor
+app.use('/inventor', express.static(path.join(__dirname, 'inventor')))
+app.use('/favicon.ico', express.static(path.join(__dirname, 'inventor/favicon.ico')))
+
 // Static for client
 let client_dir = path.join(__dirname, 'client')
 app.use('/client/media', express.static(path.join(client_dir, 'media')))
@@ -306,6 +309,7 @@ app.use('/client/client.js', express.static(path.join(client_dir, 'client.js')))
 app.use('/client/transparent.png', express.static(path.join(client_dir, 'transparent.png')))
 app.use('/client/deployed_js', express.static(path.join(client_dir, 'deployed_js')))
 app.use('/client/client.htm', express.static(path.join(client_dir, 'client.htm')))
+app.use('/client', express.static(path.join(client_dir, 'index.html')))
 
 app.get('/client/js/:filename', (req, res) => {
   let filename = req.params.filename
@@ -340,8 +344,6 @@ app.get('/client/js', (req, res) => {
     }
   })
 })
-
-app.use('/client', express.static(path.join(client_dir, 'index.html')))
 
 app.post('/message/:id', (req, res) => {
   let id = req.params.id
@@ -464,9 +466,6 @@ app.post('/socket/:id', (req, res) => {
   io_server.broadcast(msg)
   res.json({})
 })
-
-app.use('/inventor', express.static(path.join(__dirname, 'inventor')))
-app.use('/favicon.ico', express.static(path.join(__dirname, 'inventor/favicon.ico')))
 
 app.get('/blocks', (req, res) => {
   fs.readdir(path.join(__dirname, 'blocks'), (err, folders) => {
