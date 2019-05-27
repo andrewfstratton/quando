@@ -6,7 +6,8 @@
     let self = quando.robot = {}
     let state = { // holds the requested state
         hand : { left:{}, right:{}},
-        head : { yaw: {}, pitch: {}}
+        head : { yaw: {}, pitch: {}},
+        shoulder : { left: {roll: {}, pitch: {}}, right: {roll: {}, pitch: {}}}
     }
 
     class vocabList {
@@ -197,12 +198,12 @@
         }).fail(log_error)
     }
 
-    self.turnHead = (left_right, middle, range, speed, normal_inverted, val) => {
+    self.turnHead = (yaw, middle, range, speed, normal_inverted, val) => {
         let min = helper_ConvertAngle(middle - range)
         let max = helper_ConvertAngle(middle + range)
         if (!normal_inverted) { val = 1-val }
         let radians = min + (val * (max-min))
-        if (left_right) { // Yaw
+        if (yaw) { // Yaw
             state.head.yaw.angle = radians
             state.head.yaw.speed = speed
         } else { // Pitch
