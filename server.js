@@ -18,6 +18,18 @@ const ubit = require('./server/ubit')
 const net = require('net')
 const dns = require('dns')
 
+  function fail(response, msg) {
+    response.json({'success': false, 'message': msg})
+  }
+
+  function success(response, obj = false) {
+    if (!obj) {
+      obj = {}
+    }
+    obj.success = true
+    response.json(obj)
+  }
+
 //Watson services
 const TextToSpeechV1 = require('watson-developer-cloud/text-to-speech/v1');
 const tts = new TextToSpeechV1({
@@ -42,7 +54,7 @@ var toneAnalyzer = new ToneAnalyzerV3({
 var SpeechToTextV1 = require('watson-developer-cloud/speech-to-text/v1');
 var stt = new SpeechToTextV1({
   iam_apikey: 'WiLEvMCQ1hPxKRYtpFo98jYg6jsc2QSnEHx2hfsYiseu',
-  url: 'https://gateway-lon.watsonplatform.net/speech-to-text/api'
+ url: 'https://gateway-lon.watsonplatform.net/speech-to-text/api'
 });
 
 let port = process.env.PORT || 80
@@ -54,7 +66,7 @@ if (appEnv.isLocal == false) { // i.e. if running on cloud server
   console.log("INFO: Running as Hub, port="+port)
 }
 
-let drop_client = (client) => {
+function drop_client(client) {
   let index = io.clients.indexOf(client)
   if (index != -1) {
     io.clients.splice(index, 1) // unlike delete, remove the array entry, rather than set to null
@@ -130,9 +142,9 @@ app.use('/', (req, res, next) => {
 app.use('/', express.static(path.join(__dirname, 'hub')))
 app.get('/login', (req, res) => {
   if ((req.session) && (req.session.user)) {
-    res.json({ 'success': true, 'userid': req.session.user.id })
+    success(res, {'userid': req.session.user.id})
   } else {
-    res.json({ 'success': false, 'message': 'Not Logged In' })
+    fail(res, 'Not Logged In')
   }
 })
 
@@ -146,72 +158,72 @@ app.post('/login', (req, res) => {
   if (body.userid && body.password) {
     user.getOnIdPassword(body.userid, body.password).then((result) => {
       req.session.user = result
-      res.json({ 'success': true })
+      success(res)
     }, (err) => {
-      res.json({ 'success': false, 'message': 'Login Failed, please try again' + err })
+      fail(res, 'Login Failed, please try again' + err)
     })
   } else {
-    res.json({ 'success': false, 'message': 'Need UserId and password' })
+    fail(res, 'Need UserId and password')
   }
 })
 
 app.delete('/login', (req, res) => {
   delete req.session.user
-  res.json({ 'success': true, 'message': 'Logged Out' })
+  success(res, {'message': 'Logged Out'})
 })
 
 app.post('/script', (req, res) => {
   script.save(req.body.name, req.body.userid, req.body.script).then(
-        (doc) => { res.json({ 'success': true }) },
-        (err) => { res.json({ 'success': false, 'message': err }) })
+    (doc) => { success(res) },
+    (err) => { fail(res, err) })
 })
 
 app.get('/script/names/:userid', (req, res) => {
   script.getNamesOnOwnerID(req.params.userid).then(
-        (list) => { res.json({ 'success': true, 'list': list }) },
-        (err) => { res.json({ 'success': false, 'message': err }) })
+    (list) => { success(res, {'list': list}) },
+    (err) => { fail(res, err) })
 })
 
 app.get('/script/id/:id', (req, res) => {
   let id = req.params.id
   script.getOnId(id).then(
-        (result) => { res.json({ 'success': true, 'doc': result }) },
-        (err) => { res.json({ 'success': false, 'message': err }) })
+    (result) => { success(res, {'doc': result }) },
+    (err) => { fail(res, err) })
 })
 
 app.delete('/script/id/:id', (req, res) => {
   let id = req.params.id
   if (!req.session.user) {
-    res.json({ 'success': false, 'message': 'Not Logged in' }) 
+    fail(res, 'Not Logged in')
   } else {
     script.deleteOnId(id).then(
-          (doc) => { res.json({ 'success': true }) },
-          (err) => { res.json({ 'success': false, 'message': err }) })
+      (doc) => { success(res) },
+      (err) => { fail(res, err) })
   }
 })
 
 app.delete('/script/name/:name', (req, res) => {
   let name = encodeURI(req.params.name)
   if (!req.session.user) {
-    res.json({ 'success': false, 'message': 'Not Logged in' }) 
+    fail(res, 'Not Logged in') 
   } else {
     let userid = req.session.user.id
     script.deleteAllOnName(userid, name).then(
-          (doc) => { res.json({ 'success': true }) },
-          (err) => { res.json({ 'success': false, 'message': err }) })
+      (doc) => { success(res) },
+      (err) => { fail(res, err) })
     }
 })
 
 app.delete('/script/tidy/:name/id/:id', (req, res) => {
   if (!req.session.user) {
-    res.json({ 'success': false, 'message': 'Not Logged in' }) 
+    fail(res, 'Not Logged in')
   } else {
     let id = req.params.id
     let userid = req.session.user.id
     let name = encodeURI(req.params.name) // N.B. Leave name encoded...
     script.tidyOnIdName(userid, id, name).then(
-          (doc) => { res.json({ 'success': true }) },
-          (err) => { res.json({ 'success': false, 'message': err }) })
+      (doc) => { success(res) },
+      (err) => { fail(res, err) })
   }
 })
 
@@ -220,10 +232,10 @@ app.put('/script/deploy/:filename', (req, res) => {
   let script = req.body.javascript
   fs.writeFile(client_deploy + filename, script, (err) => {
     if (!err) {
-      res.json({ 'success': true })
+      success(res)
       io.emit('deploy', {script: filename})
     } else {
-      res.json({ 'success': false, 'message': 'Failed to deploy script' })
+      fail(res, 'Failed to deploy script')
     }
   })
 })
@@ -251,9 +263,9 @@ app.get('/file/type/*', (req, res) => {
           }
         }
       }
-      res.json({ 'success': true, 'files': filtered, 'folders': folders })
+      success(res, {'files': filtered, 'folders': folders})
     } else {
-      res.json({ 'success': false, 'message': 'Failed to retrieve contents of folder' })
+      fail(res, 'Failed to retrieve contents of folder')
     }
   })
 })
@@ -269,9 +281,9 @@ app.post('/file/upload/*', (req, res) => {
   form.keepExtensions = true
   form.parse(req, (err, fields, files) => {
     if (err) {
-      res.json({ 'success': false, 'message': 'failed to upload' })
+      fail(res, 'failed to upload')
     } else {
-      res.json({ 'success': true })
+      success(res)
     }
   })
   form.on('fileBegin', (name, file) => {
@@ -281,15 +293,15 @@ app.post('/file/upload/*', (req, res) => {
   form.on('file', (field, file) => {
     fs.rename(file.path, path.join(form.uploadDir, file.name), (err) => {
       if (!res.headersSent) { // Fix since first response is received
-        res.json({ 'success': false, 'message': 'an error has occured with form upload' + err })
+        fail(res, 'an error has occured with form upload' + err)
       }
     })
   })
   form.on('error', (err) => {
-    res.json({ 'success': false, 'message': 'an error has occured with form upload' + err })
+    fail(res, 'an error has occured with form upload' + err)
   })
   form.on('aborted', (err) => {
-    res.json({ 'success': false, 'message': 'Upload cancelled by browser' })
+    fail(res, 'Upload cancelled by browser')
   })
 })
 
@@ -334,13 +346,10 @@ app.get('/client/js', (req, res) => {
         }
       }
       dns.lookup(require('os').hostname(), (err, host_ip) => {
-        res.json({ 'success': true, ip: host_ip, 'files': js_files })
+        success(res, {ip: host_ip, 'files': js_files})
       })
     } else {
-      res.json({
-        'success': false,
-        'message': 'Failed to retrieve contents of deployed_js folder'
-      })
+      fail(res, 'Failed to retrieve contents of deployed_js folder')
     }
   })
 })
@@ -504,12 +513,9 @@ app.get('/blocks', (req, res) => {
           }
         }
       } // for
-      res.json({ 'success': true, 'blocks': blocks })
+      success(res, {'blocks': blocks})
     } else {
-      res.json({
-        'success': false,
-        'message': 'Failed to retrieve contents of blocks folder'
-      })
+      fail(res, 'Failed to retrieve contents of blocks folder')
     }
   })
 })
@@ -540,7 +546,7 @@ app.get('/ip', (req, res) => {
     if (local) {
       local = (client_ip == host_ip) || (client_ip == '127.0.0.1')
     }
-    res.json({ 'success': true, 'ip': host_ip, 'local': local})
+    success(res, {'ip': host_ip, 'local': local})
   })
 })
 
@@ -555,15 +561,15 @@ app.post('/user', (req, res) => {
       }
       if (local) {
         user.save(body.userid, body.password).then((result) => {
-          res.json({ 'success': true })
+          success(res)
         }, (err) => {
-          res.json({ 'success': false, 'message': 'Save Error - user probably already exists...' })
+            fail(res, 'Save Error - user probably already exists...')
         })
       } else {
-        res.json({ 'success': false, 'message': 'Must be run from local server'})
+        fail(res, 'Must be run from local server')
       }
     })
   } else {
-    res.json({ 'success': false, 'message': 'Need UserId and Password' })
+    fail(res, 'Need UserId and Password')
   }
 })
