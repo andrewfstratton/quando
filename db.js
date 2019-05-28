@@ -1,9 +1,9 @@
 'use strict'
-let db = require("./modules/pouchdb")
+let db = require("./server/pouchdb")
 
 if (require('cfenv').getAppEnv().isLocal == false) {
   console.log("Using Cloudant - i.e. running on IBM Cloud")
-  db = require("./modules/cloudant")
+  db = require("./server/cloudant")
 }
 
 exports.save = (db_name, doc) => {

@@ -14,7 +14,7 @@ const path = require('path')
 const http = require('http').Server(app)
 const https = require('https')
 const io = require('socket.io')(http)
-const ubit = require('./modules/ubit')
+const ubit = require('./server/ubit')
 const net = require('net')
 const dns = require('dns')
 
@@ -333,8 +333,8 @@ app.get('/client/js', (req, res) => {
           js_files.push(files[i])
         }
       }
-      dns.lookup(require('os').hostname(), (err, add) => {
-        res.json({ 'success': true, ip: add, 'files': js_files })
+      dns.lookup(require('os').hostname(), (err, host_ip) => {
+        res.json({ 'success': true, ip: host_ip, 'files': js_files })
       })
     } else {
       res.json({
