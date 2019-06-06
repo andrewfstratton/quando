@@ -1,5 +1,5 @@
 'use strict'
-const db = require('./db')
+const db = require('./server/db')
 const COLLECTION = 'user'
 
 exports.getOnIdPassword = (id, password) => {

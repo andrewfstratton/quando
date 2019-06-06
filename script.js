@@ -1,5 +1,5 @@
 'use strict'
-const db = require('./db')
+const db = require('./server/db')
 const COLLECTION = 'script'
 
 exports.save = (name, userid, script) => {
