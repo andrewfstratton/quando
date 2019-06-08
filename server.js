@@ -14,7 +14,6 @@ const path = require('path')
 const http = require('http').Server(app)
 const https = require('https')
 const io = require('socket.io')(http)
-const ubit = require('./server/ubit')
 const net = require('net')
 const dns = require('dns')
 
@@ -497,23 +496,7 @@ app.get('/blocks', (req, res) => {
   })
 })
 
-ubit.usb(io) // sets up all the usb based micro:bit handling...
-
-app.post('/ubit/display', (req, res) => {
-  ubit.display(req.body.val)
-  res.json({})
-})
-
-app.post('/ubit/icon', (req, res) => {
-  ubit.icon(req.body.val)
-  res.json({})
-})
-
-app.post('/ubit/turn', (req, res) => {
-  let val = req.body.val
-  ubit.turn(val.servo, val.angle)
-  res.json({})
-})
+require('./server/rest/ubit')(app, io)
 
 app.get('/ip', (req, res) => {
   let client_ip = req.ip.replace('::ffff:', '')
