@@ -7,14 +7,12 @@ const fs = require('fs')
 const formidable = require('formidable')
 const body_parser = require('body-parser')
 const base64Img = require('base64-img');
-const script = require('./server/db/script')
-const client_deploy = './client/deployed_js/'
 const user = require('./server/db/user')
 const path = require('path')
 const http = require('http').Server(app)
 const https = require('https')
 const io = require('socket.io')(http)
-const net = require('net')
+// const net = require('net')
 const dns = require('dns')
 
   function fail(response, msg) {
@@ -147,74 +145,7 @@ app.use(body_parser.urlencoded({ extended: true, limit:'10mb' }))
 app.use(body_parser.json())
 
 require('./server/rest/login')(app, success, fail)
-
-app.post('/script', (req, res) => {
-  script.save(req.body.name, req.body.userid, req.body.script).then(
-    (doc) => { success(res) },
-    (err) => { fail(res, err) })
-})
-
-app.get('/script/names/:userid', (req, res) => {
-  script.getNamesOnOwnerID(req.params.userid).then(
-    (list) => { success(res, {'list': list}) },
-    (err) => { fail(res, err) })
-})
-
-app.get('/script/id/:id', (req, res) => {
-  let id = req.params.id
-  script.getOnId(id).then(
-    (result) => { success(res, {'doc': result }) },
-    (err) => { fail(res, err) })
-})
-
-app.delete('/script/id/:id', (req, res) => {
-  let id = req.params.id
-  if (!req.session.user) {
-    fail(res, 'Not Logged in')
-  } else {
-    script.deleteOnId(id).then(
-      (doc) => { success(res) },
-      (err) => { fail(res, err) })
-  }
-})
-
-app.delete('/script/name/:name', (req, res) => {
-  let name = encodeURI(req.params.name)
-  if (!req.session.user) {
-    fail(res, 'Not Logged in') 
-  } else {
-    let userid = req.session.user.id
-    script.deleteAllOnName(userid, name).then(
-      (doc) => { success(res) },
-      (err) => { fail(res, err) })
-    }
-})
-
-app.delete('/script/tidy/:name/id/:id', (req, res) => {
-  if (!req.session.user) {
-    fail(res, 'Not Logged in')
-  } else {
-    let id = req.params.id
-    let userid = req.session.user.id
-    let name = encodeURI(req.params.name) // N.B. Leave name encoded...
-    script.tidyOnIdName(userid, id, name).then(
-      (doc) => { success(res) },
-      (err) => { fail(res, err) })
-  }
-})
-
-app.put('/script/deploy/:filename', (req, res) => {
-  let filename = req.params.filename + '.js'
-  let script = req.body.javascript
-  fs.writeFile(client_deploy + filename, script, (err) => {
-    if (!err) {
-      success(res)
-      io.emit('deploy', {script: filename})
-    } else {
-      fail(res, 'Failed to deploy script')
-    }
-  })
-})
+require('./server/rest/script')(app, io, success, fail)
 
 app.get('/file/type/*', (req, res) => {
   let filename = req.params[0]
