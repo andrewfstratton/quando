@@ -3,7 +3,7 @@ let db = require("./pouchdb")
 
 if (require('cfenv').getAppEnv().isLocal == false) {
   console.log("Using Cloudant - i.e. running on IBM Cloud")
-  db = require("./server/cloudant")
+  db = require("./cloudant")
 }
 
 exports.save = (db_name, doc) => {

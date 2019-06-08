@@ -140,37 +140,14 @@ app.use('/', (req, res, next) => {
   next()
 })
 app.use('/', express.static(path.join(__dirname, 'hub')))
-app.get('/login', (req, res) => {
-  if ((req.session) && (req.session.user)) {
-    success(res, {'userid': req.session.user.id})
-  } else {
-    fail(res, 'Not Logged In')
-  }
-})
 
 //increased limit of bp to allow for visrec 
 app.use(body_parser.json({ limit: '10mb' }));
 app.use(body_parser.urlencoded({ extended: true, limit:'10mb' }))
 
 app.use(body_parser.json())
-app.post('/login', (req, res) => {
-  let body = req.body
-  if (body.userid && body.password) {
-    user.getOnIdPassword(body.userid, body.password).then((result) => {
-      req.session.user = result
-      success(res)
-    }, (err) => {
-      fail(res, 'Login Failed, please try again' + err)
-    })
-  } else {
-    fail(res, 'Need UserId and password')
-  }
-})
 
-app.delete('/login', (req, res) => {
-  delete req.session.user
-  success(res, {'message': 'Logged Out'})
-})
+require('./server/rest/login')(app, success, fail)
 
 app.post('/script', (req, res) => {
   script.save(req.body.name, req.body.userid, req.body.script).then(
