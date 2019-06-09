@@ -1,31 +1,29 @@
 'use strict'
 const express = require('express')
+const express_static = express.static
 const session = require('express-session')
 const MemoryStore = require('memorystore')(session)
 const app = express()
 const fs = require('fs')
-const formidable = require('formidable')
 const body_parser = require('body-parser')
 const base64Img = require('base64-img');
-const user = require('./server/db/user')
 const path = require('path')
+const join = path.join
 const http = require('http').Server(app)
 const https = require('https')
 const io = require('socket.io')(http)
-// const net = require('net')
-const dns = require('dns')
 
-  function fail(response, msg) {
-    response.json({'success': false, 'message': msg})
-  }
+function fail(response, msg) {
+  response.json({'success': false, 'message': msg})
+}
 
-  function success(response, obj = false) {
-    if (!obj) {
-      obj = {}
-    }
-    obj.success = true
-    response.json(obj)
+function success(response, obj = false) {
+  if (!obj) {
+    obj = {}
   }
+  obj.success = true
+  response.json(obj)
+}
 
 //Watson services
 const TextToSpeechV1 = require('watson-developer-cloud/text-to-speech/v1');
@@ -102,7 +100,7 @@ let server = http.listen(port, () => {
   })
 })
 
-const MEDIA_FOLDER = path.join(__dirname, 'client', 'media')
+const MEDIA_FOLDER = join(__dirname, 'client', 'media')
 const MEDIA_MAP = {
   //TODO - refactor to videos & images
   'video': ['ogg', 'ogv', 'mp4', 'webm'],
@@ -136,7 +134,7 @@ app.use('/', (req, res, next) => {
     // console.log(">>" + JSON.stringify(req.session.user))
   next()
 })
-app.use('/', express.static(path.join(__dirname, 'hub')))
+app.use('/', express_static(join(__dirname, 'hub')))
 
 //increased limit of bp to allow for visrec 
 app.use(body_parser.json({ limit: '10mb' }));
@@ -146,145 +144,15 @@ app.use(body_parser.json())
 
 require('./server/rest/login')(app, success, fail)
 require('./server/rest/script')(app, io, success, fail)
-
-app.get('/file/type/*', (req, res) => {
-  let filename = req.params[0]
-  let media = path.basename(filename)
-  let folder = filename.substring(0, filename.length - media.length)
-  let folderpath = path.join(MEDIA_FOLDER, folder)
-  let suffixes = MEDIA_MAP[media] // these are the relevant filename endings - excluding the '.'
-  fs.readdir(folderpath, (err, files) => {
-    if (!err) {
-      let filelist = files.toString().split(',')
-      let filtered = []
-      let folders = []
-      for (let i in filelist) {
-        let stat = fs.statSync(path.join(folderpath, filelist[i]))
-        if (stat.isDirectory()) {
-          folders.push(filelist[i])
-        } else {
-          for (let s in suffixes) {
-            if (filelist[i].toLowerCase().endsWith('.' + suffixes[s])) {
-              filtered.push(filelist[i])
-            }
-          }
-        }
-      }
-      success(res, {'files': filtered, 'folders': folders})
-    } else {
-      fail(res, 'Failed to retrieve contents of folder')
-    }
-  })
-})
-
-app.post('/file/upload/*', (req, res) => {
-  let filename = req.params[0]
-  let media = path.basename(filename)
-  let folder = filename.substring(0, filename.length - media.length)
-  let form = new formidable.IncomingForm()
-  // form.encoding = 'utf-8'
-  form.multiples = true
-  form.uploadDir = path.join(MEDIA_FOLDER, folder)
-  form.keepExtensions = true
-  form.parse(req, (err, fields, files) => {
-    if (err) {
-      fail(res, 'failed to upload')
-    } else {
-      success(res)
-    }
-  })
-  form.on('fileBegin', (name, file) => {
-    const [fileName, fileExt] = file.name.split('.')
-    file.path = path.join(form.uploadDir, `${fileName}_${new Date().getTime()}.${fileExt}`)
-  })
-  form.on('file', (field, file) => {
-    fs.rename(file.path, path.join(form.uploadDir, file.name), (err) => {
-      if (!res.headersSent) { // Fix since first response is received
-        fail(res, 'an error has occured with form upload' + err)
-      }
-    })
-  })
-  form.on('error', (err) => {
-    fail(res, 'an error has occured with form upload' + err)
-  })
-  form.on('aborted', (err) => {
-    fail(res, 'Upload cancelled by browser')
-  })
-})
+require('./server/rest/file')(app, MEDIA_FOLDER, MEDIA_MAP, path, success, fail)
 
 // Static for inventor
-app.use('/inventor', express.static(path.join(__dirname, 'inventor')))
-app.use('/favicon.ico', express.static(path.join(__dirname, 'inventor/favicon.ico')))
+app.use('/inventor', express_static(join(__dirname, 'inventor')))
+app.use('/favicon.ico', express_static(join(__dirname, 'inventor/favicon.ico')))
 
-// Static for client
-let client_dir = path.join(__dirname, 'client')
-app.use('/client/media', express.static(path.join(client_dir, 'media')))
-app.use('/client/modules', express.static(path.join(client_dir, 'modules')))
-app.use('/client/lib', express.static(path.join(client_dir, 'lib')))
-app.use('/client/setup', express.static(path.join(client_dir, 'setup.html')))
-app.use('/client/client.css', express.static(path.join(client_dir, 'client.css')))
-app.use('/client/setup.css', express.static(path.join(client_dir, 'setup.css')))
-app.use('/client/client.js', express.static(path.join(client_dir, 'client.js')))
-app.use('/client/transparent.png', express.static(path.join(client_dir, 'transparent.png')))
-app.use('/client/deployed_js', express.static(path.join(client_dir, 'deployed_js')))
-app.use('/client/client.htm', express.static(path.join(client_dir, 'client.htm')))
-app.use('/client', express.static(path.join(client_dir, 'index.html')))
-
-app.get('/client/js/:filename', (req, res) => {
-  let filename = req.params.filename
-  fs.readFile('./client/client.htm', 'utf8', (err, data) => {
-    if (err) {
-      res.redirect('/client/setup')
-    } else {
-      res.write(data.replace(/\[\[TITLE\]\]/,
-                filename.replace(/\.js/, '')).replace(/\[\[DEPLOYED_JS\]\]/, filename))
-      res.end()
-    }
-  })
-})
-
-app.get('/client/js', (req, res) => {
-  fs.readdir(path.join(__dirname, 'client', 'deployed_js'), (err, files) => {
-    if (!err) {
-      let js_files = []
-      for(let i=0; i<files.length; i++) {
-        if (files[i].endsWith(".js")) {
-          js_files.push(files[i])
-        }
-      }
-      dns.lookup(require('os').hostname(), (err, host_ip) => {
-        success(res, {ip: host_ip, 'files': js_files})
-      })
-    } else {
-      fail(res, 'Failed to retrieve contents of deployed_js folder')
-    }
-  })
-})
-
-app.post('/message/:id', (req, res) => {
-  let id = req.params.id
-  let val = req.body.val
-  let host = req.body.host
-  if (host) {
-    let data = JSON.stringify({'val':val})
-    let options = { hostname: host, port: 443, path: '/message/'+id, method: 'POST',
-      headers: {
-        'Content-Type': 'application/json', 'Content-Length': data.length
-      }
-    }
-    let req = https.request(options, (res) => {
-      res.on('data', (d) => {})
-    })
-    req.on('error', (error) => {
-      console.error(error)
-    })
-    req.write(data)
-    req.end()
-  } else {
-    io.emit(id, {'val': val})
-  }
-  res.json({})
-})
+const client_dir = join(__dirname, 'client')
+require('./server/rest/client')(app, client_dir, express_static, join, success, fail)
+require('./server/rest/message')(app, io, https)
 
 //WATSON SERVICES
 
@@ -383,84 +251,7 @@ app.post('/socket/:id', (req, res) => {
   res.json({})
 })
 
-app.get('/blocks', (req, res) => {
-  fs.readdir(path.join(__dirname, 'blocks'), (err, folders) => {
-    if (!err) {
-      let blocks = []
-      for(let folder of folders) {
-        let menu = {title:true}
-        let parts = folder.split('_')
-        parts.shift() // drop the number
-        let name = ''
-        let cls = ''
-        for(let part of parts) {
-          cls += part + '-'
-          name += part.charAt(0).toUpperCase() + part.slice(1) + ' '
-        }
-        menu.name = name.slice(0, -1)
-        menu.class = cls.slice(0, -1)
-        menu.folder = folder
-        blocks.push(menu)
-        let files = fs.readdirSync(path.join(__dirname, 'blocks', folder))
-        if (files) {
-          let failed = false
-          for(let file of files) {
-            if (!failed && file.endsWith('.htm')) {
-              let block = {title:false}
-              block.type = file.substring(file.indexOf('_') + 1).slice(0, -4) // drop the number, and the '.htm'
-              block.type = block.type.replace(/_/g, '-') // turn _ based filename into - based attribute
-              let contents = fs.readFileSync(path.join(__dirname, 'blocks', folder, file))
-              if (contents) {
-                block.html = contents.toString('utf8')
-              } else {
-                failed = true
-              }
-              blocks.push(block)
-            }
-          }
-        }
-      } // for
-      success(res, {'blocks': blocks})
-    } else {
-      fail(res, 'Failed to retrieve contents of blocks folder')
-    }
-  })
-})
-
+require('./server/rest/blocks')(app, __dirname, join, success, fail)
 require('./server/rest/ubit')(app, io)
-
-app.get('/ip', (req, res) => {
-  let client_ip = req.ip.replace('::ffff:', '')
-  dns.lookup(require('os').hostname(), (err, host_ip) => {
-    console.log('Access Server IP: ' + host_ip + ' from Client IP: ' + client_ip)
-    let local = appEnv.isLocal // false when running on cloud server
-    if (local) {
-      local = (client_ip == host_ip) || (client_ip == '127.0.0.1')
-    }
-    success(res, {'ip': host_ip, 'local': local})
-  })
-})
-
-app.post('/user', (req, res) => {
-  let body = req.body
-  if (body.userid && body.password) {
-    let client_ip = req.ip.replace('::ffff:', '')
-    dns.lookup(require('os').hostname(), (err, host_ip) => {
-      let local = appEnv.isLocal // false when running on cloud server
-      if (local) {
-        local = (client_ip == host_ip) || (client_ip == '127.0.0.1')
-      }
-      if (local) {
-        user.save(body.userid, body.password).then((result) => {
-          success(res)
-        }, (err) => {
-            fail(res, 'Save Error - user probably already exists...')
-        })
-      } else {
-        fail(res, 'Must be run from local server')
-      }
-    })
-  } else {
-    fail(res, 'Need UserId and Password')
-  }
-})
+require('./server/rest/ip')(app, appEnv, success, fail)
+require('./server/rest/user')(app, appEnv, success, fail)

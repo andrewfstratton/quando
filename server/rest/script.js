@@ -1,3 +1,4 @@
+const fs = require('fs')
 const script = require('../db/script')
 const client_deploy = './client/deployed_js/'
 
