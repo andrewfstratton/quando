@@ -223,6 +223,36 @@ function _handleListNameChange(event) {
   }
 }
 
+self.saveIP = () => {
+  //get value of the first input field in the drag n drop window
+  let inpFields = document.getElementsByClassName("ip_inp")
+  let newIP = inpFields[1].value
+  //get IP's array from local storage
+  let ips = JSON.parse(localStorage.getItem('ips'))
+  if (!ips) {
+    ips = []
+  }
+  //ADD & SAVE NEW IP
+  ips.unshift(newIP)
+  localStorage.setItem('ips', JSON.stringify(ips))
+  _updateIPList()
+  inpFields[1].value = ""
+}
+
+function _updateIPList() {
+  let ips = JSON.parse(localStorage.getItem('ips'))
+  if (ips) { //populate ALL select lists
+    let selects = document.getElementsByClassName("ip_select")
+    let add_to_select = ''
+    for (let x = 0; x < ips.length; x++) {
+      add_to_select += `<option value="${ips[x]}">${ips[x]}</option>\n`
+    }
+    for (let select of selects) {
+    select.innerHTML = add_to_select
+    }
+  }
+}
+
 function _resizeWidth(event) {
     let target = event.target
     let hidden = document.getElementById('_hidden_width_element_')
@@ -418,6 +448,8 @@ self.setup = () => {
     } else {
       localStorage.removeItem(AUTOSAVE)
     }
+  //OK this is bad but temporary my bad
+  _updateIPList()
   }
 
   toastr.options = {
