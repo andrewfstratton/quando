@@ -541,5 +541,19 @@
         })
     }
 
+    self.touchFoot = (location, callback) => {
+        const suffix = 'BumperPressed'
+        if (['Left', 'Right'].includes(location)) {
+            _start_touchEvents(session, location + suffix, callback)
+        } else if (location == 'Either') {
+            _start_touchEvents(session, 'Left' + suffix, callback)
+            _start_touchEvents(session, 'Right' + suffix, callback)
+        } else return
+
+        quando.destructor.add(() => {
+            _destroy_touchEvents()
+        })
+    }
+
     setTimeout(updateRobot, 1000) // Start in a second
 })()
