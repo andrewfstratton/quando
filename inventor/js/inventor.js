@@ -233,6 +233,7 @@ self.saveIP = () => {
   let ips = JSON.parse(ipsRaw)
   if (!ips) {
     ips = []
+    ipsRaw = ""
   }
   //ADD & SAVE NEW IP
   if (!ipsRaw.includes(newIP)) {
@@ -289,6 +290,10 @@ self.setElementHandlers = (block) => {
     elem.addEventListener('click', self.handleToggle, true)
     self.toggleRelativesOnElement(elem)
     elem.addEventListener('mousedown', (ev)=>{ev.preventDefault();return false})
+  }
+  //add update handler for IP datalist on click
+  for (let elem of block.querySelectorAll("#robot_ip")) {
+    elem.addEventListener('click', _updateIPList)
   }
   // set auto resize for input fields
   let inputs = block.querySelectorAll("input[type='text']")
