@@ -202,9 +202,9 @@
         session.service("ALTextToSpeech").then((tts) => {
             tts.setParameter("pitchShift", pitch)
             tts.setParameter("speed", speed)
-            tts.setParameter("doubleVoice", 1)
-            tts.setParameter("doubleVoiceLevel", 0.5)
-            tts.setParameter("doubleVoiceTimeShift", 0.1)
+            tts.setParameter("doubleVoice", dblPitch)
+            tts.setParameter("doubleVoiceLevel", dblLvl)
+            tts.setParameter("doubleVoiceTimeShift", dblTimeShift)
         }).fail(log_error)
     }
 
