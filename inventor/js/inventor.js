@@ -302,9 +302,6 @@ self.copyBlock = (old, clone) => {
   for(let elem of clone.querySelectorAll("input, select")) {
     elem.disabled = false
   }
-  for(let elem of clone.querySelectorAll(".quando-box")) {
-    elem.style.minHeight = "36px"
-  }
 }
 
 self.removeBlock = (elem) => {
