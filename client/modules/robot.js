@@ -426,7 +426,6 @@
         })
         session.service("ALBasicAwareness").then(function (ba) {
             ba.stopAwareness()
-            _start_perception(session, callback, ba)
         }).fail(log_error)
     }
 
