@@ -262,15 +262,15 @@
     }
 
     self.stepForwards = function (steps, direction) {
-        const stepLength = 0.1; //in M
-        session.service("ALMotionProxy").then(function(mProxy) {
+        const stepLength = 0.025; //in M
+        session.service("ALMotion").then(function(mProxy) {
             mProxy.moveTo(steps * stepLength * direction, 0, 0)
         })
     }
 
     self.rotateBody = function (angle, direction) { //angle in degrees
         angle = helper_ConvertAngleToRads(angle)
-        session.service("ALMotionProxy").then(function(mProxy) {
+        session.service("ALMotion").then(function(mProxy) {
             mProxy.moveTo(0, 0, angle * direction)
         })
     }
