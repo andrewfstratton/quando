@@ -200,7 +200,7 @@
 
     self.changeVoice = (pitch, dblPitch = 0, dblLvl = 0, dblTimeShift = 0) => {
         session.service("ALTextToSpeech").then((tts) => {
-            tts.setParamater("pitchShift", pitch)
+            tts.setParameter("pitchShift", pitch)
             tts.setParameter("doubleVoice", 1)
             tts.setParameter("doubleVoiceLevel", 0.5)
             tts.setParameter("doubleVoiceTimeShift", 0.1)
