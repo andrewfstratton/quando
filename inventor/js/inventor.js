@@ -227,16 +227,19 @@ self.saveIP = () => {
   //get value of the first input field in the drag n drop window
   let inpFields = document.getElementsByClassName("ip_inp")
   let newIP = inpFields[1].value
+  alert(newIP)
   //get IP's array from local storage
-  let ips = JSON.parse(localStorage.getItem('ips'))
+  let ipsRaw = localStorage.getItem('ips')
+  let ips = JSON.parse(ipsRaw)
   if (!ips) {
     ips = []
   }
   //ADD & SAVE NEW IP
-  ips.unshift(newIP)
-  localStorage.setItem('ips', JSON.stringify(ips))
-  _updateIPList()
-  inpFields[1].value = ""
+  if (!ipsRaw.includes(newIP)) {
+    ips.unshift(newIP)
+    localStorage.setItem('ips', JSON.stringify(ips))
+    _updateIPList()
+  }
 }
 
 function _updateIPList() {
@@ -441,6 +444,8 @@ function _setupDragula() {
 }
 
 self.setup = () => {
+  //OK this is bad but temporary my bad
+  _updateIPList()
   window.onbeforeunload = () => {
     let obj = self.getScriptAsObject()
     if (obj.length) {
@@ -448,8 +453,6 @@ self.setup = () => {
     } else {
       localStorage.removeItem(AUTOSAVE)
     }
-  //OK this is bad but temporary my bad
-  _updateIPList()
   }
 
   toastr.options = {
