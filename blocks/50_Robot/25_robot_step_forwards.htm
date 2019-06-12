@@ -1,5 +1,7 @@
 <div class="quando-block"
-data-quando-javascript="quando.robot.stepForwards(${steps}, ${direction})">
+data-quando-javascript="quando.robot.stepForwards(${steps}, ${direction}, ${interrupt}, (()=>{
+  ${box}
+  }))">
   <div class="quando-left quando-robot"></div>
   <div class="quando-right">
     <div class="quando-row quando-robot">
@@ -10,6 +12,20 @@ data-quando-javascript="quando.robot.stepForwards(${steps}, ${direction})">
       </select>
       <input data-quando-name="steps" type="text" value="1" data-quando-encode="normal"/>
       step(s)
+      <select data-quando-name="extras" class="quando-toggle">
+        <option value="hidden">+</option>
+        <option value="show">-</option>
+      </select>
+      <span data-quando-toggle="extras=show">
+        <br>
+        <select data-quando-name="interrupt" class="quando-toggle">
+          <option value="true">Interrupt</option>
+          <option value="false">Buffer</option>
+        </select>
+        ... then, When finished
+      </span>
     </div>
+    <div data-quando-name="box" class="quando-box" data-quando-toggle="extras=show"></div>
+    <div class="quando-row quando-robot" data-quando-toggle="extras=show"></div>
   </div>
 </div>

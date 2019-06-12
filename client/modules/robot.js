@@ -232,12 +232,27 @@
         }
     }
 
+    function updateMovement(motion) {
+        motion.moveIsActive().then((active) => {
+            if (motionSequence.length) {
+                if (active && motionInterrupt) motion.stopMove()
+                
+                if (!active) {
+                    motionSequence[0]()
+                    motionSequence.shift()
+                }
+            }
+        })
+    }
+
     function updateRobot() {
         session.service("ALMotion").then((motion) => {
             updateYawPitch(motion, 'HeadYaw', state.head.yaw)
             updateYawPitch(motion, 'HeadPitch', state.head.pitch)
             updateHand(motion, 'LHand', state.hand.left)
             updateHand(motion, 'RHand', state.hand.right)
+            updateMovement(motion)
+            
             setTimeout(updateRobot, 1000/25) // i.e. x times per second
         }).fail(log_error)
     }
@@ -262,17 +277,32 @@
         }).fail(log_error)
     }
 
-    self.stepForwards = function (steps, direction) {
+    let motionSequence = []
+    let motionInterrupt = true
+
+    self.stepForwards = function (steps, direction, interrupt = false, callback) {
         const stepLength = 0.025; //in M
-        session.service("ALMotion").then(function(mProxy) {
-            mProxy.moveTo(steps * stepLength * direction, 0, 0)
+
+        if (interrupt) motionSequence = []
+        motionInterrupt = interrupt
+        motionSequence.push(() => {
+            session.service("ALMotion").then(function(mProxy) {
+                mProxy.moveTo(steps * stepLength * direction, 0, 0)
+                mProxy.waitUntilMoveIsFinished().done(callback).fail(log_error)
+            })
         })
     }
 
-    self.rotateBody = function (angle, direction) { //angle in degrees
+    self.rotateBody = function (angle, direction, interrupt = false, callback) { //angle in degrees
         angle = helper_ConvertAngleToRads(angle)
-        session.service("ALMotion").then(function(mProxy) {
-            mProxy.moveTo(0, 0, angle * direction)
+
+        if (interrupt) motionSequence = []
+        motionInterrupt = interrupt
+        motionSequence.push(() => {
+            session.service("ALMotion").then(function(mProxy) {
+                mProxy.moveTo(0, 0, angle * direction)
+                mProxy.waitUntilMoveIsFinished().done(callback).fail(log_error)
+            })
         })
     }
 
@@ -430,7 +460,7 @@
         session.service("ALMemory").then(function (ALMemory) {
             ALMemory.subscriber("ALBasicAwareness/HumanTracked").then(function (sub) {
                 sub.signal.connect(function (state) {
-                    callback()
+                    if (state != -1) callback()
                 }).then(function (processID) {
                     disconnectPerception = () => {
                         sub.signal.disconnect(processID)
