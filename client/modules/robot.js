@@ -82,7 +82,7 @@
         setTimeout(updateRobot, 1000) // Try again in a second...
     }
 
-    function helper_ConvertAngle(angle) {
+    function helper_ConvertAngleToRads(angle) { //from degree to rads
         return angle * (Math.PI / 180)
     }
 
@@ -198,9 +198,20 @@
         }).fail(log_error)
     }
 
+    self.changeVoice = (pitch, speed, dblPitch = 0, dblLvl = 0, dblTimeShift = 0) => {
+        session.service("ALTextToSpeech").then((tts) => {
+            tts.setParameter("pitchShift", pitch)
+            tts.setParameter("speed", speed)
+            tts.setParameter("doubleVoice", dblPitch)
+            tts.setParameter("doubleVoiceLevel", dblLvl)
+            tts.setParameter("doubleVoiceTimeShift", dblTimeShift)
+        }).fail(log_error)
+    }
+
+
     self.turnHead = (yaw, middle, range, speed, normal_inverted, val) => {
-        let min = helper_ConvertAngle(middle - range)
-        let max = helper_ConvertAngle(middle + range)
+        let min = helper_ConvertAngleToRads(middle - range)
+        let max = helper_ConvertAngleToRads(middle + range)
         if (!normal_inverted) { val = 1-val }
         let radians = min + (val * (max-min))
         if (yaw) { // Yaw
@@ -239,16 +250,30 @@
         console.log(armJoint);
         var finalAngle = data[angle];
         session.service("ALMotion").then(function (motion) {
-            newAngle = helper_ConvertAngle(finalAngle);
+            newAngle = helper_ConvertAngleToRads(finalAngle);
             motion.setAngles(armJoint, newAngle, 0.5);
         }).fail(log_error)
     }
 
     self.moveMotor = function (val, motor, direction) {
         session.service("ALMotion").then(function (motion) {
-            newAngle = helper_ConvertAngle(finalAngle);
+            newAngle = helper_ConvertAngleToRads(finalAngle);
             motion.setAngles(armJoint, (2 + ((val - 0) * (-2 - 2)) / (1 - 0)), 0.5);
         }).fail(log_error)
+    }
+
+    self.stepForwards = function (steps, direction) {
+        const stepLength = 0.025; //in M
+        session.service("ALMotion").then(function(mProxy) {
+            mProxy.moveTo(steps * stepLength * direction, 0, 0)
+        })
+    }
+
+    self.rotateBody = function (angle, direction) { //angle in degrees
+        angle = helper_ConvertAngleToRads(angle)
+        session.service("ALMotion").then(function(mProxy) {
+            mProxy.moveTo(0, 0, angle * direction)
+        })
     }
 
     self.changeHand = (left, open) => {

@@ -1,8 +1,12 @@
-<div class="quando-block" data-quando-javascript="quando.robot.connect('${ip}')">
+<div id="robot_ip" class="quando-block" data-quando-javascript="quando.robot.connect('${new-ip}')">
   <div class="quando-left quando-robot"></div>
   <div class="quando-right">
     <div class="quando-row quando-robot">🤖 Robot IP
-      <input data-quando-name="ip" type="text" value="" data-quando-encode="normal" />
+      <input data-quando-name="new-ip" type="text" value="" data-quando-encode="normal" class="ip_inp" list="ip_select"/>
+      <datalist data-quando-name='ip' class="ip_select" id="ip_select">
+          <option value='-Select IP-'>-Select IP-</option>
+      </datalist>
+      <button onclick="index.saveIP()">add</button>
     </div>
   </div>
 </div>
