@@ -1,7 +1,8 @@
 const fs = require('fs')
 const dns = require('dns')
+const join = require('path').join
 
-module.exports = (app, client_dir, static, join, success, fail) => {
+module.exports = (app, client_dir, static, success, fail) => {
   app.use('/client/media', static(join(client_dir, 'media')))
   app.use('/client/modules', static(join(client_dir, 'modules')))
   app.use('/client/lib', static(join(client_dir, 'lib')))

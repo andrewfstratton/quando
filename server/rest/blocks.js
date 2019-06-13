@@ -1,6 +1,7 @@
 const fs = require('fs')
+const join = require('path').join
 
-module.exports = (app, dirname, join, success, fail) => {
+module.exports = (app, dirname, success, fail) => {
   app.get('/blocks', (req, res) => {
     fs.readdir(join(dirname, 'blocks'), (err, folders) => {
       if (!err) {
