@@ -26,6 +26,13 @@
         }
     }
 
+    let ttsVals = {
+        pitch: 1,
+        speed: 100
+    }
+
+    let listenedWords = []
+
     self._list = []
     self._armActionsList = {}
 
@@ -187,8 +194,15 @@
         })
     }
 
-    self.say = (text, interrupt=false) => {
+    self.say = (text, pitch, speed, echo, interrupt=false) => {
         session.service("ALTextToSpeech").then((tts) => {
+            tts.setParameter("pitchShift", pitch)
+            tts.setParameter("speed", speed)
+            if (echo) {
+                tts.setParameter("doubleVoice", 1.1)
+                tts.setParameter("doubleVoiceLevel", 0.5)
+                tts.setParameter("doubleVoiceTimeShift", 0.1)
+            }
             if (robot.TextToSpeech.CurrentSentence != text) {
                 if (interrupt) {
                     tts.stopAll()
@@ -199,17 +213,39 @@
     }
 
     self.changeVoice = (pitch, speed, dblPitch = 0, dblLvl = 0, dblTimeShift = 0) => {
+        console.log('Voice Changed...' + pitch + speed)
+        // DELAYED CHANGE
+        ttsVals.pitch = pitch
+        ttsVals.speed = speed
+        /* DIRECT CHANGE
         session.service("ALTextToSpeech").then((tts) => {
             tts.setParameter("pitchShift", pitch)
             tts.setParameter("speed", speed)
             tts.setParameter("doubleVoice", dblPitch)
             tts.setParameter("doubleVoiceLevel", dblLvl)
             tts.setParameter("doubleVoiceTimeShift", dblTimeShift)
+        }).fail(log_error) */
+    }
+
+    //play sine wave passing value - gain ~ volume
+    self.playSineV = (freq, gain, duration, val) => {
+        console.log(val)
+        session.service("ALAudioDevice").then((aadp) => {
+            console.log('Playing Sine wave...')
+            aadp.playSine(freq, gain, 0, duration)
         }).fail(log_error)
     }
 
+    //play sine wave - gain ~ volume
+    self.playSine = (freq, gain, duration) => {
+        session.service("ALAudioDevice").then((aadp) => {
+            console.log('Playing Sine wave...')
+            aadp.playSine(freq, gain, 0, duration)
+        }).fail(log_error)
+    }
 
     self.turnHead = (yaw, middle, range, speed, normal_inverted, val) => {
+        console.log(val)
         let min = helper_ConvertAngleToRads(middle - range)
         let max = helper_ConvertAngleToRads(middle + range)
         if (!normal_inverted) { val = 1-val }
@@ -350,7 +386,6 @@
             }
         }
     }
-
 
     self.listenForWords = function (listName, confidence, blockID, callback, destruct = true) {
         waitForSayFinish();
