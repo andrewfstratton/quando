@@ -211,20 +211,14 @@
             }
         }).fail(log_error)
     }
-
-    self.changeVoice = (pitch, speed, dblPitch = 0, dblLvl = 0, dblTimeShift = 0) => {
-        console.log('Voice Changed...' + pitch + speed)
-        // DELAYED CHANGE
-        ttsVals.pitch = pitch
-        ttsVals.speed = speed
-        /* DIRECT CHANGE
-        session.service("ALTextToSpeech").then((tts) => {
-            tts.setParameter("pitchShift", pitch)
-            tts.setParameter("speed", speed)
-            tts.setParameter("doubleVoice", dblPitch)
-            tts.setParameter("doubleVoiceLevel", dblLvl)
-            tts.setParameter("doubleVoiceTimeShift", dblTimeShift)
-        }).fail(log_error) */
+    
+    self.animatedSpeech = (text, anim) => {
+        anim = "(animations/Stand/Gestures/Enthusiastic_4) "
+        session.service("ALAnimatedSpeech").then((aas) => {
+            aas.say("^start" + anim + text)
+            // If you want it to keep running, you can add a 
+            //^wait instruction at the end: ^wait(animations/Stand/Gestures/Hey_1)"
+        })
     }
 
     //play sine wave passing value - gain ~ volume
