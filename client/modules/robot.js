@@ -212,13 +212,25 @@
         }).fail(log_error)
     }
     
-    self.animatedSpeech = (text, anim) => {
+    self.animatedSay = (text, anim, pitch, speed, echo, interrupt=false) => {
         anim = "(animations/Stand/Gestures/Enthusiastic_4) "
         session.service("ALAnimatedSpeech").then((aas) => {
-            aas.say("^start" + anim + text)
+            aas.setParameter("pitchShift", pitch)
+            aas.setParameter("speed", speed)
+            if (echo) {
+                aas.setParameter("doubleVoice", 1.1)
+                aas.setParameter("doubleVoiceLevel", 0.5)
+                aas.setParameter("doubleVoiceTimeShift", 0.1)
+            }
+            if (robot.TextToSpeech.CurrentSentence != text) {
+                if (interrupt) {
+                    aas.stopAll()
+                }
+                aas.say("^start" + anim + text)
+            }
             // If you want it to keep running, you can add a 
             //^wait instruction at the end: ^wait(animations/Stand/Gestures/Hey_1)"
-        })
+        }).fail(log_error)
     }
 
     //play sine wave passing value - gain ~ volume
