@@ -236,7 +236,7 @@
         motion.moveIsActive().then((active) => {
             if (motionSequence.length) {
                 if (active && motionInterrupt) motion.stopMove()
-                
+
                 if (!active) {
                     motionSequence[0]()
                     motionSequence.shift()
@@ -280,7 +280,7 @@
     let motionSequence = []
     let motionInterrupt = true
 
-    self.stepForwards = function (steps, direction, interrupt = false, callback) {
+    self.stepForwards = function (steps, direction, interrupt = false, callback, destruct = true) {
         const stepLength = 0.025; //in M
 
         if (interrupt) motionSequence = []
@@ -291,6 +291,12 @@
                 mProxy.waitUntilMoveIsFinished().done(callback).fail(log_error)
             })
         })
+        if (destruct) {
+            quando.destructor.add(function () {
+                motionSequence = []
+                motionInterrupt = true
+            })
+        }
     }
 
     self.rotateBody = function (angle, direction, interrupt = false, callback) { //angle in degrees
@@ -301,9 +307,15 @@
         motionSequence.push(() => {
             session.service("ALMotion").then(function(mProxy) {
                 mProxy.moveTo(0, 0, angle * direction)
-                mProxy.waitUntilMoveIsFinished().done(callback).fail(log_error)
+                mProxy.waitUntilMoveIsFinished().done(callback).fail(log_error) 
             })
         })
+        if (destruct) {
+            quando.destructor.add(function () {
+                motionSequence = []
+                motionInterrupt = true
+            })
+        }
     }
 
     self.changeHand = (left, open) => {
@@ -332,28 +344,37 @@
         self.lookForPerson(session, callback, destruct)
     }
 
-    self.changeAutonomousLife = (state) => {
+    self.changeAutonomousLife = (state, callback) => {
         session.service("ALAutonomousLife").then((al) => {
-            al.setState(state)
+            al.setState(state).then(() => {
+                if (callback) callback()
+            })
         }).fail(log_error)
     }
 
     self.createWordList = function (listName) {
-        var v = new vocabList(listName, []);
-        self._list.push(v);
+        
+
+        var v = new vocabList(listName, [])
+        self._list.push(v)
     }
 
     self.addToWordList = function (listName, vocab) {
+        if (!self._list.some(list => list.listName == listName)) self.createWordList(listName)
+        
         for (var i = 0; i < self._list.length; i++) {
             if (self._list[i].listName == listName) {
-                self._list[i].vocab = self._list[i].vocab.concat(vocab.split(","));
+                self._list[i].vocab = self._list[i].vocab.concat(vocab)
             }
         }
     }
 
 
-    self.listenForWords = function (listName, confidence, blockID, callback, destruct = true) {
-        waitForSayFinish();
+    self.listenForWords = function (listName, vocab, confidence, blockID, callback, destruct = true) {
+        // waitForSayFinish();
+
+        self.addToWordList(listName, vocab)
+
         var list;
         var fullList = [];
         for (var i = 0; i < self._list.length; i++) {
@@ -412,7 +433,6 @@
             ALMemory.subscriber("WordRecognized").then(function (sub) {
                 sub.signal.connect(function (value) {
                     console.log(value)
-                    sr.pause(true)
                     if (value[1] >= confidence) {
                         for (var i = 0; i < list.vocab.length; i++) {
                             if (callback && list.vocab[i] == value[0]) {
@@ -420,7 +440,6 @@
                             }
                         }
                     }
-                    sr.pause(false)
                 }).then(function (processID) {
                     disconnectSpeechRecognition = () => {
                         sub.signal.disconnect(processID)
@@ -504,7 +523,7 @@
 
         }).fail(log_error)
         if (destruct) {
-            self.addDestructor(function () {
+            quando.destructor.add(function () {
                 _destroy_robot_listen(session, blockID) //create the destructor
             })
         }
@@ -522,7 +541,7 @@
             _start_perception(session, callback, ba)
         }).fail(log_error)
         if (destruct) {
-            self.addDestructor(function () {
+            quando.destructor.add(function () {
                 _destroy_perception(session)
             })
         }
