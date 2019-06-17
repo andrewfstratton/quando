@@ -69,19 +69,20 @@ input, #_hidden_width_element_ {
 }
 
 #menu {
-  position:relative;
   float: left;
   width: 35%;
   background-color: #ffffff;
 }
 
 #script {
-  position:relative;
-  width:100%;
   background-color: #ffeeee;
 }
 
-#menu, #script {
+#script, #scratch {
+  width:100%;
+}
+
+#menu, #script, #scratch {
   padding: 4px;
   height: 100%;
   margin: 0 auto;
@@ -96,7 +97,8 @@ input, #_hidden_width_element_ {
   z-index:1;
 }
 
-#menu, #script, .quando-box {
+#menu, #script, #scratch, .quando-box {
+  position:relative;
   display: flex;
   flex-flow: column nowrap;
 }
@@ -116,6 +118,7 @@ input, #_hidden_width_element_ {
   width: max-content;
   height: max-content;
   margin: 0px 0px 4px 0px;
+  position:relative;
 }
 
 .quando-block:hover {
@@ -124,11 +127,13 @@ input, #_hidden_width_element_ {
 
 .quando-block:hover>.quando-left,
 .quando-block:hover>*>.quando-row {
-  box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.7);
+  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.7);
 }
 
 .quando-left {
-  position:relative;
+  position:absolute;
+  top:0px;
+  left:0px;
   float:left;
   z-index:1;
   width: 8px;
@@ -157,7 +162,7 @@ input, #_hidden_width_element_ {
 .quando-box {
   margin: 0px 8px 0px 4px;
   padding: 4px 0px 0px 0px;
-  min-height: 10px;
+  min-height: 24px;
   width: 100%;
 }
 
@@ -167,9 +172,6 @@ input[type="color"] {
   width: 22px;
   padding: 0px;
 }
-/* #script .quando-box {
-  min-height: 24px;
-} */
 
 /* Colours for block backgrounds and title */
 
@@ -192,11 +194,14 @@ input[type="color"] {
 .quando-puzzle { background: #f788a2; }
 .quando-advanced { background: #ef9a9a; }
 .quando-devices { background: #81d4fa; }
+.quando-robot { background: #bbbbdd; }
 .quando-misc { background: #6bac5e; }
 .quando-style { background: #a0a0d0; }
 .quando-watson { background: #97b8f3	; }
 .quando-AR { background: #b0d95e; }
 .quando-game { background: #ffc88c; }
+.quando-test { background: #555555; }
+.quando-scratch, #scratch { background: #888888; }
 .quando-inventor-control { background: hsl(0, 50%, 90%); }
 .quando-inventor-input { background: hsl(112, 50%, 90%); }
 .quando-inventor-display { background: hsl(194, 50%, 90%); }
@@ -250,6 +255,7 @@ select.quando-toggle {
   background-color: lightblue;
 }
 
+/* Fix for iOS */
 ::-webkit-scrollbar {
     width: 15px;
     height: 15px;
@@ -265,3 +271,8 @@ select.quando-toggle {
 ::-webkit-scrollbar-track {
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.2); 
 } 
+
+/* Fix for Firefox */
+input[type=number] { 
+  -moz-appearance: textfield;
+}

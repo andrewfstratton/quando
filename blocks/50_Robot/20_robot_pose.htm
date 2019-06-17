@@ -1,0 +1,27 @@
+<div class="quando-block" data-quando-javascript="quando.robot.changePosture('${pose}', ${speed})">
+  <div class="quando-left quando-robot"></div>
+  <div class="quando-right">
+    <div class="quando-row quando-robot">🤖 Robot Pose
+      <select data-quando-name="pose">
+        <option value='Stand'>Stand - straight</option>
+        <option value='StandInit'>Stand - relaxed</option>
+        <option value='StandZero'>Stand - arms infront</option>
+        <option value='Crouch'>Crouch</option>
+        <option value='Sit'>Sit - hands on knees</option>
+        <option value='SitRelax'>Sit - legs out</option>
+        <option value='LyingBelly'>Lie - on belly</option>
+        <option value='LyingBack'>Lie - on back</option>
+      </select>
+      <select data-quando-name="extras" class="quando-toggle">
+        <option value="hidden">+</option>
+        <option value="show">-</option>
+      </select>
+      <span data-quando-toggle="extras=show">
+        <br>
+        Speed
+        <input data-quando-name="speed" type="text" value="100" data-quando-encode="normal" />
+        %
+      </span>
+    </div>
+  </div>
+</div>

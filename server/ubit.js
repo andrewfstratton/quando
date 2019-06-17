@@ -135,8 +135,8 @@ exports.usb = (_io) => {
   get_serial(usb_error, usb_success)
 }
 
-exports.turn = (servo, angle) => {
-  send_buffer.angle[servo] = angle
+exports.turn = (servo, _angle) => {
+  send_buffer.angle[servo] = _angle
 }
 
 exports.icon = (val) => {

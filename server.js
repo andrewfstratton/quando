@@ -1,11 +1,10 @@
 'use strict'
 const express = require('express')
+const express_static = express.static
 const session = require('express-session')
 const MemoryStore = require('memorystore')(session)
 const app = express()
 const fs = require('fs')
-const formidable = require('formidable')
-const morgan = require('morgan')
 const body_parser = require('body-parser')
 const base64Img = require('base64-img')
 const base64 = require('file-base64')
@@ -14,12 +13,22 @@ const watson_db = require('./watson_db')
 const client_deploy = './client/deployed_js/'
 const user = require('./user')
 const path = require('path')
+const join = require('path').join
 const http = require('http').Server(app)
 const https = require('https')
 const io = require('socket.io')(http)
-const ubit = require('./modules/ubit')
-const net = require('net')
-const dns = require('dns')
+
+function fail(response, msg) {
+  response.json({'success': false, 'message': msg})
+}
+
+function success(response, obj = false) {
+  if (!obj) {
+    obj = {}
+  }
+  obj.success = true
+  response.json(obj)
+}
 
 //Watson services
 const TextToSpeechV1 = require('watson-developer-cloud/text-to-speech/v1')
@@ -57,7 +66,7 @@ if (appEnv.isLocal == false) { // i.e. if running on cloud server
   console.log("INFO: Running as Hub, port="+port)
 }
 
-let drop_client = (client) => {
+function drop_client(client) {
   let index = io.clients.indexOf(client)
   if (index != -1) {
     io.clients.splice(index, 1) // unlike delete, remove the array entry, rather than set to null
@@ -96,7 +105,7 @@ let server = http.listen(port, () => {
   })
 })
 
-const MEDIA_FOLDER = path.join(__dirname, 'client', 'media')
+const MEDIA_FOLDER = join(__dirname, 'client', 'media')
 const MEDIA_MAP = {
   //TODO - refactor to videos & images
   'video': ['ogg', 'ogv', 'mp4', 'webm'],
@@ -111,7 +120,7 @@ const MEDIA_MAP = {
   MEDIA_MAP['UPLOAD'] = upload
 }
 
-// app.use(morgan('dev'))
+// app.use(require('morgan')('dev'))
 
 app.use(session({
   secret: 'quando_secret',
@@ -130,245 +139,25 @@ app.use('/', (req, res, next) => {
     // console.log(">>" + JSON.stringify(req.session.user))
   next()
 })
-app.use('/', express.static(path.join(__dirname, 'hub')))
-app.get('/login', (req, res) => {
-  if ((req.session) && (req.session.user)) {
-    res.json({ 'success': true, 'userid': req.session.user.id })
-  } else {
-    res.json({ 'success': false, 'message': 'Not Logged In' })
-  }
-})
+app.use('/', express_static(join(__dirname, 'hub')))
 
 //increased limit of bp to allow for visrec 
 app.use(body_parser.json({ limit: '10mb' }))
 app.use(body_parser.urlencoded({ extended: true, limit:'10mb' }))
 
 app.use(body_parser.json())
-app.post('/login', (req, res) => {
-  let body = req.body
-  if (body.userid && body.password) {
-    user.getOnIdPassword(body.userid, body.password).then((result) => {
-      req.session.user = result
-      res.json({ 'success': true })
-    }, (err) => {
-      res.json({ 'success': false, 'message': 'Login Failed, please try again' + err })
-    })
-  } else {
-    res.json({ 'success': false, 'message': 'Need UserId and password' })
-  }
-})
 
-app.delete('/login', (req, res) => {
-  delete req.session.user
-  res.json({ 'success': true, 'message': 'Logged Out' })
-})
+require('./server/rest/login')(app, success, fail)
+require('./server/rest/script')(app, io, success, fail)
+require('./server/rest/file')(app, MEDIA_FOLDER, MEDIA_MAP, success, fail)
 
-app.post('/script', (req, res) => {
-  script.save(req.body.name, req.body.userid, req.body.script).then(
-        (doc) => { res.json({ 'success': true }) },
-        (err) => { res.json({ 'success': false, 'message': err }) })
-})
+// Static for inventor
+app.use('/inventor', express_static(join(__dirname, 'inventor')))
+app.use('/favicon.ico', express_static(join(__dirname, 'inventor/favicon.ico')))
 
-app.get('/script/names/:userid', (req, res) => {
-  script.getNamesOnOwnerID(req.params.userid).then(
-        (list) => { res.json({ 'success': true, 'list': list }) },
-        (err) => { res.json({ 'success': false, 'message': err }) })
-})
-
-app.get('/script/id/:id', (req, res) => {
-  let id = req.params.id
-  script.getOnId(id).then(
-        (result) => { res.json({ 'success': true, 'doc': result }) },
-        (err) => { res.json({ 'success': false, 'message': err }) })
-})
-
-app.delete('/script/id/:id', (req, res) => {
-  let id = req.params.id
-  if (!req.session.user) {
-    res.json({ 'success': false, 'message': 'Not Logged in' }) 
-  } else {
-    script.deleteOnId(id).then(
-          (doc) => { res.json({ 'success': true }) },
-          (err) => { res.json({ 'success': false, 'message': err }) })
-  }
-})
-
-app.delete('/script/name/:name', (req, res) => {
-  let name = encodeURI(req.params.name)
-  if (!req.session.user) {
-    res.json({ 'success': false, 'message': 'Not Logged in' }) 
-  } else {
-    let userid = req.session.user.id
-    script.deleteAllOnName(userid, name).then(
-          (doc) => { res.json({ 'success': true }) },
-          (err) => { res.json({ 'success': false, 'message': err }) })
-    }
-})
-
-app.delete('/script/tidy/:name/id/:id', (req, res) => {
-  if (!req.session.user) {
-    res.json({ 'success': false, 'message': 'Not Logged in' }) 
-  } else {
-    let id = req.params.id
-    let userid = req.session.user.id
-    let name = encodeURI(req.params.name) // N.B. Leave name encoded...
-    script.tidyOnIdName(userid, id, name).then(
-          (doc) => { res.json({ 'success': true }) },
-          (err) => { res.json({ 'success': false, 'message': err }) })
-  }
-})
-
-app.put('/script/deploy/:filename', (req, res) => {
-  let filename = req.params.filename + '.js'
-  let script = req.body.javascript
-  fs.writeFile(client_deploy + filename, script, (err) => {
-    if (!err) {
-      res.json({ 'success': true })
-      io.emit('deploy', {script: filename})
-    } else {
-      res.json({ 'success': false, 'message': 'Failed to deploy script' })
-    }
-  })
-})
-
-app.get('/file/type/*', (req, res) => {
-  let filename = req.params[0]
-  let media = path.basename(filename)
-  let folder = filename.substring(0, filename.length - media.length)
-  let folderpath = path.join(MEDIA_FOLDER, folder)
-  let suffixes = MEDIA_MAP[media] // these are the relevant filename endings - excluding the '.'
-  fs.readdir(folderpath, (err, files) => {
-    if (!err) {
-      let filelist = files.toString().split(',')
-      let filtered = []
-      let folders = []
-      for (let i in filelist) {
-        let stat = fs.statSync(path.join(folderpath, filelist[i]))
-        if (stat.isDirectory()) {
-          folders.push(filelist[i])
-        } else {
-          for (let s in suffixes) {
-            if (filelist[i].toLowerCase().endsWith('.' + suffixes[s])) {
-              filtered.push(filelist[i])
-            }
-          }
-        }
-      }
-      res.json({ 'success': true, 'files': filtered, 'folders': folders })
-    } else {
-      res.json({ 'success': false, 'message': 'Failed to retrieve contents of folder' })
-    }
-  })
-})
-
-app.post('/file/upload/*', (req, res) => {
-  let filename = req.params[0]
-  let media = path.basename(filename)
-  let folder = filename.substring(0, filename.length - media.length)
-  let form = new formidable.IncomingForm()
-  // form.encoding = 'utf-8'
-  form.multiples = true
-  form.uploadDir = path.join(MEDIA_FOLDER, folder)
-  form.keepExtensions = true
-  form.parse(req, (err, fields, files) => {
-    if (err) {
-      res.json({ 'success': false, 'message': 'failed to upload' })
-    } else {
-      res.json({ 'success': true })
-    }
-  })
-  form.on('fileBegin', (name, file) => {
-    const [fileName, fileExt] = file.name.split('.')
-    file.path = path.join(form.uploadDir, `${fileName}_${new Date().getTime()}.${fileExt}`)
-  })
-  form.on('file', (field, file) => {
-    fs.rename(file.path, path.join(form.uploadDir, file.name), (err) => {
-      if (!res.headersSent) { // Fix since first response is received
-        res.json({ 'success': false, 'message': 'an error has occured with form upload' + err })
-      }
-    })
-  })
-  form.on('error', (err) => {
-    res.json({ 'success': false, 'message': 'an error has occured with form upload' + err })
-  })
-  form.on('aborted', (err) => {
-    res.json({ 'success': false, 'message': 'Upload cancelled by browser' })
-  })
-})
-
-// Static for client
-let client_dir = path.join(__dirname, 'client')
-app.use('/client/media', express.static(path.join(client_dir, 'media')))
-app.use('/client/modules', express.static(path.join(client_dir, 'modules')))
-app.use('/client/lib', express.static(path.join(client_dir, 'lib')))
-app.use('/client/setup', express.static(path.join(client_dir, 'setup.html')))
-app.use('/client/client.css', express.static(path.join(client_dir, 'client.css')))
-app.use('/client/setup.css', express.static(path.join(client_dir, 'setup.css')))
-app.use('/client/client.js', express.static(path.join(client_dir, 'client.js')))
-app.use('/client/transparent.png', express.static(path.join(client_dir, 'transparent.png')))
-app.use('/client/deployed_js', express.static(path.join(client_dir, 'deployed_js')))
-app.use('/client/client.htm', express.static(path.join(client_dir, 'client.htm')))
-
-app.get('/client/js/:filename', (req, res) => {
-  let filename = req.params.filename
-  fs.readFile('./client/client.htm', 'utf8', (err, data) => {
-    if (err) {
-      res.redirect('/client/setup')
-    } else {
-      res.write(data.replace(/\[\[TITLE\]\]/,
-                filename.replace(/\.js/, '')).replace(/\[\[DEPLOYED_JS\]\]/, filename))
-      res.end()
-    }
-  })
-})
-
-app.get('/client/js', (req, res) => {
-  fs.readdir(path.join(__dirname, 'client', 'deployed_js'), (err, files) => {
-    if (!err) {
-      let js_files = []
-      for(let i=0; i<files.length; i++) {
-        if (files[i].endsWith(".js")) {
-          js_files.push(files[i])
-        }
-      }
-      dns.lookup(require('os').hostname(), (err, add) => {
-        res.json({ 'success': true, ip: add, 'files': js_files })
-      })
-    } else {
-      res.json({
-        'success': false,
-        'message': 'Failed to retrieve contents of deployed_js folder'
-      })
-    }
-  })
-})
-
-app.use('/client', express.static(path.join(client_dir, 'index.html')))
-
-app.post('/message/:id', (req, res) => {
-  let id = req.params.id
-  let val = req.body.val
-  let host = req.body.host
-  if (host) {
-    let data = JSON.stringify({'val':val})
-    let options = { hostname: host, port: 443, path: '/message/'+id, method: 'POST',
-      headers: {
-        'Content-Type': 'application/json', 'Content-Length': data.length
-      }
-    }
-    let req = https.request(options, (res) => {
-      res.on('data', (d) => {})
-    })
-    req.on('error', (error) => {
-      console.error(error)
-    })
-    req.write(data)
-    req.end()
-  } else {
-    io.emit(id, {'val': val})
-  }
-  res.json({})
-})
+const client_dir = join(__dirname, 'client')
+require('./server/rest/client')(app, client_dir, express_static, success, fail)
+require('./server/rest/message')(app, io, https)
 
 //WATSON SERVICES
 
@@ -476,106 +265,7 @@ app.post('/socket/:id', (req, res) => {
   res.json({})
 })
 
-app.use('/inventor', express.static(path.join(__dirname, 'inventor')))
-app.use('/favicon.ico', express.static(path.join(__dirname, 'inventor/favicon.ico')))
-
-app.get('/blocks', (req, res) => {
-  fs.readdir(path.join(__dirname, 'blocks'), (err, folders) => {
-    if (!err) {
-      let blocks = []
-      for(let folder of folders) {
-        let menu = {title:true}
-        let parts = folder.split('_')
-        parts.shift() // drop the number
-        let name = ''
-        let cls = ''
-        for(let part of parts) {
-          cls += part + '-'
-          name += part.charAt(0).toUpperCase() + part.slice(1) + ' '
-        }
-        menu.name = name.slice(0, -1)
-        menu.class = cls.slice(0, -1)
-        menu.folder = folder
-        blocks.push(menu)
-        let files = fs.readdirSync(path.join(__dirname, 'blocks', folder))
-        if (files) {
-          let failed = false
-          for(let file of files) {
-            if (!failed && file.endsWith('.htm')) {
-              let block = {title:false}
-              block.type = file.substring(file.indexOf('_') + 1).slice(0, -4) // drop the number, and the '.htm'
-              block.type = block.type.replace(/_/g, '-') // turn _ based filename into - based attribute
-              let contents = fs.readFileSync(path.join(__dirname, 'blocks', folder, file))
-              if (contents) {
-                block.html = contents.toString('utf8')
-              } else {
-                failed = true
-              }
-              blocks.push(block)
-            }
-          }
-        }
-      } // for
-      res.json({ 'success': true, 'blocks': blocks })
-    } else {
-      res.json({
-        'success': false,
-        'message': 'Failed to retrieve contents of blocks folder'
-      })
-    }
-  })
-})
-
-ubit.usb(io) // sets up all the usb based micro:bit handling...
-
-app.post('/ubit/display', (req, res) => {
-  ubit.display(req.body.val)
-  res.json({})
-})
-
-app.post('/ubit/icon', (req, res) => {
-  ubit.icon(req.body.val)
-  res.json({})
-})
-
-app.post('/ubit/turn', (req, res) => {
-  let val = req.body.val
-  ubit.turn(val.servo, val.angle)
-  res.json({})
-})
-
-app.get('/ip', (req, res) => {
-  let client_ip = req.ip.replace('::ffff:', '')
-  dns.lookup(require('os').hostname(), (err, host_ip) => {
-    console.log('Access Server IP: ' + host_ip + ' from Client IP: ' + client_ip)
-    let local = appEnv.isLocal // false when running on cloud server
-    if (local) {
-      local = (client_ip == host_ip) || (client_ip == '127.0.0.1')
-    }
-    res.json({ 'success': true, 'ip': host_ip, 'local': local})
-  })
-})
-
-app.post('/user', (req, res) => {
-  let body = req.body
-  if (body.userid && body.password) {
-    let client_ip = req.ip.replace('::ffff:', '')
-    dns.lookup(require('os').hostname(), (err, host_ip) => {
-      let local = appEnv.isLocal // false when running on cloud server
-      if (local) {
-        local = (client_ip == host_ip) || (client_ip == '127.0.0.1')
-      }
-      if (local) {
-        user.save(body.userid, body.password).then((result) => {
-          res.json({ 'success': true })
-        }, (err) => {
-          res.json({ 'success': false, 'message': 'Save Error - user probably already exists...' })
-        })
-      } else {
-        res.json({ 'success': false, 'message': 'Must be run from local server'})
-      }
-    })
-  } else {
-    res.json({ 'success': false, 'message': 'Need UserId and Password' })
-  }
-})
+require('./server/rest/blocks')(app, __dirname, success, fail)
+require('./server/rest/ubit')(app, io)
+require('./server/rest/ip')(app, appEnv, success, fail)
+require('./server/rest/user')(app, appEnv, success, fail)

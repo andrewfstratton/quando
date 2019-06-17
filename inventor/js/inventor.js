@@ -302,9 +302,6 @@ self.copyBlock = (old, clone) => {
   for(let elem of clone.querySelectorAll("input, select")) {
     elem.disabled = false
   }
-  for(let elem of clone.querySelectorAll(".quando-box")) {
-    elem.style.minHeight = "36px"
-  }
 }
 
 self.removeBlock = (elem) => {
@@ -335,20 +332,22 @@ function _setupDragula() {
     elem.disabled = true
   }
   let script = document.getElementById('script')
+  let scratch = document.getElementById('scratch')
   let collections = []
   collections.push(script)
   collections.push(menu)
+  collections.push(scratch)
   let options = {}
   options.removeOnSpill = true
-  options.copy = function (elem, source) {
+  options.copy = (elem, source) => {
     return source === menu
   }
-  options.isContainer = function (el) {
+  options.isContainer = (el) => {
     return el.classList.contains('quando-box')
   }
-  options.accepts = function (elem, target) {
+  options.accepts = (elem, target) => {
     let accept = true
-    if (target === script) {
+    if ((target === script) || (target === scratch)) {
       // accept = true
     } else if (target === menu) {
       accept = false
@@ -390,9 +389,9 @@ function _setupDragula() {
   options.invalid = (elem, handle) => {
     return elem.classList.contains("quando-title")
   }
-  self.drake = dragula(collections, options).on('drop', function (elem) {
+  self.drake = dragula(collections, options).on('drop', (elem) => {
     self.setElementHandlers(elem)
-  }).on('cloned', function (clone, old, type) {
+  }).on('cloned', (clone, old, type) => {
     if (type == 'copy') {
       self.copyBlock(old, clone)
     }
@@ -476,10 +475,10 @@ self.setup = () => {
             title = block.class
             elem.classList.add('quando-' + title)
             elem.innerHTML = block.name
+            elem.style.display = ''
             if (title == 'test') {
               elem.id = "inventor_test"
             }
-            elem.style.display = ''
           } else {
             let tmp = document.createElement('div')
             tmp.innerHTML = block.html
@@ -509,7 +508,8 @@ self.setup = () => {
       for (let item of document.getElementsByClassName("quando-block")) {
         self.setElementHandlers(item)
       }
-      let first_title = document.getElementsByClassName("quando-title")[0]
+      let first_title = document.getElementsByClassName("quando-title")[2]
+      // the third title is after scratch pad and the hidden (copied) title
       if (first_title) {
         _leftClickTitle(first_title)
       }
@@ -588,13 +588,17 @@ function _warning (message) {
     }
   }
 
-  self.loaded = (obj, modal_id, name) => {
+  self.loaded = (obj, modal_id) => {
     self.showObject(obj.script)
     _deploy = obj.deploy
+    name = obj.filename
     $(modal_id).modal('hide')
     _success('Loaded...')
     $('#local_save_key').val(name)
     $('#remote_save_key').val(name)
+    if (name == '') {
+      name = '[no file]'
+    }
     $('#file_name').html(name)
   }
 
@@ -784,6 +788,7 @@ self.handle_test = () => {
   function local_save(key, _script) {
     localStorage.setItem(key, JSON.stringify({
       deploy: _deploy,
+      filename: $('#local_save_key').val(),
       script: _script
     }))
   }
@@ -837,11 +842,7 @@ self.handle_test = () => {
   self.local_load = (key) => {
     let obj = JSON.parse(localStorage.getItem(key))
     if (obj) {
-      let name = ''
-      if (key.startsWith(PREFIX)) {
-        name = key.slice(PREFIX.length)
-      }
-      self.loaded(obj, '#local_load_modal', name)
+      self.loaded(obj, '#local_load_modal')
     } else {
       if (key == AUTOSAVE) {
         _warning('No Autosave...')
@@ -857,7 +858,8 @@ self.handle_test = () => {
       success: (res) => {
         if (res.success) {
           let script = JSON.parse(res.doc.script)
-          self.loaded(script, '#remote_load_modal', res.doc.name)
+          script.filename = res.doc.name
+          self.loaded(script, '#remote_load_modal')
         } else {
           alert('Failed to find script')
         }
