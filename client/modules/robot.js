@@ -26,6 +26,13 @@
         }
     }
 
+    let ttsVals = {
+        pitch: 1,
+        speed: 100
+    }
+
+    let listenedWords = []
+
     self._list = []
     self._armActionsList = {}
 
@@ -82,7 +89,7 @@
         setTimeout(updateRobot, 1000) // Try again in a second...
     }
 
-    function helper_ConvertAngle(angle) {
+    function helper_ConvertAngleToRads(angle) { //from degree to rads
         return angle * (Math.PI / 180)
     }
 
@@ -187,8 +194,19 @@
         })
     }
 
-    self.say = (text, interrupt=false) => {
+    self.say = (text, pitch, speed, echo, interrupt=false) => {
         session.service("ALTextToSpeech").then((tts) => {
+            tts.setParameter("pitchShift", pitch)
+            tts.setParameter("speed", speed)
+            if (echo) {
+                tts.setParameter("doubleVoice", 1.1)
+                tts.setParameter("doubleVoiceLevel", 0.5)
+                tts.setParameter("doubleVoiceTimeShift", 0.1)
+            } else {
+                tts.setParameter("doubleVoice", 1)
+                tts.setParameter("doubleVoiceLevel", 0)
+                tts.setParameter("doubleVoiceTimeShift", 0.0)
+            }
             if (robot.TextToSpeech.CurrentSentence != text) {
                 if (interrupt) {
                     tts.stopAll()
@@ -197,10 +215,71 @@
             }
         }).fail(log_error)
     }
+    
+    self.animatedSay = (text, anim, pitch, speed, echo, interrupt=false) => {
+        anim = ""//"(animations/Stand/Gestures/Enthusiastic_4) "
+        session.service("ALAnimatedSpeech").then((aas) => {
+            //aas.setParameter("pitchShift", pitch)
+            //aas.setParameter("speed", speed)
+            if (echo) {
+                //aas.setParameter("doubleVoice", 1.1)
+                //aas.setParameter("doubleVoiceLevel", 0.5)
+                //aas.setParameter("doubleVoiceTimeShift", 0.1)
+            }
+            if (robot.TextToSpeech.CurrentSentence != text) {
+                if (interrupt) {
+                    //aas.stopAll()
+                }
+                aas.say("^start" + anim + text)
+            }
+            // If you want it to keep running, you can add a 
+            //^wait instruction at the end: ^wait(animations/Stand/Gestures/Hey_1)"
+        }).fail(log_error)
+    }
+        
+    self.animatedSayR = (text, anim, pitch, speed, echo, interrupt=false) => {
+        anim = ""//"(animations/Stand/Gestures/Enthusiastic_4) "
+        session.service("ALAnimatedSpeech").then((aas) => {
+            aas.setBodyLanguageMode(1)
+            //aas.setParameter("pitchShift", pitch)
+            //aas.setParameter("speed", speed)
+            if (echo) {
+                //aas.setParameter("doubleVoice", 1.1)
+                //aas.setParameter("doubleVoiceLevel", 0.5)
+                //aas.setParameter("doubleVoiceTimeShift", 0.1)
+            }
+            if (robot.TextToSpeech.CurrentSentence != text) {
+                if (interrupt) {
+                    //aas.stopAll()
+                }
+                aas.say("^start" + anim + text)
+            }
+            // If you want it to keep running, you can add a 
+            //^wait instruction at the end: ^wait(animations/Stand/Gestures/Hey_1)"
+        }).fail(log_error)
+    }
+
+    //play sine wave passing value - gain ~ volume
+    self.playSineV = (freq, gain, duration, val) => {
+        console.log(val)
+        session.service("ALAudioDevice").then((aadp) => {
+            console.log('Playing Sine wave...')
+            aadp.playSine(freq, gain, 0, duration)
+        }).fail(log_error)
+    }
+
+    //play sine wave - gain ~ volume
+    self.playSine = (freq, gain, duration) => {
+        session.service("ALAudioDevice").then((aadp) => {
+            console.log('Playing Sine wave...')
+            aadp.playSine(freq, gain, 0, duration)
+        }).fail(log_error)
+    }
 
     self.turnHead = (yaw, middle, range, speed, normal_inverted, val) => {
-        let min = helper_ConvertAngle(middle - range)
-        let max = helper_ConvertAngle(middle + range)
+        console.log(val)
+        let min = helper_ConvertAngleToRads(middle - range)
+        let max = helper_ConvertAngleToRads(middle + range)
         if (!normal_inverted) { val = 1-val }
         let radians = min + (val * (max-min))
         if (yaw) { // Yaw
@@ -221,12 +300,27 @@
         }
     }
 
+    function updateMovement(motion) {
+        motion.moveIsActive().then((active) => {
+            if (motionSequence.length) {
+                if (active && motionInterrupt) motion.stopMove()
+
+                if (!active) {
+                    motionSequence[0]()
+                    motionSequence.shift()
+                }
+            }
+        })
+    }
+
     function updateRobot() {
         session.service("ALMotion").then((motion) => {
             updateYawPitch(motion, 'HeadYaw', state.head.yaw)
             updateYawPitch(motion, 'HeadPitch', state.head.pitch)
             updateHand(motion, 'LHand', state.hand.left)
             updateHand(motion, 'RHand', state.hand.right)
+            updateMovement(motion)
+            
             setTimeout(updateRobot, 1000/25) // i.e. x times per second
         }).fail(log_error)
     }
@@ -239,16 +333,71 @@
         console.log(armJoint);
         var finalAngle = data[angle];
         session.service("ALMotion").then(function (motion) {
-            newAngle = helper_ConvertAngle(finalAngle);
+            newAngle = helper_ConvertAngleToRads(finalAngle);
             motion.setAngles(armJoint, newAngle, 0.5);
         }).fail(log_error)
     }
 
     self.moveMotor = function (val, motor, direction) {
         session.service("ALMotion").then(function (motion) {
-            newAngle = helper_ConvertAngle(finalAngle);
+            newAngle = helper_ConvertAngleToRads(finalAngle);
             motion.setAngles(armJoint, (2 + ((val - 0) * (-2 - 2)) / (1 - 0)), 0.5);
         }).fail(log_error)
+    }
+
+    let motionSequence = []
+    let motionInterrupt = true
+
+    self.stepForwards = function (steps, direction, interrupt = false, callback, destruct = true) {
+        const stepLength = 0.025; //in M
+
+        if (interrupt) motionSequence = []
+        motionInterrupt = interrupt
+        motionSequence.push(() => {
+            session.service("ALMotion").then(function(mProxy) {
+                mProxy.moveTo(steps * stepLength * direction, 0, 0)
+                mProxy.waitUntilMoveIsFinished().done(callback).fail(log_error)
+            })
+        })
+        if (destruct) {
+            quando.destructor.add(function () {
+                motionSequence = []
+                motionInterrupt = true
+            })
+        }
+    }
+
+    self.stepSideways = function (steps, direction, interrupt = false, callback) {
+        const stepLength = 0.025; //in M
+
+        if (interrupt) motionSequence = []
+        motionInterrupt = interrupt
+        motionSequence.push(() => {
+            session.service("ALMotion").then(function(mProxy) {
+                mProxy.moveTo(0, steps * stepLength * direction, 0)
+                mProxy.waitUntilMoveIsFinished().done(callback).fail(log_error)
+            })
+        })
+    }
+
+
+    self.rotateBody = function (angle, direction, interrupt = false, callback) { //angle in degrees
+        angle = helper_ConvertAngleToRads(angle)
+
+        if (interrupt) motionSequence = []
+        motionInterrupt = interrupt
+        motionSequence.push(() => {
+            session.service("ALMotion").then(function(mProxy) {
+                mProxy.moveTo(0, 0, angle * direction)
+                mProxy.waitUntilMoveIsFinished().done(callback).fail(log_error) 
+            })
+        })
+        if (destruct) {
+            quando.destructor.add(function () {
+                motionSequence = []
+                motionInterrupt = true
+            })
+        }
     }
 
     self.changeHand = (left, open) => {
@@ -277,28 +426,42 @@
         self.lookForPerson(session, callback, destruct)
     }
 
-    self.changeAutonomousLife = (state) => {
+    self.changeAutonomousLife = (state, callback) => {
         session.service("ALAutonomousLife").then((al) => {
-            al.setState(state)
+            al.setState(state).then(() => {
+                if (callback) callback()
+            })
         }).fail(log_error)
     }
 
     self.createWordList = function (listName) {
-        var v = new vocabList(listName, []);
-        self._list.push(v);
+        
+
+        var v = new vocabList(listName, [])
+        self._list.push(v)
     }
 
     self.addToWordList = function (listName, vocab) {
+        if (!self._list.some(list => list.listName == listName)) self.createWordList(listName)
+        
         for (var i = 0; i < self._list.length; i++) {
             if (self._list[i].listName == listName) {
-                self._list[i].vocab = self._list[i].vocab.concat(vocab.split(","));
+                self._list[i].vocab = self._list[i].vocab.concat(vocab)
             }
         }
     }
 
+<<<<<<< HEAD
 
+    self.listenForWords = function (listName, vocab, confidence, blockID, callback, destruct = true) {
+        // waitForSayFinish();
+
+        self.addToWordList(listName, vocab)
+
+=======
     self.listenForWords = function (listName, confidence, blockID, callback, destruct = true) {
         waitForSayFinish();
+>>>>>>> nao_dev_balraj
         var list;
         var fullList = [];
         for (var i = 0; i < self._list.length; i++) {
@@ -357,7 +520,6 @@
             ALMemory.subscriber("WordRecognized").then(function (sub) {
                 sub.signal.connect(function (value) {
                     console.log(value)
-                    sr.pause(true)
                     if (value[1] >= confidence) {
                         for (var i = 0; i < list.vocab.length; i++) {
                             if (callback && list.vocab[i] == value[0]) {
@@ -365,7 +527,6 @@
                             }
                         }
                     }
-                    sr.pause(false)
                 }).then(function (processID) {
                     disconnectSpeechRecognition = () => {
                         sub.signal.disconnect(processID)
@@ -405,7 +566,7 @@
         session.service("ALMemory").then(function (ALMemory) {
             ALMemory.subscriber("ALBasicAwareness/HumanTracked").then(function (sub) {
                 sub.signal.connect(function (state) {
-                    callback()
+                    if (state != -1) callback()
                 }).then(function (processID) {
                     disconnectPerception = () => {
                         sub.signal.disconnect(processID)
@@ -426,7 +587,6 @@
         })
         session.service("ALBasicAwareness").then(function (ba) {
             ba.stopAwareness()
-            _start_perception(session, callback, ba)
         }).fail(log_error)
     }
 
@@ -450,7 +610,7 @@
 
         }).fail(log_error)
         if (destruct) {
-            self.addDestructor(function () {
+            quando.destructor.add(function () {
                 _destroy_robot_listen(session, blockID) //create the destructor
             })
         }
@@ -468,7 +628,7 @@
             _start_perception(session, callback, ba)
         }).fail(log_error)
         if (destruct) {
-            self.addDestructor(function () {
+            quando.destructor.add(function () {
                 _destroy_perception(session)
             })
         }
@@ -536,6 +696,20 @@
         }
         sensor += 'Touched'
         _start_touchEvents(session, sensor, callback)
+        quando.destructor.add(() => {
+            _destroy_touchEvents()
+        })
+    }
+
+    self.touchFoot = (location, callback) => {
+        const suffix = 'BumperPressed'
+        if (['Left', 'Right'].includes(location)) {
+            _start_touchEvents(session, location + suffix, callback)
+        } else if (location == 'Either') {
+            _start_touchEvents(session, 'Left' + suffix, callback)
+            _start_touchEvents(session, 'Right' + suffix, callback)
+        } else return
+
         quando.destructor.add(() => {
             _destroy_touchEvents()
         })

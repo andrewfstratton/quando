@@ -223,6 +223,40 @@ function _handleListNameChange(event) {
   }
 }
 
+self.saveIP = () => {
+  //get value of the first input field in the drag n drop window
+  let inpFields = document.getElementsByClassName("ip_inp")
+  let newIP = inpFields[1].value
+  alert(newIP)
+  //get IP's array from local storage
+  let ipsRaw = localStorage.getItem('ips')
+  let ips = JSON.parse(ipsRaw)
+  if (!ips) {
+    ips = []
+    ipsRaw = ""
+  }
+  //ADD & SAVE NEW IP
+  if (!ipsRaw.includes(newIP)) {
+    ips.unshift(newIP)
+    localStorage.setItem('ips', JSON.stringify(ips))
+    _updateIPList()
+  }
+}
+
+function _updateIPList() {
+  let ips = JSON.parse(localStorage.getItem('ips'))
+  if (ips) { //populate ALL select lists
+    let selects = document.getElementsByClassName("ip_select")
+    let add_to_select = ''
+    for (let x = 0; x < ips.length; x++) {
+      add_to_select += `<option value="${ips[x]}">${ips[x]}</option>\n`
+    }
+    for (let select of selects) {
+    select.innerHTML = add_to_select
+    }
+  }
+}
+
 function _resizeWidth(event) {
     let target = event.target
     let hidden = document.getElementById('_hidden_width_element_')
@@ -256,6 +290,10 @@ self.setElementHandlers = (block) => {
     elem.addEventListener('click', self.handleToggle, true)
     self.toggleRelativesOnElement(elem)
     elem.addEventListener('mousedown', (ev)=>{ev.preventDefault();return false})
+  }
+  //add update handler for IP datalist on click
+  for (let elem of block.querySelectorAll("#robot_ip")) {
+    elem.addEventListener('click', _updateIPList)
   }
   // set auto resize for input fields
   let inputs = block.querySelectorAll("input[type='text']")
@@ -408,6 +446,8 @@ function _setupDragula() {
 }
 
 self.setup = () => {
+  //OK this is bad but temporary my bad
+  _updateIPList()
   window.onbeforeunload = () => {
     let obj = self.getScriptAsObject()
     if (obj.length) {
