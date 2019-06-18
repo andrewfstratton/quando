@@ -422,6 +422,24 @@
     audio.parentNode.replaceChild(audio.cloneNode(true), audio)
   }
 
+  self.replay_video_audio = function () {
+    let video = document.getElementById('quando_video')
+    let audio = document.getElementById('quando_audio')
+    let video_audio = null
+
+    if (!video.paused) {
+      video_audio = video
+    } else if (!audio.paused) {
+      video_audio = audio
+    }
+
+    if (video_audio) {
+      video_audio.pause()
+      video_audio.currentTime = 0
+      video_audio.play()
+    }
+  }
+
   self.hands = function (count, do_fn) {
     var hands = 'None'
     var handler = function () {

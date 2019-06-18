@@ -104,7 +104,7 @@ const MEDIA_MAP = {
   //TODO - refactor to videos & images
   'video': ['ogg', 'ogv', 'mp4', 'webm'],
   'audio': ['mp3', 'wav'],
-  'images': ['bmp', 'jpg', 'jpeg', 'png'],
+  'images': ['bmp', 'jpg', 'jpeg', 'png', 'gif'],
   'objects': ['gltf', 'glb'], 
   // 'objects': ['obj', 'mtl'],
 }
