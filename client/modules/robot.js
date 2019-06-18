@@ -26,6 +26,13 @@
         }
     }
 
+    let ttsVals = {
+        pitch: 1,
+        speed: 100
+    }
+
+    let listenedWords = []
+
     self._list = []
     self._armActionsList = {}
 
@@ -187,8 +194,19 @@
         })
     }
 
-    self.say = (text, interrupt=false) => {
+    self.say = (text, pitch, speed, echo, interrupt=false) => {
         session.service("ALTextToSpeech").then((tts) => {
+            tts.setParameter("pitchShift", pitch)
+            tts.setParameter("speed", speed)
+            if (echo) {
+                tts.setParameter("doubleVoice", 1.1)
+                tts.setParameter("doubleVoiceLevel", 0.5)
+                tts.setParameter("doubleVoiceTimeShift", 0.1)
+            } else {
+                tts.setParameter("doubleVoice", 1)
+                tts.setParameter("doubleVoiceLevel", 0)
+                tts.setParameter("doubleVoiceTimeShift", 0.0)
+            }
             if (robot.TextToSpeech.CurrentSentence != text) {
                 if (interrupt) {
                     tts.stopAll()
@@ -197,19 +215,69 @@
             }
         }).fail(log_error)
     }
-
-    self.changeVoice = (pitch, speed, dblPitch = 0, dblLvl = 0, dblTimeShift = 0) => {
-        session.service("ALTextToSpeech").then((tts) => {
-            tts.setParameter("pitchShift", pitch)
-            tts.setParameter("speed", speed)
-            tts.setParameter("doubleVoice", dblPitch)
-            tts.setParameter("doubleVoiceLevel", dblLvl)
-            tts.setParameter("doubleVoiceTimeShift", dblTimeShift)
+    
+    self.animatedSay = (text, anim, pitch, speed, echo, interrupt=false) => {
+        anim = ""//"(animations/Stand/Gestures/Enthusiastic_4) "
+        session.service("ALAnimatedSpeech").then((aas) => {
+            //aas.setParameter("pitchShift", pitch)
+            //aas.setParameter("speed", speed)
+            if (echo) {
+                //aas.setParameter("doubleVoice", 1.1)
+                //aas.setParameter("doubleVoiceLevel", 0.5)
+                //aas.setParameter("doubleVoiceTimeShift", 0.1)
+            }
+            if (robot.TextToSpeech.CurrentSentence != text) {
+                if (interrupt) {
+                    //aas.stopAll()
+                }
+                aas.say("^start" + anim + text)
+            }
+            // If you want it to keep running, you can add a 
+            //^wait instruction at the end: ^wait(animations/Stand/Gestures/Hey_1)"
+        }).fail(log_error)
+    }
+        
+    self.animatedSayR = (text, anim, pitch, speed, echo, interrupt=false) => {
+        anim = ""//"(animations/Stand/Gestures/Enthusiastic_4) "
+        session.service("ALAnimatedSpeech").then((aas) => {
+            aas.setBodyLanguageMode(1)
+            //aas.setParameter("pitchShift", pitch)
+            //aas.setParameter("speed", speed)
+            if (echo) {
+                //aas.setParameter("doubleVoice", 1.1)
+                //aas.setParameter("doubleVoiceLevel", 0.5)
+                //aas.setParameter("doubleVoiceTimeShift", 0.1)
+            }
+            if (robot.TextToSpeech.CurrentSentence != text) {
+                if (interrupt) {
+                    //aas.stopAll()
+                }
+                aas.say("^start" + anim + text)
+            }
+            // If you want it to keep running, you can add a 
+            //^wait instruction at the end: ^wait(animations/Stand/Gestures/Hey_1)"
         }).fail(log_error)
     }
 
+    //play sine wave passing value - gain ~ volume
+    self.playSineV = (freq, gain, duration, val) => {
+        console.log(val)
+        session.service("ALAudioDevice").then((aadp) => {
+            console.log('Playing Sine wave...')
+            aadp.playSine(freq, gain, 0, duration)
+        }).fail(log_error)
+    }
+
+    //play sine wave - gain ~ volume
+    self.playSine = (freq, gain, duration) => {
+        session.service("ALAudioDevice").then((aadp) => {
+            console.log('Playing Sine wave...')
+            aadp.playSine(freq, gain, 0, duration)
+        }).fail(log_error)
+    }
 
     self.turnHead = (yaw, middle, range, speed, normal_inverted, val) => {
+        console.log(val)
         let min = helper_ConvertAngleToRads(middle - range)
         let max = helper_ConvertAngleToRads(middle + range)
         if (!normal_inverted) { val = 1-val }
@@ -299,6 +367,20 @@
         }
     }
 
+    self.stepSideways = function (steps, direction, interrupt = false, callback) {
+        const stepLength = 0.025; //in M
+
+        if (interrupt) motionSequence = []
+        motionInterrupt = interrupt
+        motionSequence.push(() => {
+            session.service("ALMotion").then(function(mProxy) {
+                mProxy.moveTo(0, steps * stepLength * direction, 0)
+                mProxy.waitUntilMoveIsFinished().done(callback).fail(log_error)
+            })
+        })
+    }
+
+
     self.rotateBody = function (angle, direction, interrupt = false, callback) { //angle in degrees
         angle = helper_ConvertAngleToRads(angle)
 
@@ -369,12 +451,17 @@
         }
     }
 
+<<<<<<< HEAD
 
     self.listenForWords = function (listName, vocab, confidence, blockID, callback, destruct = true) {
         // waitForSayFinish();
 
         self.addToWordList(listName, vocab)
 
+=======
+    self.listenForWords = function (listName, confidence, blockID, callback, destruct = true) {
+        waitForSayFinish();
+>>>>>>> nao_dev_balraj
         var list;
         var fullList = [];
         for (var i = 0; i < self._list.length; i++) {

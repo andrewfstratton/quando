@@ -162,7 +162,7 @@ input, #_hidden_width_element_ {
 .quando-box {
   margin: 0px 8px 0px 4px;
   padding: 4px 0px 0px 0px;
-  min-height: 10px;
+  min-height: 24px;
   width: 100%;
 }
 
@@ -172,9 +172,6 @@ input[type="color"] {
   width: 22px;
   padding: 0px;
 }
-/* #script .quando-box {
-  min-height: 24px;
-} */
 
 /* Colours for block backgrounds and title */
 
