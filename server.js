@@ -8,7 +8,6 @@ const fs = require('fs')
 const body_parser = require('body-parser')
 const base64Img = require('base64-img')
 const base64 = require('file-base64')
-const script = require('./script')
 const watson_db = require('./watson_db')
 const client_deploy = './client/deployed_js/'
 const user = require('./user')
