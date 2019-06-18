@@ -202,6 +202,10 @@
                 tts.setParameter("doubleVoice", 1.1)
                 tts.setParameter("doubleVoiceLevel", 0.5)
                 tts.setParameter("doubleVoiceTimeShift", 0.1)
+            } else {
+                tts.setParameter("doubleVoice", 1)
+                tts.setParameter("doubleVoiceLevel", 0)
+                tts.setParameter("doubleVoiceTimeShift", 0.0)
             }
             if (robot.TextToSpeech.CurrentSentence != text) {
                 if (interrupt) {
@@ -356,6 +360,20 @@
             })
         })
     }
+
+    self.stepSideways = function (steps, direction, interrupt = false, callback) {
+        const stepLength = 0.025; //in M
+
+        if (interrupt) motionSequence = []
+        motionInterrupt = interrupt
+        motionSequence.push(() => {
+            session.service("ALMotion").then(function(mProxy) {
+                mProxy.moveTo(0, steps * stepLength * direction, 0)
+                mProxy.waitUntilMoveIsFinished().done(callback).fail(log_error)
+            })
+        })
+    }
+
 
     self.rotateBody = function (angle, direction, interrupt = false, callback) { //angle in degrees
         angle = helper_ConvertAngleToRads(angle)
