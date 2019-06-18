@@ -1,0 +1,27 @@
+<div class="quando-block" data-quando-javascript="quando.robot.animatedSayR('${say}', 'anim', ${pitch}, ${speed}, ${echo}, ${interrupt})">
+  <div class="quando-left quando-robot"></div>
+  <div class="quando-right">
+    <div class="quando-row quando-robot">🤖 Robot Animated R 💬
+      <input data-quando-name="say" type="text" value="" data-quando-encode="normal" />
+      Pitch:
+      <input data-quando-name="pitch" type="text" value="1" data-quando-encode="normal"/>
+      Speed:
+      <input data-quando-name="speed" type="text" value="1" data-quando-encode="normal"/>
+      <select data-quando-name="extras" class="quando-toggle">
+        <option value="hidden">+</option>
+        <option value="show">-</option>
+      </select>
+      <span data-quando-toggle="extras=show">
+        <br>
+        <select data-quando-name='echo' class='quando-toggle'>
+          <option value='true'>Echo</option>
+          <option value='false'>No Echo</option>
+        </select>
+        <select data-quando-name='interrupt' class='quando-toggle'>
+          <option value='true'>Interrupt</option>
+          <option value='false'>Buffer</option>
+        </select>
+      </span>
+    </div>
+  </div>
+</div>
