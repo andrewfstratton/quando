@@ -286,19 +286,28 @@
         }
     }
 
-    //INCOMPLETE
-    self.moveArmNew = (yaw, middle, range, speed, normal_inverted, val) => {
+    self.moveArmNew = (left, roll, middle, range, speed, normal_inverted, val) => {
         console.log(val)
         let min = helper_ConvertAngleToRads(middle - range)
         let max = helper_ConvertAngleToRads(middle + range)
         if (!normal_inverted) { val = 1-val }
         let radians = min + (val * (max-min))
-        if (yaw) { // Yaw
-            state.shoulder.left.roll.angle = radians
-            state.shoulder.left.roll.speed = speed
-        } else { // Pitch
-            state.shoulder.left.pitch.angle = radians
-            state.shoulder.left.pitch.speed = speed
+        if (left) { // Update Left Arm
+            if (roll) { // Roll
+                state.shoulder.left.roll.angle = radians
+                state.shoulder.left.roll.speed = speed
+            } else { // Pitch
+                state.shoulder.left.pitch.angle = radians
+                state.shoulder.left.pitch.speed = speed
+            }
+        } else { // Update Right Arm
+            if (roll) { // Roll
+                state.shoulder.right.roll.angle = radians
+                state.shoulder.right.roll.speed = speed
+            } else { // Pitch
+                state.shoulder.right.pitch.angle = radians
+                state.shoulder.right.pitch.speed = speed
+            }
         }
     }
 
