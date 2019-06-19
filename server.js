@@ -7,8 +7,7 @@ const app = express()
 const fs = require('fs')
 const body_parser = require('body-parser')
 const base64Img = require('base64-img');
-const path = require('path')
-const join = path.join
+const join = require('path').join
 const http = require('http').Server(app)
 const https = require('https')
 const io = require('socket.io')(http)
@@ -144,14 +143,14 @@ app.use(body_parser.json())
 
 require('./server/rest/login')(app, success, fail)
 require('./server/rest/script')(app, io, success, fail)
-require('./server/rest/file')(app, MEDIA_FOLDER, MEDIA_MAP, path, success, fail)
+require('./server/rest/file')(app, MEDIA_FOLDER, MEDIA_MAP, success, fail)
 
 // Static for inventor
 app.use('/inventor', express_static(join(__dirname, 'inventor')))
 app.use('/favicon.ico', express_static(join(__dirname, 'inventor/favicon.ico')))
 
 const client_dir = join(__dirname, 'client')
-require('./server/rest/client')(app, client_dir, express_static, join, success, fail)
+require('./server/rest/client')(app, client_dir, express_static, success, fail)
 require('./server/rest/message')(app, io, https)
 
 //WATSON SERVICES
@@ -251,7 +250,7 @@ app.post('/socket/:id', (req, res) => {
   res.json({})
 })
 
-require('./server/rest/blocks')(app, __dirname, join, success, fail)
+require('./server/rest/blocks')(app, __dirname, success, fail)
 require('./server/rest/ubit')(app, io)
 require('./server/rest/ip')(app, appEnv, success, fail)
 require('./server/rest/user')(app, appEnv, success, fail)

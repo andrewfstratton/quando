@@ -1,7 +1,8 @@
 const fs = require('fs')
 const formidable = require('formidable')
+const path = require('path')
 
-module.exports = (app, path, media_folder, media_map, success, fail) => {
+module.exports = (app, media_folder, media_map, success, fail) => {
   app.get('/file/type/*', (req, res) => {
     let filename = req.params[0]
     let media = path.basename(filename)
