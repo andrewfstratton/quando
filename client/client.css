@@ -15,6 +15,11 @@ body {
     background-color: rgba(224, 119, 0, 0.6);
     border: 0px;  /* solid grey; */
 }
+
+#hiddenCanvas {
+    z-index: 2;
+}
+
 .quando_label::before {
     content: '\25b6\0020';
 }
@@ -24,6 +29,17 @@ body {
     padding: 5px;
     margin: 2px 2px 5px 2px;
 }
+
+#inp {
+    height: 1.9vw;
+    width: 80%;
+    padding: 5px;
+}
+
+#inpButton {
+    height: 1.9vw;
+}
+
 #quando_labels {
     position: absolute;
     z-index: 100;

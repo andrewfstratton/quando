@@ -6,7 +6,12 @@ const MemoryStore = require('memorystore')(session)
 const app = express()
 const fs = require('fs')
 const body_parser = require('body-parser')
-const base64Img = require('base64-img');
+const base64Img = require('base64-img')
+const base64 = require('file-base64')
+const watson_db = require('./watson_db')
+const client_deploy = './client/deployed_js/'
+const user = require('./user')
+const path = require('path')
 const join = require('path').join
 const http = require('http').Server(app)
 const https = require('https')
@@ -25,31 +30,31 @@ function success(response, obj = false) {
 }
 
 //Watson services
-const TextToSpeechV1 = require('watson-developer-cloud/text-to-speech/v1');
+const TextToSpeechV1 = require('watson-developer-cloud/text-to-speech/v1')
 const tts = new TextToSpeechV1({
   iam_apikey: 'rRDUgzsh17bWWYS2VesXDCkHIanOQIuE42ccPOI7qivX',
   url: 'https://gateway-lon.watsonplatform.net/text-to-speech/api'
-});
+})
 
-const VisualRecognitionV3 = require('watson-developer-cloud/visual-recognition/v3');
+const VisualRecognitionV3 = require('watson-developer-cloud/visual-recognition/v3')
 const visRec = new VisualRecognitionV3({
   version: '2018-03-19',
   iam_apikey: 'md2b1cDrwPHQC-a-hJovQnsgdvRyympAfBArw4niQCn9',
   url: 'https://gateway.watsonplatform.net/visual-recognition/api'
-});
+})
 
-var ToneAnalyzerV3 = require('watson-developer-cloud/tone-analyzer/v3');
+var ToneAnalyzerV3 = require('watson-developer-cloud/tone-analyzer/v3')
 var toneAnalyzer = new ToneAnalyzerV3({
   version: '2017-09-21',
   iam_apikey: 'WcRnTs5agEpG9o_PKiTTQSJK1G7fUpcdodKWuVCJivUh',
   url: 'https://gateway-lon.watsonplatform.net/tone-analyzer/api'
-});
+})
 
-var SpeechToTextV1 = require('watson-developer-cloud/speech-to-text/v1');
+var SpeechToTextV1 = require('watson-developer-cloud/speech-to-text/v1')
 var stt = new SpeechToTextV1({
   iam_apikey: 'WiLEvMCQ1hPxKRYtpFo98jYg6jsc2QSnEHx2hfsYiseu',
- url: 'https://gateway-lon.watsonplatform.net/speech-to-text/api'
-});
+  url: 'https://gateway-lon.watsonplatform.net/speech-to-text/api'
+})
 
 let port = process.env.PORT || 80
 let appEnv = require('cfenv').getAppEnv() // For IBM Cloud
@@ -136,7 +141,7 @@ app.use('/', (req, res, next) => {
 app.use('/', express_static(join(__dirname, 'hub')))
 
 //increased limit of bp to allow for visrec 
-app.use(body_parser.json({ limit: '10mb' }));
+app.use(body_parser.json({ limit: '10mb' }))
 app.use(body_parser.urlencoded({ extended: true, limit:'10mb' }))
 
 app.use(body_parser.json())
@@ -157,90 +162,99 @@ require('./server/rest/message')(app, io, https)
 
 //Text-To-Speech
 app.post('/watson/TTS_request', (req, res) => {
+  let filename = null
   console.log('Text to Speech Requested...')
-  let text = req.body.text;
-  console.log('TTS Text is: ' + text);
-  let params = { //stuff sent to API
-    text: text,
-    accept: 'audio/wav'
-  } 
-  tts.synthesize(params, function(err, audio) { //handling errors and file
-    if (err) {
-      console.log(err);
-      return;
-    } 
-    //save output file
-    tts.repairWavHeader(audio);
-    fs.writeFileSync(__dirname + '/client/media/tts.wav', audio);
-    console.log('TTS - audio written as tts.wav');
-    res.json({});
-  });
-});
+  let text = req.body.text
+  watson_db.save(text).then(
+    (success) => { 
+      console.log(success)
+      let params = { //stuff sent to API
+        text: text,
+        accept: 'audio/wav',
+      } 
+      tts.synthesize(params, function(err, audio) { //handling errors and file
+        if (err) {
+          console.log(err)
+          return
+        } 
+        //save output file
+        tts.repairWavHeader(audio)
+        fs.writeFileSync(__dirname + '/client/media/'+success.id+'.wav', audio)
+        console.log('TTS - audio written as '+success.id+'.wav')
+        filename = success.id
+        res.json(filename)
+      })
+    },
+    (err) => { console.log(err) })
+})
 
 //Visual-Recognition
 app.post('/watson/VISREC_request', (req, res) => {
-  console.log('Visual Recognition Requested...');
-  let imgData = req.body.imgData;
+  console.log('Visual Recognition Requested...')
+  let imgData = req.body.imgData
   base64Img.img(imgData, __dirname + '/client/media', 'visrec', function(err, filepath) {
-
-    let file = fs.createReadStream(__dirname +'/client/media/visrec.png');
+    let file = fs.createReadStream(__dirname +'/client/media/visrec.png')
     let params = { //stuff sent to API
       images_file: file
-    };
+    }
     //call API
     visRec.classify(params, function(err, response) {
       if (err) {
-        console.log(err);
+        console.log(err)
       } else {
-        //TODO - need to parse out the classification here n pass it back with the socket signal
-        console.log(JSON.stringify(response, null, 2));
-        res.json(JSON.stringify(response, null, 2));
-      };
-    });
-
-  });
-  //io.emit('VISREC_return', {}) //send socket signal to client saying rec complete
-});
+        console.log(JSON.stringify(response, null, 2))
+        res.json(JSON.stringify(response, null, 2))
+      }
+    })
+  })
+})
 
 //Tone Analyzer
 app.post('/watson/TONE_request', (req, res) => {
-  console.log('Tone Analyzer Requested...');
-  let text = req.body.text;
+  console.log('Tone Analyzer Requested...')
+  let text = req.body.text
   let params = { //stuff sent to API
     tone_input: {'text': text},
     content_type: 'application/json'
-  };
+  }
   toneAnalyzer.tone(params, function (error, toneAnalysis) {
     if (error) {
-      console.log(error);
+      console.log(error)
     } else { 
-      //console.log(JSON.stringify(toneAnalysis, null, 2));
-      res.json(JSON.stringify(toneAnalysis, null, 2));
+      //console.log(JSON.stringify(toneAnalysis, null, 2))
+      res.json(JSON.stringify(toneAnalysis, null, 2))
     }
   })
-});
+})
 
 //Speech to Text
 app.post('/watson/SPEECH_request', (req, res) => {
-  console.log('Speech to Text Requested...');
-  var combinedStream = CombinedStream.create();
-  combinedStream.append(fs.createReadStream(__dirname + 'audio-file1.wav'));
-  combinedStream.append(fs.createReadStream(__dirname + 'audio-file2.wav'));
-  
-  var params = {
-    audio: combinedStream,
-    content_type: 'audio/wav',
-    timestamps: true,
-    word_alternatives_threshold: 0.9
-  };
-  speechToText.recognize(recognizeParams, function(error, speechRecognitionResults) {
-    if (error) {
-      console.log(error);
-    } else {
-      console.log(JSON.stringify(speechRecognitionResults, null, 2));
-    }
-  });
-});
+  console.log('Speech to Text Requested...')
+  let data = req.body.data
+  watson_db.save(data).then((success) => {
+    base64.decode(data, success.id+".webm", function(err, output){
+      console.log('success!')
+      var params = {
+        objectMode: false,
+        content_type: 'audio/webm',
+        model: 'en-GB_BroadbandModel'
+      }
+      
+      var recognizeStream = stt.recognizeUsingWebSocket(params);
+      recognizeStream.setEncoding('utf8')
+      
+      // Pipe in the audio.
+      fs.createReadStream(success.id+".webm").pipe(recognizeStream)
+      recognizeStream.on('data', function(event) { onEvent('Data:', event); });
+      
+      // Display events on the console.
+      function onEvent(name, event) {
+          console.log(name, "written to "+success.id+".webm: "+JSON.stringify(event, null, 2));
+          res.json(JSON.stringify(event, null, 2))
+      };
+    })
+  })
+})
 
 app.post('/socket/:id', (req, res) => {
   let id = req.params.id
