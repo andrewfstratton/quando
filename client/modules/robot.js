@@ -26,11 +26,6 @@
         }
     }
 
-    let ttsVals = {
-        pitch: 1,
-        speed: 100
-    }
-
     let listenedWords = []
 
     self._list = []
@@ -292,27 +287,36 @@
     }
 
     //INCOMPLETE
-    self.moveArm = (yaw, middle, range, speed, normal_inverted, val) => {
+    self.moveArmNew = (yaw, middle, range, speed, normal_inverted, val) => {
         console.log(val)
         let min = helper_ConvertAngleToRads(middle - range)
         let max = helper_ConvertAngleToRads(middle + range)
         if (!normal_inverted) { val = 1-val }
         let radians = min + (val * (max-min))
         if (yaw) { // Yaw
-            state.head.yaw.angle = radians
-            state.head.yaw.speed = speed
+            state.shoulder.left.roll.angle = radians
+            state.shoulder.left.roll.speed = speed
         } else { // Pitch
-            state.head.pitch.angle = radians
-            state.head.pitch.speed = speed
+            state.shoulder.left.pitch.angle = radians
+            state.shoulder.left.pitch.speed = speed
         }
     }
 
-    function updateYawPitch(motion, direction, yaw_pitch) {
+    function updateYawPitch(motion, joint, yaw_pitch) {
         if (yaw_pitch.angle && (yaw_pitch.angle !== yaw_pitch.last_angle)) { // update yaw
-            motion.killTasksUsingResources([direction]) // Kill any current motions
-            motion.setAngles(direction, yaw_pitch.angle, yaw_pitch.speed/100)
+            motion.killTasksUsingResources([joint]) // Kill any current motions
+            motion.setAngles(joint, yaw_pitch.angle, yaw_pitch.speed/100)
             yaw_pitch.last_angle = yaw_pitch.angle
             yaw_pitch.angle = false
+        }
+    }
+
+    function updateJoint(motion, joint, pitch_roll) {
+        if (pitch_roll.angle && (pitch_roll.angle !== pitch_roll.last_angle)) { // update yaw
+            motion.killTasksUsingResources([joint]) // Kill any current motions
+            motion.setAngles(joint, pitch_roll.angle, pitch_roll.speed/100)
+            pitch_roll.last_angle = pitch_roll.angle
+            pitch_roll.angle = false
         }
     }
 
@@ -335,6 +339,10 @@
             updateYawPitch(motion, 'HeadPitch', state.head.pitch)
             updateHand(motion, 'LHand', state.hand.left)
             updateHand(motion, 'RHand', state.hand.right)
+            updateJoint(motion, 'LShoulderPitch', state.shoulder.left.pitch)
+            updateJoint(motion, 'LShoulderRoll', state.shoulder.left.roll)
+            updateJoint(motion, 'RShoulderPitch', state.shoulder.right.pitch)
+            updateJoint(motion, 'RShoulderRoll', state.shoulder.right.roll)
             updateMovement(motion)
             
             setTimeout(updateRobot, 1000/25) // i.e. x times per second

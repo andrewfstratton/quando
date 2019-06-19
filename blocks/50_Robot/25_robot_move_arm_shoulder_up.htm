@@ -6,6 +6,11 @@ data-quando-javascript="quando.robot.turnHead(${yaw}, ${middle}, ${range}, ${spe
 🤖 Move Arm
 <select data-quando-name='yaw' class='quando-toggle'><option value='false'>⇕</option>
 </select>
+<select data-quando-name="left"
+class="quando-toggle">
+  <option value="true">Left</option>
+  <option value="false">Right</option>
+</select>
 <select data-quando-name="extras"
 class="quando-toggle">
   <option value="hidden">+</option>
@@ -16,7 +21,7 @@ class="quando-toggle">
 <input data-quando-name="middle" type="text" value="0" data-quando-encode="normal"/>
 degrees
 ±
-<input data-quando-name="range" type="text" value="40" data-quando-encode="normal"/>
+<input data-quando-name="range" type="text" value="120" data-quando-encode="normal"/>
 degrees.
 &nbsp;
  Speed
