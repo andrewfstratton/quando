@@ -291,6 +291,22 @@
         }
     }
 
+    //INCOMPLETE
+    self.moveArm = (yaw, middle, range, speed, normal_inverted, val) => {
+        console.log(val)
+        let min = helper_ConvertAngleToRads(middle - range)
+        let max = helper_ConvertAngleToRads(middle + range)
+        if (!normal_inverted) { val = 1-val }
+        let radians = min + (val * (max-min))
+        if (yaw) { // Yaw
+            state.head.yaw.angle = radians
+            state.head.yaw.speed = speed
+        } else { // Pitch
+            state.head.pitch.angle = radians
+            state.head.pitch.speed = speed
+        }
+    }
+
     function updateYawPitch(motion, direction, yaw_pitch) {
         if (yaw_pitch.angle && (yaw_pitch.angle !== yaw_pitch.last_angle)) { // update yaw
             motion.killTasksUsingResources([direction]) // Kill any current motions
