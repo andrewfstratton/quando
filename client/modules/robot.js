@@ -5,10 +5,16 @@
     }
     let self = quando.robot = {}
     let state = { // holds the requested state
-        hand : { left:{}, right:{}},
+        hand : { left: {}, right: {}},
         head : { yaw: {}, pitch: {}},
         shoulder : { left: {roll: {}, pitch: {}}, right: {roll: {}, pitch: {}}}
     }
+
+    let exampleSine = {freq: 200, gain: 20, duration: 1}
+    let testSBuffer = [exampleSine, {freq: 250, gain: 20, duration: 1}, {freq: 300, gain: 20, duration: 1}, {freq: 350, gain: 20, duration: 1}, {freq: 450, gain: 20, duration: 1}]
+    let sineBuffer = []
+    sineBuffer = testSBuffer
+    let testCounter = 0
 
     class vocabList {
         constructor(listName, vocab) {
@@ -25,8 +31,6 @@
             TextDone: null
         }
     }
-
-    let listenedWords = []
 
     self._list = []
     self._armActionsList = {}
@@ -269,10 +273,33 @@
             console.log('Playing Sine wave...')
             aadp.playSine(freq, gain, 0, duration)
         }).fail(log_error)
+    } 
+
+    self.goThroughSineBuffer = () => {
+        if (sineBuffer.length > 0) { //if there's a tone that needs playing
+            testCounter += 1
+            console.log(testCounter)
+            let sine = sineBuffer[0]
+            let freq = sine.freq
+            let gain = sine.gain
+            let duration = sine.duration
+            //play sine
+            session.service("ALAudioDesvice").then((aadp) => {
+                console.log('Playing Sine wave: ' + freq + "Hz " + gain + " gain " + duration + " seconds counter:" + testCounter)
+                aadp.playSine(freq, gain, 0, duration)
+            }).fail(log_error)
+
+            sineBuffer.shift() //remove played sine wave
+            //wait till wave is over, then call itself again
+            window.setTimeout(self.goThroughSineBuffer(), sine.duration*1000)
+        } 
+    }
+
+    self.addSineWaveToBuffer = (freq, gain, duration) => {
+        sineBuffer.push({freq: freq, gain: gain, duration: duration})
     }
 
     self.turnHead = (yaw, middle, range, speed, normal_inverted, val) => {
-        console.log(val)
         let min = helper_ConvertAngleToRads(middle - range)
         let max = helper_ConvertAngleToRads(middle + range)
         if (!normal_inverted) { val = 1-val }
@@ -287,7 +314,6 @@
     }
 
     self.moveArmNew = (left, roll, middle, range, speed, normal_inverted, val) => {
-        console.log(val)
         let min = helper_ConvertAngleToRads(middle - range)
         let max = helper_ConvertAngleToRads(middle + range)
         if (!normal_inverted) { val = 1-val }
@@ -324,6 +350,7 @@
         if (pitch_roll.angle && (pitch_roll.angle !== pitch_roll.last_angle)) { // update yaw
             motion.killTasksUsingResources([joint]) // Kill any current motions
             motion.setAngles(joint, pitch_roll.angle, pitch_roll.speed/100)
+            console.log(joint + " " + pitch_roll.angle)
             pitch_roll.last_angle = pitch_roll.angle
             pitch_roll.angle = false
         }
