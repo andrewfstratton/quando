@@ -348,9 +348,7 @@
 
     function updateJoint(motion, joint, pitch_roll) {
         if (pitch_roll.angle && (pitch_roll.angle !== pitch_roll.last_angle)) { // update yaw
-            motion.killTasksUsingResources([joint]) // Kill any current motions
             motion.setAngles(joint, pitch_roll.angle, pitch_roll.speed/100)
-            console.log(joint + " " + pitch_roll.angle)
             pitch_roll.last_angle = pitch_roll.angle
             pitch_roll.angle = false
         }
