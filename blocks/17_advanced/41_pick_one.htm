@@ -7,6 +7,15 @@ data-quando-javascript="$(pre$, quando.pick.set(${data-quando-id}, [${box}]))$$(
         <option value='true'>Next</option>
         <option value='false'>Previous</option>
       </select>
+      &nbsp;
+      <select data-quando-name='extras' class='quando-toggle'>
+        <option value='hidden'>+</option>
+        <option value='show'>-</option>
+      </select>
+      <span data-quando-toggle='extras=show'>
+        <br />
+        from list <input data-quando-name="name" type="text" value="" data-quando-list="pick"/>
+      </span>
     </div>
     <div data-quando-name="box" class="quando-box" data-quando-fn-array="true"></div>
     <div class="quando-row quando-advanced"></div>
