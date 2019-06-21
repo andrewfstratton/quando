@@ -509,17 +509,12 @@
         }
     }
 
-<<<<<<< HEAD
 
     self.listenForWords = function (listName, vocab, confidence, blockID, callback, destruct = true) {
         // waitForSayFinish();
 
         self.addToWordList(listName, vocab)
 
-=======
-    self.listenForWords = function (listName, confidence, blockID, callback, destruct = true) {
-        waitForSayFinish();
->>>>>>> nao_dev_balraj
         var list;
         var fullList = [];
         for (var i = 0; i < self._list.length; i++) {
