@@ -5,7 +5,7 @@
   }
   const self = quando.eeg = {};
 
-  const client = new Cortex({ verbose: 2 });
+  const client = new Cortex({ verbose: 1 });
   const quandoML = new QuandoML();
 
   self._labels = [];        // set of labels used for ml classification
@@ -93,13 +93,11 @@
       self._subs.push(type);
 
       client.on("connected", () => {
-        return client.subscribe({ streams: [type] })
-          .then(_subs => {
-            const subs = Object.assign({}, ..._subs);
-            if (!subs[type])
-              throw new Error("failed to subscribe to " + type);              
-            
-            const cols = subs[type].cols;
+        return client.subscribe({ streams: [type], session: client.session.id })
+          .then(({ success }) => {
+            if (!success.length) { throw new Error("failed to subscribe to " + type); }
+
+            const cols = success[0].cols;
             let processData;
             if (_initProcessing[type]) {
               processData = _initProcessing[type](cols);
@@ -225,8 +223,8 @@
 
       return {
         yaw: data.GYROX,
-        pitch: data.GYROY,
-        roll: data.GYROZ,
+        pitch: data.GYROZ,
+        roll: data.GYROY,
         nodding: _nodding.get()
       };
     };
@@ -239,18 +237,9 @@
 
   const _initProcessing = {
     "mot" : (cols) => {
-      // Motion data columns look like 'IMD_GYROX',
-      // this will make them look like 'gyroX'
-      const makeFriendlyCol = col =>
-      col.replace(
-        /^IMD_(.*?)([XYZ]?)$/,
-        (_, name, dim) => name.toLowerCase() + dim
-      );
-      
-      const motCols = cols.map(makeFriendlyCol);
       const motCalibrateNum = 1000;
       const offset = {};
-      for (col of motCols) offset[col] = 0;
+      for (col of cols) offset[col] = 0;
 
       const processMotData = _initMotData(offset);
       let motCalibrateCount = 0;
@@ -258,7 +247,7 @@
 
       return (data) => {
         const mot = {};
-        motCols.forEach((col, i) => mot[col] = data[i]);
+        cols.forEach((col, i) => mot[col] = data[i]);
 
         if (!calibrated) {
           motCalibrateCount++;
@@ -371,12 +360,13 @@
 
   client.ready
     .then(() => client.init({
-      username: "directk",
-      password: "Eweagtmslon19", 
-      client_id: "8sfFMP0y2opXq6gmhNBAmcbdnDdBM06y6Y3RiJiL", 
-      client_secret: "cR8MKcueMdKDvYh33zUmnxHYfMqoi9nwD5VuM0lzZt1Z5iBxP7JDovZ0n96dONYvUgDM8mB9IRsw7tjX2o8oS5IehDsLpOrXKKL2HvePWrYwhdWW8Q6W9ynD75uohikw"
+      clientId: "8sfFMP0y2opXq6gmhNBAmcbdnDdBM06y6Y3RiJiL", 
+      clientSecret: "cR8MKcueMdKDvYh33zUmnxHYfMqoi9nwD5VuM0lzZt1Z5iBxP7JDovZ0n96dONYvUgDM8mB9IRsw7tjX2o8oS5IehDsLpOrXKKL2HvePWrYwhdWW8Q6W9ynD75uohikw"
     })) 
     .then(() => client.createSession({ status: 'open' }))
-    .then(() => client.emit("connected", {}, true));
+    .then((session) => {
+      client.session = session;
+      client.emit("connected", {}, true);
+    });
 
 })();

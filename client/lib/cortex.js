@@ -22,7 +22,7 @@
     return;
   }
 
-  const CORTEX_URL = "wss://emotivcortex.com:54321";
+  const CORTEX_URL = "wss://localhost:6868";
 
   const safeParse = msg => {
     try {
@@ -111,32 +111,26 @@
     _debug(...msg) {
       if (this.verbose > 2) console.warn("[Cortex DEBUG]", ...msg);
     }
-    init({ username, password, client_id, client_secret, debit } = {}) {
-      return this.getUserLogin()
-        .then(users => {
-          if (users[0]) {
-            this._log("init: Logging out other user", users[0]);
-            return this.logout({ username: users[0] }).then(() => []);
-          }
-          if (username) {
-            this._log("init: Reusing existing login");
-          } else {
-            this._log("init: Logging in anonymously");
-          }
-          return users;
+    init({ clientId, clientSecret, debit } = {}) {
+      return this.requestAccess({ clientId, clientSecret })
+        .then(({ accessGranted, message }) => {
+          if (accessGranted) this._log("init: Access granted");
         })
-        .then(users => {
-          if (!users[0] && username && password) {
-            this._log("init: Logging in as", username);
-            return this.login({ username, password, client_id, client_secret });
-          }
-        })
-        .then(() => this.authorize({ client_id, client_secret, debit }))
-        .then(({ _auth }) => {
+        .then(() => this.authorize({ clientId, clientSecret, debit }))
+        .then(({ cortexToken }) => {
           this._log("init: Got auth token");
-          this._debug("init: Auth token", _auth);
-          this._auth = _auth;
+          this._debug("init: Auth token", cortexToken);
+          this.cortexToken = cortexToken;
         })
+        .then(() => this.queryHeadsets())
+        .then(headsets => {
+          if (headsets.length) {
+            return this.controlDevice({ command: 'connect', headset: headsets[0].id });
+          } else {
+            this._warn("init: No headset available to connect");
+          }
+        })
+        .then(() => this._log("init: Connected to headset"))
         .then(() => this.emit("init"));
     }
     close() {
@@ -179,13 +173,13 @@
     }
     defineMethod(methodName, paramDefs = []) {
       if (this[methodName]) return;
-      const needsAuth = paramDefs.some(p => p.name === "_auth");
+      const needsAuth = paramDefs.some(p => p.name === "cortexToken");
       // console.log("method: ", methodName, " needs auth: ", needsAuth);
       const requiredParams = paramDefs.filter(p => p.required).map(p => p.name);
 
       this[methodName] = (params = {}) => {
-        if (needsAuth && this._auth && !params._auth) {
-          params = Object.assign({}, params, { _auth: this._auth });
+        if (needsAuth && this.cortexToken && !params.cortexToken) {
+          params = Object.assign({}, params, { cortexToken: this.cortexToken });
         }
         const missingParams = requiredParams.filter(p => params[p] == null);
         if (missingParams.length > 0) {
