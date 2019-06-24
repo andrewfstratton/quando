@@ -360,6 +360,16 @@
         }
     }
 
+    self.initVideoStream = () => {
+        session.service("ALVideoDevice").then((avd) => {
+            let cam = avd.subscribeCamera("subscriberID", "kVGA", "kRGB", 10) 
+            //subscriberID, resolution, colour space, fps
+            let results = avd.getImageRemote(cam)
+            imgData = results[6].GetBinary()
+            console.log(imgData)
+        }).fail(log_error)
+    }
+
     function updateYawPitch(motion, joint, yaw_pitch) {
         if (yaw_pitch.angle && (yaw_pitch.angle !== yaw_pitch.last_angle)) { // update yaw
             motion.killTasksUsingResources([joint]) // Kill any current motions
