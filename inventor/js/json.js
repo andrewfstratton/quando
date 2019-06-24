@@ -18,7 +18,9 @@ self.scriptToArray = (script) => {
   for (let block of self.filterClass("quando-block", script.children)) {
     // persist data-quando-id
     let block_persist = {}
-    block_persist["id"] = block.dataset.quandoId
+    if (block.dataset && block.dataset.quandoId) {
+      block_persist["id"] = block.dataset.quandoId
+    }
     block_persist["block_type"] = block.dataset.quandoBlockType
     let values = {}
     let boxes = []
@@ -54,7 +56,6 @@ self.scriptToArray = (script) => {
 self.addObjectToElement = (obj, elem) => {
   if (obj) {
     for(let block of obj) {
-      let id = block.id
       if (block.block_type == 'devices-rotate-object3d') {
         block.block_type = 'media-rotate-object3d'
       }
@@ -63,7 +64,7 @@ self.addObjectToElement = (obj, elem) => {
       }
       // find block_type
       let src_block = document.getElementById("menu").querySelector("[data-quando-block-type='"+ block.block_type +"']")
-      if (!src_block) {  // Block is most likely out of date...
+      if (!src_block) {  // Block is no longer in the menu and is most likely out of date...
         alert('Failed to create:'+block.block_type)
         console.log('Unknown Block: '+JSON.stringify(block))
       }
@@ -73,7 +74,9 @@ self.addObjectToElement = (obj, elem) => {
         for(let elem of clone.querySelectorAll("input, select")) {
           elem.disabled = false
         }
-        clone.dataset.quandoId = id
+        if (block.id) {
+          clone.dataset.quandoId = block.id
+        }
         clone.style.display = "" // removes display none ?!
         for (let key in block.values) {
           let element = clone.querySelector("[data-quando-name='"+ key +"']")
