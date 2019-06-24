@@ -5,10 +5,16 @@
     }
     let self = quando.robot = {}
     let state = { // holds the requested state
-        hand : { left:{}, right:{}},
+        hand : { left: {}, right: {}},
         head : { yaw: {}, pitch: {}},
         shoulder : { left: {roll: {}, pitch: {}}, right: {roll: {}, pitch: {}}}
     }
+
+    let exampleSine = {freq: 200, gain: 20, duration: 1}
+    let testSBuffer = [exampleSine, {freq: 250, gain: 20, duration: 1}, {freq: 300, gain: 20, duration: 1}, {freq: 350, gain: 20, duration: 1}, {freq: 450, gain: 20, duration: 1}]
+    let sineBuffer = []
+    sineBuffer = testSBuffer
+    let testCounter = 0
 
     class vocabList {
         constructor(listName, vocab) {
@@ -25,8 +31,6 @@
             TextDone: null
         }
     }
-
-    let listenedWords = []
 
     self._list = []
     self._armActionsList = {}
@@ -269,10 +273,33 @@
             console.log('Playing Sine wave...')
             aadp.playSine(freq, gain, 0, duration)
         }).fail(log_error)
+    } 
+
+    self.goThroughSineBuffer = () => {
+        if (sineBuffer.length > 0) { //if there's a tone that needs playing
+            testCounter += 1
+            console.log(testCounter)
+            let sine = sineBuffer[0]
+            let freq = sine.freq
+            let gain = sine.gain
+            let duration = sine.duration
+            //play sine
+            session.service("ALAudioDesvice").then((aadp) => {
+                console.log('Playing Sine wave: ' + freq + "Hz " + gain + " gain " + duration + " seconds counter:" + testCounter)
+                aadp.playSine(freq, gain, 0, duration)
+            }).fail(log_error)
+
+            sineBuffer.shift() //remove played sine wave
+            //wait till wave is over, then call itself again
+            window.setTimeout(self.goThroughSineBuffer(), sine.duration*1000)
+        } 
+    }
+
+    self.addSineWaveToBuffer = (freq, gain, duration) => {
+        sineBuffer.push({freq: freq, gain: gain, duration: duration})
     }
 
     self.turnHead = (yaw, middle, range, speed, normal_inverted, val) => {
-        console.log(val)
         let min = helper_ConvertAngleToRads(middle - range)
         let max = helper_ConvertAngleToRads(middle + range)
         if (!normal_inverted) { val = 1-val }
@@ -287,7 +314,6 @@
     }
 
     self.moveArmNew = (left, roll, middle, range, speed, normal_inverted, val) => {
-        console.log(val)
         let min = helper_ConvertAngleToRads(middle - range)
         let max = helper_ConvertAngleToRads(middle + range)
         if (!normal_inverted) { val = 1-val }
@@ -322,7 +348,6 @@
 
     function updateJoint(motion, joint, pitch_roll) {
         if (pitch_roll.angle && (pitch_roll.angle !== pitch_roll.last_angle)) { // update yaw
-            motion.killTasksUsingResources([joint]) // Kill any current motions
             motion.setAngles(joint, pitch_roll.angle, pitch_roll.speed/100)
             pitch_roll.last_angle = pitch_roll.angle
             pitch_roll.angle = false
@@ -333,7 +358,7 @@
         motion.moveIsActive().then((active) => {
             if (motionSequence.length) {
                 if (active && motionInterrupt) motion.stopMove()
-                
+
                 if (!active) {
                     motionSequence[0]()
                     motionSequence.shift()
@@ -381,7 +406,7 @@
     let motionSequence = []
     let motionInterrupt = true
 
-    self.stepForwards = function (steps, direction, interrupt = false, callback) {
+    self.stepForwards = function (steps, direction, interrupt = false, callback, destruct = true) {
         const stepLength = 0.025; //in M
 
         if (interrupt) motionSequence = []
@@ -392,6 +417,12 @@
                 mProxy.waitUntilMoveIsFinished().done(callback).fail(log_error)
             })
         })
+        if (destruct) {
+            quando.destructor.add(function () {
+                motionSequence = []
+                motionInterrupt = true
+            })
+        }
     }
 
     self.stepSideways = function (steps, direction, interrupt = false, callback) {
@@ -416,9 +447,15 @@
         motionSequence.push(() => {
             session.service("ALMotion").then(function(mProxy) {
                 mProxy.moveTo(0, 0, angle * direction)
-                mProxy.waitUntilMoveIsFinished().done(callback).fail(log_error)
+                mProxy.waitUntilMoveIsFinished().done(callback).fail(log_error) 
             })
         })
+        if (destruct) {
+            quando.destructor.add(function () {
+                motionSequence = []
+                motionInterrupt = true
+            })
+        }
     }
 
     self.changeHand = (left, open) => {
@@ -447,27 +484,37 @@
         self.lookForPerson(session, callback, destruct)
     }
 
-    self.changeAutonomousLife = (state) => {
+    self.changeAutonomousLife = (state, callback) => {
         session.service("ALAutonomousLife").then((al) => {
-            al.setState(state)
+            al.setState(state).then(() => {
+                if (callback) callback()
+            })
         }).fail(log_error)
     }
 
     self.createWordList = function (listName) {
-        var v = new vocabList(listName, []);
-        self._list.push(v);
+        
+
+        var v = new vocabList(listName, [])
+        self._list.push(v)
     }
 
     self.addToWordList = function (listName, vocab) {
+        if (!self._list.some(list => list.listName == listName)) self.createWordList(listName)
+        
         for (var i = 0; i < self._list.length; i++) {
             if (self._list[i].listName == listName) {
-                self._list[i].vocab = self._list[i].vocab.concat(vocab.split(","));
+                self._list[i].vocab = self._list[i].vocab.concat(vocab)
             }
         }
     }
 
-    self.listenForWords = function (listName, confidence, blockID, callback, destruct = true) {
-        waitForSayFinish();
+
+    self.listenForWords = function (listName, vocab, confidence, blockID, callback, destruct = true) {
+        // waitForSayFinish();
+
+        self.addToWordList(listName, vocab)
+
         var list;
         var fullList = [];
         for (var i = 0; i < self._list.length; i++) {
@@ -526,7 +573,6 @@
             ALMemory.subscriber("WordRecognized").then(function (sub) {
                 sub.signal.connect(function (value) {
                     console.log(value)
-                    sr.pause(true)
                     if (value[1] >= confidence) {
                         for (var i = 0; i < list.vocab.length; i++) {
                             if (callback && list.vocab[i] == value[0]) {
@@ -534,7 +580,6 @@
                             }
                         }
                     }
-                    sr.pause(false)
                 }).then(function (processID) {
                     disconnectSpeechRecognition = () => {
                         sub.signal.disconnect(processID)
@@ -618,7 +663,7 @@
 
         }).fail(log_error)
         if (destruct) {
-            self.addDestructor(function () {
+            quando.destructor.add(function () {
                 _destroy_robot_listen(session, blockID) //create the destructor
             })
         }
@@ -636,7 +681,7 @@
             _start_perception(session, callback, ba)
         }).fail(log_error)
         if (destruct) {
-            self.addDestructor(function () {
+            quando.destructor.add(function () {
                 _destroy_perception(session)
             })
         }

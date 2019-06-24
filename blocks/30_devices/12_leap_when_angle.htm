@@ -1,5 +1,5 @@
 <div class="quando-block" data-quando-drop-valid="display-when-display,advanced-comment"
-    data-quando-javascript="quando.leap.handle${angle}(${mid_degrees}, ${plus_minus}, ${inverted}, (val) => {${box}})">
+    data-quando-javascript="quando.leap.handle${angle}('${hand}', ${mid_degrees}, ${plus_minus}, ${inverted}, (val) => {${box}})">
     <div class="quando-left quando-devices"></div>
     <div class="quando-right">
         <div class="quando-row quando-devices">
@@ -26,6 +26,15 @@
                     <option value='false'>Normal</option>
                     <option value='true'>Inverted</option>
                 </select>
+                <br />
+                <span data-quando-toggle='extras=show'>
+                    <select data-quando-name='hand'>
+                        <option value='Either'>Either</option>
+                        <option value='Left'>Left</option>
+                        <option value='Right'>Right</option>
+                    </select>
+                    hand
+                </span>
             </span>
         </div>
         <div data-quando-name="box" class="quando-box"></div>
