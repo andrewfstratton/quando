@@ -10,11 +10,13 @@
         shoulder : { left: {roll: {}, pitch: {}}, right: {roll: {}, pitch: {}}}
     }
 
-    let exampleSine = {freq: 200, gain: 20, duration: 1}
-    let testSBuffer = [exampleSine, {freq: 250, gain: 20, duration: 1}, {freq: 300, gain: 20, duration: 1}, {freq: 350, gain: 20, duration: 1}, {freq: 450, gain: 20, duration: 1}]
+    let exampleSine = {freq: 441, gain: 25, duration: 1}
+    let testSBuffer = [exampleSine, {freq: 480, gain: 25, duration: 1}, {freq: 520, gain: 25, duration: 1}, {freq: 560, gain: 25, duration: 1}, {freq: 600, gain: 25, duration: 1}]
     let sineBuffer = []
     sineBuffer = testSBuffer
     let testCounter = 0
+    let sinePlayDelay = 116
+    let sinePlaying = false
 
     class vocabList {
         constructor(listName, vocab) {
@@ -258,42 +260,63 @@
         }).fail(log_error)
     }
 
-    //play sine wave passing value - gain ~ volume
-    self.playSineV = (freq, gain, duration, val) => {
-        console.log(val)
-        session.service("ALAudioDevice").then((aadp) => {
-            console.log('Playing Sine wave...')
-            aadp.playSine(freq, gain, 0, duration)
-        }).fail(log_error)
+    //sine handler, governs behaviour with specified type- buffer/interrupt/value
+    self.sineHandler = (type, freq, gain, duration) => {
+        if (type == "Interrupt") {
+            self.playSine(freq, gain, duration)
+        } else if (type == "Buffer") {
+            self.addSineWaveToBuffer(freq, gain, duration)
+            if (!sinePlaying) {
+                self.goThroughSineBuffer
+            }
+        } else if (type == "Val") {
+            self.playSineV(val)
+        }
     }
-
-    //play sine wave - gain ~ volume
-    self.playSine = (freq, gain, duration) => {
-        session.service("ALAudioDevice").then((aadp) => {
-            console.log('Playing Sine wave...')
-            aadp.playSine(freq, gain, 0, duration)
-        }).fail(log_error)
-    } 
 
     self.goThroughSineBuffer = () => {
         if (sineBuffer.length > 0) { //if there's a tone that needs playing
+            sinePlaying = true
             testCounter += 1
-            console.log(testCounter)
+
+            //intermediary variables for simplicity
             let sine = sineBuffer[0]
             let freq = sine.freq
             let gain = sine.gain
             let duration = sine.duration
+
             //play sine
-            session.service("ALAudioDesvice").then((aadp) => {
+            session.service("ALAudioDevice").then((aadp) => {
                 console.log('Playing Sine wave: ' + freq + "Hz " + gain + " gain " + duration + " seconds counter:" + testCounter)
                 aadp.playSine(freq, gain, 0, duration)
             }).fail(log_error)
 
             sineBuffer.shift() //remove played sine wave
-            //wait till wave is over, then call itself again
-            window.setTimeout(self.goThroughSineBuffer(), sine.duration*1000)
-        } 
+            //wait till wave is over + delay, then call itself again
+            window.setTimeout(self.goThroughSineBuffer, duration*1000 + sinePlayDelay)
+        } else {
+            console.log('nothing left to play!')
+            sinePlaying = false
+        }
     }
+
+    //play sine wave w.r.t. value
+    self.playSineV = (val) => {
+        console.log(val)
+        session.service("ALAudioDevice").then((aadp) => {
+            console.log('Playing Sine wave...')
+            aadp.playSine(600*val, 50, 0, 0.1)
+        }).fail(log_error)
+    }
+
+    //play sine wave w/specified params
+    self.playSine = (freq, gain, duration) => {
+        session.service("ALAudioDevice").then((aadp) => {
+            console.log('Playing Sine wave: ' + freq + "Hz " + gain + " gain " + duration + " seconds counter:" + testCounter)
+            aadp.playSine(freq, gain, 0, duration)
+        }).fail(log_error)
+    } 
+
 
     self.addSineWaveToBuffer = (freq, gain, duration) => {
         sineBuffer.push({freq: freq, gain: gain, duration: duration})
@@ -371,7 +394,8 @@
 
     function updateRobot() {
         session.service("ALMotion").then((motion) => {
-            updateYawPitch(motion, 'HeadYaw', state.head.yaw)
+            updateYawPitch(motion, 'HeadYaw', state.head.yaw
+            )
             updateYawPitch(motion, 'HeadPitch', state.head.pitch)
             updateHand(motion, 'LHand', state.hand.left)
             updateHand(motion, 'RHand', state.hand.right)
@@ -381,7 +405,7 @@
             updateJoint(motion, 'RShoulderRoll', state.shoulder.right.roll)
             updateMovement(motion)
             
-            setTimeout(updateRobot, 1000/25) // i.e. x times per second
+            setTimeout(updateRobot, 1000/10) // i.e. x times per second
         }).fail(log_error)
     }
 

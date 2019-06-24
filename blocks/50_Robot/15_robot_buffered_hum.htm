@@ -1,13 +1,19 @@
 <div class="quando-block"
-data-quando-javascript="quando.robot.playSineV(${freq}, ${gain}, ${duration})">
-<div class="quando-left quando-robot"></div>
-<div class="quando-right">
-  <div class="quando-row quando-robot">Buffered Hum with Frequency: 
-    <input data-quando-name="freq" type="text" value="0" data-quando-encode="normal"/>
-    gain
-    <input data-quando-name="gain" type="text" value="50" data-quando-encode="normal"/>
-    duration
-    <input data-quando-name="duration" type="text" value="0.1" data-quando-encode="normal"/>
-  </div>
+data-quando-javascript="quando.robot.sineHandler('${type}'', ${freq}, ${gain}, ${duration})">
+  <div class="quando-left quando-robot"></div>
+  <div class="quando-right">
+    <div class="quando-row quando-robot">
+      <select data-quando-name='type'>
+        <option value='Buffer'>Buffer</option>
+        <option value='Interrupt'>Interrupt</option>
+        <option value='Val'>Val</option>
+      </select>
+      Hum with Frequency: 
+      <input data-quando-name="freq" type="text" value="0" data-quando-encode="normal"/>
+      gain
+      <input data-quando-name="gain" type="text" value="50" data-quando-encode="normal"/>
+      duration
+      <input data-quando-name="duration" type="text" value="0.1" data-quando-encode="normal"/>
+    </div>
   </div>
 </div>
