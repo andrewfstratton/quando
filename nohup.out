@@ -1,0 +1,11 @@
+
+> quando@0.7.20180513 pouchd /mnt/d/Ubuntu/quando
+> pouchdb-server --port 5984 --dir pouchdb --config pouchdb-config.json
+
+(node:345) UnhandledPromiseRejectionWarning: OpenError: IO error: /mnt/d/Ubuntu/quando/pouchdb/_replicator/MANIFEST-000028: No such file or directory
+    at /mnt/d/Ubuntu/quando/node_modules/levelup/lib/levelup.js:91:23
+    at /mnt/d/Ubuntu/quando/node_modules/deferred-leveldown/node_modules/abstract-leveldown/abstract-leveldown.js:39:16
+    at /mnt/d/Ubuntu/quando/node_modules/deferred-leveldown/deferred-leveldown.js:19:21
+    at /mnt/d/Ubuntu/quando/node_modules/leveldown/node_modules/abstract-leveldown/abstract-leveldown.js:39:16
+(node:345) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 3)
+(node:345) [DEP0018] DeprecationWarning: Unhandled promise rejections are deprecated. In the future, promise rejections that are not handled will terminate the Node.js process with a non-zero exit code.

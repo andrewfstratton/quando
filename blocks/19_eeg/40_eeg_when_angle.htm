@@ -1,0 +1,32 @@
+<div class="quando-block" data-quando-javascript="quando.eeg.onRotation('${angle}', ${mid_degrees}, ${plus_minus}, ${inverted}, (val) => {${box}})">
+  <div class="quando-left quando-eeg"></div>
+  <div class="quando-right">
+      <div class="quando-row quando-eeg">
+          <span class="quando-info" title="Emotiv headset required">🧠</span>
+          When angle
+          <select data-quando-name="angle">
+              <option value='Yaw'>⇔ Yaw</option>
+              <option value='Pitch'>⇕ Pitch</option>
+              <option value='Roll'>⤹⤸ Roll</option>
+          </select>
+          &nbsp; ⚡
+          <select data-quando-name='extras' class='quando-toggle'>
+              <option value='hidden'>+</option>
+              <option value='show'>-</option>
+          </select>
+          <span data-quando-toggle='extras=show'>
+              <br />
+              <input data-quando-name="mid_degrees" type="text" value="0" data-quando-encode="normal" />
+              degrees ±
+              <input data-quando-name="plus_minus" type="text" value="180" data-quando-encode="normal" />
+              degrees
+              <select data-quando-name='inverted' class='quando-toggle'>
+                  <option value='false'>Normal</option>
+                  <option value='true'>Inverted</option>
+              </select>
+          </span>
+      </div>
+      <div data-quando-name="box" class="quando-box"></div>
+      <div class="quando-row quando-eeg"></div>
+  </div>
+</div>
