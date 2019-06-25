@@ -261,6 +261,9 @@ function _resizeWidth(event) {
     let target = event.target
     let hidden = document.getElementById('_hidden_width_element_')
     hidden.textContent = target.value
+    if (target.value == "") {
+      hidden.textContent = target.placeholder
+    }
     let width = hidden.offsetWidth + 10
     // if (target.type=='number') { // need extra width for arrows
       // width += 8
