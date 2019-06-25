@@ -1,19 +1,24 @@
 <div class="quando-block"
-data-quando-javascript='<input data-quando-name="${input}" type="text" value="${default}" data-quando-encode="${encode}"/>'>
-    <div class="quando-left quando-inventor-input"></div>
-    <div class="quando-right">
-        <div class="quando-row quando-inventor-input">
-            Input <input data-quando-name="input" title="Name" type="text" value="" data-quando-encode="normal"/>
-            Default <input data-quando-name="default" title="value" type="text" value="" data-quando-encode="normal"/>
-            <select data-quando-name="show_hide" class="quando-toggle">
-                <option value="show">...</option>
-                <option value="hide">▲</option>
-            </select>
-            <!-- <br data-quando-toggle="hide"/> -->
-            <select data-quando-toggle="hide" data-quando-name="encode">
-                <option value="normal">Encode</option>
-                <option value="raw">Raw</option>
-            </select>
-        </div>
-    </div>
+data-quando-javascript="<input data-quando-name='${input}' type='text' value='${default}' placeholder='${placeholder}' data-quando-encode='${encode}'/>">
+<div class="quando-left quando-inventor-input"></div>
+<div class="quando-right">
+<div class="quando-row quando-inventor-input">Input
+<input data-quando-name="input" type="text" value="" data-quando-encode="normal"/>
+Default
+<input data-quando-name="default" type="text" value="" data-quando-encode="normal"/>
+Empty
+<input data-quando-name="placeholder" type="text" value="" data-quando-encode="normal"/>
+<select data-quando-name="extras"
+class="quando-toggle">
+  <option value="hidden">+</option>
+  <option value="show">-</option>
+</select>
+<span data-quando-toggle="extras=show">
+<br>
+<select data-quando-name='encode' class='quando-toggle'><option value='normal'>Encode</option>
+<option value='raw'>Raw</option>
+</select>
+</span>
+</div>
+</div>
 </div>

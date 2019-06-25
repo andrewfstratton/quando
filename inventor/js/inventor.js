@@ -261,6 +261,9 @@ function _resizeWidth(event) {
     let target = event.target
     let hidden = document.getElementById('_hidden_width_element_')
     hidden.textContent = target.value
+    if (target.value == "") {
+      hidden.textContent = target.placeholder
+    }
     let width = hidden.offsetWidth + 10
     // if (target.type=='number') { // need extra width for arrows
       // width += 8
@@ -274,7 +277,7 @@ self.setElementHandlers = (block) => {
   block.addEventListener('contextmenu', self.handleRightClick, false)
   // add handler for list item change
   let id = null
-  if (block.dataset) {
+  if (block.dataset && block.dataset.quandoId) {
     id = block.dataset.quandoId
   }
   if (id && id != "true") {
@@ -304,7 +307,16 @@ self.setElementHandlers = (block) => {
   }
 }
 
-self.copyBlock = (old, clone) => {
+function _next_data_quando_id(id) {
+  let result = id
+  while (document.querySelector(`[data-quando-id='${result}']`)) {
+    result++
+  }
+  return result
+}
+
+self.copyBlock = (old, clone) => { // Note that Clone is a 'simple' copy of old
+  // copy across selected indexes
   if (old.hasChildNodes()) {
     let selector = "select"
       let oldNodes = old.querySelectorAll(selector)
@@ -316,14 +328,19 @@ self.copyBlock = (old, clone) => {
         }
       }
   }
-  if (old.dataset.quandoId) {
-    let _id = 0
-    while (document.querySelector(`[data-quando-id='${_id}']`)) {
-      _id++
-    }
-    clone.dataset.quandoId=_id
-    // has just created id - now add id to select options
-    let input = old.querySelector("input[data-quando-list]")
+  // Create new ids
+  let _id = _next_data_quando_id(0) // find the next free id
+  // Get all the clone divs that have a data-quando-id
+  let nodes = []
+  if (clone.dataset.quandoId) {
+    nodes.push(clone)
+  }
+  nodes = nodes.concat(Array.from(clone.querySelectorAll(`[data-quando-id]`)))
+  for(let node of nodes) {
+    node.dataset.quandoId = _id // next free id
+    _id = _next_data_quando_id(_id)
+    // now add id to select options
+    let input = node.querySelector("input[data-quando-list]")
     if (input) {
       let list_name = input.dataset.quandoList
       if (list_name) {
