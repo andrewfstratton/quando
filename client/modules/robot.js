@@ -195,7 +195,16 @@
         })
     }
 
-    self.say = (text, pitch, speed, echo, interrupt=false) => {
+    self.speechHandler = (anim, text, pitch, speed, echo, interrupt=false) => {
+        self.changeVoice(pitch, speed, echo)
+        if (anim == "None") {
+            self.say(text, interrupt)
+        } else {
+            self.animatedSay(anim, text, interrupt)
+        }
+    }
+
+    self.changeVoice = (pitch, speed, echo) => {
         session.service("ALTextToSpeech").then((tts) => {
             tts.setParameter("pitchShift", pitch)
             tts.setParameter("speed", speed)
@@ -208,6 +217,11 @@
                 tts.setParameter("doubleVoiceLevel", 0)
                 tts.setParameter("doubleVoiceTimeShift", 0.0)
             }
+        }).fail(log_error)
+    }
+
+    self.say = (text, interrupt=false) => {
+        session.service("ALTextToSpeech").then((tts) => {
             if (robot.TextToSpeech.CurrentSentence != text) {
                 if (interrupt) {
                     tts.stopAll()
@@ -217,58 +231,30 @@
         }).fail(log_error)
     }
     
-    self.animatedSay = (text, anim, pitch, speed, echo, interrupt=false) => {
-        anim = ""//"(animations/Stand/Gestures/Enthusiastic_4) "
+    self.animatedSay = (anim, text, interrupt=false) => {
+        associatedAnim = "" // "(animations/Stand/Gestures/Enthusiastic_4)"
         session.service("ALAnimatedSpeech").then((aas) => {
-            //aas.setParameter("pitchShift", pitch)
-            //aas.setParameter("speed", speed)
-            if (echo) {
-                //aas.setParameter("doubleVoice", 1.1)
-                //aas.setParameter("doubleVoiceLevel", 0.5)
-                //aas.setParameter("doubleVoiceTimeShift", 0.1)
+            if (anim == "Random") {
+                aas.setBodyLanguageMode(1) //random body language
+            } else {
+                aas.setBodyLanguageMode(0) //contextual body language
             }
+
             if (robot.TextToSpeech.CurrentSentence != text) {
                 if (interrupt) {
-                    //aas.stopAll()
+                    //aas.stopAll() TODO FIX ANIMATED INTERRUPT
                 }
-                aas.say("^start" + anim + text)
+                aas.say("^start" + associatedAnim + text)
             }
-            // If you want it to keep running, you can add a 
-            //^wait instruction at the end: ^wait(animations/Stand/Gestures/Hey_1)"
         }).fail(log_error)
     }
         
-    self.animatedSayR = (text, anim, pitch, speed, echo, interrupt=false) => {
-        anim = ""//"(animations/Stand/Gestures/Enthusiastic_4) "
-        session.service("ALAnimatedSpeech").then((aas) => {
-            aas.setBodyLanguageMode(1)
-            //aas.setParameter("pitchShift", pitch)
-            //aas.setParameter("speed", speed)
-            if (echo) {
-                //aas.setParameter("doubleVoice", 1.1)
-                //aas.setParameter("doubleVoiceLevel", 0.5)
-                //aas.setParameter("doubleVoiceTimeShift", 0.1)
-            }
-            if (robot.TextToSpeech.CurrentSentence != text) {
-                if (interrupt) {
-                    //aas.stopAll()
-                }
-                aas.say("^start" + anim + text)
-            }
-            // If you want it to keep running, you can add a 
-            //^wait instruction at the end: ^wait(animations/Stand/Gestures/Hey_1)"
-        }).fail(log_error)
-    }
-
     //sine handler, governs behaviour with specified type- buffer/interrupt/value
     self.sineHandler = (type, freq, gain, duration) => {
         if (type == "Interrupt") {
             self.playSine(freq, gain, duration)
         } else if (type == "Buffer") {
             self.addSineWaveToBuffer(freq, gain, duration)
-            if (!sinePlaying) {
-                self.goThroughSineBuffer
-            }
         } else if (type == "Val") {
             self.playSineV(val)
         }
@@ -362,11 +348,16 @@
 
     self.initVideoStream = () => {
         session.service("ALVideoDevice").then((avd) => {
-            let cam = avd.subscribeCamera("subscriberID", "kVGA", "kRGB", 10) 
+            console.log(avd.getActiveCamera())
+            let cam = avd.subscribeCamera("subscriberID", 0, "kVGA", "kRGB", 10).then((camera) => {
+                console.log('TESst'+camera)
+            }).fail(log_error) 
             //subscriberID, resolution, colour space, fps
+            console.log("cam: "+cam)
             let results = avd.getImageRemote(cam)
-            imgData = results[6].GetBinary()
-            console.log(imgData)
+            console.log("res: "+results)
+            imgData = results[6]
+            console.log("imgdata: "+imgData)
         }).fail(log_error)
     }
 
