@@ -11,6 +11,11 @@ let client_script = ""
 self.showObject = (obj) => {
   let script = document.getElementById('script')
   script.innerHTML = ''
+  self.appendObject(obj)
+}
+
+self.appendObject = (obj) => {
+  let script = document.getElementById('script')
   json.addObjectToElement(obj, script)
   _populateLists()
   json.setOptions()
@@ -307,14 +312,6 @@ self.setElementHandlers = (block) => {
   }
 }
 
-function _next_data_quando_id(id) {
-  let result = id
-  while (document.querySelector(`[data-quando-id='${result}']`)) {
-    result++
-  }
-  return result
-}
-
 self.copyBlock = (old, clone) => { // Note that Clone is a 'simple' copy of old
   // copy across selected indexes
   if (old.hasChildNodes()) {
@@ -329,7 +326,7 @@ self.copyBlock = (old, clone) => { // Note that Clone is a 'simple' copy of old
       }
   }
   // Create new ids
-  let _id = _next_data_quando_id(0) // find the next free id
+  let _id = json.nextDataQuandoId(0) // find the next free id
   // Get all the clone divs that have a data-quando-id
   let nodes = []
   if (clone.dataset.quandoId) {
@@ -338,7 +335,7 @@ self.copyBlock = (old, clone) => { // Note that Clone is a 'simple' copy of old
   nodes = nodes.concat(Array.from(clone.querySelectorAll(`[data-quando-id]`)))
   for(let node of nodes) {
     node.dataset.quandoId = _id // next free id
-    _id = _next_data_quando_id(_id)
+    _id = json.nextDataQuandoId(_id)
     // now add id to select options
     let input = node.querySelector("input[data-quando-list]")
     if (input) {
@@ -1001,13 +998,9 @@ self.handle_test = () => {
   }
 
   self.handle_show_code = () => {
-    $('#menu_dropdown').dropdown('hide')
-    $('#show_modal_title').html('Show Code')
     $('#show_modal').modal('show')
     $('#show_modal_code').removeClass('language-xml').addClass('language-javascript')
-    let code = self.generateCode(document.getElementById('script'))
-    code = code.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-    $('#show_modal_code').html(code)
+    update_code_clip()
   }
 
   self.handle_clear = () => {
@@ -1018,6 +1011,50 @@ self.handle_test = () => {
     $('#local_save_key').val('')
     $('#remote_save_key').val('')
     self.showObject()
+  }
+
+  function update_code_clip() {
+    let disabled = true
+    let btn = $('#show_modal_code_toggle_button')
+    let txt = ""
+    let script = document.getElementById("script")
+    if (btn.text() == 'Clip') { // i.e. if is Clip
+      disabled = false
+      let arr = json.scriptToArray(script)
+      txt = "["
+      for(let i in arr) {
+        if (txt != "[") {
+          txt += ',\n'
+        }
+        txt += JSON.stringify(arr[i])
+      }
+      txt += ']'
+    } else { // must be Code
+      btn.text('Code') // In case the first time it's called
+      txt = self.generateCode(script)
+    }
+    $('#show_modal_clip_paste_button').prop('disabled', disabled)
+    $('#show_modal_code').prop('readonly', false)
+    $('#show_modal_code').text(txt)
+    $('#show_modal_code').prop('readonly', disabled)
+  }
+
+  self.handle_code_clip_toggle = () => {
+    let btn = $('#show_modal_code_toggle_button')
+    if (btn.text() != 'Clip') { // i.e. if was Code, or blank (!), now to be Clip
+      btn.text('Clip')
+    } else { // was Clip, now Code
+      btn.text('Code')
+    }
+    update_code_clip()
+  }
+
+  self.handle_clip_paste = () => {
+    let txt = $('#show_modal_code').val()
+    let obj = JSON.parse(txt)
+    self.appendObject(obj)
+    $('#show_modal').modal('hide')
+    toastr.success("Clipboard pasted to script...")
   }
 
   function _file_list_add (file_name, path, fn_name, block_id, elem_name) {

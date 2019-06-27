@@ -3,6 +3,14 @@
 (() => {
     let self = this['json'] = {} // for access from the web page, etc.
 
+self.nextDataQuandoId = (id) => {
+  let result = id
+  while (document.querySelector(`[data-quando-id='${result}']`)) {
+    result++
+  }
+  return result
+}
+
 self.filterClass = (cls, children) => {
   let result = []
   for (let child of children) {
@@ -75,7 +83,7 @@ self.addObjectToElement = (obj, elem) => {
           elem.disabled = false
         }
         if (block.id) {
-          clone.dataset.quandoId = block.id
+          clone.dataset.quandoId = self.nextDataQuandoId(block.id)
         }
         clone.style.display = "" // removes display none ?!
         for (let key in block.values) {
