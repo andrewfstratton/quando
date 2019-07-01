@@ -16,6 +16,8 @@ const join = require('path').join
 const http = require('http').Server(app)
 const https = require('https')
 const io = require('socket.io')(http)
+const ass_id = "bb92f3b5-92ef-4fdc-8c8b-7fc7a5f58d53"
+let ass_session_id = ""
 
 function fail(response, msg) {
   response.json({'success': false, 'message': msg})
@@ -56,6 +58,14 @@ var stt = new SpeechToTextV1({
   url: 'https://gateway-lon.watsonplatform.net/speech-to-text/api'
 })
 
+const AssistantV2 = require('ibm-watson/assistant/v2');
+const ass = new AssistantV2({
+  version: '2019-02-28',
+  iam_apikey: '6L_VbcL3_3Yi9YcKzbltbahy32xRR1mF7CxGe2kn6hZR',
+  url: 'https://gateway-lon.watsonplatform.net/assistant/api'
+});
+
+
 let port = process.env.PORT || 80
 let appEnv = require('cfenv').getAppEnv() // For IBM Cloud
 if (appEnv.isLocal == false) { // i.e. if running on cloud server
@@ -70,6 +80,20 @@ function drop_client(client) {
   if (index != -1) {
     io.clients.splice(index, 1) // unlike delete, remove the array entry, rather than set to null
   }
+}
+
+function create_assistant_session() {
+  console.log('creating session...')
+  ass.createSession({
+    assistant_id: ass_id
+  })
+  .then(res => {
+    console.log('assistant session id: ' + res.session_id)
+    ass_session_id = res.session_id
+  })
+  .catch(err => {
+    console.log(err)
+  })
 }
 
 let server = http.listen(port, () => {
@@ -254,6 +278,35 @@ app.post('/watson/SPEECH_request', (req, res) => {
       };
     })
   })
+})
+
+//Assistant
+app.post('/watson/ASS_request', (req, res) => {
+  console.log('Assistant Requested...')
+  create_assistant_session()
+  
+  let text = req.body.text
+  console.log('text: '  + text)
+  let id = req.body.id
+  setTimeout(() => {
+    console.log('pinging assistant......')
+    ass.message({
+      assistant_id: ass_id,
+      session_id: ass_session_id,
+      input: {'message_type': 'text',
+              'text': text}
+    })
+    .then(ass_res => {
+      console.log(ass_res.statusCode)
+      console.log(ass_res)
+      console.log(ass_res.output.generic[0].text)
+      console.log(ass_res.output.intents[0].intent)
+      console.log(JSON.stringify(ass_res))
+      res.json("JSON.stringify(ass_res)")
+    })
+    .catch(err => {
+      console.log(err)
+    })}, 2500)
 })
 
 app.post('/socket/:id', (req, res) => {
