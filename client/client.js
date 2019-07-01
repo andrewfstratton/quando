@@ -9,7 +9,10 @@
 
   self.socket = io.connect('http://' + window.location.hostname)
   
-  self.call_tts = function(text) {
+  self.call_tts = function(text, val) {        
+    if (typeof val === 'string' && val.length) {
+      text = val
+    }
     //send POST request to server
     fetch('/watson/TTS_request', { method: 'POST', 
         body: JSON.stringify({'text':text}), 
@@ -475,7 +478,10 @@
     _set_or_append_tag_text(text, 'quando_title', append)
   }
 
-  self.text = function (text = '', append = false) {
+  self.text = function (text = '', append = false, val) {
+    if (typeof val === 'string' && val.length) {
+      text = val
+    }
     _set_or_append_tag_text(text, 'quando_text', append)
   }
 

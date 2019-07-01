@@ -195,7 +195,10 @@
         })
     }
 
-    self.speechHandler = (anim, text, pitch, speed, echo, interrupt=false) => {
+    self.speechHandler = (anim, text, pitch, speed, echo, interrupt=false, val) => {
+        if (typeof val === 'string' && val.length) {
+            text = val
+        }
         self.changeVoice(pitch, speed, echo)
         if (anim == "None") {
             self.say(text, interrupt)
@@ -203,6 +206,16 @@
             self.animatedSay(anim, text, interrupt)
         }
     }
+
+    self.speechHandlerTest = (anim, text, pitch, speed, echo, interrupt=false) => {
+        self.changeVoice(pitch, speed, echo)
+        if (anim == "None") {
+            self.say(text, interrupt)
+        } else {
+            self.animatedSay(anim, text, interrupt)
+        }
+    }
+
 
     self.changeVoice = (pitch, speed, echo) => {
         session.service("ALTextToSpeech").then((tts) => {
