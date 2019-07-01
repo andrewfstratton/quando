@@ -294,6 +294,9 @@ self.setElementHandlers = (block) => {
   for (let elem of block.querySelectorAll("input[data-quando-media]")) {
     elem.addEventListener('click', self.handleFile, false)
   }
+  for (let elem of block.querySelectorAll("input[data-quando-robot='say']")) {
+    elem.addEventListener('click', self.handleRobotModal, false)
+  }
   for (let elem of block.querySelectorAll("select.quando-toggle")) {
     elem.addEventListener('click', self.handleToggle, true)
     self.toggleRelativesOnElement(elem)
@@ -1260,6 +1263,69 @@ self.handle_test = () => {
       alert('Behaviour incomplete.')
     }
   }
+
+  self.handleRobotModal = (event) => {
+    event.preventDefault()
+
+    let elem = event.target
+    let text = elem.value
+
+    let block_id = _getAncestorId(elem, "quando-block")
+    _handle_robot_modal(text, block_id)
+
+    return false
+  }
+
+  self.handle_robot_say = (event) => {
+    event.preventDefault()
+
+    let robot_say_modal = $('#robot_say_modal')
+    let text = robot_say_modal.find('#robot_say_input').first()
+    let block_id = text.attr('data-block-id')
+    let block = document.querySelector('[data-quando-id="'+block_id+'"]')
+
+    if (block) {
+      let input = block.querySelector('[data-quando-robot="say"]')
+
+      input.value = text.val()
+      robot_say_modal.modal('hide')
+    }
+
+    return false
+  }
+
+  function _handle_robot_modal(text, block_id) {
+    let robot_say_modal = $('#robot_say_modal')
+    let input = robot_say_modal.find('#robot_say_input').first()
+    input.attr('data-block-id', block_id)
+
+    input.val(text)
+    robot_say_modal.modal('show')
+  }
+
+  self.add_robot_voice_tuning = (event) => {
+    let elem = $(event.target)
+    let type = elem.attr('data-type')
+    let tuning = ''
+
+    if (type == 'number') {
+      elem = elem.parents('.dropdown').find('input')
+      tuning = elem.attr('data-value').replace('number', elem.val())
+    } else {
+      tuning = elem.attr('data-value')
+    }
+
+    let robot_say_modal = $('#robot_say_modal')
+    let input = robot_say_modal.find('#robot_say_input').first()
+    let value = input.val()
+    let cursor_pos = input.prop('selectionEnd')
+
+    input.val(value.substring(0, cursor_pos) + tuning + value.substring(cursor_pos))
+    input.focus()
+    input.prop('selectionEnd', cursor_pos + tuning.length)
+  }
+
+
 })(this['generator'], this['json'])
 
 window.onload = index.setup() // FIX - this should be inventor - but generated html/javascript refers to index

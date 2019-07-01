@@ -321,6 +321,24 @@
         sineBuffer.push({freq: freq, gain: gain, duration: duration})
     }
 
+    const assistant = new WebSocket('ws://nao-ibm-assistant.eu-gb.mybluemix.net/ws/assistant')
+    assistant.onerror = err => console.error("IBM Assistant connection error: ", err)
+
+    self.assistant = (text, val) => {
+        if (typeof val === 'string' && val.length) { text = val }
+
+        if (assistant.readyState == WebSocket.OPEN) {
+            assistant.send(text)
+        } else { setTimeout(() => self.assistant(text,val), 100) }
+    }
+
+    self.onAssistant = (callback) => {
+        assistant.onmessage = ({ data }) => {
+            const text = JSON.parse(data).output.generic[0].text
+            if (typeof callback === 'function') { callback(text) }
+        }
+    }
+
     self.turnHead = (yaw, middle, range, speed, normal_inverted, val) => {
         let min = helper_ConvertAngleToRads(middle - range)
         let max = helper_ConvertAngleToRads(middle + range)
