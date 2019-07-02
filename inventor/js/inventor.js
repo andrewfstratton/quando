@@ -1308,9 +1308,9 @@ self.handle_test = () => {
     let type = elem.attr('data-type')
     let tuning = ''
 
-    if (type == 'number') {
+    if (['number', 'file'].includes(type)) {
       elem = elem.parents('.dropdown').find('input')
-      tuning = elem.attr('data-value').replace('number', elem.val())
+      tuning = elem.attr('data-value').replace(type, elem.val())
     } else {
       tuning = elem.attr('data-value')
     }

@@ -262,7 +262,7 @@
     </div>
     <div class="modal fade" id="file_modal" role="dialog">
         <div class="modal-dialog">
-            <div class="modal-content">
+            <div class="modal-content"> 
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title file_modal_select_file">Select File</h4>
@@ -392,6 +392,20 @@
                                 <input type="number" class="form-control" data-value="\\vol=number\\" value="50">
                                 <span class="input-group-btn">
                                     <button class="btn btn-info" type="button" data-type="number" onclick="index.add_robot_voice_tuning(event);">Add</button>
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="dropdown btn-group">
+                        <button class="btn btn-default btn-sm dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                            Audio File
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                            <li class="input-group">
+                                <input type="text" class="form-control" data-value="\\audio=&quot;/home/nao/audio/file&quot;\\" value="">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-info" type="button" data-type="file" onclick="index.add_robot_voice_tuning(event);">Add</button>
                                 </span>
                             </li>
                         </ul>

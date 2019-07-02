@@ -31,6 +31,9 @@
             CurrentSentence: null,
             Status: null,
             TextDone: null
+        },
+        AudioPlayer: {
+            playing: false
         }
     }
 
@@ -148,7 +151,6 @@
             ALMemory.subscriber("ALTextToSpeech/CurrentSentence").then(function (sub) {
                 sub.signal.connect(function (value) {
                     console.log(value);
-                    quando.text(value + "... ", true) // TODO: remove later
                     robot.TextToSpeech.CurrentSentence = value;
                 });
             });
@@ -193,6 +195,18 @@
             nao_reconnect(robotIP)
         }).on('connect_error', () => {
             nao_reconnect(robotIP)
+        })
+    }
+
+    self.audio = (fileName, interrupt) => {
+        let path = '/home/nao/audio/'
+        session.service('ALAudioPlayer').then(ap => {
+            ap.stopAll().then(() => {
+                robot.AudioPlayer.playing = true
+                ap.playFile(path + fileName).then(() => {
+                    robot.AudioPlayer.playing = false
+                })
+            })
         })
     }
 
@@ -407,8 +421,7 @@
 
     function updateRobot() {
         session.service("ALMotion").then((motion) => {
-            updateYawPitch(motion, 'HeadYaw', state.head.yaw
-            )
+            updateYawPitch(motion, 'HeadYaw', state.head.yaw)
             updateYawPitch(motion, 'HeadPitch', state.head.pitch)
             updateHand(motion, 'LHand', state.hand.left)
             updateHand(motion, 'RHand', state.hand.right)
