@@ -8,6 +8,9 @@
   var _lookup = {} // holds run time arrays
 
   self.socket = io.connect('http://' + window.location.hostname)
+
+
+  var websockets = []
   
   self.call_tts = function(text, val) {        
     if (typeof val === 'string' && val.length) {
@@ -286,6 +289,53 @@
     fetch('/message/' + message, { method: 'POST', 
       body: JSON.stringify({'val':val, 'host':host}), 
       headers: {"Content-Type": "application/json"}
+    })
+  }
+
+  self.create_websocket_connection = function (url) {
+    var socket = self.get_websocket_connection(url)
+
+    if (!socket) {
+      socket = new WebSocket(url)
+      socket.onerror = err => console.error("Websocket connection error: ", err)
+
+      websockets.push(socket)
+    }
+
+    return socket
+  }
+
+  self.get_websocket_connection = function (url) {
+    for (i = 0; i < websockets.length; i++) {
+      if (websockets[i].url == url) { return websockets[i] }
+    }
+  }
+
+  self.send_websocket_message = function (output, url, val) {
+    if (val) { output = val }
+
+    var socket = self.create_websocket_connection(url)
+
+    if (socket.readyState == WebSocket.OPEN) {
+      socket.send(output)
+    } else {
+      setTimeout(() => self.send_websocket_message(output, url, val), 100)
+    }
+  }
+
+  self.add_websocket_handler = function (url, callback) {
+    var socket = self.create_websocket_connection(url)
+
+    socket.onmessage = (evt) => {
+      if (typeof callback === 'function') { callback(evt.data) }
+    }
+
+    self.destructor.add( () => {
+      if (socket.readyState == WebSocket.OPEN) {
+        socket.close()
+      }
+
+      websockets.splice(websockets.indexOf(socket), 1)
     })
   }
 
