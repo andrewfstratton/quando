@@ -148,6 +148,7 @@
             ALMemory.subscriber("ALTextToSpeech/CurrentSentence").then(function (sub) {
                 sub.signal.connect(function (value) {
                     console.log(value);
+                    quando.text(value + "... ", true) // TODO: remove later
                     robot.TextToSpeech.CurrentSentence = value;
                 });
             });
@@ -550,6 +551,7 @@
 
     self.listenForWords = function (listName, vocab, confidence, blockID, callback, destruct = true) {
         // waitForSayFinish();
+        if (!listName.length) { listName = "default" }
 
         self.addToWordList(listName, vocab)
 
@@ -558,7 +560,9 @@
         for (var i = 0; i < self._list.length; i++) {
             var element = self._list[i];
             self._list[i].vocab.forEach(function (word) {
-                fullList.push(word);
+                if (word.length) {
+                    fullList.push(word);
+                }
             });
             if (element.listName == listName) {
                 list = element;
@@ -612,10 +616,14 @@
                 sub.signal.connect(function (value) {
                     console.log(value)
                     if (value[1] >= confidence) {
-                        for (var i = 0; i < list.vocab.length; i++) {
-                            if (callback && list.vocab[i] == value[0]) {
-                                callback()
+                        if (list.length) {
+                            for (var i = 0; i < list.vocab.length; i++) {
+                                if (callback && list.vocab[i] == value[0]) {
+                                    callback(value[0])
+                                }
                             }
+                        } else {
+                            callback(value[0])
                         }
                     }
                 }).then(function (processID) {
