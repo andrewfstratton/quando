@@ -410,6 +410,32 @@
                             </li>
                         </ul>
                     </div>
+                    <div class="dropdown btn-group">
+                        <button class="btn btn-default btn-sm dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                            Animation
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                            <li class="input-group">
+                                <select class="form-control" data-value="^startTag(option)">
+                                    <option value='yes'>Yes</option>
+                                    <option value='no'>No</option>
+                                    <option value='not know'>Don't know</option>
+                                    <option value='me'>Me</option>
+                                    <option value='you'>You</option>
+                                    <option value='hello'>Greet</option>
+                                    <option value='please'>Please</option>
+                                    <option value='body language'>Body language</option>
+                                    <option value='call'>Call</option>
+                                    <option value='clear'>Explain</option>
+                                    <option value='enthusiastic'>Enthusiastic</option>
+                                </select>
+                                <span class="input-group-btn">
+                                    <button class="btn btn-info" type="button" data-type="option" onclick="index.add_robot_voice_tuning(event);">Add</button>
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
                     <textarea class="form-control" id="robot_say_input" style="resize: vertical;" rows="3"></textarea>
                 </div>
                 <div class="modal-footer">
