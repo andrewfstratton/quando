@@ -32,20 +32,20 @@ function success(response, obj = false) {
 }
 
 //Watson services
-const TextToSpeechV1 = require('watson-developer-cloud/text-to-speech/v1')
+const TextToSpeechV1 = require('ibm-watson/text-to-speech/v1')
 const tts = new TextToSpeechV1({
   iam_apikey: 'rRDUgzsh17bWWYS2VesXDCkHIanOQIuE42ccPOI7qivX',
   url: 'https://gateway-lon.watsonplatform.net/text-to-speech/api'
 })
 
-const VisualRecognitionV3 = require('watson-developer-cloud/visual-recognition/v3')
+const VisualRecognitionV3 = require('ibm-watson/visual-recognition/v3')
 const visRec = new VisualRecognitionV3({
   version: '2018-03-19',
   iam_apikey: 'md2b1cDrwPHQC-a-hJovQnsgdvRyympAfBArw4niQCn9',
   url: 'https://gateway.watsonplatform.net/visual-recognition/api'
 })
 
-var ToneAnalyzerV3 = require('watson-developer-cloud/tone-analyzer/v3')
+var ToneAnalyzerV3 = require('ibm-watson/tone-analyzer/v3')
 var toneAnalyzer = new ToneAnalyzerV3({
   version: '2017-09-21',
   iam_apikey: 'WcRnTs5agEpG9o_PKiTTQSJK1G7fUpcdodKWuVCJivUh',
@@ -256,7 +256,7 @@ app.post('/watson/SPEECH_request', (req, res) => {
   let data = req.body.data
   let sent = 0
   watson_db.save(data).then((success) => {
-    base64.decode(data, success.id+".webm", function(err, output){
+    base64.decode(data, __dirname + '/client/media/stt/'+success.id+".webm", function(err, output){
       console.log('base 64 decoding success to '+success.id+'.webm')
       var params = {
         objectMode: false,
@@ -270,7 +270,7 @@ app.post('/watson/SPEECH_request', (req, res) => {
       recognizeStream.setEncoding('utf8')
       
       // Pipe in the audio.
-      fs.createReadStream(success.id+".webm").pipe(recognizeStream)
+      fs.createReadStream(__dirname + '/client/media/stt/' + success.id+".webm").pipe(recognizeStream)
 
       recognizeStream.on('data', function(event) {
         // Display events on the console.
