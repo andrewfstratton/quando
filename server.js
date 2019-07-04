@@ -191,7 +191,6 @@ app.post('/watson/TTS_request', (req, res) => {
   let text = req.body.text
   watson_db.save(text).then(
     (success) => { 
-      console.log(success)
       let params = { //stuff sent to API
         text: text,
         accept: 'audio/wav',
@@ -204,7 +203,7 @@ app.post('/watson/TTS_request', (req, res) => {
         //save output file
         tts.repairWavHeader(audio)
         fs.writeFileSync(__dirname + '/client/media/'+success.id+'.wav', audio)
-        console.log('TTS - audio written as '+success.id+'.wav')
+        console.log('TTS success - audio written as '+success.id+'.wav')
         filename = success.id
         res.json(filename)
       })
