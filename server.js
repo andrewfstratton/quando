@@ -52,7 +52,7 @@ var toneAnalyzer = new ToneAnalyzerV3({
   url: 'https://gateway-lon.watsonplatform.net/tone-analyzer/api'
 })
 
-var SpeechToTextV1 = require('watson-developer-cloud/speech-to-text/v1')
+var SpeechToTextV1 = require('ibm-watson/speech-to-text/v1')
 var stt = new SpeechToTextV1({
   iam_apikey: 'WiLEvMCQ1hPxKRYtpFo98jYg6jsc2QSnEHx2hfsYiseu',
   url: 'https://gateway-lon.watsonplatform.net/speech-to-text/api'
@@ -255,27 +255,43 @@ app.post('/watson/TONE_request', (req, res) => {
 app.post('/watson/SPEECH_request', (req, res) => {
   console.log('Speech to Text Requested...')
   let data = req.body.data
+  let sent = 0
   watson_db.save(data).then((success) => {
     base64.decode(data, success.id+".webm", function(err, output){
-      console.log('success!')
+      console.log('base 64 decoding success to '+success.id+'.webm')
       var params = {
         objectMode: false,
         content_type: 'audio/webm',
-        model: 'en-GB_BroadbandModel'
+        model: 'en-GB_BroadbandModel',
+        max_alternatives: 1
       }
       
-      var recognizeStream = stt.recognizeUsingWebSocket(params);
+      //create speech to text obj
+      var recognizeStream = stt.recognizeUsingWebSocket(params)
       recognizeStream.setEncoding('utf8')
       
       // Pipe in the audio.
       fs.createReadStream(success.id+".webm").pipe(recognizeStream)
-      recognizeStream.on('data', function(event) { onEvent('Data:', event); });
-      
-      // Display events on the console.
-      function onEvent(name, event) {
-          console.log(name, "written to "+success.id+".webm: "+JSON.stringify(event, null, 2));
+
+      recognizeStream.on('data', function(event) {
+        // Display events on the console.
+        if (sent == 0) {
+          console.log(success.id+".webm read as: "+JSON.stringify(event, null, 2))
           res.json(JSON.stringify(event, null, 2))
-      };
+          sent++
+        } else {
+          console.log(success.id+".webm read as: "+JSON.stringify(event, null, 2) + ' NOT SENT')
+        }
+      })
+      recognizeStream.on('error', function(event) {
+        // Display events on the console.
+        console.log(JSON.stringify(event, null, 2))
+      })
+      recognizeStream.on('close', function(event) {
+        // Display events on the console.
+        console.log('closed, '+JSON.stringify(event, null, 2))
+      })
+      
     })
   })
 })
