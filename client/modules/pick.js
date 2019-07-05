@@ -38,7 +38,7 @@
     }
   }
 
-  self.one = (id, next) => {
+  self.one = (id, message, next) => {
     let arr = _list[id]
     if (arr.length > 0) {
       if (!arr.hasOwnProperty('index')) {
@@ -60,6 +60,10 @@
         }
       }
       if (typeof fn === 'function') { fn() }
+    }
+
+    if (message.length) {
+      quando.add_message_handler(message, () => self.reset(id))
     }
   }
 

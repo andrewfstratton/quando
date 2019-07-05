@@ -8,8 +8,14 @@
   var _lookup = {} // holds run time arrays
 
   self.socket = io.connect('http://' + window.location.hostname)
+
+
+  var websockets = []
   
-  self.call_tts = function(text) {
+  self.call_tts = function(text, val) {        
+    if (typeof val === 'string' && val.length) {
+      text = val
+    }
     //send POST request to server
     fetch('/watson/TTS_request', { method: 'POST', 
         body: JSON.stringify({'text':text}), 
@@ -23,6 +29,19 @@
           self.audio(data+'.wav', false)
         }, 0)
       })
+    })
+  } 
+    
+  self.call_ass = function(text) {
+    //send POST request to server
+    fetch('/watson/ASS_request', { method: 'POST', 
+        body: JSON.stringify({'text':text}), 
+        headers: {"Content-Type": "application/json",
+                  Accept: 'application/json'}
+    }).then(function(response) {
+      console.log(response)
+      let output = JSON.parse(response)
+      self.text(output.generic[0].text, true)
     })
   } 
 
@@ -155,6 +174,54 @@
 
     })
 
+    self.call_speech_to_text_ass = function(fn) {  
+      let div = document.getElementById('visrec_label')
+      let elem = document.getElementById('quando_labels')
+      let recording = false
+      let mediaRecorder = null
+      //if label doesn't already exist, create label
+      if (div == null) {
+        div = document.createElement('div')
+        div.className = 'quando_label'
+        div.innerHTML = "Click to start listening..."
+        div.setAttribute('id', 'stt_label')
+      }
+  
+      navigator.mediaDevices.getUserMedia({ audio: true, video: false })
+      .then(stream => {
+        mediaRecorder = new MediaRecorder(stream)
+        const audioChunks = []
+    
+        mediaRecorder.ondataavailable = e => {
+          audioChunks.push(e.data)
+          if (mediaRecorder.state == "inactive") {
+            const audioBlob = new Blob(audioChunks,{type:'video/webm'});
+            var reader = new window.FileReader();
+            reader.readAsDataURL(audioBlob); 
+            reader.onloadend = function() {
+               base64 = reader.result;
+               base64 = base64.split(',')[1];
+               console.log(base64 );
+               fetch('/watson/SPEECH_request', { method: 'POST', 
+                 body: JSON.stringify({'data':base64}), 
+                 headers: {"Content-Type": "application/json"}
+               }).then(function(response) {
+                  response.json().then(function(data) {
+                    console.log(data.replace(/"/g, ""))
+                    //let input = document.getElementById('inp')
+                    //input.value = data.replace(/"/g, "")
+                    //input.click()
+                    fn(data.replace(/"/g, ""))
+                    div.innerHTML = "Click to start listening..."
+                  })
+                })
+            }
+          }
+        }
+  
+      })
+    }
+
     div.addEventListener("click", function(){
       if (!recording) {
         mediaRecorder.start()
@@ -222,6 +289,53 @@
     fetch('/message/' + message, { method: 'POST', 
       body: JSON.stringify({'val':val, 'host':host}), 
       headers: {"Content-Type": "application/json"}
+    })
+  }
+
+  self.create_websocket_connection = function (url) {
+    var socket = self.get_websocket_connection(url)
+
+    if (!socket) {
+      socket = new WebSocket(url)
+      socket.onerror = err => console.error("Websocket connection error: ", err)
+
+      websockets.push(socket)
+    }
+
+    return socket
+  }
+
+  self.get_websocket_connection = function (url) {
+    for (i = 0; i < websockets.length; i++) {
+      if (websockets[i].url == url) { return websockets[i] }
+    }
+  }
+
+  self.send_websocket_message = function (output, url, val) {
+    if (val) { output = val }
+
+    var socket = self.create_websocket_connection(url)
+
+    if (socket.readyState == WebSocket.OPEN) {
+      socket.send(output)
+    } else {
+      setTimeout(() => self.send_websocket_message(output, url, val), 100)
+    }
+  }
+
+  self.add_websocket_handler = function (url, callback) {
+    var socket = self.create_websocket_connection(url)
+
+    socket.onmessage = (evt) => {
+      if (typeof callback === 'function') { callback(evt.data) }
+    }
+
+    self.destructor.add( () => {
+      if (socket.readyState == WebSocket.OPEN) {
+        socket.close()
+      }
+
+      websockets.splice(websockets.indexOf(socket), 1)
     })
   }
 
@@ -414,7 +528,10 @@
     _set_or_append_tag_text(text, 'quando_title', append)
   }
 
-  self.text = function (text = '', append = false) {
+  self.text = function (text = '', append = false, val) {
+    if (typeof val === 'string' && val.length) {
+      text = val
+    }
     _set_or_append_tag_text(text, 'quando_text', append)
   }
 

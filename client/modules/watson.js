@@ -5,7 +5,10 @@
   }
   var self = quando.watson = {}
 
-  self.call_tts = function(text) {
+  self.call_tts = function(text, value) {
+    if (typeof val === 'string' && val.length) {
+      text = val
+    }
     //send POST request to server
     fetch('/watson/TTS_request', { method: 'POST', 
         body: JSON.stringify({'text':text}), 

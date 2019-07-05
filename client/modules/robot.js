@@ -10,11 +10,13 @@
         shoulder : { left: {roll: {}, pitch: {}}, right: {roll: {}, pitch: {}}}
     }
 
-    let exampleSine = {freq: 200, gain: 20, duration: 1}
-    let testSBuffer = [exampleSine, {freq: 250, gain: 20, duration: 1}, {freq: 300, gain: 20, duration: 1}, {freq: 350, gain: 20, duration: 1}, {freq: 450, gain: 20, duration: 1}]
+    let exampleSine = {freq: 441, gain: 25, duration: 1}
+    let testSBuffer = [exampleSine, {freq: 480, gain: 25, duration: 1}, {freq: 520, gain: 25, duration: 1}, {freq: 560, gain: 25, duration: 1}, {freq: 600, gain: 25, duration: 1}]
     let sineBuffer = []
     sineBuffer = testSBuffer
     let testCounter = 0
+    let sinePlayDelay = 116
+    let sinePlaying = false
 
     class vocabList {
         constructor(listName, vocab) {
@@ -27,8 +29,11 @@
         TextToSpeech: {
             CurrentWord: null,
             CurrentSentence: null,
-            Status: null,
+            Status: 'done',
             TextDone: null
+        },
+        AudioPlayer: {
+            playing: false
         }
     }
 
@@ -94,14 +99,7 @@
 
     function set_up() {
         session.service("ALAutonomousLife").then(function (al) {
-            Promise.resolve(al.getState()).then(conditional).then(function (value) {
-                if (!value) {
-                    session.service("ALTextToSpeech").then(function (tts) {
-                        //tts.say("Please wait whilst I set up. I only do this once after being turned on, or if you have changed my autonomous life state.");
-                    }).fail(log_error)
-                    // al.setState("disabled") // See if this leaves Robot 'alive'
-                }
-            })
+            al.setState('solitary').fail(log_error)
 
             session.service("ALMemory").then(function (ALMemory) {
                 ALMemory.subscriber("AutonomousLife/State").then(function (sub) {
@@ -193,7 +191,67 @@
         })
     }
 
-    self.say = (text, pitch, speed, echo, interrupt=false) => {
+    let audioSequence = []
+    let audioInterrupt = true
+
+    self.audio = (fileName, scope) => {
+        let path = '/home/nao/audio/'
+
+        if (scope == 'interrupt') audioSequence = []
+        audioInterrupt = scope == 'interrupt'
+        if (scope == 'bg') {
+            session.service('ALAudioPlayer').then(ap => {
+                ap.playFile(path + fileName).fail(log_error)
+            })
+        } else {
+            audioSequence.push(() => {
+                session.service('ALAudioPlayer').then(ap => {
+                    robot.AudioPlayer.playing = true
+                    ap.playFile(path + fileName).fail(log_error).always(() => {
+                        robot.AudioPlayer.playing = false
+                    })
+                })
+            })
+        }
+        
+        quando.destructor.add(function () {
+            audioSequence = []
+            audioInterrupt = true
+        })
+    }
+
+    self.speechHandler = (anim, text, pitch, speed, echo, interrupt=false, val) => {
+        if (typeof val === 'string' && val.length) {
+            text = val
+        }
+
+        if (interrupt) audioSequence = []
+        audioInterrupt = interrupt
+        audioSequence.push(() => {
+            self.changeVoice(pitch, speed, echo)
+            if (anim == "None") {
+                self.say(text)
+            } else {
+                self.animatedSay(anim, text)
+            }
+        })
+        quando.destructor.add(function () {
+            audioSequence = []
+            audioInterrupt = true
+        })
+    }
+
+    self.speechHandlerTest = (anim, text, pitch, speed, echo, interrupt=false) => {
+        self.changeVoice(pitch, speed, echo)
+        if (anim == "None") {
+            self.say(text, interrupt)
+        } else {
+            self.animatedSay(anim, text, interrupt)
+        }
+    }
+
+
+    self.changeVoice = (pitch, speed, echo) => {
         session.service("ALTextToSpeech").then((tts) => {
             tts.setParameter("pitchShift", pitch)
             tts.setParameter("speed", speed)
@@ -206,94 +264,85 @@
                 tts.setParameter("doubleVoiceLevel", 0)
                 tts.setParameter("doubleVoiceTimeShift", 0.0)
             }
+        }).fail(log_error)
+    }
+
+    self.say = (text) => {
+        session.service("ALTextToSpeech").then((tts) => {
             if (robot.TextToSpeech.CurrentSentence != text) {
-                if (interrupt) {
-                    tts.stopAll()
-                }
                 tts.say(text)
             }
         }).fail(log_error)
     }
     
-    self.animatedSay = (text, anim, pitch, speed, echo, interrupt=false) => {
-        anim = ""//"(animations/Stand/Gestures/Enthusiastic_4) "
+    self.animatedSay = (anim, text) => {
         session.service("ALAnimatedSpeech").then((aas) => {
-            //aas.setParameter("pitchShift", pitch)
-            //aas.setParameter("speed", speed)
-            if (echo) {
-                //aas.setParameter("doubleVoice", 1.1)
-                //aas.setParameter("doubleVoiceLevel", 0.5)
-                //aas.setParameter("doubleVoiceTimeShift", 0.1)
+            if (anim == "Random") {
+                aas.setBodyLanguageMode(1) //random body language
+            } else {
+                aas.setBodyLanguageMode(0) //contextual body language
             }
+
             if (robot.TextToSpeech.CurrentSentence != text) {
-                if (interrupt) {
-                    //aas.stopAll()
-                }
-                aas.say("^start" + anim + text)
+                aas.say(text)
             }
-            // If you want it to keep running, you can add a 
-            //^wait instruction at the end: ^wait(animations/Stand/Gestures/Hey_1)"
         }).fail(log_error)
     }
         
-    self.animatedSayR = (text, anim, pitch, speed, echo, interrupt=false) => {
-        anim = ""//"(animations/Stand/Gestures/Enthusiastic_4) "
-        session.service("ALAnimatedSpeech").then((aas) => {
-            aas.setBodyLanguageMode(1)
-            //aas.setParameter("pitchShift", pitch)
-            //aas.setParameter("speed", speed)
-            if (echo) {
-                //aas.setParameter("doubleVoice", 1.1)
-                //aas.setParameter("doubleVoiceLevel", 0.5)
-                //aas.setParameter("doubleVoiceTimeShift", 0.1)
-            }
-            if (robot.TextToSpeech.CurrentSentence != text) {
-                if (interrupt) {
-                    //aas.stopAll()
-                }
-                aas.say("^start" + anim + text)
-            }
-            // If you want it to keep running, you can add a 
-            //^wait instruction at the end: ^wait(animations/Stand/Gestures/Hey_1)"
-        }).fail(log_error)
+    //sine handler, governs behaviour with specified type- buffer/interrupt/value
+    self.sineHandler = (type, freq, gain, duration) => {
+        if (type == "Interrupt") {
+            self.playSine(freq, gain, duration)
+        } else if (type == "Buffer") {
+            self.addSineWaveToBuffer(freq, gain, duration)
+        } else if (type == "Val") {
+            self.playSineV(val)
+        }
     }
-
-    //play sine wave passing value - gain ~ volume
-    self.playSineV = (freq, gain, duration, val) => {
-        console.log(val)
-        session.service("ALAudioDevice").then((aadp) => {
-            console.log('Playing Sine wave...')
-            aadp.playSine(freq, gain, 0, duration)
-        }).fail(log_error)
-    }
-
-    //play sine wave - gain ~ volume
-    self.playSine = (freq, gain, duration) => {
-        session.service("ALAudioDevice").then((aadp) => {
-            console.log('Playing Sine wave...')
-            aadp.playSine(freq, gain, 0, duration)
-        }).fail(log_error)
-    } 
 
     self.goThroughSineBuffer = () => {
         if (sineBuffer.length > 0) { //if there's a tone that needs playing
+            sinePlaying = true
             testCounter += 1
-            console.log(testCounter)
+
+            //intermediary variables for simplicity
             let sine = sineBuffer[0]
             let freq = sine.freq
             let gain = sine.gain
             let duration = sine.duration
+
             //play sine
-            session.service("ALAudioDesvice").then((aadp) => {
+            session.service("ALAudioDevice").then((aadp) => {
                 console.log('Playing Sine wave: ' + freq + "Hz " + gain + " gain " + duration + " seconds counter:" + testCounter)
                 aadp.playSine(freq, gain, 0, duration)
             }).fail(log_error)
 
             sineBuffer.shift() //remove played sine wave
-            //wait till wave is over, then call itself again
-            window.setTimeout(self.goThroughSineBuffer(), sine.duration*1000)
-        } 
+            //wait till wave is over + delay, then call itself again
+            window.setTimeout(self.goThroughSineBuffer, duration*1000 + sinePlayDelay)
+        } else {
+            console.log('nothing left to play!')
+            sinePlaying = false
+        }
     }
+
+    //play sine wave w.r.t. value
+    self.playSineV = (val) => {
+        console.log(val)
+        session.service("ALAudioDevice").then((aadp) => {
+            console.log('Playing Sine wave...')
+            aadp.playSine(600*val, 50, 0, 0.1)
+        }).fail(log_error)
+    }
+
+    //play sine wave w/specified params
+    self.playSine = (freq, gain, duration) => {
+        session.service("ALAudioDevice").then((aadp) => {
+            console.log('Playing Sine wave: ' + freq + "Hz " + gain + " gain " + duration + " seconds counter:" + testCounter)
+            aadp.playSine(freq, gain, 0, duration)
+        }).fail(log_error)
+    } 
+
 
     self.addSineWaveToBuffer = (freq, gain, duration) => {
         sineBuffer.push({freq: freq, gain: gain, duration: duration})
@@ -337,6 +386,21 @@
         }
     }
 
+    self.initVideoStream = () => {
+        session.service("ALVideoDevice").then((avd) => {
+            console.log(avd.getActiveCamera())
+            let cam = avd.subscribeCamera("subscriberID", 0, "kVGA", "kRGB", 10).then((camera) => {
+                console.log('TESst'+camera)
+            }).fail(log_error) 
+            //subscriberID, resolution, colour space, fps
+            console.log("cam: "+cam)
+            let results = avd.getImageRemote(cam)
+            console.log("res: "+results)
+            imgData = results[6]
+            console.log("imgdata: "+imgData)
+        }).fail(log_error)
+    }
+
     function updateYawPitch(motion, joint, yaw_pitch) {
         if (yaw_pitch.angle && (yaw_pitch.angle !== yaw_pitch.last_angle)) { // update yaw
             motion.killTasksUsingResources([joint]) // Kill any current motions
@@ -367,6 +431,26 @@
         })
     }
 
+    function updateAudioOutput(ap, tts) {
+        if (audioSequence.length) {
+            const speechNotActive = ["stopped", "done"].includes(robot.TextToSpeech.Status)
+            const speechActive = robot.TextToSpeech.Status == "started"
+            const audioFileActive = robot.AudioPlayer.playing
+            if ((speechActive || audioFileActive) && audioInterrupt) {
+                ap.stopAll()
+                tts.stopAll()
+
+                robot.TextToSpeech.Status = "stopped" // TODO: not sure if necesarry
+                robot.AudioPlayer.playing = false
+            }
+
+            if (speechNotActive && !audioFileActive) {
+                audioSequence[0]()
+                audioSequence.shift()
+            }
+        }
+    }
+
     function updateRobot() {
         session.service("ALMotion").then((motion) => {
             updateYawPitch(motion, 'HeadYaw', state.head.yaw)
@@ -378,8 +462,14 @@
             updateJoint(motion, 'RShoulderPitch', state.shoulder.right.pitch)
             updateJoint(motion, 'RShoulderRoll', state.shoulder.right.roll)
             updateMovement(motion)
-            
-            setTimeout(updateRobot, 1000/25) // i.e. x times per second
+
+            session.service("ALAudioPlayer").then(ap => {
+                session.service("ALTextToSpeech").then(tts => {
+                    updateAudioOutput(ap, tts)
+
+                    setTimeout(updateRobot, 1000/10) // i.e. x times per second
+                }).fail(log_error)
+            }).fail(log_error)
         }).fail(log_error)
     }
 
@@ -486,9 +576,11 @@
 
     self.changeAutonomousLife = (state, callback) => {
         session.service("ALAutonomousLife").then((al) => {
-            al.setState(state).then(() => {
-                if (callback) callback()
-            })
+            setTimeout(() => { // setTimeout override set_up behaviour
+                al.setState(state).then(() => {
+                    if (callback) callback()
+                })
+            }, 100)
         }).fail(log_error)
     }
 
@@ -512,6 +604,7 @@
 
     self.listenForWords = function (listName, vocab, confidence, blockID, callback, destruct = true) {
         // waitForSayFinish();
+        if (!listName.length) { listName = "default" }
 
         self.addToWordList(listName, vocab)
 
@@ -520,7 +613,9 @@
         for (var i = 0; i < self._list.length; i++) {
             var element = self._list[i];
             self._list[i].vocab.forEach(function (word) {
-                fullList.push(word);
+                if (word.length) {
+                    fullList.push(word);
+                }
             });
             if (element.listName == listName) {
                 list = element;
@@ -574,10 +669,14 @@
                 sub.signal.connect(function (value) {
                     console.log(value)
                     if (value[1] >= confidence) {
-                        for (var i = 0; i < list.vocab.length; i++) {
-                            if (callback && list.vocab[i] == value[0]) {
-                                callback()
+                        if (list.length) {
+                            for (var i = 0; i < list.vocab.length; i++) {
+                                if (callback && list.vocab[i] == value[0]) {
+                                    callback(value[0])
+                                }
                             }
+                        } else {
+                            callback(value[0])
                         }
                     }
                 }).then(function (processID) {
