@@ -5,7 +5,13 @@
         <div class="quando-row quando-devices">
             <span class="quando-info" title="This block can only be dragged into When Display.">⚠</span>
             <span class="quando-info" title="Leap motion required"> 🖐</span>
-            When angle
+            When 
+            <select data-quando-name='hand'>
+                <option value='Either'>👈/👉</option>
+                <option value='Left'>👈</option>
+                <option value='Right'>👉</option>
+            </select>
+            angle
             <select data-quando-name="angle">
                 <option value='Yaw'>⇔ Yaw</option>
                 <option value='Pitch'>⇕ Pitch</option>
@@ -26,15 +32,6 @@
                     <option value='false'>Normal</option>
                     <option value='true'>Inverted</option>
                 </select>
-                <br />
-                <span data-quando-toggle='extras=show'>
-                    <select data-quando-name='hand'>
-                        <option value='Either'>Either</option>
-                        <option value='Left'>Left</option>
-                        <option value='Right'>Right</option>
-                    </select>
-                    hand
-                </span>
             </span>
         </div>
         <div data-quando-name="box" class="quando-box"></div>
