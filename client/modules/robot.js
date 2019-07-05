@@ -99,14 +99,7 @@
 
     function set_up() {
         session.service("ALAutonomousLife").then(function (al) {
-            Promise.resolve(al.getState()).then(conditional).then(function (value) {
-                if (!value) {
-                    session.service("ALTextToSpeech").then(function (tts) {
-                        //tts.say("Please wait whilst I set up. I only do this once after being turned on, or if you have changed my autonomous life state.");
-                    }).fail(log_error)
-                    // al.setState("disabled") // See if this leaves Robot 'alive'
-                }
-            })
+            al.setState('solitary').fail(log_error)
 
             session.service("ALMemory").then(function (ALMemory) {
                 ALMemory.subscriber("AutonomousLife/State").then(function (sub) {
@@ -583,9 +576,11 @@
 
     self.changeAutonomousLife = (state, callback) => {
         session.service("ALAutonomousLife").then((al) => {
-            al.setState(state).then(() => {
-                if (callback) callback()
-            })
+            setTimeout(() => { // setTimeout override set_up behaviour
+                al.setState(state).then(() => {
+                    if (callback) callback()
+                })
+            }, 100)
         }).fail(log_error)
     }
 
