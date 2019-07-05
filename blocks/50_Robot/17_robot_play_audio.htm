@@ -1,4 +1,4 @@
-<div class="quando-block" data-quando-id="true" data-quando-javascript="quando.robot.audio('${file_name}', ${interrupt})">
+<div class="quando-block" data-quando-id="true" data-quando-javascript="quando.robot.audio('${file_name}', '${scope}')">
   <div class="quando-left quando-robot"></div>
   <div class="quando-right">
     <div class="quando-row quando-robot">
@@ -9,9 +9,10 @@
         <option value="show">-</option>
       </select>
       <span data-quando-toggle="extras=show">
-        <select data-quando-name='interrupt' class='quando-toggle'>
-          <option value='true'>Interrupt</option>
-          <option value='false'>Buffer</option>
+        <select data-quando-name='scope' class='quando-toggle'>
+          <option value='interrupt'>Interrupt</option>
+          <option value='buffer'>Buffer</option>
+          <option value='bg'>Background</option>
         </select>
       </span>
     </div>

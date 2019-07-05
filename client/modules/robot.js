@@ -29,7 +29,7 @@
         TextToSpeech: {
             CurrentWord: null,
             CurrentSentence: null,
-            Status: null,
+            Status: 'done',
             TextDone: null
         },
         AudioPlayer: {
@@ -201,19 +201,26 @@
     let audioSequence = []
     let audioInterrupt = true
 
-    self.audio = (fileName, interrupt) => {
+    self.audio = (fileName, scope) => {
         let path = '/home/nao/audio/'
 
-        if (interrupt) audioSequence = []
-        audioSequence = interrupt
-        audioSequence.push(() => {
+        if (scope == 'interrupt') audioSequence = []
+        audioInterrupt = scope == 'interrupt'
+        if (scope == 'bg') {
             session.service('ALAudioPlayer').then(ap => {
-                robot.AudioPlayer.playing = true
-                ap.playFile(path + fileName).then(() => {
-                    robot.AudioPlayer.playing = false
+                ap.playFile(path + fileName).fail(log_error)
+            })
+        } else {
+            audioSequence.push(() => {
+                session.service('ALAudioPlayer').then(ap => {
+                    robot.AudioPlayer.playing = true
+                    ap.playFile(path + fileName).fail(log_error).always(() => {
+                        robot.AudioPlayer.playing = false
+                    })
                 })
             })
-        })
+        }
+        
         quando.destructor.add(function () {
             audioSequence = []
             audioInterrupt = true
@@ -226,7 +233,7 @@
         }
 
         if (interrupt) audioSequence = []
-        audioSequence = interrupt
+        audioInterrupt = interrupt
         audioSequence.push(() => {
             self.changeVoice(pitch, speed, echo)
             if (anim == "None") {
@@ -436,7 +443,6 @@
             const speechNotActive = ["stopped", "done"].includes(robot.TextToSpeech.Status)
             const speechActive = robot.TextToSpeech.Status == "started"
             const audioFileActive = robot.AudioPlayer.playing
-
             if ((speechActive || audioFileActive) && audioInterrupt) {
                 ap.stopAll()
                 tts.stopAll()
