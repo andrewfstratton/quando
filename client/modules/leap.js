@@ -28,7 +28,17 @@
   }
 
   self.handleX = function (hand, range, inverted, callback) {
-    _handleXYZ('leapX' + hand, -range*10, range*10, inverted, callback)
+    let max = range*10
+    let min = -max
+    if ((hand == "Left") || (hand == "Right")) {
+      min = 75 // i.e. 7.5 cm
+      max += min // the range is effectively half for each hand
+      if (hand == "Left") {
+        min = -max
+        max = -75
+      }
+    }
+    _handleXYZ('leapX' + hand, min, max, inverted, callback)
   }
 
   self.handleY = function (hand, range, inverted, callback) {

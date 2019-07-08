@@ -6,23 +6,15 @@
             <span class="quando-info" title="This block can only be dragged into When Display.">⚠</span>
             <span class="quando-info" title="Leap motion required"> 🖐</span>
             When
+            <select data-quando-name='hand'>
+                <option value='Either'>👈/👉</option>
+                <option value='Left'>👈</option>
+                <option value='Right'>👉</option>
+            </select>
             <select data-quando-name='hand_fn' class='quando-toggle'>
                 <option value='handClosed'>Fist</option>
                 <option value='handOpen'>Flat</option>
             </select>
-            <select data-quando-name='extras' class='quando-toggle'>
-                <option value='hidden'>+</option>
-                <option value='show'>-</option>
-            </select>
-            </br>
-            <span data-quando-toggle='extras=show'>
-                <select data-quando-name='hand'>
-                    <option value='Either'>Either</option>
-                    <option value='Left'>Left</option>
-                    <option value='Right'>Right</option>
-                </select>
-                hand
-            </span>
         </div>
         <div data-quando-name="box" class="quando-box"></div>
         <div class="quando-row quando-devices"></div>

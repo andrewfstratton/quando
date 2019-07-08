@@ -1,9 +1,11 @@
-<div class="quando-block" data-quando-id="true" data-quando-javascript="quando.robot.listenForWords('${listName}', '${words}', ${confidence},  ${data-quando-id}, ((val)=>{
+<div class="quando-block" data-quando-drop-valid="display-when-display,advanced-comment" data-quando-id="true" data-quando-javascript="quando.robot.listenForWords('${listName}', '${words}', ${confidence},  ${data-quando-id}, ((val)=>{
   ${box}
   }))">
   <div class="quando-left quando-robot"></div>
   <div class="quando-right">
-    <div class="quando-row quando-robot">🤖 When hearing
+    <div class="quando-row quando-robot">
+      <span class="quando-info" title="This block can only be dragged into When Display.">⚠</span>
+      🤖 When hearing
       <input data-quando-name="words" type="text" value="" data-quando-encode="normal" />
       from
       <input data-quando-name="listName" type="text" value="" data-quando-encode="normal" />

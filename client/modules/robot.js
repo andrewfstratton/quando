@@ -29,8 +29,11 @@
         TextToSpeech: {
             CurrentWord: null,
             CurrentSentence: null,
-            Status: null,
+            Status: 'done',
             TextDone: null
+        },
+        AudioPlayer: {
+            playing: false
         }
     }
 
@@ -96,14 +99,7 @@
 
     function set_up() {
         session.service("ALAutonomousLife").then(function (al) {
-            Promise.resolve(al.getState()).then(conditional).then(function (value) {
-                if (!value) {
-                    session.service("ALTextToSpeech").then(function (tts) {
-                        //tts.say("Please wait whilst I set up. I only do this once after being turned on, or if you have changed my autonomous life state.");
-                    }).fail(log_error)
-                    // al.setState("disabled") // See if this leaves Robot 'alive'
-                }
-            })
+            al.setState('solitary').fail(log_error)
 
             session.service("ALMemory").then(function (ALMemory) {
                 ALMemory.subscriber("AutonomousLife/State").then(function (sub) {
@@ -148,7 +144,6 @@
             ALMemory.subscriber("ALTextToSpeech/CurrentSentence").then(function (sub) {
                 sub.signal.connect(function (value) {
                     console.log(value);
-                    quando.text(value + "... ", true) // TODO: remove later
                     robot.TextToSpeech.CurrentSentence = value;
                 });
             });
@@ -196,16 +191,54 @@
         })
     }
 
+    let audioSequence = []
+    let audioInterrupt = true
+
+    self.audio = (fileName, scope) => {
+        let path = '/home/nao/audio/'
+
+        if (scope == 'interrupt') audioSequence = []
+        audioInterrupt = scope == 'interrupt'
+        if (scope == 'bg') {
+            session.service('ALAudioPlayer').then(ap => {
+                ap.playFile(path + fileName).fail(log_error)
+            })
+        } else {
+            audioSequence.push(() => {
+                session.service('ALAudioPlayer').then(ap => {
+                    robot.AudioPlayer.playing = true
+                    ap.playFile(path + fileName).fail(log_error).always(() => {
+                        robot.AudioPlayer.playing = false
+                    })
+                })
+            })
+        }
+        
+        quando.destructor.add(function () {
+            audioSequence = []
+            audioInterrupt = true
+        })
+    }
+
     self.speechHandler = (anim, text, pitch, speed, echo, interrupt=false, val) => {
         if (typeof val === 'string' && val.length) {
             text = val
         }
-        self.changeVoice(pitch, speed, echo)
-        if (anim == "None") {
-            self.say(text, interrupt)
-        } else {
-            self.animatedSay(anim, text, interrupt)
-        }
+
+        if (interrupt) audioSequence = []
+        audioInterrupt = interrupt
+        audioSequence.push(() => {
+            self.changeVoice(pitch, speed, echo)
+            if (anim == "None") {
+                self.say(text)
+            } else {
+                self.animatedSay(anim, text)
+            }
+        })
+        quando.destructor.add(function () {
+            audioSequence = []
+            audioInterrupt = true
+        })
     }
 
     self.speechHandlerTest = (anim, text, pitch, speed, echo, interrupt=false) => {
@@ -234,19 +267,15 @@
         }).fail(log_error)
     }
 
-    self.say = (text, interrupt=false) => {
+    self.say = (text) => {
         session.service("ALTextToSpeech").then((tts) => {
             if (robot.TextToSpeech.CurrentSentence != text) {
-                if (interrupt) {
-                    tts.stopAll()
-                }
                 tts.say(text)
             }
         }).fail(log_error)
     }
     
-    self.animatedSay = (anim, text, interrupt=false) => {
-        associatedAnim = "" // "(animations/Stand/Gestures/Enthusiastic_4)"
+    self.animatedSay = (anim, text) => {
         session.service("ALAnimatedSpeech").then((aas) => {
             if (anim == "Random") {
                 aas.setBodyLanguageMode(1) //random body language
@@ -255,10 +284,7 @@
             }
 
             if (robot.TextToSpeech.CurrentSentence != text) {
-                if (interrupt) {
-                    //aas.stopAll() TODO FIX ANIMATED INTERRUPT
-                }
-                aas.say("^start" + associatedAnim + text)
+                aas.say(text)
             }
         }).fail(log_error)
     }
@@ -405,10 +431,29 @@
         })
     }
 
+    function updateAudioOutput(ap, tts) {
+        if (audioSequence.length) {
+            const speechNotActive = ["stopped", "done"].includes(robot.TextToSpeech.Status)
+            const speechActive = robot.TextToSpeech.Status == "started"
+            const audioFileActive = robot.AudioPlayer.playing
+            if ((speechActive || audioFileActive) && audioInterrupt) {
+                ap.stopAll()
+                tts.stopAll()
+
+                robot.TextToSpeech.Status = "stopped" // TODO: not sure if necesarry
+                robot.AudioPlayer.playing = false
+            }
+
+            if (speechNotActive && !audioFileActive) {
+                audioSequence[0]()
+                audioSequence.shift()
+            }
+        }
+    }
+
     function updateRobot() {
         session.service("ALMotion").then((motion) => {
-            updateYawPitch(motion, 'HeadYaw', state.head.yaw
-            )
+            updateYawPitch(motion, 'HeadYaw', state.head.yaw)
             updateYawPitch(motion, 'HeadPitch', state.head.pitch)
             updateHand(motion, 'LHand', state.hand.left)
             updateHand(motion, 'RHand', state.hand.right)
@@ -417,8 +462,14 @@
             updateJoint(motion, 'RShoulderPitch', state.shoulder.right.pitch)
             updateJoint(motion, 'RShoulderRoll', state.shoulder.right.roll)
             updateMovement(motion)
-            
-            setTimeout(updateRobot, 1000/10) // i.e. x times per second
+
+            session.service("ALAudioPlayer").then(ap => {
+                session.service("ALTextToSpeech").then(tts => {
+                    updateAudioOutput(ap, tts)
+
+                    setTimeout(updateRobot, 1000/10) // i.e. x times per second
+                }).fail(log_error)
+            }).fail(log_error)
         }).fail(log_error)
     }
 
@@ -525,9 +576,11 @@
 
     self.changeAutonomousLife = (state, callback) => {
         session.service("ALAutonomousLife").then((al) => {
-            al.setState(state).then(() => {
-                if (callback) callback()
-            })
+            setTimeout(() => { // setTimeout override set_up behaviour
+                al.setState(state).then(() => {
+                    if (callback) callback()
+                })
+            }, 100)
         }).fail(log_error)
     }
 
