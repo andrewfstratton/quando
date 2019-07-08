@@ -44,3 +44,8 @@ pouchdb/*/*
 client/deployed_js/-.js
 pouchdb/log.txt
 pouchdb-config.json
+
+#speech-to-text files
+.webm
+client\media\visrec.png
+client/media/stt/*

@@ -16,6 +16,8 @@ const join = require('path').join
 const http = require('http').Server(app)
 const https = require('https')
 const io = require('socket.io')(http)
+const ass_id = "bb92f3b5-92ef-4fdc-8c8b-7fc7a5f58d53"
+let ass_session_id = ""
 
 function fail(response, msg) {
   response.json({'success': false, 'message': msg})
@@ -30,31 +32,39 @@ function success(response, obj = false) {
 }
 
 //Watson services
-const TextToSpeechV1 = require('watson-developer-cloud/text-to-speech/v1')
+const TextToSpeechV1 = require('ibm-watson/text-to-speech/v1')
 const tts = new TextToSpeechV1({
   iam_apikey: 'rRDUgzsh17bWWYS2VesXDCkHIanOQIuE42ccPOI7qivX',
   url: 'https://gateway-lon.watsonplatform.net/text-to-speech/api'
 })
 
-const VisualRecognitionV3 = require('watson-developer-cloud/visual-recognition/v3')
+const VisualRecognitionV3 = require('ibm-watson/visual-recognition/v3')
 const visRec = new VisualRecognitionV3({
   version: '2018-03-19',
   iam_apikey: 'md2b1cDrwPHQC-a-hJovQnsgdvRyympAfBArw4niQCn9',
   url: 'https://gateway.watsonplatform.net/visual-recognition/api'
 })
 
-var ToneAnalyzerV3 = require('watson-developer-cloud/tone-analyzer/v3')
+var ToneAnalyzerV3 = require('ibm-watson/tone-analyzer/v3')
 var toneAnalyzer = new ToneAnalyzerV3({
   version: '2017-09-21',
   iam_apikey: 'WcRnTs5agEpG9o_PKiTTQSJK1G7fUpcdodKWuVCJivUh',
   url: 'https://gateway-lon.watsonplatform.net/tone-analyzer/api'
 })
 
-var SpeechToTextV1 = require('watson-developer-cloud/speech-to-text/v1')
+var SpeechToTextV1 = require('ibm-watson/speech-to-text/v1')
 var stt = new SpeechToTextV1({
   iam_apikey: 'WiLEvMCQ1hPxKRYtpFo98jYg6jsc2QSnEHx2hfsYiseu',
   url: 'https://gateway-lon.watsonplatform.net/speech-to-text/api'
 })
+
+const AssistantV2 = require('ibm-watson/assistant/v2');
+const ass = new AssistantV2({
+  version: '2019-02-28',
+  iam_apikey: '6L_VbcL3_3Yi9YcKzbltbahy32xRR1mF7CxGe2kn6hZR',
+  url: 'https://gateway-lon.watsonplatform.net/assistant/api'
+});
+
 
 let port = process.env.PORT || 80
 let appEnv = require('cfenv').getAppEnv() // For IBM Cloud
@@ -70,6 +80,20 @@ function drop_client(client) {
   if (index != -1) {
     io.clients.splice(index, 1) // unlike delete, remove the array entry, rather than set to null
   }
+}
+
+function create_assistant_session() {
+  console.log('creating session...')
+  ass.createSession({
+    assistant_id: ass_id
+  })
+  .then(res => {
+    console.log('assistant session id: ' + res.session_id)
+    ass_session_id = res.session_id
+  })
+  .catch(err => {
+    console.log(err)
+  })
 }
 
 let server = http.listen(port, () => {
@@ -167,7 +191,6 @@ app.post('/watson/TTS_request', (req, res) => {
   let text = req.body.text
   watson_db.save(text).then(
     (success) => { 
-      console.log(success)
       let params = { //stuff sent to API
         text: text,
         accept: 'audio/wav',
@@ -180,7 +203,7 @@ app.post('/watson/TTS_request', (req, res) => {
         //save output file
         tts.repairWavHeader(audio)
         fs.writeFileSync(__dirname + '/client/media/'+success.id+'.wav', audio)
-        console.log('TTS - audio written as '+success.id+'.wav')
+        console.log('TTS success - audio written as '+success.id+'.wav')
         filename = success.id
         res.json(filename)
       })
@@ -231,29 +254,74 @@ app.post('/watson/TONE_request', (req, res) => {
 app.post('/watson/SPEECH_request', (req, res) => {
   console.log('Speech to Text Requested...')
   let data = req.body.data
+  let sent = 0
   watson_db.save(data).then((success) => {
-    base64.decode(data, success.id+".webm", function(err, output){
-      console.log('success!')
+    base64.decode(data, __dirname + '/client/media/stt/'+success.id+".webm", function(err, output){
+      console.log('base 64 decoding success to '+success.id+'.webm')
       var params = {
         objectMode: false,
         content_type: 'audio/webm',
-        model: 'en-GB_BroadbandModel'
+        model: 'en-GB_BroadbandModel',
+        max_alternatives: 1
       }
       
-      var recognizeStream = stt.recognizeUsingWebSocket(params);
+      //create speech to text obj
+      var recognizeStream = stt.recognizeUsingWebSocket(params)
       recognizeStream.setEncoding('utf8')
       
       // Pipe in the audio.
-      fs.createReadStream(success.id+".webm").pipe(recognizeStream)
-      recognizeStream.on('data', function(event) { onEvent('Data:', event); });
-      
-      // Display events on the console.
-      function onEvent(name, event) {
-          console.log(name, "written to "+success.id+".webm: "+JSON.stringify(event, null, 2));
+      fs.createReadStream(__dirname + '/client/media/stt/' + success.id+".webm").pipe(recognizeStream)
+
+      recognizeStream.on('data', function(event) {
+        // Display events on the console.
+        if (sent == 0) {
+          console.log(success.id+".webm read as: "+JSON.stringify(event, null, 2))
           res.json(JSON.stringify(event, null, 2))
-      };
+          sent++
+        } else {
+          console.log(success.id+".webm read as: "+JSON.stringify(event, null, 2) + ' NOT SENT')
+        }
+      })
+      recognizeStream.on('error', function(event) {
+        // Display events on the console.
+        console.log(JSON.stringify(event, null, 2))
+      })
+      recognizeStream.on('close', function(event) {
+        // Display events on the console.
+        console.log('closed, '+JSON.stringify(event, null, 2))
+      })
+      
     })
   })
+})
+
+//Assistant
+app.post('/watson/ASS_request', (req, res) => {
+  console.log('Assistant Requested...')
+  create_assistant_session()
+  
+  let text = req.body.text
+  console.log('text: '  + text)
+  let id = req.body.id
+  setTimeout(() => {
+    console.log('pinging assistant......')
+    ass.message({
+      assistant_id: ass_id,
+      session_id: ass_session_id,
+      input: {'message_type': 'text',
+              'text': text}
+    })
+    .then(ass_res => {
+      console.log(ass_res.statusCode)
+      console.log(ass_res)
+      console.log(ass_res.output.generic[0].text)
+      console.log(ass_res.output.intents[0].intent)
+      console.log(JSON.stringify(ass_res))
+      res.json("JSON.stringify(ass_res)")
+    })
+    .catch(err => {
+      console.log(err)
+    })}, 2500)
 })
 
 app.post('/socket/:id', (req, res) => {

@@ -23,6 +23,7 @@
     "file-base64": "^1.0.0",
     "formidable": "^1.2.1",
     "graceful-fs": "4.1.10",
+    "ibm-watson": "^4.2.1",
     "leapjs": "^0.6.4",
     "memorystore": "^1.6.1",
     "morgan": "^1.9.1",

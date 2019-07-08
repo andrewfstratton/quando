@@ -1,11 +1,14 @@
-(function () {
-  var quando = this['quando']
+(() => {
+  let quando = this['quando']
   if (!quando) {
-    alert('Fatal Error: Watson must be included after quando_browser')
+      alert('Fatal Error: Watson must be included after quando_browser')
   }
-  var self = quando.watson = {}
+  let self = quando.watson = {}
 
-  self.call_tts = function(text) {
+  self.call_tts = function(text, val) {        
+    if (typeof val === 'string' && val.length) {
+      text = val
+    }
     //send POST request to server
     fetch('/watson/TTS_request', { method: 'POST', 
         body: JSON.stringify({'text':text}), 
@@ -16,9 +19,22 @@
         console.log(data)
         //play audio after 
         window.setTimeout(()=> {
-          self.audio(data+'.wav', false)
+          quando.audio(data+'.wav', false)
         }, 0)
       })
+    })
+  } 
+    
+  self.call_ass = function(text) {
+    //send POST request to server
+    fetch('/watson/ASS_request', { method: 'POST', 
+        body: JSON.stringify({'text':text}), 
+        headers: {"Content-Type": "application/json",
+                  Accept: 'application/json'}
+    }).then(function(response) {
+      console.log(response)
+      let output = JSON.parse(response)
+      quando.text(output.generic[0].text, true)
     })
   } 
 
@@ -26,9 +42,9 @@
     let scene = document.getElementById('scene')
     if (scene == null) { 
       //if scene DOES NOT exist
-      let scene = self.ar.initScene()
-      let hiddenCanvas = self.ar.initHiddenCanvas()
-      let camera = self.ar.initCam()
+      let scene = quando.ar.initScene()
+      let hiddenCanvas = quando.ar.initHiddenCanvas()
+      let camera = quando.ar.initCam()
 
       //add all elements to DOM
       scene.appendChild(camera)
@@ -43,7 +59,7 @@
     let vid = null
     let imgData = null
 
-    //timeout of 2 seconds to wait for webcam feed to load in
+    //timeout of 3 seconds to wait for webcam feed to load in
     window.setTimeout(()=>{
       let div = document.getElementById('visrec_label')
       let elem = document.getElementById('quando_labels')
@@ -78,7 +94,7 @@
         self.call_vis_rec_api(imgData, goalClass, fn)
       })
       elem.appendChild(div)
-    }, 2000)
+    }, 3000)
   }
 
   self.call_vis_rec_api = function(imgData, goalClass, fn) {
@@ -104,20 +120,115 @@
         }
       )
   }
+  self.call_speech_to_text = function() {  
+    let div = document.getElementById('visrec_label')
+    let elem = document.getElementById('quando_labels')
+    let recording = false
+    let mediaRecorder = null
+    //if label doesn't already exist, create label
+    if (div == null) {
+      div = document.createElement('div')
+      div.className = 'quando_label'
+      div.innerHTML = "Click to start listening..."
+      div.setAttribute('id', 'stt_label')
+    }
+
+    navigator.mediaDevices.getUserMedia({ audio: true, video: false })
+    .then(stream => {
+      mediaRecorder = new MediaRecorder(stream)
+      const audioChunks = []
   
-  self.call_speech_to_text = function() {
-    //send POST request to server
-    fetch('/watson/VISREC_request', { method: 'POST', 
-      body: JSON.stringify({'fileURL':fileURL}), 
-      headers: {"Content-Type": "application/json"}
-    }).then(
-      function(response) {
-        response.json().then(
-          function(data) {
+      mediaRecorder.ondataavailable = e => {
+        audioChunks.push(e.data)
+        if (mediaRecorder.state == "inactive") {
+          const audioBlob = new Blob(audioChunks,{type:'video/webm'});
+          var reader = new window.FileReader();
+          reader.readAsDataURL(audioBlob); 
+          reader.onloadend = function() {
+             base64 = reader.result;
+             base64 = base64.split(',')[1];
+             console.log(base64 );
+             fetch('/watson/SPEECH_request', { method: 'POST', 
+               body: JSON.stringify({'data':base64}), 
+               headers: {"Content-Type": "application/json"}
+             }).then(function(response) {
+                response.json().then(function(data) {
+                  console.log(data.replace(/"/g, ""))
+                  let input = document.getElementById('inp')
+                  input.value = data.replace(/"/g, "")
+                  input.click()
+                  div.innerHTML = "Click to start listening..."
+                })
+              })
           }
-        )
+        }
       }
-    )
+
+    })
+
+    self.call_speech_to_text_ass = function(fn) {  
+      let div = document.getElementById('visrec_label')
+      let elem = document.getElementById('quando_labels')
+      let recording = false
+      let mediaRecorder = null
+      //if label doesn't already exist, create label
+      if (div == null) {
+        div = document.createElement('div')
+        div.className = 'quando_label'
+        div.innerHTML = "Click to start listening..."
+        div.setAttribute('id', 'stt_label')
+      }
+  
+      navigator.mediaDevices.getUserMedia({ audio: true, video: false })
+      .then(stream => {
+        mediaRecorder = new MediaRecorder(stream)
+        const audioChunks = []
+    
+        mediaRecorder.ondataavailable = e => {
+          audioChunks.push(e.data)
+          if (mediaRecorder.state == "inactive") {
+            const audioBlob = new Blob(audioChunks,{type:'video/webm'});
+            var reader = new window.FileReader();
+            reader.readAsDataURL(audioBlob); 
+            reader.onloadend = function() {
+               base64 = reader.result;
+               base64 = base64.split(',')[1];
+               console.log(base64 );
+               fetch('/watson/SPEECH_request', { method: 'POST', 
+                 body: JSON.stringify({'data':base64}), 
+                 headers: {"Content-Type": "application/json"}
+               }).then(function(response) {
+                  response.json().then(function(data) {
+                    console.log(data.replace(/"/g, ""))
+                    //let input = document.getElementById('inp')
+                    //input.value = data.replace(/"/g, "")
+                    //input.click()
+                    fn(data.replace(/"/g, ""))
+                    div.innerHTML = "Click to start listening..."
+                  })
+                })
+            }
+          }
+        }
+  
+      })
+    }
+
+    div.addEventListener("click", function(){
+      if (!recording) {
+        mediaRecorder.start()
+        div.innerHTML = "Stop listening..."
+        recording = true
+      } else {
+        recording = false
+        mediaRecorder.stop()
+        div.innerHTML = "Working..."
+      }
+    }) 
+
+
+    elem.appendChild(div)
+    /*/send POST request to server*/
   }
 
 
@@ -143,4 +254,5 @@
       })
     })
   }
-})
+
+})()
