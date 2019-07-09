@@ -254,9 +254,18 @@ app.post('/watson/TONE_request', (req, res) => {
 app.post('/watson/SPEECH_request', (req, res) => {
   console.log('Speech to Text Requested...')
   let data = req.body.data
-  let sent = 0
   watson_db.save(data).then((success) => {
-    base64.decode(data, __dirname + '/client/media/stt/'+success.id+".webm", function(err, output){
+    const dir = __dirname + '/client/media/stt/'
+    const filePath = dir + success.id + '.webm'
+
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, '0744');
+    }
+
+    base64.decode(data, filePath, function(err, output){
+      if (err) { console.log(err); return; }
+      var sent = false
+
       console.log('base 64 decoding success to '+success.id+'.webm')
       var params = {
         objectMode: false,
@@ -270,27 +279,36 @@ app.post('/watson/SPEECH_request', (req, res) => {
       recognizeStream.setEncoding('utf8')
       
       // Pipe in the audio.
-      fs.createReadStream(__dirname + '/client/media/stt/' + success.id+".webm").pipe(recognizeStream)
+      fs.createReadStream(filePath).pipe(recognizeStream)
 
-      recognizeStream.on('data', function(event) {
+      recognizeStream.once('data', function(event) {
         // Display events on the console.
-        if (sent == 0) {
-          console.log(success.id+".webm read as: "+JSON.stringify(event, null, 2))
+        console.log(success.id+".webm read as: "+JSON.stringify(event, null, 2))
+        if (!sent) {
+          sent = true
           res.json(JSON.stringify(event, null, 2))
-          sent++
-        } else {
-          console.log(success.id+".webm read as: "+JSON.stringify(event, null, 2) + ' NOT SENT')
         }
       })
-      recognizeStream.on('error', function(event) {
+      recognizeStream.once('error', function(event) {
         // Display events on the console.
         console.log(JSON.stringify(event, null, 2))
       })
-      recognizeStream.on('close', function(event) {
+      recognizeStream.once('close', function(event) {
         // Display events on the console.
         console.log('closed, '+JSON.stringify(event, null, 2))
+
+        if (!sent) { 
+          sent = true
+          res.json({ error: true, msg: 'No recognition' })
+        }
       })
       
+      setTimeout(() => {
+        if (!sent) { 
+          sent = true
+          res.json({ error: true, msg: 'Request timeout' })
+        }
+      }, 5000)
     })
   })
 })
