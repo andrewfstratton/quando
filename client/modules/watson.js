@@ -142,12 +142,12 @@
       mediaRecorder = new MediaRecorder(stream)
       let audioChunks = []
       mediaRecorder.onstart = e => {
-        alert(audioChunks)
+        ////alert(audioChunks)
       }
       mediaRecorder.ondataavailable = e => {
         //audio
         audioChunks.push(e.data)
-        alert(audioChunks)
+        ////alert(audioChunks)
         if (mediaRecorder.state == "inactive") {
           //const audioBlob = new Blob(audioChunks,{type:'video/webm'});
           const audioBlob = new Blob([e.data],{type:'video/webm'});
@@ -207,12 +207,12 @@
       mediaRecorder = new MediaRecorder(stream)
       let audioChunks = []
       mediaRecorder.onstart = e => {
-        alert(audioChunks)
+        //alert(audioChunks)
       }
       mediaRecorder.ondataavailable = e => {
         //audio
         audioChunks.push(e.data)
-        alert(audioChunks)
+        //alert(audioChunks)
         if (mediaRecorder.state == "inactive") {
           //const audioBlob = new Blob(audioChunks,{type:'video/webm'});
           const audioBlob = new Blob([e.data],{type:'video/webm'});
