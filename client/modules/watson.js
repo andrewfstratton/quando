@@ -39,6 +39,7 @@
   } 
 
   self.call_vis_rec = function(goalClass, fn) {
+    goalClass = goalClass.toLowerCase()
     let scene = document.getElementById('scene')
     if (scene == null) { 
       //if scene DOES NOT exist
@@ -68,7 +69,7 @@
       if (div == null) {
         div = document.createElement('div')
         div.className = 'quando_label'
-        div.innerHTML = "Found the thing?"
+        div.innerHTML = "📷"
         div.setAttribute('id', 'visrec_label')
       }
 
@@ -108,18 +109,21 @@
         function(response) {
 
           let div = document.getElementById('visrec_label')
-          div.innerHTML = "Seen! Click to try again if you want to..."
+          div.innerHTML = "Click to try again..."
 
           response.json().then(function(data) {
             //has it seen what it wants to?
             if (data.includes(goalClass)) {
               //execute box
               fn()
-            }
+            } else (
+              quando.text(data)
+            )
           })
         }
       )
   }
+
   self.call_speech_to_text = function() {  
     let div = document.getElementById('visrec_label')
     let elem = document.getElementById('quando_labels')
@@ -136,12 +140,18 @@
     navigator.mediaDevices.getUserMedia({ audio: true, video: false })
     .then(stream => {
       mediaRecorder = new MediaRecorder(stream)
-      const audioChunks = []
-  
+      let audioChunks = []
+      mediaRecorder.onstart = e => {
+        alert(audioChunks)
+      }
       mediaRecorder.ondataavailable = e => {
+        //audio
         audioChunks.push(e.data)
+        alert(audioChunks)
         if (mediaRecorder.state == "inactive") {
-          const audioBlob = new Blob(audioChunks,{type:'video/webm'});
+          //const audioBlob = new Blob(audioChunks,{type:'video/webm'});
+          const audioBlob = new Blob([e.data],{type:'video/webm'});
+          //const audioBlob = new Blob(e.data,{type:'video/webm'});
           var reader = new window.FileReader();
           reader.readAsDataURL(audioBlob); 
           reader.onloadend = function() {
@@ -163,57 +173,7 @@
           }
         }
       }
-
     })
-
-    self.call_speech_to_text_ass = function(fn) {  
-      let div = document.getElementById('visrec_label')
-      let elem = document.getElementById('quando_labels')
-      let recording = false
-      let mediaRecorder = null
-      //if label doesn't already exist, create label
-      if (div == null) {
-        div = document.createElement('div')
-        div.className = 'quando_label'
-        div.innerHTML = "Click to start listening..."
-        div.setAttribute('id', 'stt_label')
-      }
-  
-      navigator.mediaDevices.getUserMedia({ audio: true, video: false })
-      .then(stream => {
-        mediaRecorder = new MediaRecorder(stream)
-        const audioChunks = []
-    
-        mediaRecorder.ondataavailable = e => {
-          audioChunks.push(e.data)
-          if (mediaRecorder.state == "inactive") {
-            const audioBlob = new Blob(audioChunks,{type:'video/webm'});
-            var reader = new window.FileReader();
-            reader.readAsDataURL(audioBlob); 
-            reader.onloadend = function() {
-               base64 = reader.result;
-               base64 = base64.split(',')[1];
-               console.log(base64 );
-               fetch('/watson/SPEECH_request', { method: 'POST', 
-                 body: JSON.stringify({'data':base64}), 
-                 headers: {"Content-Type": "application/json"}
-               }).then(function(response) {
-                  response.json().then(function(data) {
-                    console.log(data.replace(/"/g, ""))
-                    //let input = document.getElementById('inp')
-                    //input.value = data.replace(/"/g, "")
-                    //input.click()
-                    fn(data.replace(/"/g, ""))
-                    div.innerHTML = "Click to start listening..."
-                  })
-                })
-            }
-          }
-        }
-  
-      })
-    }
-
     div.addEventListener("click", function(){
       if (!recording) {
         mediaRecorder.start()
@@ -225,8 +185,72 @@
         div.innerHTML = "Working..."
       }
     }) 
+    elem.appendChild(div)
+    /*/send POST request to server*/
+  }
 
+  self.call_speech_to_text2 = function(fn) {  
+    let div = document.getElementById('visrec_label')
+    let elem = document.getElementById('quando_labels')
+    let recording = false
+    let mediaRecorder = null
+    //if label doesn't already exist, create label
+    if (div == null) {
+      div = document.createElement('div')
+      div.className = 'quando_label'
+      div.innerHTML = "Click to start listening..."
+      div.setAttribute('id', 'stt_label')
+    }
 
+    navigator.mediaDevices.getUserMedia({ audio: true, video: false })
+    .then(stream => {
+      mediaRecorder = new MediaRecorder(stream)
+      let audioChunks = []
+      mediaRecorder.onstart = e => {
+        alert(audioChunks)
+      }
+      mediaRecorder.ondataavailable = e => {
+        //audio
+        audioChunks.push(e.data)
+        alert(audioChunks)
+        if (mediaRecorder.state == "inactive") {
+          //const audioBlob = new Blob(audioChunks,{type:'video/webm'});
+          const audioBlob = new Blob([e.data],{type:'video/webm'});
+          //const audioBlob = new Blob(e.data,{type:'video/webm'});
+          var reader = new window.FileReader();
+          reader.readAsDataURL(audioBlob); 
+          reader.onloadend = function() {
+             base64 = reader.result;
+             base64 = base64.split(',')[1];
+             console.log(base64 );
+             fetch('/watson/SPEECH_request', { method: 'POST', 
+               body: JSON.stringify({'data':base64}), 
+               headers: {"Content-Type": "application/json"}
+             }).then(function(response) {
+                response.json().then(function(data) {
+                  console.log(data.replace(/"/g, ""))
+                  fn(val = data.replace(/"/g, ""))
+                  let input = document.getElementById('inp')
+                  input.value = data.replace(/"/g, "")
+                  input.click()
+                  div.innerHTML = "Click to start listening..."
+                })
+              })
+          }
+        }
+      }
+    })
+    div.addEventListener("click", function(){
+      if (!recording) {
+        mediaRecorder.start()
+        div.innerHTML = "Stop listening..."
+        recording = true
+      } else {
+        recording = false
+        mediaRecorder.stop()
+        div.innerHTML = "Working..."
+      }
+    }) 
     elem.appendChild(div)
     /*/send POST request to server*/
   }

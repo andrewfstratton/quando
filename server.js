@@ -194,7 +194,7 @@ app.post('/watson/TTS_request', (req, res) => {
       let params = { //stuff sent to API
         text: text,
         accept: 'audio/wav',
-      } 
+      }
       tts.synthesize(params, function(err, audio) { //handling errors and file
         if (err) {
           console.log(err)
