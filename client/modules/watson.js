@@ -123,8 +123,8 @@
         }
       )
   }
-
-  self.call_speech_to_text = function() {  
+  
+  self.call_speech_to_text = function(callback) {  
     let div = document.getElementById('visrec_label')
     let elem = document.getElementById('quando_labels')
     let recording = false
@@ -136,38 +136,38 @@
       div.innerHTML = "Click to start listening..."
       div.setAttribute('id', 'stt_label')
     }
-
+    
     navigator.mediaDevices.getUserMedia({ audio: true, video: false })
     .then(stream => {
-      mediaRecorder = new MediaRecorder(stream)
-      let audioChunks = []
-      mediaRecorder.onstart = e => {
-        ////alert(audioChunks)
-      }
+      mediaRecorder = new MediaRecorder(stream, { mimeType: "audio/webm" })
       mediaRecorder.ondataavailable = e => {
-        //audio
-        audioChunks.push(e.data)
-        ////alert(audioChunks)
         if (mediaRecorder.state == "inactive") {
-          //const audioBlob = new Blob(audioChunks,{type:'video/webm'});
-          const audioBlob = new Blob([e.data],{type:'video/webm'});
-          //const audioBlob = new Blob(e.data,{type:'video/webm'});
+          const audioBlob = new Blob([e.data],{type:"audio/webm"});
           var reader = new window.FileReader();
-          reader.readAsDataURL(audioBlob); 
+          reader.readAsDataURL(audioBlob);
           reader.onloadend = function() {
              base64 = reader.result;
              base64 = base64.split(',')[1];
-             console.log(base64 );
              fetch('/watson/SPEECH_request', { method: 'POST', 
                body: JSON.stringify({'data':base64}), 
                headers: {"Content-Type": "application/json"}
              }).then(function(response) {
                 response.json().then(function(data) {
-                  console.log(data.replace(/"/g, ""))
-                  let input = document.getElementById('inp')
-                  input.value = data.replace(/"/g, "")
-                  input.click()
                   div.innerHTML = "Click to start listening..."
+
+                  if (!data.error) {
+                    const text = data.replace(/"/g, "")
+                    console.log(text)
+
+                    if (typeof callback === 'function') { callback(text) }
+
+                    let input = document.getElementById('inp')
+                    if (input) {
+                      input.value = text
+                      input.click()
+                    }
+                  }
+                  
                 })
               })
           }
@@ -188,73 +188,6 @@
     elem.appendChild(div)
     /*/send POST request to server*/
   }
-
-  self.call_speech_to_text2 = function(fn) {  
-    let div = document.getElementById('visrec_label')
-    let elem = document.getElementById('quando_labels')
-    let recording = false
-    let mediaRecorder = null
-    //if label doesn't already exist, create label
-    if (div == null) {
-      div = document.createElement('div')
-      div.className = 'quando_label'
-      div.innerHTML = "Click to start listening..."
-      div.setAttribute('id', 'stt_label')
-    }
-
-    navigator.mediaDevices.getUserMedia({ audio: true, video: false })
-    .then(stream => {
-      mediaRecorder = new MediaRecorder(stream)
-      let audioChunks = []
-      mediaRecorder.onstart = e => {
-        //alert(audioChunks)
-      }
-      mediaRecorder.ondataavailable = e => {
-        //audio
-        audioChunks.push(e.data)
-        //alert(audioChunks)
-        if (mediaRecorder.state == "inactive") {
-          //const audioBlob = new Blob(audioChunks,{type:'video/webm'});
-          const audioBlob = new Blob([e.data],{type:'video/webm'});
-          //const audioBlob = new Blob(e.data,{type:'video/webm'});
-          var reader = new window.FileReader();
-          reader.readAsDataURL(audioBlob); 
-          reader.onloadend = function() {
-             base64 = reader.result;
-             base64 = base64.split(',')[1];
-             console.log(base64 );
-             fetch('/watson/SPEECH_request', { method: 'POST', 
-               body: JSON.stringify({'data':base64}), 
-               headers: {"Content-Type": "application/json"}
-             }).then(function(response) {
-                response.json().then(function(data) {
-                  console.log(data.replace(/"/g, ""))
-                  fn(val = data.replace(/"/g, ""))
-                  let input = document.getElementById('inp')
-                  input.value = data.replace(/"/g, "")
-                  input.click()
-                  div.innerHTML = "Click to start listening..."
-                })
-              })
-          }
-        }
-      }
-    })
-    div.addEventListener("click", function(){
-      if (!recording) {
-        mediaRecorder.start()
-        div.innerHTML = "Stop listening..."
-        recording = true
-      } else {
-        recording = false
-        mediaRecorder.stop()
-        div.innerHTML = "Working..."
-      }
-    }) 
-    elem.appendChild(div)
-    /*/send POST request to server*/
-  }
-
 
   self.addToneHandler = function(goalTone, fn) {
     //adds 'onClick' event listener to the input prompt button

@@ -220,6 +220,10 @@
         })
     }
 
+    self.masterVolume = (volume) => {
+        session.service('ALAudioDevice').then(ad => ad.setOutputVolume(volume)).fail(log_error)
+    }
+
     self.speechHandler = (anim, text, pitch, speed, echo, interrupt=false, val) => {
         if (typeof val === 'string' && val.length) {
             text = val
