@@ -9,7 +9,6 @@
 
   self.socket = io.connect('http://' + window.location.hostname)
 
-
   var websockets = []
   
   // self.call_tts = function(text, val) {        
