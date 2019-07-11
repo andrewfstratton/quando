@@ -5,8 +5,31 @@
   }
   let self = quando.pick = {}
   let _list = {}
+  let _list_temp = {}
 
-  function _pick(val, arr) {
+  // self.pick = function(val, arr) {
+  //   if (val === false) {
+  //     val = 0.5
+  //   }
+  //   var i = Math.floor(val * arr.length)
+  //   if (i == arr.length) {
+  //     i--
+  //   }
+  //   arr[i]()
+  //   arr.splice(i, 1)
+  // }
+
+  // self.pick_random = function(arr) {
+  //   alert('r'+randArr)
+  //   if (randArr == []) {
+  //     randArr = arr
+  //   } else {
+  //     var r = Math.random()
+  //     self.pick(r, randArr)
+  //   }   
+  // }
+
+  function _pick(val, arr, repeat) {
     if (val === false) {
       val = 0.5
     }
@@ -15,16 +38,25 @@
       i--
     }
     arr[i]()
+    if (!repeat) {
+      arr.splice(i, 1)
+    }
   }
 
 
-  self.random = (id) => {
+  self.random = (id, repeat) => {
+    //if all things in list have been executed, reset list
+    if (_list_temp[id].length == 0) {
+      _list_temp[id] = [..._list[id]]
+    }
+    //pick random in list
     let r = Math.random()
-    _pick(r, _list[id])
+    _pick(r, _list_temp[id], repeat)
   }
 
   self.set = (id, arr) => {
     _list[id] = arr
+    _list_temp[id] = [..._list[id]] //set _list_temp as copy of _list
   }
 
   self.reset = (id) => {

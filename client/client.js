@@ -10,6 +10,7 @@
   self.socket = io.connect('http://' + window.location.hostname)
 
   var websockets = []
+  let randArr = []
   
   // self.call_tts = function(text, val) {        
   //   if (typeof val === 'string' && val.length) {
@@ -785,34 +786,40 @@
     
   }
 
-  self.pick = function(val, arr) {
-    if (val === false) {
-      val = 0.5
-    }
-    var i = Math.floor(val * arr.length)
-    if (i == arr.length) {
-      i--
-    }
-    arr[i]()
-  }
+  // self.pick = function(val, arr) {
+  //   if (val === false) {
+  //     val = 0.5
+  //   }
+  //   var i = Math.floor(val * arr.length)
+  //   if (i == arr.length) {
+  //     i--
+  //   }
+  //   arr[i]()
+  //   arr.splice(i, 1)
+  // }
 
-  self.pick_random = function(arr) {
-    var r = Math.random()
-    self.pick(r, arr)
-  }
+  // self.pick_random = function(arr) {
+  //   alert('r'+randArr)
+  //   if (randArr == []) {
+  //     randArr = arr
+  //   } else {
+  //     var r = Math.random()
+  //     self.pick(r, randArr)
+  //   }   
+  // }
 
-  self.pick_one_each_time = function(arr) {
-    if (arr.length > 0) {
-      if (!arr.hasOwnProperty('index')) {
-        arr.index = 0
-      }
-      var fn = arr[arr.index]
-      if (++arr.index >= arr.length) {
-        arr.index = 0
-      }
-      if (typeof fn === 'function') { fn() }
-    }
-  }
+  // self.pick_one_each_time = function(arr) {
+  //   if (arr.length > 0) {
+  //     if (!arr.hasOwnProperty('index')) {
+  //       arr.index = 0
+  //     }
+  //     var fn = arr[arr.index]
+  //     if (++arr.index >= arr.length) {
+  //       arr.index = 0
+  //     }
+  //     if (typeof fn === 'function') { fn() }
+  //   }
+  // }
 
   self.setOnId = (id, val) => {
     _lookup[id] = val
