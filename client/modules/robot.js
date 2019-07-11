@@ -231,6 +231,7 @@
 
         if (interrupt) audioSequence = []
         audioInterrupt = interrupt
+        
         audioSequence.push(() => {
             self.changeVoice(pitch, speed, echo)
             if (anim == "None") {
@@ -274,6 +275,7 @@
     self.say = (text) => {
         session.service("ALTextToSpeech").then((tts) => {
             if (robot.TextToSpeech.CurrentSentence != text) {
+                
                 tts.say(text)
             }
         }).fail(log_error)
@@ -438,9 +440,8 @@
     function updateAudioOutput(ap, tts) {
         if (audioSequence.length) {
             const speechNotActive = ["stopped", "done"].includes(robot.TextToSpeech.Status)
-            const speechActive = robot.TextToSpeech.Status == "started"
             const audioFileActive = robot.AudioPlayer.playing
-            if ((speechActive || audioFileActive) && audioInterrupt) {
+            if (audioInterrupt) {
                 ap.stopAll()
                 tts.stopAll()
 
@@ -470,8 +471,7 @@
             session.service("ALAudioPlayer").then(ap => {
                 session.service("ALTextToSpeech").then(tts => {
                     updateAudioOutput(ap, tts)
-
-                    setTimeout(updateRobot, 1000/10) // i.e. x times per second
+                    setTimeout(updateRobot, 1000/25) // i.e. x times per second
                 }).fail(log_error)
             }).fail(log_error)
         }).fail(log_error)
