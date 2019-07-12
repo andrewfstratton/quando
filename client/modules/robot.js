@@ -7,7 +7,9 @@
     let state = { // holds the requested state
         hand : { left: {}, right: {}},
         head : { yaw: {}, pitch: {}},
-        shoulder : { left: {roll: {}, pitch: {}}, right: {roll: {}, pitch: {}}}
+        shoulder : { left: {roll: {}, pitch: {}}, right: {roll: {}, pitch: {}}},
+        elbow : { left: {roll: {}, yaw: {}}, right: {roll: {}, yaw: {}}},
+        wrist : { left: {yaw: {}}, right: {yaw: {}}}
     }
 
     let exampleSine = {freq: 441, gain: 25, duration: 1}
@@ -368,27 +370,15 @@
         }
     }
 
-    self.moveArmNew = (left, roll, middle, range, speed, normal_inverted, val) => {
+    self.moveArmNew = (pos, joint, dir, middle, range, speed, normal_inverted, val) => {
         let min = helper_ConvertAngleToRads(middle - range)
         let max = helper_ConvertAngleToRads(middle + range)
         if (!normal_inverted) { val = 1-val }
         let radians = min + (val * (max-min))
-        if (left) { // Update Left Arm
-            if (roll) { // Roll
-                state.shoulder.left.roll.angle = radians
-                state.shoulder.left.roll.speed = speed
-            } else { // Pitch
-                state.shoulder.left.pitch.angle = radians
-                state.shoulder.left.pitch.speed = speed
-            }
-        } else { // Update Right Arm
-            if (roll) { // Roll
-                state.shoulder.right.roll.angle = radians
-                state.shoulder.right.roll.speed = speed
-            } else { // Pitch
-                state.shoulder.right.pitch.angle = radians
-                state.shoulder.right.pitch.speed = speed
-            }
+
+        if (state[joint][pos][dir]) {
+            state[joint][pos][dir].angle = radians
+            state[joint][pos][dir].speed = speed
         }
     }
 
@@ -422,6 +412,24 @@
             pitch_roll.last_angle = pitch_roll.angle
             pitch_roll.angle = false
         }
+    }
+
+    function updateJoints(motion) {
+        const joints = [ 'shoulder', 'elbow', 'wrist' ]
+        const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
+
+        Object.keys(state).forEach(joint => {
+            if (joints.includes(joint)) {
+                ['left', 'right'].forEach(pos => {
+                    ['yaw', 'pitch', 'roll'].forEach(dir => {
+                        if (state[joint][pos][dir]) {
+                            const name = capitalize(pos.charAt(0)) + capitalize(joint) + capitalize(dir)
+                            updateJoint(motion, name, state[joint][pos][dir])
+                        }
+                    })
+                })
+            }
+        })
     }
 
     function updateMovement(motion) {
@@ -462,10 +470,8 @@
             updateYawPitch(motion, 'HeadPitch', state.head.pitch)
             updateHand(motion, 'LHand', state.hand.left)
             updateHand(motion, 'RHand', state.hand.right)
-            updateJoint(motion, 'LShoulderPitch', state.shoulder.left.pitch)
-            updateJoint(motion, 'LShoulderRoll', state.shoulder.left.roll)
-            updateJoint(motion, 'RShoulderPitch', state.shoulder.right.pitch)
-            updateJoint(motion, 'RShoulderRoll', state.shoulder.right.roll)
+
+            updateJoints(motion)
             updateMovement(motion)
 
             session.service("ALAudioPlayer").then(ap => {
