@@ -46,7 +46,7 @@ pouchdb/log.txt
 pouchdb-config.json
 
 #speech-to-text files
-.webm
+*.webm
 client\media\visrec.png
 client/media/stt/*
 server/rest/client/media/visrec.png
