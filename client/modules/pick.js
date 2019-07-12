@@ -6,6 +6,7 @@
   let self = quando.pick = {}
   let _list = {}
   let _list_temp = {}
+  let _last_pick = []
 
   // self.pick = function(val, arr) {
   //   if (val === false) {
@@ -29,7 +30,7 @@
   //   }   
   // }
 
-  function _pick(val, arr, repeat) {
+  function _pick(val, arr, id, type) {
     if (val === false) {
       val = 0.5
     }
@@ -37,21 +38,32 @@
     if (i == arr.length) {
       i--
     }
-    arr[i]()
-    if (!repeat) {
+    if (type == "dr") {
+      alert('i: ' + i + ', last: ' + _last_pick[id])
+      if (i != _last_pick[id]) {
+        arr[i]()
+        _last_pick[id] = i
+      } else {
+        self.random(id, type)
+      }
+    } else {
+      arr[i]()
+      _last_pick[id] = i
+    }
+    if (type == "Reorder") {
       arr.splice(i, 1)
     }
   }
 
 
-  self.random = (id, repeat) => {
-    //if all things in list have been executed, reset list
+  self.random = (id, type) => {
+    //if all things in temp list have been executed, reset list
     if (_list_temp[id].length == 0) {
       _list_temp[id] = [..._list[id]]
     }
-    //pick random in list
+    //pick random from list
     let r = Math.random()
-    _pick(r, _list_temp[id], repeat)
+    _pick(r, _list_temp[id], id, type)
   }
 
   self.set = (id, arr) => {

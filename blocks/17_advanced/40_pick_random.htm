@@ -1,5 +1,5 @@
 <div class="quando-block" data-quando-id="true"
-  data-quando-javascript="$(pre$, quando.pick.set(${data-quando-id}, [${box}]))$$(nl)$quando.pick.random(${data-quando-id}, ${repeat})">
+  data-quando-javascript="$(pre$, quando.pick.set(${data-quando-id}, [${box}]))$$(nl)$quando.pick.random(${data-quando-id}, '${type}')">
   <div class="quando-left quando-advanced"></div>
   <div class="quando-right">
     <div class="quando-row quando-advanced">
@@ -10,9 +10,10 @@
       </select>
       <span data-quando-toggle='extras=show'>
         <br />
-        <select data-quando-name='repeat' class='quando-toggle'>
-          <option value='true'>Allow Repeats</option>
-          <option value='false'>Don't Repeat</option>
+        <select data-quando-name='type' class='quando-toggle'>
+          <option value='Normal'>Normal</option>
+          <option value='Reorder'>Unique Order</option>
+          <option value="dr">Don't Repeat</option>
         </select>
       </span>
     </div>
