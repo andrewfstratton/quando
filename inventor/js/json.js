@@ -106,7 +106,7 @@ self.addObjectToElement = (obj, elem) => {
               error_elem.style.display = ''
               let text = error_elem.querySelector("[data-quando-name='text']")
               if (text) {
-                text.value = "key = " + block.values[key]
+                text.value = key + " = " + block.values[key]
               }
             }
             console.log("Failed to set block '" + block.block_type + "', key '" + key + "' to:")
