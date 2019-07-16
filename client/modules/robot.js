@@ -12,12 +12,8 @@
         wrist : { left: {yaw: {}}, right: {yaw: {}}}
     }
 
-    let exampleSine = {freq: 441, gain: 25, duration: 1}
-    let testSBuffer = [exampleSine, {freq: 480, gain: 25, duration: 1}, {freq: 520, gain: 25, duration: 1}, {freq: 560, gain: 25, duration: 1}, {freq: 600, gain: 25, duration: 1}]
     let sineBuffer = []
-    sineBuffer = testSBuffer
-    let testCounter = 0
-    let sinePlayDelay = 116
+    let sinePlayDelay = 120
     let sinePlaying = false
 
     class vocabList {
@@ -277,7 +273,6 @@
     self.say = (text) => {
         session.service("ALTextToSpeech").then((tts) => {
             if (robot.TextToSpeech.CurrentSentence != text) {
-                
                 tts.say(text)
             }
         }).fail(log_error)
@@ -311,7 +306,6 @@
     self.goThroughSineBuffer = () => {
         if (sineBuffer.length > 0) { //if there's a tone that needs playing
             sinePlaying = true
-            testCounter += 1
 
             //intermediary variables for simplicity
             let sine = sineBuffer[0]
@@ -320,9 +314,9 @@
             let duration = sine.duration
 
             //play sine
-            session.service("ALAudioDevice").then((aadp) => {
-                console.log('Playing Sine wave: ' + freq + "Hz " + gain + " gain " + duration + " seconds counter:" + testCounter)
-                aadp.playSine(freq, gain, 0, duration)
+            session.service("ALAudioPlayer").then((ap) => {
+                console.log('Playing Sine wave: ' + freq + "Hz " + gain + " gain " + duration + " seconds")
+                ap.playSine(freq, gain, 0, duration)
             }).fail(log_error)
 
             sineBuffer.shift() //remove played sine wave
@@ -346,7 +340,7 @@
     //play sine wave w/specified params
     self.playSine = (freq, gain, duration) => {
         session.service("ALAudioDevice").then((aadp) => {
-            console.log('Playing Sine wave: ' + freq + "Hz " + gain + " gain " + duration + " seconds counter:" + testCounter)
+            console.log('Playing Sine wave: ' + freq + "Hz " + gain + " gain " + duration + " seconds")
             aadp.playSine(freq, gain, 0, duration)
         }).fail(log_error)
     } 
