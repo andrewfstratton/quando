@@ -370,10 +370,14 @@
   }
 
   self.add_scaled_handler = function (event_name, callback, scaler) {
+    let last_value = null
     var handler = function (ev) {
       var value = scaler(ev.detail)
       if (value !== null) {
-        callback(value)
+        if (value != last_value) {
+          last_value = value
+          callback(value)
+        }
       }
     }
     quando.add_handler(event_name, handler)
