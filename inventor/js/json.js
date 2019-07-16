@@ -5,6 +5,9 @@
 
 self.nextDataQuandoId = (id) => {
   let result = id
+  if (isNaN(id)) {
+    result = 0
+  }
   while (document.querySelector(`[data-quando-id='${result}']`)) {
     result++
   }
