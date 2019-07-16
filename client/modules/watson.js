@@ -4,6 +4,8 @@
       alert('Fatal Error: Watson must be included after quando_browser')
   }
   let self = quando.watson = {}
+  let mediaRecorder = null
+  let recording = false
 
   self.call_tts = function(text, val) {        
     if (typeof val === 'string' && val.length) {
@@ -25,18 +27,18 @@
     })
   } 
     
-  self.call_ass = function(text) {
-    //send POST request to server
-    fetch('/watson/ASS_request', { method: 'POST', 
-        body: JSON.stringify({'text':text}), 
-        headers: {"Content-Type": "application/json",
-                  Accept: 'application/json'}
-    }).then(function(response) {
-      console.log(response)
-      let output = JSON.parse(response)
-      quando.text(output.generic[0].text, true)
-    })
-  } 
+  // self.call_ass = function(text) {
+  //   //send POST request to server
+  //   fetch('/watson/ASS_request', { method: 'POST', 
+  //       body: JSON.stringify({'text':text}), 
+  //       headers: {"Content-Type": "application/json",
+  //                 Accept: 'application/json'}
+  //   }).then(function(response) {
+  //     console.log(response)
+  //     let output = JSON.parse(response)
+  //     quando.text(output.generic[0].text, true)
+  //   })
+  // } 
 
   self.call_vis_rec = function(goalClass, fn) {
     goalClass = goalClass.toLowerCase()
@@ -127,8 +129,6 @@
   self.call_speech_to_text = function(callback) {  
     let div = document.getElementById('visrec_label')
     let elem = document.getElementById('quando_labels')
-    let recording = false
-    let mediaRecorder = null
     //if label doesn't already exist, create label
     if (div == null) {
       div = document.createElement('div')
@@ -180,6 +180,7 @@
         div.innerHTML = "Stop listening..."
         recording = true
       } else {
+        quando.send_message('rec stop')
         recording = false
         mediaRecorder.stop()
         div.innerHTML = "Working..."
@@ -188,6 +189,25 @@
     elem.appendChild(div)
     /*/send POST request to server*/
   }
+
+  self.startRec = function() {
+    mediaRecorder.start()
+    recording = true
+  }
+  self.stopRec = function() {
+    recording = false
+    mediaRecorder.stop()
+  }
+  self.toggleRec = function() {
+    if (!recording) {
+      mediaRecorder.start()
+      recording = true
+    } else {
+      recording = false
+      mediaRecorder.stop()
+    }
+  }
+
 
   self.addToneHandler = function(goalTone, fn) {
     //adds 'onClick' event listener to the input prompt button

@@ -1,9 +1,21 @@
 <div class="quando-block" data-quando-id="true"
-  data-quando-javascript="$(pre$, quando.pick.set(${data-quando-id}, [${box}]))$$(nl)$quando.pick.random(${data-quando-id})">
+  data-quando-javascript="$(pre$, quando.pick.set(${data-quando-id}, [${box}]))$$(nl)$quando.pick.random(${data-quando-id}, '${type}')">
   <div class="quando-left quando-advanced"></div>
   <div class="quando-right">
     <div class="quando-row quando-advanced">
       🎲 Pick Random
+      <select data-quando-name='extras' class='quando-toggle'>
+        <option value='hidden'>+</option>
+        <option value='show'>-</option>
+      </select>
+      <span data-quando-toggle='extras=show'>
+        <br />
+        <select data-quando-name='type' class='quando-toggle'>
+          <option value='Normal'>Normal</option>
+          <option value='Reorder'>Unique Order</option>
+          <option value="dr">Don't Repeat</option>
+        </select>
+      </span>
     </div>
     <div data-quando-name="box" class="quando-box" data-quando-fn-array="true"></div>
     <div class="quando-row quando-advanced">

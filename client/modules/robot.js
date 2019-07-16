@@ -7,15 +7,13 @@
     let state = { // holds the requested state
         hand : { left: {}, right: {}},
         head : { yaw: {}, pitch: {}},
-        shoulder : { left: {roll: {}, pitch: {}}, right: {roll: {}, pitch: {}}}
+        shoulder : { left: {roll: {}, pitch: {}}, right: {roll: {}, pitch: {}}},
+        elbow : { left: {roll: {}, yaw: {}}, right: {roll: {}, yaw: {}}},
+        wrist : { left: {yaw: {}}, right: {yaw: {}}}
     }
 
-    let exampleSine = {freq: 441, gain: 25, duration: 1}
-    let testSBuffer = [exampleSine, {freq: 480, gain: 25, duration: 1}, {freq: 520, gain: 25, duration: 1}, {freq: 560, gain: 25, duration: 1}, {freq: 600, gain: 25, duration: 1}]
     let sineBuffer = []
-    sineBuffer = testSBuffer
-    let testCounter = 0
-    let sinePlayDelay = 116
+    let sinePlayDelay = 120
     let sinePlaying = false
 
     class vocabList {
@@ -231,6 +229,7 @@
 
         if (interrupt) audioSequence = []
         audioInterrupt = interrupt
+        
         audioSequence.push(() => {
             self.changeVoice(pitch, speed, echo)
             if (anim == "None") {
@@ -307,7 +306,6 @@
     self.goThroughSineBuffer = () => {
         if (sineBuffer.length > 0) { //if there's a tone that needs playing
             sinePlaying = true
-            testCounter += 1
 
             //intermediary variables for simplicity
             let sine = sineBuffer[0]
@@ -316,9 +314,9 @@
             let duration = sine.duration
 
             //play sine
-            session.service("ALAudioDevice").then((aadp) => {
-                console.log('Playing Sine wave: ' + freq + "Hz " + gain + " gain " + duration + " seconds counter:" + testCounter)
-                aadp.playSine(freq, gain, 0, duration)
+            session.service("ALAudioPlayer").then((ap) => {
+                console.log('Playing Sine wave: ' + freq + "Hz " + gain + " gain " + duration + " seconds")
+                ap.playSine(freq, gain, 0, duration)
             }).fail(log_error)
 
             sineBuffer.shift() //remove played sine wave
@@ -342,7 +340,7 @@
     //play sine wave w/specified params
     self.playSine = (freq, gain, duration) => {
         session.service("ALAudioDevice").then((aadp) => {
-            console.log('Playing Sine wave: ' + freq + "Hz " + gain + " gain " + duration + " seconds counter:" + testCounter)
+            console.log('Playing Sine wave: ' + freq + "Hz " + gain + " gain " + duration + " seconds")
             aadp.playSine(freq, gain, 0, duration)
         }).fail(log_error)
     } 
@@ -366,27 +364,15 @@
         }
     }
 
-    self.moveArmNew = (left, roll, middle, range, speed, normal_inverted, val) => {
+    self.moveArmNew = (pos, joint, dir, middle, range, speed, normal_inverted, val) => {
         let min = helper_ConvertAngleToRads(middle - range)
         let max = helper_ConvertAngleToRads(middle + range)
         if (!normal_inverted) { val = 1-val }
         let radians = min + (val * (max-min))
-        if (left) { // Update Left Arm
-            if (roll) { // Roll
-                state.shoulder.left.roll.angle = radians
-                state.shoulder.left.roll.speed = speed
-            } else { // Pitch
-                state.shoulder.left.pitch.angle = radians
-                state.shoulder.left.pitch.speed = speed
-            }
-        } else { // Update Right Arm
-            if (roll) { // Roll
-                state.shoulder.right.roll.angle = radians
-                state.shoulder.right.roll.speed = speed
-            } else { // Pitch
-                state.shoulder.right.pitch.angle = radians
-                state.shoulder.right.pitch.speed = speed
-            }
+
+        if (state[joint][pos][dir]) {
+            state[joint][pos][dir].angle = radians
+            state[joint][pos][dir].speed = speed
         }
     }
 
@@ -422,6 +408,24 @@
         }
     }
 
+    function updateJoints(motion) {
+        const joints = [ 'shoulder', 'elbow', 'wrist' ]
+        const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
+
+        Object.keys(state).forEach(joint => {
+            if (joints.includes(joint)) {
+                ['left', 'right'].forEach(pos => {
+                    ['yaw', 'pitch', 'roll'].forEach(dir => {
+                        if (state[joint][pos][dir]) {
+                            const name = capitalize(pos.charAt(0)) + capitalize(joint) + capitalize(dir)
+                            updateJoint(motion, name, state[joint][pos][dir])
+                        }
+                    })
+                })
+            }
+        })
+    }
+
     function updateMovement(motion) {
         motion.moveIsActive().then((active) => {
             if (motionSequence.length) {
@@ -438,9 +442,8 @@
     function updateAudioOutput(ap, tts) {
         if (audioSequence.length) {
             const speechNotActive = ["stopped", "done"].includes(robot.TextToSpeech.Status)
-            const speechActive = robot.TextToSpeech.Status == "started"
             const audioFileActive = robot.AudioPlayer.playing
-            if ((speechActive || audioFileActive) && audioInterrupt) {
+            if (audioInterrupt) {
                 ap.stopAll()
                 tts.stopAll()
 
@@ -461,17 +464,14 @@
             updateYawPitch(motion, 'HeadPitch', state.head.pitch)
             updateHand(motion, 'LHand', state.hand.left)
             updateHand(motion, 'RHand', state.hand.right)
-            updateJoint(motion, 'LShoulderPitch', state.shoulder.left.pitch)
-            updateJoint(motion, 'LShoulderRoll', state.shoulder.left.roll)
-            updateJoint(motion, 'RShoulderPitch', state.shoulder.right.pitch)
-            updateJoint(motion, 'RShoulderRoll', state.shoulder.right.roll)
+
+            updateJoints(motion)
             updateMovement(motion)
 
             session.service("ALAudioPlayer").then(ap => {
                 session.service("ALTextToSpeech").then(tts => {
                     updateAudioOutput(ap, tts)
-
-                    setTimeout(updateRobot, 1000/10) // i.e. x times per second
+                    setTimeout(updateRobot, 1000/25) // i.e. x times per second
                 }).fail(log_error)
             }).fail(log_error)
         }).fail(log_error)
