@@ -151,7 +151,7 @@ module.exports = (app, base64, base64Img, watson_db, fs) => {
     console.log('Speech to Text Requested...')
     let data = req.body.data
     watson_db.save(data).then((success) => {
-      const dir = __dirname + '/client/media/stt/'
+      const dir = __dirname + '/../../client/media/stt/'
       const filePath = dir + success.id + '.webm'
 
       if (!fs.existsSync(dir)) {

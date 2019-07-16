@@ -285,58 +285,64 @@
     })
   }
 
-  self.send_message = function(message, val, host='') {
-    fetch('/message/' + message, { method: 'POST', 
-      body: JSON.stringify({'val':val, 'host':host}), 
-      headers: {"Content-Type": "application/json"}
-    })
+  self.send_message = function(message, val, host='', type='broadcast') {
+    if (['broadcast', 'local'].includes(type)) {
+      fetch('/message/' + message, { method: 'POST',
+        body: JSON.stringify({ 
+          'val':val, 'host':host, 'local':type == 'local', 'socketId':self.socket.id 
+        }),
+        headers: {"Content-Type": "application/json"}
+      })
+    } else if (host) {
+      var socket = self.create_websocket(host, message)
+
+      if (socket) {
+        self.send_websocket_message(socket, val)
+        socket.onmessage = (evt) => { self.send_message(message, evt.data, '', 'local') }
+      }
+    }
   }
 
-  self.create_websocket_connection = function (url) {
-    var socket = self.get_websocket_connection(url)
-
+  self.create_websocket = function (host, message) {
+    var socket = self.get_websocket(message)
+   
     if (!socket) {
-      socket = new WebSocket(url)
-      socket.onerror = err => console.error("Websocket connection error: ", err)
+      if (!/^(?:http|ws)(?:s)?:\/\//.test(host)) { host = 'ws://' + host }
+      try {
+        let url = new URL(host)
+        url = `${url.protocol}//${url.hostname}${url.pathname}/${message}`
 
-      websockets.push(socket)
+        socket = new WebSocket(url)
+        socket.message = message
+
+        socket.onerror = err => console.error("Websocket connection error: ", err)
+  
+        websockets.push(socket)
+      } catch (e) { console.error(e) }
     }
 
     return socket
   }
 
-  self.get_websocket_connection = function (url) {
-    for (i = 0; i < websockets.length; i++) {
-      if (websockets[i].url == url) { return websockets[i] }
-    }
-  }
-
-  self.send_websocket_message = function (output, url, val) {
-    if (val) { output = val }
-
-    var socket = self.create_websocket_connection(url)
-
-    if (socket.readyState == WebSocket.OPEN) {
-      socket.send(output)
-    } else {
-      setTimeout(() => self.send_websocket_message(output, url, val), 100)
-    }
-  }
-
-  self.add_websocket_handler = function (url, callback) {
-    var socket = self.create_websocket_connection(url)
-
-    socket.onmessage = (evt) => {
-      if (typeof callback === 'function') { callback(evt.data) }
-    }
-
-    self.destructor.add( () => {
-      if (socket.readyState == WebSocket.OPEN) {
-        socket.close()
-      }
-
+  self.get_websocket = function (message) {
+    let socket = websockets.find(socket => socket.message == message)
+    
+    if (socket && socket.readyState == WebSocket.CLOSED) {
       websockets.splice(websockets.indexOf(socket), 1)
-    })
+      return null
+    }
+
+    return socket
+  }
+
+  self.send_websocket_message = function (socket, val) {
+    if (socket.readyState == WebSocket.OPEN) {
+      socket.send(val)
+    } else {
+      socket.onopen = function () {
+        socket.send(val)
+      }
+    }
   }
 
   self.idle_reset = function () {
