@@ -180,6 +180,7 @@
         div.innerHTML = "Stop listening..."
         recording = true
       } else {
+        quando.send_message('rec stop')
         recording = false
         mediaRecorder.stop()
         div.innerHTML = "Working..."

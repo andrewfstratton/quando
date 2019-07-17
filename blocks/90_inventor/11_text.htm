@@ -1,8 +1,34 @@
-<div class="quando-block" data-quando-javascript='${text}'>
+<div class="quando-block" data-quando-javascript='$(eq$,${iconify}$,true$,<span class="iconify">)$
+$(eq$,${bold}$,true$,<b>)$
+$(eq$,${italic}$,true$,<i>)$
+${text}
+$(eq$,${italic}$,true$,</i>)$
+$(eq$,${bold}$,true$,</b>)$
+$(eq$,${iconify}$,true$,</span>)$'>
     <div class="quando-left quando-inventor-display"></div>
     <div class="quando-right">
         <div class="quando-row quando-inventor-display">
-            📄 Text <input data-quando-name="text" type="text" value=""/>
+            📄 Text 
+            <input data-quando-name="text" type="text" value=""/>
+            <select data-quando-name="extras" class="quando-toggle">
+                <option value="hidden">+</option>
+                <option value="show">-</option>
+            </select>
+            <span data-quando-toggle="extras=show">
+                <br>
+                <select data-quando-name='iconify' class='quando-toggle'>
+                    <option value='false'>☐ iconify</option>
+                    <option value='true'>☑ Iconify</option>
+                </select>
+                <select data-quando-name='bold' class='quando-toggle'>
+                    <option value='false'>☐ bold</option>
+                    <option value='true'>☑ Bold</option>
+                </select>
+                <select data-quando-name='italic' class='quando-toggle'>
+                    <option value='false'>☐ italic</option>
+                    <option value='true'>☑ Italic</option>
+                </select>
+            </span>
         </div>
     </div>
 </div>

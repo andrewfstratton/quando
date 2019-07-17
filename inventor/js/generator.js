@@ -198,4 +198,12 @@ fn.eq = (block, str, val, gen) => {
     }
     return result
 }
+
+fn.hasValue = (block, str, gen) => {
+    let result = ''
+    if (str) {
+        result = gen
+    }
+    return result
+}
 })()

@@ -1,16 +1,22 @@
 <div class="quando-block"
-data-quando-javascript="quando.robot.moveArmNew(${left}, ${roll}, ${middle}, ${range}, ${speed}, ${normal}, val)">
+data-quando-javascript="quando.robot.moveArmNew('${pos}', '${joint}', '${dir}', ${middle}, ${range}, ${speed}, ${normal}, val)">
 <div class="quando-left quando-robot"></div>
 <div class="quando-right">
 <div class="quando-row quando-robot">⚡
 🤖 Move 
-<select data-quando-name='left'>
-    <option value='true'>👈</option>
-    <option value='false'>👉</option>
-</select> Arm
-<select data-quando-name='roll' class='quando-toggle'> <!-- facing the robot -->
-    <option value='true'>⇔</option>
-    <option value='false'>⇕</option>
+<select data-quando-name='pos' class="quando-toggle">
+    <option value='left'>👈</option>
+    <option value='right'>👉</option>
+</select>
+<select data-quando-name='joint'>
+    <option value='shoulder'>Shoulder</option>
+    <option value='elbow'>Elbow</option>
+    <option value='wrist'>Wrist</option>
+</select>
+<select data-quando-name='dir'> <!-- facing the robot -->
+    <option value='yaw'>⤹⤸ Roll</option>
+    <option value='pitch'>⇕ Pitch</option>
+    <option value='roll'>⇔ Yaw</option>
 </select>
 <select data-quando-name="extras"
 class="quando-toggle">

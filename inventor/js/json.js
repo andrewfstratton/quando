@@ -65,6 +65,7 @@ self.scriptToArray = (script) => {
 }
 
 self.addObjectToElement = (obj, elem) => {
+  let menu = document.getElementById("menu")
   if (obj) {
     for(let block of obj) {
       if (block.block_type == 'devices-rotate-object3d') {
@@ -74,9 +75,9 @@ self.addObjectToElement = (obj, elem) => {
         block.block_type = 'media-move-object3d'
       }
       // find block_type
-      let src_block = document.getElementById("menu").querySelector("[data-quando-block-type='"+ block.block_type +"']")
+      let src_block = menu.querySelector("[data-quando-block-type='"+ block.block_type +"']")
       if (!src_block) {  // Block is no longer in the menu and is most likely out of date...
-        alert('Failed to create:'+block.block_type)
+        alert('Failed to create Block:'+block.block_type)
         console.log('Unknown Block: '+JSON.stringify(block))
       }
       if (src_block) { // clone to script
@@ -98,6 +99,16 @@ self.addObjectToElement = (obj, elem) => {
               element.value = block.values[key]
             }
           } else {
+            element = menu.querySelector("[data-quando-block-type='advanced-error']")
+            if (element) {
+              elem.appendChild(element.cloneNode(true))
+              let error_elem = elem.lastChild
+              error_elem.style.display = ''
+              let text = error_elem.querySelector("[data-quando-name='text']")
+              if (text) {
+                text.value = key + " = " + block.values[key]
+              }
+            }
             console.log("Failed to set block '" + block.block_type + "', key '" + key + "' to:")
             console.log(block.values[key])
           }
