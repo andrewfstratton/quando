@@ -2,7 +2,7 @@
 
 ## To Deploy in Windows - tested with Windows 10 Pro
 
-Prerequisites: Chrome browser, Node JS, (optional) git for windows install (https://gitforwindows.org/)
+Prerequisites: Chrome browser, Node JS **Do not use Current - Use LTS version** (tested with v10.15.0), (optional) git for windows install (https://gitforwindows.org/)
 
 1. Download the zip and extract into C:\quando, or Clone the repository in C: using git clone https://github.com/andrewfstratton/quando.git
 2. In the command line, in C:\quando, npm update - this will likely take a while
