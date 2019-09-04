@@ -839,6 +839,12 @@
     return _lookup[id]
   }
 
+  self.tempIf = (val, goal, fn) => {
+    if (val.contains(goal)) {
+      fn(val)
+    }
+  }
+
   self.vary_each_time = function(fn, end_value, inverted, seesaw) {
     end_value--
     if (end_value < 1) { // Avoid infinite answers...
