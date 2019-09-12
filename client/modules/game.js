@@ -134,6 +134,13 @@
   }
 
   self.addQuestion = function (answer, fn) {
+    quando.promptInput()
+    let stt_label = document.getElementById('stt_label')
+    //if label doesn't already exist, create label
+    if (stt_label == null) {
+      quando.watson.call_speech_to_text()
+    }
+    
     //add on click event listener to the input prompt
     let input = document.getElementById('inp')
     let button = document.getElementById('inpButton')

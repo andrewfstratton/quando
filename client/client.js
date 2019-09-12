@@ -765,8 +765,8 @@
   }
 
   self.addLabelStatement = function (title, fn) {
-    var elem = document.getElementById('quando_labels')
-    var div = document.getElementById('label'+title)
+    let elem = document.getElementById('quando_labels')
+    let div = document.getElementById('label'+title)
     if (div == null) {
       div = document.createElement('div')
       div.className = 'quando_label'
@@ -778,22 +778,25 @@
   }
 
   self.promptInput = function() {
-    var elem = document.getElementById('quando_labels')
-    var div = document.createElement('div')
-    var input = document.createElement('input')
-    var button = document.createElement('button')
-    button.setAttribute('id', 'inpButton')
-    input.setAttribute('id', 'inp')
-
-    div.className = 'quando_label'
-    input.type = "text"
-    input.className = "quando_input"
-    button.innerHTML = "Submit"
-
-    div.appendChild(input)
-    div.appendChild(button)
-    elem.appendChild(div)
-    
+    let input = document.getElementById('imp')
+    console.log("inp=" + input)
+    if (input == null) {
+      let elem = document.getElementById('quando_labels')
+      let div = document.createElement('div')
+      input = document.createElement('input')
+      let button = document.createElement('button')
+      button.setAttribute('id', 'inpButton')
+      input.setAttribute('id', 'inp')
+  
+      div.className = 'quando_label'
+      input.type = "text"
+      input.className = "quando_input"
+      button.innerHTML = "Submit"
+  
+      div.appendChild(input)
+      div.appendChild(button)
+      elem.appendChild(div)
+    }
   }
 
   // self.pick = function(val, arr) {
