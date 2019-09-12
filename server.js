@@ -55,24 +55,24 @@ let server = http.listen(port, () => {
     })
   }
   io.on('connection', (client) => {
-    console.log('Socket connected...')
+    console.log('Socket IO connected...')
     io.clients.push(client)
     client.on('error', ()=>{
-      console.log('Socket error...')
+      console.log('Socket IO error...')
       drop_client(client)
     })
     client.on('timeout', ()=>{
-      console.log('Socket timeout...')
+      console.log('Socket IO timeout...')
       drop_client(client)
     })
     client.on('data', (data)=>{
-      console.log('Socket data...')
+      console.log('Socket IO data...')
       console.log(data.toString())
       client.write('Ok\n')
     })
     client.on('end', ()=>{
       drop_client(client)
-      console.log('...closed['+index+']')
+      console.log('...Socket IO:closed['+index+']')
     })
   })
 })
