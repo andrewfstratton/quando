@@ -25,6 +25,24 @@
       return hiddenCanvas
     }
 
+    self.artest = function(fn) {
+      let scene = document.getElementById('scene')
+      if (scene == null) { //if scene DOES NOT exist
+        //alert('scene doesnt exist.')
+        let scene = self.initScene()
+        let marker = self.initMarker(markerID)
+        let camera = self.initCam()
+        let canvas = self.initHiddenCanvas()
+
+        //add all elements to DOM
+        scene.prepend(marker)
+        scene.appendChild(camera)
+        document.getElementById('quando_AR').append(scene)
+        document.body.append(canvas)
+        fn()
+      }
+    }
+
     self.initMarker = function(markerID) {
       let marker = document.getElementById(markerID)
       if (marker!=null) {

@@ -223,28 +223,36 @@
     }
 
     self.speechHandler = (anim, text, pitch, speed, echo, interrupt=false, val) => {
-        if (typeof val === 'string' && val.length) {
-            text = val
-        }
+      if (typeof val === 'string' && val.length) {
+          text = val
+      }
 
-        if (interrupt) audioSequence = []
-        audioInterrupt = interrupt
-        
-        audioSequence.push(() => {
-            self.changeVoice(pitch, speed, echo)
-            if (anim == "None") {
-                self.say(text)
-            } else {
-                self.animatedSay(anim, text)
-            }
-        })
-        quando.destructor.add(function () {
-            audioSequence = []
-            audioInterrupt = true
-        })
+      self.changeVoice(pitch, speed, echo)
+      if (interrupt) audioSequence = []
+      audioInterrupt = interrupt
+      
+      if (audioSequence.length > 15) {
+        audioSequence = []
+      }
+
+      audioSequence.push(() => {
+          if (anim == "None") {
+              self.say(text)
+          } else {
+              self.animatedSay(anim, text)
+          }
+      })
+      quando.destructor.add(function () {
+          audioSequence = []
+          audioInterrupt = true
+      })
     }
 
-    self.speechHandlerTest = (anim, text, pitch, speed, echo, interrupt=false) => {
+    self.speechHandlerTest = (anim, text, pitch, speed, echo, interrupt=false, val) => {
+      if (typeof val === 'string' && val.length) {
+          text = val
+      }
+
         self.changeVoice(pitch, speed, echo)
         if (anim == "None") {
             self.say(text, interrupt)
