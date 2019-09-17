@@ -4,7 +4,7 @@ from microbit import *
 _channel = 0
 CONFIG_FILE = 'config.txt'
 
-# The radio won't work unless it's switched on.
+# Radio won't work when off
 def radio_on():
     # set the channel
     radio.config(channel=_channel, power=1, length=128, data_rate=radio.RATE_2MBIT)
@@ -17,7 +17,7 @@ def display_channel():
         display.show(chr(_channel-10+ord('A')))
 
 def check_button(button, add):
-    global _channel # this allows us to change the global variable
+    global _channel # allows change global var
     if button.is_pressed():
         _channel = _channel + add # which we do here
         if _channel < 0:
@@ -27,7 +27,7 @@ def check_button(button, add):
         save()
         display_channel()
         while button.is_pressed():
-            sleep(50) # this is 0.05 seconds, or 500 millisecon
+            sleep(50) # 0.05secs
 
 def config():
     flip = 0
@@ -44,7 +44,7 @@ def config():
 def save():
     with open(CONFIG_FILE, 'w') as file:
         file.write(str(_channel))
-        
+
 def load():
     global _channel
     try:
@@ -52,7 +52,7 @@ def load():
             data = file.read()
             _channel = int(data)
     except:
-        print('{"message":"Initialising Channel"}')
+        print('{"message":"Init Channel"}')
         save()
     display_channel()
     sleep(200)
@@ -81,9 +81,8 @@ def proxy():
         except:
             print('{"error":"packet"}')
             radio.off()
-#            sleep(1000)
             radio_on()
-    return # never
+    return #never
 
 print('{"started":true}')
 load()
