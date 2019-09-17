@@ -11,7 +11,24 @@ module.exports = (app) => {
         stdio: 'inherit'
       })
     } else {
-      console.log(`@@Attempt to execute '${exe}'`)
+      console.log(`@@Security Warning - attempt to execute '${exe}'`)
     }
+  })
+
+  app.post('/control/type', (req, res) => {
+    let str = decodeURI(req.body.val)
+    robot.typeString(str)
+    res.json({})
+  })
+
+  app.post('/control/key', (req, res) => {
+    let val = req.body.val
+    let modifier = []
+    if (val.shift) { modifer.push('shift') }
+    if (val.ctrl) { modifer.push('control') }
+    if (val.alt) { modifer.push('alt') }
+    if (val.command) { modifer.push('command') }
+    robot.keyTap(val.key, modifier)
+    res.json({})
   })
 }

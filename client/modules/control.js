@@ -12,7 +12,24 @@
     })
   }
 
+  function decodeText(str) {
+    return str.replace(/&amp;/g, '&')
+            .replace(/&lt;/g, '<')
+            .replace(/&gt;/g, '>')
+            .replace(/&quot;/g, '"')
+            .replace(/&apos;/g, "'")
+  }
+
   self.run = (exec) => {
     _send('run', exec)
+  }
+
+  self.type = (str) => {
+    _send('type', decodeText(str))
+  }
+
+  self.key = (ch, shift=false, ctrl=false, alt=false, command=false, ) => {
+    let val = {'key':ch, 'shift':shift, 'ctrl':ctrl, 'alt':alt, 'command':command}
+    _send('key', val)
   }
 })()
