@@ -39,7 +39,7 @@
       i--
     }
     if (type == "dr") {
-      alert('i: ' + i + ', last: ' + _last_pick[id])
+      // alert('i: ' + i + ', last: ' + _last_pick[id])
       if (i != _last_pick[id]) {
         arr[i]()
         _last_pick[id] = i
@@ -73,20 +73,13 @@
 
   self.reset = (id) => {
     let arr = _list[id]
-    if (arr.hasOwnProperty('index')) {
-      if (arr.next) {
-        arr.index = 0
-      } else {
-        arr.index = arr.length-1
-      }
-    }
+    delete arr.index
   }
 
   self.one = (id, message, next) => {
     let arr = _list[id]
     if (arr.length > 0) {
       if (!arr.hasOwnProperty('index')) {
-        arr.next = next
         if (next) {
           arr.index = 0 // Start at beginning
         } else { // start at end
