@@ -188,7 +188,8 @@ module.exports = (app, base64, base64Img, watson_db, fs) => {
         })
         recognizeStream.once('error', function(event) {
           // Display events on the console.
-          console.log(JSON.stringify(event, null, 2))
+          console.log('ERROR')
+          // console.log(JSON.stringify(event, null, 2))
         })
         recognizeStream.once('close', function(event) {
           // Display events on the console.
