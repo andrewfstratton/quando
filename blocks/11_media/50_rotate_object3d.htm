@@ -1,8 +1,12 @@
-<div class="quando-block" data-quando-javascript="quando.object3d.${angle}(val, ${mid_degrees}, ${plus_minus}, ${inverted})">
+<div class="quando-block" data-quando-javascript="quando.object3d.${angle}(val, ${mid_degrees}, ${plus_minus}, ${inverted}, ${fixed})">
     <div class="quando-left quando-media"></div>
     <div class="quando-right">
         <div class="quando-row quando-media">
-            ⚡🎁 Rotate 3D Object
+            ⚡🎁 Rotate 3D 
+            <select data-quando-name='fixed' class='quando-toggle'>
+                <option value='false'>Object</option>
+                <option value='true'>Scene</option>
+            </select>
             <select data-quando-name="angle">
                 <option value='yaw'>⇔ Yaw</option>
                 <option value='pitch'>⇕ Pitch</option>

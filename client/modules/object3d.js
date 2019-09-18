@@ -1,25 +1,26 @@
 (function () {
-    var quando = this['quando']
+    let quando = this['quando']
     if (!quando) {
       alert('Fatal Error: object3d must be included after client.js')
     }
-    var self = quando.object3d = {}
+    let self = quando.object3d = {}
     self.width = screen.width
     self.height = screen.height
-    var scene = false
-    var object = false
-    var fixed = false
-    var animation_id = false 
-    var canvas = false
+    let scene = false
+    let renderer = false
+    let camera = false
+    let object = false
+    let fixed = false
+    let animation_id = false 
+    let canvas = false
+    // hold the buffered updates...
+    var update_object = {}
+    var update_fixed = {}
 
     function _clear_object() {
         if (object) {
             scene.remove(object)
             object = false
-        }
-        if (animation_id) {
-            cancelAnimationFrame( animation_id )
-            animation_id = false
         }
     }
 
@@ -27,6 +28,10 @@
         if (canvas) {
             document.getElementById('quando_3d').removeChild(canvas)
             canvas = false
+        }
+        if (animation_id) {
+            cancelAnimationFrame( animation_id )
+            animation_id = false
         }
     }
 
@@ -43,49 +48,65 @@
         _clear_canvas()
     }
 
-    function _add_object_to_scene(obj) {
+    function _update_object(update, object) {
         if (object) {
-            _clear_object()
-        } else {
+          if (update) {
+            if (update.z) { object.position.z = update.z; delete update.z }
+            if (update.y) { object.position.y = update.y; delete update.y }
+            if (update.x) { object.position.x = update.x; delete update.x }
+            if (update._roll) { object.rotation.z = update._roll; delete update._roll }
+            if (update._pitch) { object.rotation.x = update._pitch; delete update._pitch }
+            if (update._yaw) { object.rotation.y = update._yaw; delete update._yaw }
+          }
+        }
+    }
+
+    function _setup_scene() {
+        if (renderer == false) {
             renderer = new THREE.WebGLRenderer()
             camera = new THREE.PerspectiveCamera( 25, self.width/self.height, 0.1, 10000 )
-            scene = new THREE.Scene()
             camera.position.z = 100 // pull back camera
             camera.up = new THREE.Vector3(0,1,0)
             camera.lookAt(new THREE.Vector3(0,0,0))
+            scene = new THREE.Scene()
             renderer.setSize(self.width, self.height) // start the renderer
             // attach the render-supplied DOM element to container
             canvas = renderer.domElement
             document.getElementById('quando_3d').append(canvas)
-            var pointLight = new THREE.PointLight( 0xFFFFFF )
+            let pointLight = new THREE.PointLight( 0xFFFFFF )
             pointLight.position.set(10, 50, 230)
             scene.add(pointLight)
-            var light = new THREE.AmbientLight( 0xAAAAAA )
+            let light = new THREE.AmbientLight( 0xAAAAAA )
             scene.add( light )
         }
-        object = obj
-        // add an object to the scene
-        scene.add(obj)
-        obj.rotation.order='ZXY'
-        function update(renderer, scene, camera) {
-            if (self.z) { obj.position.z = self.z; delete self.z }
-            if (self.y) { obj.position.y = self.y; delete self.y }
-            if (self.x) { obj.position.x = self.x; delete self.x }
-            if (self._roll) { obj.rotation.z = self._roll; delete self._roll }
-            if (self._pitch) { obj.rotation.x = self._pitch; delete self._pitch }
-            if (self._yaw) { obj.rotation.y = self._yaw; delete self._yaw }
-            // camera.lookAt(obj.position)
-            renderer.render(scene, camera)
-            animation_id = requestAnimationFrame(function() {
-                update(renderer, scene, camera)
-            })
-        }
-        update(renderer, scene, camera)
     }
 
-    function _add_fixed_object(fixed) {
+    function _update_scene() {
+        animation_id = requestAnimationFrame(() => {
+            _update_scene()
+            console.log("Frame tick...")
+        })
+        _update_object(update_object, object)
+        _update_object(update_fixed, fixed)
+        renderer.render(scene, camera)
+    }
+
+    function _add_object(obj) {
+        _setup_scene()
+        _clear_object()
+        object = obj
+        // add an object to the scene
+        object.rotation.order='ZXY'
+        scene.add(object)
+        _update_scene()
+    }
+
+    function _add_fixed_object(_fixed) {
+        _setup_scene()
         _clear_fixed()
+        fixed = _fixed
         scene.add(fixed)
+        _update_scene()
     }
 
     function _convert_linear(val, mid, range, inverted) {
@@ -96,34 +117,40 @@
         return min + (val * (max-min))
     }
 
-    self.in_out = function (val, mid, range, inverted) {
-        self.z = _convert_linear(val, mid, range, inverted)
+    self.in_out = function (val, mid, range, inverted, fixed=false) {
+        var buffered = fixed?update_fixed:update_object
+        buffered.z = _convert_linear(val, mid, range, inverted)
     }
 
-    self.left_right = function (val, mid, range, inverted) {
-        self.x = _convert_linear(val, mid, range, !inverted) // yes - inverted must be inverted...
+    self.left_right = function (val, mid, range, inverted, fixed=false) {
+        var buffered = fixed?update_fixed:update_object
+        buffered.x = _convert_linear(val, mid, range, !inverted) // yes - inverted must be inverted...
     }
 
-    self.up_down = function (val, mid, range, inverted) {
-        self.y = _convert_linear(val, mid, range, inverted)
+    self.up_down = function (val, mid, range, inverted, fixed=false) {
+        var buffered = fixed?update_fixed:update_object
+        buffered.y = _convert_linear(val, mid, range, inverted)
     }
 
-    self.roll = function (val, mid, range, inverted) {
-        self._roll = quando.convert_angle(val, mid, range, inverted)
+    self.roll = function (val, mid, range, inverted, fixed=false) {
+        var buffered = fixed?update_fixed:update_object
+        buffered._roll = quando.convert_angle(val, mid, range, inverted)
     }
 
-    self.pitch = function (val, mid, range, inverted) {
-        self._pitch = quando.convert_angle(val, mid, range, inverted)
+    self.pitch = function (val, mid, range, inverted, fixed=false) {
+        var buffered = fixed?update_fixed:update_object
+        buffered._pitch = quando.convert_angle(val, mid, range, inverted)
     }
 
-    self.yaw = function (val, mid, range, inverted) {
-        self._yaw = quando.convert_angle(val, mid, range, inverted)
+    self.yaw = function (val, mid, range, inverted, fixed=false) {
+        var buffered = fixed?update_fixed:update_object
+        buffered._yaw = quando.convert_angle(val, mid, range, inverted)
     }
 
     function _load_obj(loader, path, obj) {
         loader.setPath(path)
         loader.load(obj, function(result) {
-            _add_object_to_scene(result)
+            _add_object(result)
         })
     }
 
@@ -148,16 +175,22 @@
     self.loadGLTF = function(filename, fixed=false) {
         if (filename) {
             filename = '/client/media/' + encodeURI(filename)
+            let loader = new THREE.GLTFLoader()
+            loader.load(filename,
+                function ( gltf ) {
+                    if (fixed) {
+                        _add_fixed_object(gltf.scene)
+                    } else {
+                        _add_object(gltf.scene)
+                    }
+            })
+        } else {
+            if (fixed) {
+                _clear_fixed()
+            } else {
+                _clear_object()
+            }
         }
-        let loader = new THREE.GLTFLoader()
-        loader.load(filename,
-            function ( gltf ) {
-                if (fixed) {
-                    _add_fixed_object(gltf.scene)
-                } else {
-                    _add_object_to_scene(gltf.scene)
-                }
-        })
     }
 
 }) ()
