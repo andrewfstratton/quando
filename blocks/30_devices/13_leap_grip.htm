@@ -1,0 +1,35 @@
+<div class="quando-block" data-quando-drop-valid="display-when-display,advanced-comment"
+  data-quando-javascript="quando.leap.handleGrip('${hand}', ${min}, ${max}, ${inverted}, (val)=>{${box}})">
+  <div class="quando-left quando-devices"></div>
+  <div class="quando-right">
+    <div class="quando-row quando-devices">
+      👋 When
+      <select data-quando-name="hand">
+        <option value='Either'>🖐</option>
+        <option value='Left'>👈</option>
+        <option value='Right'>👉</option>
+      </select>
+      Grip
+      ⚡
+      <select data-quando-name="extras" class="quando-toggle">
+        <option value="hidden">+</option>
+        <option value="show">-</option>
+      </select>
+      <span data-quando-toggle="extras=show">
+        <br>
+        <input data-quando-name='min' type='number' value='0' placeholder='min' style='width: 4em' min='0' max='100'
+          data-quando-encode='normal' />
+        % to
+        <input data-quando-name='max' type='number' value='100' placeholder='max' style='width: 4em' min='0' max='100'
+          data-quando-encode='normal' />
+        %
+        <select data-quando-name='inverted' class='quando-toggle'>
+          <option value='false'>normal</option>
+          <option value='true'>inverted</option>
+        </select>
+      </span>
+    </div>
+    <div data-quando-name="box" class="quando-box"></div>
+    <div class="quando-row quando-devices"></div>
+  </div>
+</div>

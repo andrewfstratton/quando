@@ -17,6 +17,11 @@
     quando.add_handler('leapHandClosed' + hand, callback)
   }
 
+  self.handleGrip = (hand, min, max, inverted, callback) => {
+    let scale = quando.new_scaler(min/100, max/100, inverted) // min and max are percent
+    quando.add_scaled_handler('leapHandGrip' + hand, callback, scale)
+  }
+
   function _handleXYZ (event, min, max, inverted, callback) {
     var scale = quando.new_scaler(min, max, inverted)
     quando.add_scaled_handler(event, callback, scale)
@@ -75,6 +80,7 @@
   self.last_pitch = { 'Left': false, 'Right': false }
   self.last_yaw = { 'Left': false, 'Right': false }
   self.last_flat = { 'Left': false, 'Right': false }
+  self.last_grip = { 'Left': false, 'Right': false }
   self.handler = function (frame) {
     if (frame.hands) {
       if (frame.hands.length >= 1) {
@@ -127,6 +133,11 @@
               quando.dispatch_event('leapHandOpen' + type)
               quando.dispatch_event('leapHandOpenEither')
               self.last_flat[type] = true
+            }
+            if (strength != self.last_grip[type]) {
+              quando.dispatch_event('leapHandGrip' + type, {'detail': strength})
+              quando.dispatch_event('leapHandGripEither', {'detail': strength})
+              self.last_grip[type] = strength
             }
           }
         }
