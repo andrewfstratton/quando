@@ -8,28 +8,6 @@
   let _list_temp = {}
   let _last_pick = []
 
-  // self.pick = function(val, arr) {
-  //   if (val === false) {
-  //     val = 0.5
-  //   }
-  //   var i = Math.floor(val * arr.length)
-  //   if (i == arr.length) {
-  //     i--
-  //   }
-  //   arr[i]()
-  //   arr.splice(i, 1)
-  // }
-
-  // self.pick_random = function(arr) {
-  //   alert('r'+randArr)
-  //   if (randArr == []) {
-  //     randArr = arr
-  //   } else {
-  //     var r = Math.random()
-  //     self.pick(r, randArr)
-  //   }   
-  // }
-
   function _pick(val, arr, id, type) {
     if (val === false) {
       val = 0.5
@@ -38,8 +16,7 @@
     if (i == arr.length) {
       i--
     }
-    if (type == "dr") {
-      // alert('i: ' + i + ', last: ' + _last_pick[id])
+    if (type == "Different") {
       if (i != _last_pick[id]) {
         arr[i]()
         _last_pick[id] = i

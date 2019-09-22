@@ -400,7 +400,7 @@
     }
 
     function updateYawPitch(motion, joint, yaw_pitch) {
-        if (yaw_pitch.angle && (yaw_pitch.angle !== yaw_pitch.last_angle)) { // update yaw
+        if (yaw_pitch.hasOwnProperty('angle') && (yaw_pitch.angle !== yaw_pitch.last_angle)) { // update yaw
             motion.killTasksUsingResources([joint]) // Kill any current motions
             motion.setAngles(joint, yaw_pitch.angle, yaw_pitch.speed/100)
             yaw_pitch.last_angle = yaw_pitch.angle
@@ -409,7 +409,7 @@
     }
 
     function updateJoint(motion, joint, pitch_roll) {
-        if (pitch_roll.angle && (pitch_roll.angle !== pitch_roll.last_angle)) { // update yaw
+        if (pitch_roll.hasOwnProperty('angle') && (pitch_roll.angle !== pitch_roll.last_angle)) { // update yaw
             motion.setAngles(joint, pitch_roll.angle, pitch_roll.speed/100)
             pitch_roll.last_angle = pitch_roll.angle
             pitch_roll.angle = false
@@ -844,9 +844,7 @@
      */
     self.touchHead = (location, callback) => {
         _start_touchEvents(session, location + 'TactilTouched', callback)
-        quando.destructor.add(() => {
-            _destroy_touchEvents()
-        })
+        quando.destructor.add(_destroy_touchEvents)
     }
 
     self.touchHand = (left, location, callback) => {
@@ -860,23 +858,23 @@
         }
         sensor += 'Touched'
         _start_touchEvents(session, sensor, callback)
-        quando.destructor.add(() => {
-            _destroy_touchEvents()
-        })
+        quando.destructor.add(_destroy_touchEvents)
     }
 
     self.touchFoot = (location, callback) => {
         const suffix = 'BumperPressed'
-        if (['Left', 'Right'].includes(location)) {
-            _start_touchEvents(session, location + suffix, callback)
-        } else if (location == 'Either') {
+        let destroy = false
+        if (['Left', 'Either'].includes(location)) {
             _start_touchEvents(session, 'Left' + suffix, callback)
+            destroy = true
+        }
+        if (['Right', 'Either'].includes(location)) {
             _start_touchEvents(session, 'Right' + suffix, callback)
-        } else return
-
-        quando.destructor.add(() => {
-            _destroy_touchEvents()
-        })
+            destroy = true
+        }
+        if (destroy) {
+            quando.destructor.add(_destroy_touchEvents)
+        }
     }
 
     setTimeout(updateRobot, 1000) // Start in a second
