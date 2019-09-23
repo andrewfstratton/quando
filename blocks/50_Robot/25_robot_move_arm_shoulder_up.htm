@@ -1,43 +1,44 @@
 <div class="quando-block"
-data-quando-javascript="quando.robot.moveArmNew('${pos}', '${joint}', '${dir}', ${middle}, ${range}, ${speed}, ${normal}, val)">
-<div class="quando-left quando-robot"></div>
-<div class="quando-right">
-<div class="quando-row quando-robot">⚡
-🤖 Move 
-<select data-quando-name='pos' class="quando-toggle">
-    <option value='left'>👈</option>
-    <option value='right'>👉</option>
-</select>
-<select data-quando-name='joint'>
-    <option value='shoulder'>Shoulder</option>
-    <option value='elbow'>Elbow</option>
-    <option value='wrist'>Wrist</option>
-</select>
-<select data-quando-name='dir'> <!-- facing the robot -->
-    <option value='yaw'>⤹⤸ Roll</option>
-    <option value='pitch'>⇕ Pitch</option>
-    <option value='roll'>⇔ Yaw</option>
-</select>
-<select data-quando-name="extras"
-class="quando-toggle">
-  <option value="hidden">+</option>
-  <option value="show">-</option>
-</select>
-<span data-quando-toggle="extras=show">
-<br>
-<input data-quando-name="middle" type="text" value="0" data-quando-encode="normal"/>
-degrees
-±
-<input data-quando-name="range" type="text" value="100" data-quando-encode="normal"/>
-degrees.
-&nbsp;
- Speed
-<input data-quando-name="speed" type="text" value="15" data-quando-encode="normal"/>
-%
-<select data-quando-name='normal' class='quando-toggle'><option value='false'>normal</option>
-<option value='true'>inverted</option>
-</select>
-</span>
-</div>
-</div>
+    data-quando-javascript="quando.robot.moveArm('${position}', '${joint}', '${direction}', ${middle}, ${range}, ${speed}, ${inverted}, val)">
+    <div class="quando-left quando-robot"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-robot">⚡
+            🤖 Move
+            <select data-quando-name='position' class="quando-toggle">
+                <option value='left'>👈</option>
+                <option value='right'>👉</option>
+            </select>
+            <select data-quando-name='joint'>
+                <option value='shoulder'>Shoulder</option>
+                <option value='elbow'>Elbow</option>
+                <option value='wrist'>Wrist</option>
+            </select>
+            <select data-quando-name='direction'>
+                <!-- facing the robot -->
+                <option value='yaw'>⤹⤸ Roll</option>
+                <option value='pitch'>⇕ Pitch</option>
+                <option value='roll'>⇔ Yaw</option>
+            </select>
+            <select data-quando-name="extras" class="quando-toggle">
+                <option value="hidden">+</option>
+                <option value="show">-</option>
+            </select>
+            <span data-quando-toggle="extras=show">
+                <br>
+                <input data-quando-name="middle" type="text" value="0" data-quando-encode="normal" />
+                degrees
+                ±
+                <input data-quando-name="range" type="text" value="100" data-quando-encode="normal" />
+                degrees
+                &nbsp;
+                Speed
+                <input data-quando-name="speed" type="text" value="15" data-quando-encode="normal" />
+                %
+                <select data-quando-name='inverted' class='quando-toggle'>
+                    <option value='false'>Normal</option>
+                    <option value='true'>Inverted</option>
+                </select>
+            </span>
+        </div>
+    </div>
 </div>

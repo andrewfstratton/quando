@@ -1,6 +1,5 @@
-<div class="quando-block" data-quando-drop-valid="display-when-display,advanced-comment" data-quando-id="true" data-quando-javascript="quando.robot.listenForWords('${listName}', '${words}', ${confidence},  ${data-quando-id}, ((val)=>{
-  ${box}
-  }))">
+<div class="quando-block" data-quando-drop-valid="display-when-display,advanced-comment" data-quando-id="true"
+  data-quando-javascript="quando.robot.listenForWords('${list_name}', '${words}', ${confidence},  ${data-quando-id}, ((val)=>{${box}}))">
   <div class="quando-left quando-robot"></div>
   <div class="quando-right">
     <div class="quando-row quando-robot">
@@ -8,13 +7,13 @@
       🤖 When hearing
       <input data-quando-name="words" type="text" value="" data-quando-encode="normal" />
       from
-      <input data-quando-name="listName" type="text" value="" data-quando-encode="normal" />
+      <input data-quando-name="list_name" type="text" value="" data-quando-encode="normal" />
       <select data-quando-name="extras" class="quando-toggle">
         <option value="hidden">+</option>
         <option value="show">-</option>
       </select>
       <span data-quando-toggle="extras=show">
-        <br>
+        <br/>
         Confidence
         <input data-quando-name="confidence" type="text" value="0" data-quando-encode="normal" />
       </span>

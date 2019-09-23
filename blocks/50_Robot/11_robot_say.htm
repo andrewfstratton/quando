@@ -1,10 +1,11 @@
-<div class="quando-block" data-quando-id="true" data-quando-javascript="quando.robot.speechHandler('${anim}', '${say}', ${pitch}, ${speed}, ${echo}, ${interrupt}, val)">
+<div class="quando-block" data-quando-id="true"
+  data-quando-javascript="quando.robot.speechHandler('${animation}', '${say}', ${pitch}, ${speed}, ${echo}, ${interrupt}, val)">
   <div class="quando-left quando-robot"></div>
   <div class="quando-right">
     <div class="quando-row quando-robot">🤖💬 Robot Say
       <input data-quando-name="say" data-quando-robot="say" type="text" value="" data-quando-encode="normal" />
       with
-      <select data-quando-name='anim' class='quando-toggle'>
+      <select data-quando-name='animation' class='quando-toggle'>
         <option value='None'>No</option>
         <option value='Contextual'>Contextual</option>
         <option value='Random'>Random</option>
@@ -17,12 +18,12 @@
       <span data-quando-toggle="extras=show">
         <br>
         Pitch:
-        <input data-quando-name="pitch" type="text" value="1" data-quando-encode="normal"/>
+        <input data-quando-name="pitch" type="text" value="1" data-quando-encode="normal" />
         Speed:
-        <input data-quando-name="speed" type="text" value="1" data-quando-encode="normal"/>
+        <input data-quando-name="speed" type="text" value="1" data-quando-encode="normal" />
         <select data-quando-name='echo' class='quando-toggle'>
-          <option value='true'>Echo</option>
           <option value='false'>No Echo</option>
+          <option value='true'>Echo</option>
         </select>
         <select data-quando-name='interrupt' class='quando-toggle'>
           <option value='true'>Interrupt</option>

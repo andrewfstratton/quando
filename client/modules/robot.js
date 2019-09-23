@@ -197,7 +197,7 @@
 
         if (scope == 'interrupt') audioSequence = []
         audioInterrupt = scope == 'interrupt'
-        if (scope == 'bg') {
+        if (scope == 'background') {
             session.service('ALAudioPlayer').then(ap => {
                 ap.playFile(path + fileName).fail(log_error)
             })
@@ -323,7 +323,7 @@
 
             //play sine
             session.service("ALAudioPlayer").then((ap) => {
-                console.log('Playing Sine wave: ' + freq + "Hz " + gain + " gain " + duration + " seconds")
+                // console.log('Playing Sine wave: ' + freq + "Hz " + gain + " gain " + duration + " seconds")
                 ap.playSine(freq, gain, 0, duration)
             }).fail(log_error)
 
@@ -331,16 +331,13 @@
             //wait till wave is over + delay, then call itself again
             window.setTimeout(self.goThroughSineBuffer, duration*1000 + sinePlayDelay)
         } else {
-            console.log('nothing left to play!')
             sinePlaying = false
         }
     }
 
     //play sine wave w.r.t. value
     self.playSineV = (val) => {
-        console.log(val)
         session.service("ALAudioDevice").then((aadp) => {
-            console.log('Playing Sine wave...')
             aadp.playSine(600*val, 50, 0, 0.1)
         }).fail(log_error)
     }
@@ -348,7 +345,7 @@
     //play sine wave w/specified params
     self.playSine = (freq, gain, duration) => {
         session.service("ALAudioDevice").then((aadp) => {
-            console.log('Playing Sine wave: ' + freq + "Hz " + gain + " gain " + duration + " seconds")
+            // console.log('Playing Sine wave: ' + freq + "Hz " + gain + " gain " + duration + " seconds")
             aadp.playSine(freq, gain, 0, duration)
         }).fail(log_error)
     } 
@@ -358,10 +355,10 @@
         sineBuffer.push({freq: freq, gain: gain, duration: duration})
     }
 
-    self.turnHead = (yaw, middle, range, speed, normal_inverted, val) => {
+    self.turnHead = (yaw, middle, range, speed, inverted, val) => {
         let min = helper_ConvertAngleToRads(middle - range)
         let max = helper_ConvertAngleToRads(middle + range)
-        if (!normal_inverted) { val = 1-val }
+        if (inverted) { val = 1-val }
         let radians = min + (val * (max-min))
         if (yaw) { // Yaw
             state.head.yaw.angle = radians
@@ -372,30 +369,28 @@
         }
     }
 
-    self.moveArmNew = (pos, joint, dir, middle, range, speed, normal_inverted, val) => {
+    self.moveArm = (position, joint, direction, middle, range, speed, inverted, val) => {
         let min = helper_ConvertAngleToRads(middle - range)
         let max = helper_ConvertAngleToRads(middle + range)
-        if (!normal_inverted) { val = 1-val }
+        if (inverted) { val = 1-val }
         let radians = min + (val * (max-min))
 
-        if (state[joint][pos][dir]) {
-            state[joint][pos][dir].angle = radians
-            state[joint][pos][dir].speed = speed
+        if (state[joint][position][direction]) {
+            state[joint][position][direction].angle = radians
+            state[joint][position][direction].speed = speed
         }
     }
 
     self.initVideoStream = () => {
         session.service("ALVideoDevice").then((avd) => {
-            console.log(avd.getActiveCamera())
+            // console.log(avd.getActiveCamera())
             let cam = avd.subscribeCamera("subscriberID", 0, "kVGA", "kRGB", 10).then((camera) => {
-                console.log('TESst'+camera)
+                // console.log('TESst'+camera)
             }).fail(log_error) 
             //subscriberID, resolution, colour space, fps
-            console.log("cam: "+cam)
             let results = avd.getImageRemote(cam)
-            console.log("res: "+results)
+            // console.log("res: "+results)
             imgData = results[6]
-            console.log("imgdata: "+imgData)
         }).fail(log_error)
     }
 
@@ -409,7 +404,7 @@
     }
 
     function updateJoint(motion, joint, pitch_roll) {
-        if (pitch_roll.hasOwnProperty('angle') && (pitch_roll.angle !== pitch_roll.last_angle)) { // update yaw
+        if (pitch_roll.hasOwnProperty('angle') && (pitch_roll.angle !== pitch_roll.last_angle)) { // update pitch
             motion.setAngles(joint, pitch_roll.angle, pitch_roll.speed/100)
             pitch_roll.last_angle = pitch_roll.angle
             pitch_roll.angle = false
@@ -422,11 +417,11 @@
 
         Object.keys(state).forEach(joint => {
             if (joints.includes(joint)) {
-                ['left', 'right'].forEach(pos => {
-                    ['yaw', 'pitch', 'roll'].forEach(dir => {
-                        if (state[joint][pos][dir]) {
-                            const name = capitalize(pos.charAt(0)) + capitalize(joint) + capitalize(dir)
-                            updateJoint(motion, name, state[joint][pos][dir])
+                ['left', 'right'].forEach(position => {
+                    ['yaw', 'pitch', 'roll'].forEach(direction => {
+                        if (state[joint][position][direction]) {
+                            const name = capitalize(position.charAt(0)) + capitalize(joint) + capitalize(direction)
+                            updateJoint(motion, name, state[joint][position][direction])
                         }
                     })
                 })
