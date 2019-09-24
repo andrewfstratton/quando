@@ -15,6 +15,8 @@
     let sineBuffer = []
     let sinePlayDelay = 120
     let sinePlaying = false
+    const STEP_LENGTH = 25.0/1000 //in mm
+
 
     class vocabList {
         constructor(listName, vocab) {
@@ -504,13 +506,11 @@
     let motionInterrupt = true
 
     self.stepForwards = function (steps, direction, interrupt = false, callback, destruct = true) {
-        const stepLength = 0.025; //in M
-
         if (interrupt) motionSequence = []
         motionInterrupt = interrupt
         motionSequence.push(() => {
             session.service("ALMotion").then(function(mProxy) {
-                mProxy.moveTo(steps * stepLength * direction, 0, 0)
+                mProxy.moveTo(steps * STEP_LENGTH * direction, 0, 0)
                 mProxy.waitUntilMoveIsFinished().done(callback).fail(log_error)
             })
         })
@@ -523,13 +523,11 @@
     }
 
     self.stepSideways = function (steps, direction, interrupt = false, callback) {
-        const stepLength = 0.025; //in M
-
         if (interrupt) motionSequence = []
         motionInterrupt = interrupt
         motionSequence.push(() => {
             session.service("ALMotion").then(function(mProxy) {
-                mProxy.moveTo(0, steps * stepLength * direction, 0)
+                mProxy.moveTo(0, steps * STEP_LENGTH * direction, 0)
                 mProxy.waitUntilMoveIsFinished().done(callback).fail(log_error)
             })
         })
