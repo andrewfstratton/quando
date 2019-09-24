@@ -24,9 +24,11 @@ module.exports = (app, dirname, success, fail) => {
           if (files) {
             let failed = false
             for(let file of files) {
-              if (!failed && file.endsWith('.htm')) {
+              if (!failed && (file.endsWith('.htm') || (file.endsWith('.html')))) {
+                let suffix_length = '.htm'.length
+                if (file.endsWith('.html')) suffix_length++
                 let block = {title:false}
-                block.type = file.substring(file.indexOf('_') + 1).slice(0, -4) // drop the number, and the '.htm'
+                block.type = file.substring(file.indexOf('_') + 1).slice(0, -suffix_length) // drop the number, and the '.htm'
                 block.type = block.type.replace(/_/g, '-') // turn _ based filename into - based attribute
                 let contents = fs.readFileSync(join(dirname, 'blocks', folder, file))
                 if (contents) {
