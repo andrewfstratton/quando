@@ -1,6 +1,6 @@
 {
   "name": "quando",
-  "version": "0.8.20190115",
+  "version": "0.8.20190924",
   "description": "Quando Toolset",
   "main": "start.js",
   "scripts": {
@@ -23,18 +23,19 @@
     "file-base64": "^1.0.0",
     "formidable": "^1.2.1",
     "graceful-fs": "4.1.10",
-    "ibm-watson": "^4.2.1",
+    "ibm-watson": "^4.5.1",
     "leapjs": "^0.6.4",
     "memorystore": "^1.6.1",
     "morgan": "^1.9.1",
-    "npm": "^6.10.1",
-    "pouchdb": "^6.4.3",
-    "pouchdb-find": "^6.4.3",
+    "node-gyp": "^5.0.3",
+    "npm": "^6.11.3",
+    "pouchdb": "^7.1.1",
+    "pouchdb-find": "^7.1.1",
     "pouchdb-server": "^4.1.0",
     "promise": "^8.0.3",
     "robotjs": "^0.5.1",
     "serialport": "^7.1.5",
-    "socket.io": "^2.2.0",
+    "socket.io": "^2.3.0",
     "watson-developer-cloud": "^3.18.3"
   },
   "devDependencies": {
