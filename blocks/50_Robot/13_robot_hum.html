@@ -1,12 +1,25 @@
-<div class="quando-block" data-quando-javascript="quando.robot.playSine(${freq}, ${gain}, ${duration})">
+<div class="quando-block" data-quando-javascript="quando.robot.playSine(${frequency}, ${gain}, ${duration})">
   <div class="quando-left quando-robot"></div>
   <div class="quando-right">
-    <div class="quando-row quando-robot">Hum with Frequency:
-      <input data-quando-name="freq" type="text" value="250" data-quando-encode="normal" />
-      gain
-      <input data-quando-name="gain" type="text" value="50" data-quando-encode="normal" />
-      duration
-      <input data-quando-name="duration" type="text" value="0.1" data-quando-encode="normal" />
+    <div class="quando-row quando-robot">
+      🤖🔊 Hum
+      <input data-quando-name='frequency' type='number' value='250' placeholder='' style='width: 5em' min='1'
+        max='10000' data-quando-encode='normal' />
+      Hz, for
+      <input data-quando-name='duration' type='number' value='1' placeholder='' style='width: 5em' min='0' max='100'
+        data-quando-encode='normal' />
+      seconds
+      <select data-quando-name="extras" class="quando-toggle">
+        <option value="hidden">+</option>
+        <option value="show">-</option>
+      </select>
+      <span data-quando-toggle="extras=show">
+        <br>
+        volume
+        <input data-quando-name='gain' type='number' value='100' placeholder='' style='width: 4em' min='0' max='100'
+          data-quando-encode='normal' />
+        %
+      </span>
     </div>
   </div>
 </div>

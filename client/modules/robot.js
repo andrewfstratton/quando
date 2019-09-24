@@ -302,60 +302,12 @@
         }).fail(log_error)
     }
         
-    //sine handler, governs behaviour with specified type- buffer/interrupt/value
-    self.sineHandler = (type, freq, gain, duration) => {
-        if (type == "Interrupt") {
-            self.playSine(freq, gain, duration)
-        } else if (type == "Buffer") {
-            self.addSineWaveToBuffer(freq, gain, duration)
-        } else if (type == "Val") {
-            self.playSineV(val)
-        }
-    }
-
-    self.goThroughSineBuffer = () => {
-        if (sineBuffer.length > 0) { //if there's a tone that needs playing
-            sinePlaying = true
-
-            //intermediary variables for simplicity
-            let sine = sineBuffer[0]
-            let freq = sine.freq
-            let gain = sine.gain
-            let duration = sine.duration
-
-            //play sine
-            session.service("ALAudioPlayer").then((ap) => {
-                // console.log('Playing Sine wave: ' + freq + "Hz " + gain + " gain " + duration + " seconds")
-                ap.playSine(freq, gain, 0, duration)
-            }).fail(log_error)
-
-            sineBuffer.shift() //remove played sine wave
-            //wait till wave is over + delay, then call itself again
-            window.setTimeout(self.goThroughSineBuffer, duration*1000 + sinePlayDelay)
-        } else {
-            sinePlaying = false
-        }
-    }
-
-    //play sine wave w.r.t. value
-    self.playSineV = (val) => {
+    self.playSine = (frequency, gain, duration) => {
         session.service("ALAudioDevice").then((aadp) => {
-            aadp.playSine(600*val, 50, 0, 0.1)
-        }).fail(log_error)
-    }
-
-    //play sine wave w/specified params
-    self.playSine = (freq, gain, duration) => {
-        session.service("ALAudioDevice").then((aadp) => {
-            // console.log('Playing Sine wave: ' + freq + "Hz " + gain + " gain " + duration + " seconds")
-            aadp.playSine(freq, gain, 0, duration)
+            aadp.playSine(frequency, gain, 0, duration)
         }).fail(log_error)
     } 
 
-
-    self.addSineWaveToBuffer = (freq, gain, duration) => {
-        sineBuffer.push({freq: freq, gain: gain, duration: duration})
-    }
 
     self.turnHead = (yaw, middle, range, speed, inverted, val) => {
         let min = helper_ConvertAngleToRads(middle - range)
