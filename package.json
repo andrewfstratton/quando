@@ -8,7 +8,7 @@
     "pouchd": "pouchdb-server --port 5984 --dir pouchdb --config pouchdb-config.json",
     "quando": "node server.js",
     "start": "node .",
-    "standardize": "standard"
+    "install_local": "npm install pouchdb pouchdb-server pouchdb-find"
   },
   "author": "Andrew Stratton",
   "license": "ISC",
@@ -40,7 +40,6 @@
   },
   "devDependencies": {
     "chai": "^4.2.0",
-    "mocha": "^4.1.0",
-    "standard": "^10.0.3"
+    "mocha": "^4.1.0"
   }
 }

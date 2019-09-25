@@ -6,19 +6,23 @@ Prerequisites: Chrome browser, Node JS **Do not use Current - Use LTS version** 
 
 1. Download the zip and extract into C:\quando, or Clone the repository in C: using git clone https://github.com/andrewfstratton/quando.git
 2. In the command line, in C:\quando, npm update - this will likely take a while
-3. You may see errors installing/building serialport - this should only happen with 'obscure' operating systems, e.g. non x64 windows.  The only missing feature will be (currently) USB micro:bit access - if you need this, then follow the relevant guide at https://serialport.io/docs/en/guide-installation
+3. You may see errors installing/building serialport - this should only happen with 'obscure' operating systems, e.g. non x64 windows.  The only missing feature will be (currently) USB micro:bit access - if you need this, then follow the relevant guide at https://serialport.io/docs/guide-installation
   * Note: You may need to install windows developer tools - run an admin shell, then 'npm install -g windows-build-tools'
 
-### Setting up Quando for first time use
+### Setting up Quando for first time use offline and local
 
-1. Run quando (which runs the pouchdb server and the quando node server).  Note that the PouchDB log file is in pouchdb/log.txt
-2. Open the Control Panel through http://127.0.0.1 in chrome
-3. Create a new user, e.g. 'test' with password 'test' and 'Add User'.
-    * Note: you can change a user's password (or delete a user) through the PouchDB Control Panel.
-4. Chrome needs to be modified to allow video and audio to auto play:
+1. Run 'npm run install_local' to install pouchdb - you should only need to do this once
+2. If you see errors for building sqlite3, try (for windows):
+  * In an admin shell, run 'npm install -g windows-build-tools'
+
+3. Run quando (which will try to run the local pouchdb server and the quando node server).  Note that the PouchDB log file is in pouchdb/log.txt
+4. Open the Control Panel through http://127.0.0.1 in chrome
+5. Create a new user, e.g. 'test' with password 'test' and 'Add User'.
+    * Note: you can change a user's password (or delete a user) through the PouchDB Control Panel - available through the hub page, or at http://127.0.0.1:5984/_utils.
+6. Chrome needs to be modified to allow video and audio to auto play:
     1. _open chrome://flags/#autoplay-policy_
     2. _change to 'no user gesture is required'_
-4. From the Control Panel, open 127.0.0.1/inventor using the QR Code or click the link for local access, login as test/test
+7. From the Control Panel, open 127.0.0.1/inventor using the QR Code or click the link for local access, login as test/test
 
 ### To add automatic Windows *Server* startup - for deployed use - not for development
 1. using Windows R, run gpedit.msc
