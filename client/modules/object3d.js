@@ -84,7 +84,7 @@
     function _update_scene() {
         animation_id = requestAnimationFrame(() => {
             _update_scene()
-            console.log("Frame tick...")
+            // console.log("Frame tick...")
         })
         _update_object(update_object, object)
         _update_object(update_fixed, fixed)

@@ -21,8 +21,12 @@ module.exports = (app, client_dir, static, success, fail) => {
       if (err) {
         res.redirect('/client/setup')
       } else {
-        res.write(data.replace(/\[\[TITLE\]\]/,
-                  filename.replace(/\.js/, '')).replace(/\[\[DEPLOYED_JS\]\]/, filename))
+        let file_string = filename
+        data = data.replace(/\[\[TITLE\]\]/, filename.replace(/\.js/, ''))
+        deploy_string = 'data-deploy=""'
+        file_string = 'src="/client/deployed_js/'+file_string+'"'
+        data = data.replace(deploy_string, file_string)
+        res.write(data)
         res.end()
       }
     })
