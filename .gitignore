@@ -44,6 +44,7 @@ pouchdb/*/*
 client/deployed_js/-.js
 pouchdb/log.txt
 pouchdb-config.json
+package-lock.json
 
 #speech-to-text files
 *.webm
