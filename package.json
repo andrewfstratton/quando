@@ -8,7 +8,7 @@
     "pouchd": "pouchdb-server --port 5984 --dir pouchdb --config pouchdb-config.json",
     "quando": "node server.js",
     "start": "node .",
-    "install_local": "npm install pouchdb pouchdb-server pouchdb-find"
+    "install_local": "npm install pouchdb pouchdb-server pouchdb-find robotjs serialport"
   },
   "author": "Andrew Stratton",
   "license": "ISC",
@@ -30,8 +30,6 @@
     "node-gyp": "^5.0.3",
     "npm": "^6.11.3",
     "promise": "^8.0.3",
-    "robotjs": "^0.5.1",
-    "serialport": "^7.1.5",
     "socket.io": "^2.3.0",
     "watson-developer-cloud": "^3.18.3"
   },
