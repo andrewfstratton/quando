@@ -1,0 +1,30 @@
+<div class="quando-block" data-quando-javascript="quando.key.handleKey('${key}',${control},${alt},()=>{${box}})">
+  <div class="quando-left quando-devices"></div>
+  <div class="quando-right">
+    <div class="quando-row quando-devices">📄
+      <span class="iconify">
+        abc
+      </span>
+      When
+      <input data-quando-name='key' type='text' value='' placeholder='abc' data-quando-encode='normal' />
+      pressed
+      <select data-quando-name="extras" class="quando-toggle">
+        <option value="hidden">+</option>
+        <option value="show">-</option>
+      </select>
+      <span data-quando-toggle="extras=show">
+        <br>
+        <select data-quando-name='control' class='quando-toggle'>
+          <option value='false'>no control</option>
+          <option value='true'>control</option>
+        </select>
+        <select data-quando-name='alt' class='quando-toggle'>
+          <option value='false'>no alt</option>
+          <option value='true'>alt</option>
+        </select>
+      </span>
+    </div>
+    <div data-quando-name="box" class="quando-box"></div>
+    <div class="quando-row quando-devices"></div>
+  </div>
+</div>

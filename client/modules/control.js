@@ -29,7 +29,7 @@
     _send('type', decodeText(str))
   }
 
-  self.key = (ch, shift=false, ctrl=false, alt=false, command=false, ) => {
+  self.key = (ch, shift=false, ctrl=false, alt=false, command=false) => {
     let val = {'key':ch, 'shift':shift, 'ctrl':ctrl, 'alt':alt, 'command':command}
     _send('key', val)
   }
