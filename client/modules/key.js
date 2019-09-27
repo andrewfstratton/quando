@@ -9,21 +9,24 @@
   function handle_keys(event) {
     if (!event.repeat) {
       let handlers = key_pressed[event.key]
-      for (let i in handlers) {
-        handlers[i](event.ctrlKey, event.altKey)
+      for (let id in handlers) {
+        handlers[id](event.ctrlKey, event.altKey)
       }
     }
   }
 
-  self.handleKey = (key, ctrl=false, alt=false, callback) => {
+  self.handleKey = (id, key, ctrl=false, alt=false, callback) => {
     let handlers = key_pressed[key]
     if (!handlers) {
-      handlers = key_pressed[key] = []
+      handlers = key_pressed[key] = {}
     }
-    handlers.push((e_ctrl, e_alt) => {
+    handlers[id]=(e_ctrl, e_alt) => {
       if ((ctrl == e_ctrl) && (e_alt == alt)) {
         callback()
       }
+    }
+    quando.destructor.add(() => {
+      delete handlers[id]
     })
   }
 
