@@ -17,4 +17,4 @@ COPY . /opt/quando
 # start app
 EXPOSE 80
 EXPOSE 5984
-CMD ["npm", "start"]
+CMD ["/bin/sh", "/opt/quando/entrypoint.sh"]
