@@ -1,5 +1,5 @@
 # base image - ubit.js compiled against this version and not 12, so we have to use this
-FROM node:11
+FROM node:lts-jessie
 
 # set working directory
 RUN mkdir /opt/quando
