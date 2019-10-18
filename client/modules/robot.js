@@ -11,12 +11,9 @@
         elbow : { left: {roll: {}, yaw: {}}, right: {roll: {}, yaw: {}}},
         wrist : { left: {yaw: {}}, right: {yaw: {}}}
     }
+    let session = false
 
-    let sineBuffer = []
-    let sinePlayDelay = 120
-    let sinePlaying = false
     const STEP_LENGTH = 25.0/1000 //in mm
-
 
     class vocabList {
         constructor(listName, vocab) {
@@ -38,55 +35,6 @@
     }
 
     self._list = []
-    self._armActionsList = {}
-
-    let ARM_LOOKUP = {
-        "left": {
-            "up": {
-                "joint": "LShoulderPitch",
-                "halfway": "0",
-                "maximum": "-80",
-                "value": 1.5,
-            },
-            "down": {
-                "joint": "LShoulderPitch",
-                "halfway": "0",
-                "maximum": "90",
-            },
-            "out": {
-                "joint": "LShoulderRoll",
-                "halfway": "30",
-                "maximum": "60",
-            },
-            "in": {
-                "joint": "LShoulderRoll",
-                "halfway": "0",
-                "maximum": "-18",
-            }
-        },
-        "right": {
-            "up": {
-                "joint": "RShoulderPitch",
-                "halfway": "0",
-                "maximum": "-80",
-            },
-            "down": {
-                "joint": "RShoulderPitch",
-                "halfway": "0",
-                "maximum": "90",
-            },
-            "in": {
-                "joint": "RShoulderRoll",
-                "halfway": "0",
-                "maximum": "18",
-            },
-            "out": {
-                "joint": "RShoulderRoll",
-                "halfway": "-30",
-                "maximum": "-60",
-            }
-        }
-    };
 
     function log_error(err) {
         console.log("Error: " + err)
@@ -164,12 +112,6 @@
                 });
             });
         });
-    }
-
-    function armJointMovement(joint, angle, speed = 0.5) {
-        session.service("ALMotion").then(function (motion) {
-            motion.setAngles(joint, angle, speed);
-        }).fail(log_error)
     }
 
     function conditional(value) {
@@ -323,17 +265,31 @@
         }
     }
 
-    self.moveArm = (position, joint, direction, middle, range, speed, inverted, val) => {
-        let min = helper_ConvertAngleToRads(middle - range)
-        let max = helper_ConvertAngleToRads(middle + range)
-        if (inverted) { val = 1-val }
-        let radians = min + (val * (max-min))
-
-        if (state[joint][position][direction]) {
-            state[joint][position][direction].angle = radians
-            state[joint][position][direction].speed = speed
-        }
+    const JOINT_ANGLES = { // Note: set for the right arm - looking out from the Nao
+        'roll_shoulder':{joint:'shoulder', direction:'roll', min:0.3142, max:-1.3265},
+        'pitch_shoulder':{joint:'shoulder', direction:'pitch', min:2.0857, max:-2.0857}, // max and min inverted so bigger is up
+        'yaw_elbow':{joint:'elbow', direction:'yaw', min:-2.0857, max:2.0857},
+        'roll_elbow':{joint:'elbow', direction:'roll', min:1.5446, max:0.0349}, // Again inverted...
+        'yaw_wrist':{joint:'wrist', direction:'yaw', min:-1.8238, max:1.8238}
     }
+
+    self.moveArmJoint = (left, joint_direction, min_percent, max_percent, speed, inverted, val) => {
+      if (inverted) { val = 1-val }
+      let {joint, direction, min, max} = JOINT_ANGLES[joint_direction]
+      if (left) {
+          [max, min] = [-min, -max]
+      }
+      let range = max - min
+      // now range may be changed by the min and max percent
+      max = (range*max_percent/100)+min // N.B. Do not put this statement after the next
+      min += range*min_percent/100
+      let radians = min + (val * (max-min))
+      let position = left?'left':'right'
+      let new_state = state[joint][position][direction]
+      new_state.angle = radians
+      new_state.speed = speed
+    }
+
 
     self.initVideoStream = () => {
         session.service("ALVideoDevice").then((avd) => {
@@ -358,10 +314,11 @@
     }
 
     function updateJoint(motion, joint, pitch_roll) {
-        if (pitch_roll.hasOwnProperty('angle') && (pitch_roll.angle !== pitch_roll.last_angle)) { // update pitch
+        if (pitch_roll.angle !== pitch_roll.last_angle) { // update pitch
             motion.setAngles(joint, pitch_roll.angle, pitch_roll.speed/100)
             pitch_roll.last_angle = pitch_roll.angle
-            pitch_roll.angle = false
+            delete pitch_roll.angle
+            delete pitch_roll.speed
         }
     }
 
@@ -373,9 +330,10 @@
             if (joints.includes(joint)) {
                 ['left', 'right'].forEach(position => {
                     ['yaw', 'pitch', 'roll'].forEach(direction => {
-                        if (state[joint][position][direction]) {
+                        let roll_pitch = state[joint][position][direction]
+                        if (roll_pitch && roll_pitch.hasOwnProperty('angle')) {
                             const name = capitalize(position.charAt(0)) + capitalize(joint) + capitalize(direction)
-                            updateJoint(motion, name, state[joint][position][direction])
+                            updateJoint(motion, name, roll_pitch)
                         }
                     })
                 })
@@ -416,7 +374,8 @@
     }
 
     function updateRobot() {
-        session.service("ALMotion").then((motion) => {
+        if (session) {
+          session.service("ALMotion").then((motion) => {
             updateYawPitch(motion, 'HeadYaw', state.head.yaw)
             updateYawPitch(motion, 'HeadPitch', state.head.pitch)
             updateHand(motion, 'LHand', state.hand.left)
@@ -431,20 +390,10 @@
                     setTimeout(updateRobot, 1000/25) // i.e. x times per second
                 }).fail(log_error)
             }).fail(log_error)
-        }).fail(log_error)
-    }
-
-    self.moveArm = function (arm, direction, angle) {
-        console.log("Arm: " + arm + "\nDirection: " + direction + "\nAngle: " + angle);
-        var json = ARM_LOOKUP;
-        var data = json[arm][direction];
-        var armJoint = data["joint"];
-        console.log(armJoint);
-        var finalAngle = data[angle];
-        session.service("ALMotion").then(function (motion) {
-            newAngle = helper_ConvertAngleToRads(finalAngle);
-            motion.setAngles(armJoint, newAngle, 0.5);
-        }).fail(log_error)
+          }).fail(log_error)
+        } else {
+          setTimeout(updateRobot, 1000) // i.e. try again in a second...
+        }
     }
 
     self.moveMotor = function (val, motor, direction) {
@@ -542,8 +491,6 @@
     }
 
     self.createWordList = function (listName) {
-        
-
         var v = new vocabList(listName, [])
         self._list.push(v)
     }

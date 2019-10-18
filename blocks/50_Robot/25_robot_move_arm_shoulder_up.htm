@@ -1,23 +1,19 @@
 <div class="quando-block"
-    data-quando-javascript="quando.robot.moveArm('${position}', '${joint}', '${direction}', ${middle}, ${range}, ${speed}, ${inverted}, val)">
+    data-quando-javascript="quando.robot.moveArmJoint(${left}, '${joint}', ${min}, ${max}, ${speed}, ${inverted}, val)">
     <div class="quando-left quando-robot"></div>
     <div class="quando-right">
         <div class="quando-row quando-robot">⚡
             🤖 Move
-            <select data-quando-name='position' class="quando-toggle">
-                <option value='left'>👈</option>
-                <option value='right'>👉</option>
+            <select data-quando-name='left' class='quando-toggle'>
+                <option value='true'>👈</option>
+                <option value='false'>👉</option>
             </select>
-            <select data-quando-name='joint'>
-                <option value='shoulder'>Shoulder</option>
-                <option value='elbow'>Elbow</option>
-                <option value='wrist'>Wrist</option>
-            </select>
-            <select data-quando-name='direction'>
-                <!-- facing the robot -->
-                <option value='yaw'>⤹⤸ Roll</option>
-                <option value='pitch'>⇕ Pitch</option>
-                <option value='roll'>⇔ Yaw</option>
+            <select data-quando-name="joint">
+                <option value='roll_shoulder'>Shoulder ⇔</option>
+                <option value='pitch_shoulder'>Shoulder ⇕</option>
+                <option value='roll_elbow'>Elbow bend</option>
+                <option value='yaw_elbow'>Elbow ⤹⤸</option>
+                <option value='yaw_wrist'>Wrist ⤹⤸ </option>
             </select>
             <select data-quando-name="extras" class="quando-toggle">
                 <option value="hidden">+</option>
@@ -25,18 +21,21 @@
             </select>
             <span data-quando-toggle="extras=show">
                 <br>
-                <input data-quando-name="middle" type="text" value="0" data-quando-encode="normal" />
-                degrees
-                ±
-                <input data-quando-name="range" type="text" value="100" data-quando-encode="normal" />
-                degrees
+                min
+                <input data-quando-name='min' type='number' value='0' placeholder='' style='width: 4em' min='0'
+                    max='100' data-quando-encode='normal'/>
+                %
+                <input data-quando-name='max' type='number' value='100' placeholder='' style='width: 4em' min='0'
+                    max='100' data-quando-encode='normal'/>
+                %
                 &nbsp;
                 Speed
-                <input data-quando-name="speed" type="text" value="15" data-quando-encode="normal" />
+                <input data-quando-name='speed' type='number' value='15' placeholder='' style='width: 4em' min='0'
+                    max='100' data-quando-encode='normal'/>
                 %
                 <select data-quando-name='inverted' class='quando-toggle'>
-                    <option value='false'>Normal</option>
-                    <option value='true'>Inverted</option>
+                    <option value='false'>normal</option>
+                    <option value='true'>inverted</option>
                 </select>
             </span>
         </div>

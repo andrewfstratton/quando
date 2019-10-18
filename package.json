@@ -1,6 +1,6 @@
 {
   "name": "quando",
-  "version": "0.8.20190924",
+  "version": "0.8.20191015",
   "description": "Quando Toolset",
   "main": "start.js",
   "scripts": {
@@ -8,6 +8,7 @@
     "pouchd": "pouchdb-server --port 5984 --dir pouchdb --config pouchdb-config.json",
     "quando": "node server.js",
     "start": "node .",
+    "nodemon": "nodemon server.js",
     "install_local": "npm install pouchdb pouchdb-server pouchdb-find robotjs serialport"
   },
   "author": "Andrew Stratton",
@@ -36,5 +37,13 @@
   "devDependencies": {
     "chai": "^4.2.0",
     "mocha": "^4.1.0"
+  },
+  "nodemonConfig": {
+    "ignore": ["client/",
+      "device_setup/",
+      "inventor/",
+      "pouchdb/",
+      "hub/",
+      "blocks/"]
   }
 }
