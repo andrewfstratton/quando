@@ -11,7 +11,7 @@ ENV PATH /opt/quando/node_modules/.bin:$PATH
 # install and cache app dependencies
 COPY package.json /opt/quando/package.json
 # "|| :" prevents this command from failing temporarily while RobotJS is broken
-RUN npm run install_local --silent || :
+RUN npm run install_local || :
 COPY . /opt/quando
 
 # start app
