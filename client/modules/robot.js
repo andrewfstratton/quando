@@ -69,16 +69,6 @@
         setTimeout(() => { self.connect(robotIp) }, 1000)
     }
 
-    function waitForSayFinish() {
-        if (robot.TextDone == 0) {
-            setTimeout(function () { waitForSayFinish() }, 50);
-        }
-    }
-
-    function execute_leap_executor() {
-        var run = setInterval(function () { leapJointMovement(0.5) }, 0.1 * 1000);
-    }
-
     function execute_event_listeners() {
         session.service("ALMemory").then(function (ALMemory) {
             ALMemory.subscriber("ALTextToSpeech/CurrentWord").then(function (sub) {
@@ -251,19 +241,26 @@
     } 
 
 
-    self.turnHead = (yaw, middle, range, speed, inverted, val) => {
-        let min = helper_ConvertAngleToRads(middle - range)
-        let max = helper_ConvertAngleToRads(middle + range)
-        if (inverted) { val = 1-val }
-        let radians = min + (val * (max-min))
-        if (yaw) { // Yaw
-            state.head.yaw.angle = radians
-            state.head.yaw.speed = speed
-        } else { // Pitch
-            state.head.pitch.angle = radians
-            state.head.pitch.speed = speed
-        }
+    const HEAD_ANGLES = {
+        true:{direction:'yaw', min:2.0857, max:-2.0857},
+        false:{direction:'pitch', min:0.5149, max:-0.6720}
     }
+
+    self.turnHead = (yaw, min_percent, max_percent, speed, inverted, val) => {
+        if (inverted) { val = 1-val }
+      let {direction, min, max} = HEAD_ANGLES[yaw]
+      if (state.mirror && yaw) {
+          [max, min] = [min, max] // Warning: this likely only works for symmetric angles
+      }
+      let range = max - min
+      // now range may be changed by the min and max percent
+      max = (range*max_percent/100)+min // N.B. Do not put this statement after the next
+      min += range*min_percent/100
+        let radians = min + (val * (max-min))
+      let new_state = state.head[direction]
+      new_state.angle = radians
+      new_state.speed = speed
+        }
 
     const JOINT_ANGLES = { // Note: set for the right arm - looking out from the Nao
         'roll_shoulder':{joint:'shoulder', direction:'roll', min:0.3142, max:-1.3265},
@@ -507,7 +504,6 @@
 
 
     self.listenForWords = function (listName, vocab, confidence, blockID, callback, destruct = true) {
-        // waitForSayFinish();
         if (!listName.length) { listName = "default" }
 
         self.addToWordList(listName, vocab)
