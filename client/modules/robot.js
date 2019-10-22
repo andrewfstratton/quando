@@ -9,7 +9,9 @@
         head : { yaw: {}, pitch: {}},
         shoulder : { left: {roll: {}, pitch: {}}, right: {roll: {}, pitch: {}}},
         elbow : { left: {roll: {}, yaw: {}}, right: {roll: {}, yaw: {}}},
-        wrist : { left: {yaw: {}}, right: {yaw: {}}}
+        wrist : { left: {yaw: {}}, right: {yaw: {}}},
+        motion: {sequence:[], interrupt:true},
+        mirror : false // when true, switches left/right, etc.
     }
     let session = false
 
@@ -240,6 +242,9 @@
         }).fail(log_error)
     } 
 
+    self.mirror = (mirror) => {
+        state.mirror = mirror
+    }
 
     const HEAD_ANGLES = {
         true:{direction:'yaw', min:2.0857, max:-2.0857},
@@ -247,7 +252,7 @@
     }
 
     self.turnHead = (yaw, min_percent, max_percent, speed, inverted, val) => {
-        if (inverted) { val = 1-val }
+      if (inverted) { val = 1-val }
       let {direction, min, max} = HEAD_ANGLES[yaw]
       if (state.mirror && yaw) {
           [max, min] = [min, max] // Warning: this likely only works for symmetric angles
@@ -256,25 +261,35 @@
       // now range may be changed by the min and max percent
       max = (range*max_percent/100)+min // N.B. Do not put this statement after the next
       min += range*min_percent/100
-        let radians = min + (val * (max-min))
+      let radians = min + (val * (max-min))
       let new_state = state.head[direction]
       new_state.angle = radians
       new_state.speed = speed
-        }
+    }
 
-    const JOINT_ANGLES = { // Note: set for the right arm - looking out from the Nao
-        'roll_shoulder':{joint:'shoulder', direction:'roll', min:0.3142, max:-1.3265},
+    const ARM_JOINT_ANGLES = { // Note: set for the right arm - looking out from the Nao
+        'roll_shoulder':{joint:'shoulder', direction:'roll', min:0.3142, max:-1.3265, mirror:true},
         'pitch_shoulder':{joint:'shoulder', direction:'pitch', min:2.0857, max:-2.0857}, // max and min inverted so bigger is up
-        'yaw_elbow':{joint:'elbow', direction:'yaw', min:-2.0857, max:2.0857},
-        'roll_elbow':{joint:'elbow', direction:'roll', min:1.5446, max:0.0349}, // Again inverted...
-        'yaw_wrist':{joint:'wrist', direction:'yaw', min:-1.8238, max:1.8238}
+        'yaw_elbow':{joint:'elbow', direction:'yaw', min:-2.0857, max:2.0857, mirror:true},
+        'roll_elbow':{joint:'elbow', direction:'roll', min:0.0349, max:1.5446, negate:true}, // only one to negate only...
+        'yaw_wrist':{joint:'wrist', direction:'yaw', min:-1.8238, max:1.8238, mirror:true}
     }
 
     self.moveArmJoint = (left, joint_direction, min_percent, max_percent, speed, inverted, val) => {
       if (inverted) { val = 1-val }
-      let {joint, direction, min, max} = JOINT_ANGLES[joint_direction]
+      let {joint, direction, min, max, mirror=false, negate=false} = ARM_JOINT_ANGLES[joint_direction]
+      if (state.mirror) {
+        left = !left
+        if (mirror) {
+            val = 1-val // and value is swapped?!
+        }
+      } // When mirrored, left and right are swapped?!
       if (left) {
-          [max, min] = [-min, -max]
+          if (negate) {
+            [max, min] = [-max, -min]
+          } else {
+            [max, min] = [-min, -max]
+          }
       }
       let range = max - min
       // now range may be changed by the min and max percent
@@ -340,12 +355,13 @@
 
     function updateMovement(motion) {
         motion.moveIsActive().then((active) => {
-            if (motionSequence.length) {
-                if (active && motionInterrupt) motion.stopMove()
-
+            let state_motion = state.motion
+            if (state_motion.sequence.length) {
+                if (active && state_motion.interrupt) {
+                  motion.stopMove()
+                }
                 if (!active) {
-                    motionSequence[0]()
-                    motionSequence.shift()
+                    (state_motion.sequence.shift())()
                 }
             }
         })
@@ -393,65 +409,54 @@
         }
     }
 
-    self.moveMotor = function (val, motor, direction) {
-        session.service("ALMotion").then(function (motion) {
-            newAngle = helper_ConvertAngleToRads(finalAngle);
-            motion.setAngles(armJoint, (2 + ((val - 0) * (-2 - 2)) / (1 - 0)), 0.5);
-        }).fail(log_error)
+    const DIRECTION_STEPS = {
+        'forward': {x:1, y:0},
+        'back': {x:-1, y:0},
+        'left': {x:0, y:1, mirror:true},
+        'right': {x:0, y:-1, mirror:true}
     }
 
-    let motionSequence = []
-    let motionInterrupt = true
-
-    self.stepForwards = function (steps, direction, interrupt = false, callback, destruct = true) {
-        if (interrupt) motionSequence = []
-        motionInterrupt = interrupt
-        motionSequence.push(() => {
-            session.service("ALMotion").then(function(mProxy) {
-                mProxy.moveTo(steps * STEP_LENGTH * direction, 0, 0)
-                mProxy.waitUntilMoveIsFinished().done(callback).fail(log_error)
-            })
-        })
-        if (destruct) {
-            quando.destructor.add(function () {
-                motionSequence = []
-                motionInterrupt = true
-            })
+    self.walk = (direction, steps, interrupt) => {
+        let state_motion = state.motion
+        if (interrupt) {
+          state_motion.sequence = []
         }
-    }
-
-    self.stepSideways = function (steps, direction, interrupt = false, callback) {
-        if (interrupt) motionSequence = []
-        motionInterrupt = interrupt
-        motionSequence.push(() => {
-            session.service("ALMotion").then(function(mProxy) {
-                mProxy.moveTo(0, steps * STEP_LENGTH * direction, 0)
-                mProxy.waitUntilMoveIsFinished().done(callback).fail(log_error)
+        state_motion.interrupt = interrupt
+        let length = steps * STEP_LENGTH
+        let {x, y, mirror} = DIRECTION_STEPS[direction]
+        x = x * length
+        y = y * length
+        if (state.mirror && mirror) {
+          y = -y
+        }
+        state_motion.sequence.push(() => {
+            session.service("ALMotion").then((mProxy) => {
+                mProxy.moveTo(x, y, 0)
             })
         })
     }
 
-
-    self.rotateBody = function (angle, direction, interrupt = false, callback) { //angle in degrees
+    self.rotateBody = (angle, direction, interrupt = false) => { //angle in degrees
         angle = helper_ConvertAngleToRads(angle)
-
-        if (interrupt) motionSequence = []
-        motionInterrupt = interrupt
-        motionSequence.push(() => {
-            session.service("ALMotion").then(function(mProxy) {
+        let state_motion = state.motion
+        if (interrupt) {
+          state_motion.sequence = []
+        }
+        state_motion.interrupt = interrupt
+        if (state.mirror) {
+          direction *= -1
+        }
+        state_motion.sequence.push(() => {
+            session.service("ALMotion").then((mProxy) => {
                 mProxy.moveTo(0, 0, angle * direction)
-                mProxy.waitUntilMoveIsFinished().done(callback).fail(log_error) 
             })
         })
-        if (destruct) {
-            quando.destructor.add(function () {
-                motionSequence = []
-                motionInterrupt = true
-            })
-        }
     }
 
     self.changeHand = (left, open) => {
+        if (state.mirror) {
+            left = !left
+        }
         if (left) {
             state.hand.left.open = open
         } else { // right
@@ -473,8 +478,14 @@
         }
     }
 
-    self.personPerception = function (callback, destruct = true) {
-        self.lookForPerson(session, callback, destruct)
+    self.personPerception = (callback) => {
+        session.service("ALBasicAwareness").then((ba) => {
+            ba.startAwareness()
+            _start_perception(session, callback)
+        }).fail(log_error)
+        quando.destructor.add(() => {
+            _destroy_perception(session)
+        })
     }
 
     self.changeAutonomousLife = (state, callback) => {
@@ -612,9 +623,8 @@
      * Also creates the disconnect event
      * @param {object} session Stores the connection to the robot
      * @param {function} callback Function to execute if the robot sees someone
-     * @param {object} ba Basic awareness service
      */
-    function _start_perception(session, callback, ba) {
+    function _start_perception(session, callback) {
         session.service("ALMemory").then(function (ALMemory) {
             ALMemory.subscriber("ALBasicAwareness/HumanTracked").then(function (sub) {
                 sub.signal.connect(function (state) {
@@ -664,24 +674,6 @@
         if (destruct) {
             quando.destructor.add(function () {
                 _destroy_robot_listen(session, blockID) //create the destructor
-            })
-        }
-    }
-
-    /**
-     * Starts the person perception listener
-     * @param {object} session Stores the conneciton to the robot
-     * @param {function} callback Function to execute
-     * @param {boolean} destruct Whether to create the destructor or not
-     */
-    self.lookForPerson = function (session, callback, destruct = true) {
-        session.service("ALBasicAwareness").then(function (ba) {
-            ba.startAwareness()
-            _start_perception(session, callback, ba)
-        }).fail(log_error)
-        if (destruct) {
-            quando.destructor.add(function () {
-                _destroy_perception(session)
             })
         }
     }
@@ -736,6 +728,9 @@
     }
 
     self.touchHand = (left, location, callback) => {
+        if (state.mirror) {
+            left = !left
+        }
         let sensor = 'Hand' + (left?'Left':'Right')
         if (location == 'front') {
             sensor += left?'Right':'Left'
@@ -750,19 +745,19 @@
     }
 
     self.touchFoot = (location, callback) => {
+        let left = ['Left', 'Either'].includes(location)
+        let right = ['Right', 'Either'].includes(location)
+        if (state.mirror) {
+            [left, right] = [right, left]
+        }
         const suffix = 'BumperPressed'
-        let destroy = false
-        if (['Left', 'Either'].includes(location)) {
+        if (left) {
             _start_touchEvents(session, 'Left' + suffix, callback)
-            destroy = true
         }
-        if (['Right', 'Either'].includes(location)) {
+        if (right) {
             _start_touchEvents(session, 'Right' + suffix, callback)
-            destroy = true
         }
-        if (destroy) {
-            quando.destructor.add(_destroy_touchEvents)
-        }
+        quando.destructor.add(_destroy_touchEvents)
     }
 
     setTimeout(updateRobot, 1000) // Start in a second

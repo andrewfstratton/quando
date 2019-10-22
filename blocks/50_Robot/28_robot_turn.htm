@@ -1,16 +1,14 @@
-<div class="quando-block" data-quando-javascript="quando.robot.rotateBody(${angle}, ${direction}, ${interrupt}, (()=>{
-  ${box}
-  }))">
+<div class="quando-block" data-quando-javascript="quando.robot.rotateBody(${angle}, ${direction}, ${interrupt})">
   <div class="quando-left quando-robot"></div>
   <div class="quando-right">
     <div class="quando-row quando-robot">
-      🤖🚶
-      Turn
+      🤖👣 Turn
       <select data-quando-name='direction' class='quando-toggle'>
-        <option value='-1'>Clockwise</option>
-        <option value='1'>Anticlockwise</option>
+        <option value='1'>⇦ Left</option>
+        <option value='-1'>⇨ Right</option>
       </select>
-      <input data-quando-name="angle" type="text" value="0" data-quando-encode="normal"/>
+      <input data-quando-name='angle' type='number' value='90' placeholder='' style='width: 4em' min='-360' max='360'
+        data-quando-encode='normal' />
       degrees
       <select data-quando-name="extras" class="quando-toggle">
         <option value="hidden">+</option>
@@ -19,12 +17,9 @@
       <span data-quando-toggle="extras=show">
         <br>
         <select data-quando-name="interrupt" class="quando-toggle">
-          <option value="true">Interrupt</option>
-          <option value="false">Buffer</option>
+          <option value="true">interrupt</option>
+          <option value="false">buffer</option>
         </select>
-        ... then, When finished
       </span>
     </div>
-    <div data-quando-name="box" class="quando-box" data-quando-toggle="extras=show"></div>
-    <div class="quando-row quando-robot" data-quando-toggle="extras=show"></div>
 </div>
