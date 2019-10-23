@@ -799,41 +799,6 @@
     }
   }
 
-  // self.pick = function(val, arr) {
-  //   if (val === false) {
-  //     val = 0.5
-  //   }
-  //   var i = Math.floor(val * arr.length)
-  //   if (i == arr.length) {
-  //     i--
-  //   }
-  //   arr[i]()
-  //   arr.splice(i, 1)
-  // }
-
-  // self.pick_random = function(arr) {
-  //   alert('r'+randArr)
-  //   if (randArr == []) {
-  //     randArr = arr
-  //   } else {
-  //     var r = Math.random()
-  //     self.pick(r, randArr)
-  //   }   
-  // }
-
-  // self.pick_one_each_time = function(arr) {
-  //   if (arr.length > 0) {
-  //     if (!arr.hasOwnProperty('index')) {
-  //       arr.index = 0
-  //     }
-  //     var fn = arr[arr.index]
-  //     if (++arr.index >= arr.length) {
-  //       arr.index = 0
-  //     }
-  //     if (typeof fn === 'function') { fn() }
-  //   }
-  // }
-
   self.setOnId = (id, val) => {
     _lookup[id] = val
   }
@@ -846,40 +811,6 @@
     if (val.contains(goal)) {
       fn(val)
     }
-  }
-
-  self.vary_each_time = function(fn, end_value, inverted, seesaw) {
-    end_value--
-    if (end_value < 1) { // Avoid infinite answers...
-      end_value = 1
-    }
-    if (!fn.hasOwnProperty('counter')) {
-      fn.counter = 0
-      fn.direction = 1 // go up at the start - inverted will flip the final result...
-    }
-    // calculate the current value, then adjust the counter to the next value...
-    let val = fn.counter/end_value
-    if (inverted) {
-      val = 1 - val
-    }
-    fn.counter += fn.direction
-    if (fn.counter < 0) {
-      if (seesaw) {
-        fn.counter = 1 // i.e. next time is one more than the 0 minimum
-        fn.direction = 1
-      } else {
-        fn.counter = end_value // logically this can't happen now...
-      }
-    }
-    if (fn.counter > end_value) {
-      if (seesaw) {
-        fn.counter = end_value - 1 // next value is one less than the maximum
-        fn.direction = -1
-      } else {
-        fn.counter = 0 // back to start
-      }
-    }
-    if (typeof fn === 'function') { fn.call(this, val) }
   }
 
   function _degrees_to_radians (degrees) {
