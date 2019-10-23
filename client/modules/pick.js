@@ -93,4 +93,29 @@
     arr[i]()
   }
 
+  self.every = (id, time, duration) => {
+    let arr = _list[id]
+    if (arr.length > 0) {
+      arr.index = 0 // start at 0
+      let ms = time * 1000
+      if (duration == 'minutes') {
+        ms *= 60
+      } else if (duration == 'hours') {
+        ms *= 60*60
+      }
+      let every_fn = () => {
+        let fn = arr[arr.index]
+        if (++arr.index >= arr.length) {
+          arr.index = 0
+        }
+        if (typeof fn === 'function') { fn() }
+      }
+      every_fn() // Call now
+      let id = setInterval(every_fn, ms)
+      quando.destructor.add(() => {
+        clearInterval(id)
+      })
+    }
+  }
+
 })()

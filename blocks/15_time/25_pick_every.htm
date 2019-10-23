@@ -1,0 +1,22 @@
+<div class="quando-block" data-quando-id="true" 
+  data-quando-javascript="$(pre$, quando.pick.set(${data-quando-id}, [${box}]))$$(nl)$quando.pick.every(${data-quando-id},${time},'${duration}')">
+  <div class="quando-left quando-time"></div>
+  <div class="quando-right">
+    <div class="quando-row quando-time">⏰
+      Pick
+      <span class="iconify">
+        one
+      </span>
+      every
+      <input data-quando-name='time' type='number' value='1' placeholder='' style='width: 3em' min='0' max='100'
+        data-quando-encode='normal' />
+      <select data-quando-name="duration">
+        <option value='seconds'>seconds</option>
+        <option value='minutes'>minutes</option>
+        <option value='hours'>hours</option>
+      </select>
+    </div>
+    <div data-quando-name="box" class="quando-box" data-quando-fn-array="true"></div>
+    <div class="quando-row quando-time"></div>
+  </div>
+</div>
