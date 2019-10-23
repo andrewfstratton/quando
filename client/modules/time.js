@@ -45,4 +45,34 @@
     self.every(count, 'seconds', callback)
   }
 
+  self.vary = (count, units, loop, per, per_units, inverted, callback) => {
+    let time_ms = self.units_to_ms(units, count)
+    let start_time = new Date().getTime()
+    let interval_ms = self.units_to_ms(per_units, 1) / per
+    let once = (loop == 'once')
+    let seesaw = (loop == 'seesaw')
+    let check_fn = ()=>{
+      let now = new Date().getTime()
+      let val = (now - start_time) / time_ms
+      if (once && (val >= 1)) {
+        // we've exceeded the limit - so call one last time at the limit
+        val = 1
+        clearInterval(id) // kill the interval
+      } else {
+        let iteration = Math.floor(val)
+        val -= iteration // get the fractional part
+        if (seesaw && (iteration % 2)) {
+          val = 1 - val
+        }
+      }
+      if (inverted) { val = 1 - val }
+      callback(val)
+    }
+    check_fn(0) // Call now at beginning of val
+    let id = setInterval(check_fn, interval_ms)
+    quando.destructor.add(() => {
+      clearInterval(id)
+    })
+  }
+
 })()
