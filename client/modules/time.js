@@ -32,7 +32,7 @@
     })
   }
 
-  self.per = (times = 1, units = 'second', callback) => {
+  function _unit_to_time(units) {
     let time = 1
     if (units == 'minute') {
       time = 60
@@ -41,6 +41,11 @@
     } else if (units == 'day') {
       time = 60*60*24
     }
+    return time
+  }
+
+  self.per = (times = 1, units = 'second', callback) => {
+    let time = _unit_to_time(units)
     let count = time / times
     self.every(count, 'seconds', callback)
   }
@@ -72,6 +77,57 @@
     let id = setInterval(check_fn, interval_ms)
     quando.destructor.add(() => {
       clearInterval(id)
+    })
+  }
+
+  function _tidy_filter(filter, near) {
+    // average any in last segment
+    let {times, segments} = filter
+    let new_val = filter.latest
+    if (times.length > 0) {
+      let total = 0
+      let count = times.length
+      while (times.length > 0) {
+        total += times.shift()['val'] // we don't care about the time order...
+      }
+      new_val = total/count
+    }
+    segments.push(new_val)
+    // prune segments not needed
+    if (segments.length > ((2*near)+1)) {
+      segments.shift()
+    }
+  }
+
+  function _update_val(type, segments, callback) {
+    if (type == 'average') {
+      let total = segments.reduce((sum,x)=>sum+x)
+      if (segments.length > 0) {
+        callback(total/segments.length)
+      }
+    }
+  }
+
+  let _filters = {}
+  const MAX_PS = 1000/150 // limit updates to 1500/second
+  self.filter = (type, times_per, units, near, id, val, callback) => {
+    let time = _unit_to_time(units)
+    let per_ms = 1000 * time / times_per
+    if (per_ms < MAX_PS) { per_ms = MAX_PS }
+    let _filter = _filters[id]
+    if (!_filter) {
+      _filters[id] = _filter = {times: [], segments:[]}
+      _filter.check = setInterval(()=>{
+        _tidy_filter(_filter, near)
+        _update_val(type, _filter.segments, callback)
+      }, per_ms)
+    }
+    // set as latest and add this value
+    _filter.latest = val
+    _filter.times.push({'time': new Date().getTime(), 'val': val})
+    quando.destructor.add(() => {
+      clearInterval(_filter.check)
+      delete _filters[id]
     })
   }
 

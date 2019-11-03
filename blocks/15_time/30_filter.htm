@@ -1,0 +1,37 @@
+<div class="quando-block" data-quando-id="true"
+  data-quando-javascript="quando.time.filter('${filter}',${timesper},'${units}',${near},${data-quando-id},val,(val)=>{${box}})">
+  <div class="quando-left quando-time"></div>
+  <div class="quando-right">
+    <div class="quando-row quando-time">⚡
+      <span class="iconify">
+        Filter
+      </span>
+      <select data-quando-name="filter">
+        <option value='average'>Average</option>
+      </select>
+      ⚡
+      <select data-quando-name="extras" class="quando-toggle">
+        <option value="hidden">+</option>
+        <option value="show">-</option>
+      </select>
+      <span data-quando-toggle="extras=show">
+        <br>
+        <input data-quando-name='timesper' type='number' value='20' placeholder='' style='width: 3em' min='0' max='100'
+          data-quando-encode='normal' />
+        times per
+        <select data-quando-name="units">
+          <option value='second'>Second</option>
+          <option value='minute'>Minute</option>
+          <option value='hour'>Hour</option>
+          <option value='day'>Day</option>
+        </select>
+        check ±
+        <input data-quando-name='near' type='number' value='2' placeholder='' style='width: 2em' min='0' max='99'
+          data-quando-encode='normal' />
+        nearest
+      </span>
+    </div>
+    <div data-quando-name="box" class="quando-box"></div>
+    <div class="quando-row quando-time"></div>
+  </div>
+</div>
