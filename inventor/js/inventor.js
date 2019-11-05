@@ -279,7 +279,9 @@ function _resizeWidth(event) {
 }
   
 self.setElementHandlers = (block) => {
-  block.addEventListener('contextmenu', self.handleRightClick, false)
+  if (block.id != 'scratch') { // contextmenu is not shown for clipboard
+    block.addEventListener('contextmenu', self.handleRightClick, false)
+  }
   // add handler for list item change
   let id = null
   if (block.dataset && block.dataset.quandoId) {
