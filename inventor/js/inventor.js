@@ -547,7 +547,7 @@ self.setup = () => {
             }
           }
           if (elem) {
-            parent.appendChild(elem)
+            parent.insertBefore(elem, menu_title)
           } else {
             let name = block.name
             if (!name) {
@@ -567,8 +567,7 @@ self.setup = () => {
       for (let item of document.getElementsByClassName("quando-block")) {
         self.setElementHandlers(item)
       }
-      let first_title = document.getElementsByClassName("quando-title")[2]
-      // the third title is after scratch pad and the hidden (copied) title
+      let first_title = document.getElementsByClassName("quando-title")[0]
       if (first_title) {
         _leftClickTitle(first_title)
       }
