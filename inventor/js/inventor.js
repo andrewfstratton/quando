@@ -53,7 +53,7 @@ function _show_right_menu(elem) {
     }
     if (containing_block)  {
       let clone = containing_block.cloneNode(true)
-      if (self.hasAncestor(containing_block, document.getElementById('menu'))) { // in the menu - so copy to script
+      if (_hasAncestor(containing_block, document.getElementById('menu'))) { // in the menu - so copy to script
         document.getElementById('script').appendChild(clone)
       } else {
         let parent = containing_block.parentNode
@@ -371,7 +371,12 @@ self.removeBlock = (elem) => {
   }
 }
 
-self.hasAncestor = (elem, ancestor) => {
+/**
+ * return true when elem has ancestor as a (recursive) parent
+ * @param elem
+ * @param ancestor
+ */
+function _hasAncestor(elem, ancestor) {
     let found = false
     let el = elem
     while (!found && (el = el.parentNode)) {
@@ -409,7 +414,9 @@ function _setupDragula() {
     } else if (target === menu) {
       accept = false
     } else if (target.classList.contains('quando-box')) { // i.e. a valid container
-      if (self.hasAncestor(target, menu)) {
+      if (_hasAncestor(target, menu)) {
+        accept = false
+      } else if (_hasAncestor(target, elem)) { // trying to drag into itself
         accept = false
       } else {
         let limited = elem.dataset.quandoDropValid
