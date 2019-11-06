@@ -279,7 +279,7 @@ function _resizeWidth(event) {
 }
   
 self.setElementHandlers = (block) => {
-  if (block.id != 'scratch') { // contextmenu is not shown for clipboard
+  if (block.id != 'clipboard') { // contextmenu is not shown for clipboard
     block.addEventListener('contextmenu', self.handleRightClick, false)
   }
   // add handler for list item change
@@ -394,11 +394,11 @@ function _setupDragula() {
     elem.disabled = true
   }
   let script = document.getElementById('script')
-  let scratch = document.getElementById('scratch')
+  let clipboard = document.getElementById('clipboard')
   let collections = []
   collections.push(script)
   collections.push(menu)
-  collections.push(scratch)
+  collections.push(clipboard)
   let options = {}
   options.removeOnSpill = true
   options.copy = (elem, source) => {
@@ -409,7 +409,7 @@ function _setupDragula() {
   }
   options.accepts = (elem, target) => {
     let accept = true
-    if ((target === script) || (target === scratch)) {
+    if ((target === script) || (target === clipboard)) {
       // accept = true
     } else if (target === menu) {
       accept = false
@@ -542,9 +542,6 @@ self.setup = () => {
             elem.classList.add('quando-' + title)
             elem.innerHTML = block.name
             elem.style.display = ''
-            if (title == 'test') {
-              elem.id = "inventor_test"
-            }
           } else {
             let tmp = document.createElement('div')
             tmp.innerHTML = block.html
@@ -815,16 +812,13 @@ self.testCreator = (code) => {
 self.handle_test = () => {
     let code = self.generateCode(document.getElementById('script'))
     if (code) {
-      let inventor_test = document.getElementById('inventor_test')
-      if (inventor_test && code.startsWith('<div class="quando-block"')) {
-        let menu = document.getElementById('menu')
-        while (menu.lastChild != inventor_test) {
-          menu.removeChild(menu.lastChild)
-        }
+      let clipboard = document.getElementById('clipboard')
+      if (clipboard && code.startsWith('<div class="quando-block"')) { // if inventing a block
         let tmp = document.createElement('div')
         tmp.innerHTML = code
         self.setElementHandlers(tmp.firstChild)
-        document.getElementById('menu').appendChild(tmp.firstChild)
+        clipboard.appendChild(tmp.firstChild)
+        _leftClickTitle(document.getElementById('clipboard_title'))
       } else {
         self.testCreator(code)
       }
