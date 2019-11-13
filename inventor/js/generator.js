@@ -126,7 +126,8 @@ self.getCodeInBlock = function(block) {
 self.getCode = function(block) {
     let result = '' 
     if (block.dataset.quandoJavascript) {
-      result = self.getCodeInBlock(block) + '\n'
+      result = self.getCodeInBlock(block)
+      if (result != '') { result += '\n' }
     }
     return result
 }
@@ -194,16 +195,16 @@ fn.pre = (block, ...inserts) => {
     return ''
 }
 
-fn.eq = (block, str, val, gen) => {
-    let result = ''
+fn.eq = (block, str, val, gen, gen_else='') => {
+    let result = gen_else
     if (str == val) {
         result = gen
     }
     return result
 }
 
-fn.hasValue = (block, str, gen) => {
-    let result = ''
+fn.hasValue = (block, str, gen, gen_else='') => {
+    let result = gen_else
     if (str) {
         result = gen
     }

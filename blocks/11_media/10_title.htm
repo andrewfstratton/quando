@@ -1,13 +1,21 @@
-<div class="quando-block" data-quando-javascript="quando.title('${text}', ${append})">
+<div class="quando-block" data-quando-javascript="quando.title($(eq$,${txt}$,true$,txt$,'${text}')$,${append})">
     <div class="quando-left quando-media"></div>
     <div class="quando-right">
         <div class="quando-row quando-media">
+            <select data-quando-name='txt' class='quando-toggle'>
+                <option value='false'>❔</option>
+                <option value='true'>❓</option>
+            </select>
             <span class="iconify">abc</span>
             <select data-quando-name="append" class='quando-toggle'>
                 <option value="false">Show</option>
                 <option value="true">Add</option>
             </select>
-            Title <input data-quando-name="text" type="text" value="" data-quando-encode="normal"/>
+            Title
+            <span data-quando-toggle='txt=false'>
+                &quot;<input data-quando-name="text" type="text" value=""
+                    data-quando-encode='normal' />&quot;
+            </span>
         </div>
     </div>
 </div>

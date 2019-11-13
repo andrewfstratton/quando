@@ -1,8 +1,16 @@
-<div class="quando-block" data-quando-javascript="quando.speech.say('${sentence}', ${speed}, ${pitch}, ${volume})">
+<div class="quando-block" data-quando-javascript="quando.speech.say($(eq$,${txt}$,true$,txt$,'${text}')$, ${speed}, ${pitch}, ${volume})">
   <div class="quando-left quando-media"></div>
   <div class="quando-right">
-    <div class="quando-row quando-media">💬 Say
-      <input data-quando-name="sentence" type="text" value="" data-quando-encode="normal" />
+    <div class="quando-row quando-media">
+      <select data-quando-name='txt' class='quando-toggle'>
+          <option value='false'>❔</option>
+          <option value='true'>❓</option>
+      </select>
+      💬 Say
+      <span data-quando-toggle='txt=false'>
+          &quot;<input data-quando-name="text" type="text" value=""
+              data-quando-encode='normal' />&quot;
+      </span>
       <select data-quando-name='extras' class='quando-toggle'>
         <option value='hidden'>+</option>
         <option value='show'>-</option>

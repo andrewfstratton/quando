@@ -266,30 +266,23 @@
 
   function _set_or_append_tag_text(txt, tag, append) {
     var elem = document.getElementById(tag)
-    if (typeof txt === 'function') {
-      // HACK: N.B. This may be a security worry?!
-      txt = txt()
-    }    
     if (append) {
       txt = elem.innerHTML + txt
     }
-    if (!txt) {
+      if (txt) {
+      elem.style.visibility = 'visible'
+    } else {
       elem.style.visibility = 'hidden'
       txt = ''
-    } else {
-      elem.style.visibility = 'visible'
     }
     elem.innerHTML = txt
   }
   
-  self.title = function (text = '', append = false) {
+  self.title = (text = '', append = false) => {
     _set_or_append_tag_text(text, 'quando_title', append)
   }
 
-  self.text = function (text = '', append = false, val) {
-    if (typeof val === 'string' && val.length) {
-      text = val
-    }
+  self.text = (text = '', append = false) => {
     _set_or_append_tag_text(text, 'quando_text', append)
   }
 
@@ -585,7 +578,8 @@
   }
 })()
 
-var val = false // force handler to manage when not embedded
+var val = false // force handlers to manage when not embedded
+var txt = false // assume default is ignore
 
 if (document.title == "[[TITLE]]") { // this was opened by Inventor >> Test
   document.title = "TEST"
