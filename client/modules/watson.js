@@ -126,71 +126,6 @@
       )
   }
   
-  self.call_speech_to_text_pass = function(callback) {  
-    quando.promptInput()
-    let div = document.getElementById('visrec_label')
-    let elem = document.getElementById('quando_labels')
-    //if label doesn't already exist, create label
-    if (div == null) {
-      div = document.createElement('div')
-      div.className = 'quando_label'
-      div.innerHTML = "Click to start listening..."
-      div.setAttribute('id', 'stt_label')
-    }
-    
-    navigator.mediaDevices.getUserMedia({ audio: true, video: false })
-    .then(stream => {
-      mediaRecorder = new MediaRecorder(stream, { mimeType: "audio/webm" })
-      mediaRecorder.ondataavailable = e => {
-        if (mediaRecorder.state == "inactive") {
-          const audioBlob = new Blob([e.data],{type:"audio/webm"});
-          var reader = new window.FileReader();
-          reader.readAsDataURL(audioBlob);
-          reader.onloadend = function() {
-             base64 = reader.result;
-             base64 = base64.split(',')[1];
-             fetch('/watson/SPEECH_request', { method: 'POST', 
-               body: JSON.stringify({'data':base64}), 
-               headers: {"Content-Type": "application/json"}
-             }).then(function(response) {
-                response.json().then(function(data) {
-                  div.innerHTML = "Click to start listening..."
-
-                  if (!data.error) {
-                    const text = data.replace(/"/g, "")
-                    console.log(text)
-
-                    if (typeof callback === 'function') { callback(text) }
-
-                    let input = document.getElementById('inp')
-                    if (input) {
-                      input.value = text
-                      input.click()
-                    }
-                  }
-                  
-                })
-              })
-          }
-        }
-      }
-    })
-    div.addEventListener("click", function(){
-      if (!recording) {
-        mediaRecorder.start()
-        div.innerHTML = "Stop listening..."
-        recording = true
-      } else {
-        quando.send_message('rec stop')
-        recording = false
-        mediaRecorder.stop()
-        div.innerHTML = "Working..."
-      }
-    }) 
-    elem.appendChild(div)
-    /*/send POST request to server*/
-  }
-
   self.call_speech_to_text = function() {  
     quando.promptInput()
     let div = document.getElementById('visrec_label')
@@ -202,9 +137,7 @@
       div.innerHTML = "Click to start listening..."
       div.setAttribute('id', 'stt_label')
     }
-    
-    navigator.mediaDevices.getUserMedia({ audio: true, video: false })
-    .then(stream => {
+    navigator.mediaDevices.getUserMedia({ audio: true, video: false }).then(stream => {
       mediaRecorder = new MediaRecorder(stream, { mimeType: "audio/webm" })
       mediaRecorder.ondataavailable = e => {
         if (mediaRecorder.state == "inactive") {
@@ -217,8 +150,8 @@
              fetch('/watson/SPEECH_request', { method: 'POST', 
                body: JSON.stringify({'data':base64}), 
                headers: {"Content-Type": "application/json"}
-             }).then(function(response) {
-                response.json().then(function(data) {
+             }).then((response) => {
+                response.json().then((data) => {
                   div.innerHTML = "Click to start listening..."
                   if (!data.error) {
                     const text = data.replace(/"/g, "")
@@ -230,14 +163,13 @@
                       input.click()
                     }
                   }
-                  
                 })
               })
           }
         }
       }
     })
-    div.addEventListener("click", function(){
+    div.addEventListener("click", () => {
       if (!recording) {
         mediaRecorder.start()
         div.innerHTML = "Stop listening..."
@@ -253,24 +185,15 @@
     /*/send POST request to server*/
   }
 
-  self.startRec = function() {
+  self.startRec = () => {
     mediaRecorder.start()
     recording = true
   }
-  self.stopRec = function() {
+
+  self.stopRec = () => {
     recording = false
     mediaRecorder.stop()
   }
-  self.toggleRec = function() {
-    if (!recording) {
-      mediaRecorder.start()
-      recording = true
-    } else {
-      recording = false
-      mediaRecorder.stop()
-    }
-  }
-
 
   self.addToneHandler = function(goalTone, fn) {
     //adds 'onClick' event listener to the input prompt button

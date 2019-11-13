@@ -286,7 +286,7 @@
     _set_or_append_tag_text(text, 'quando_text', append)
   }
 
-  self.projection = function (front = true) {
+  self.projection = (front = true) => {
     let scale = 1
     if (!front) {
       scale = -1
@@ -575,6 +575,10 @@
     if (audio) { self.audio('',false) }
     if (object3d) { self.object3d.clear() }
     if (speech) { self.speech.clear() }
+  }
+
+  self.prompt = (text, callback) => {
+    callback(prompt(decodeURI(text)))
   }
 })()
 
