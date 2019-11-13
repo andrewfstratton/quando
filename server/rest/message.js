@@ -7,12 +7,11 @@ module.exports = (app, io, https) => {
     let url = null
     try {
       let host = req.body.host
-      if (!/^(?:http|ws)(?:s)?:\/\//.test(host)) { host = 'https://' + host }
+      if (!/^(?:http|ws)(?:s)?:\/\//.test(host)) {
+        host = 'https://' + host
+      }
       url = new URL(host) 
     } catch (e) { }
-    let socketId = req.body.socketId
-    let local = req.body.local
-    
     if (url) {
       let data = JSON.stringify({'val':val})
       let options = { 
@@ -29,7 +28,11 @@ module.exports = (app, io, https) => {
       })
       req.write(data)
       req.end()
-    } else { _send_message(io, socketId, local, id, val) }
+    } else {
+      let socketId = req.body.socketId
+      let local = req.body.local
+      _send_message(io, socketId, local, id, val)
+    }
     res.json({})
   })
 }

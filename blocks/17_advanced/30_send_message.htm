@@ -1,11 +1,16 @@
-<div class="quando-block" data-quando-javascript="quando.send_message('${message}', val, '${host}', '${type}')">
+<div class="quando-block" data-quando-javascript="quando.send_message('${message}', $(eq$,${txt}$,true$,txt$,val)$, '${host}', '${type}')">
     <div class="quando-left quando-advanced"></div>
     <div class="quando-right">
-        <div class="quando-row quando-advanced">⚡ 📡 Send
+        <div class="quando-row quando-advanced">
+            <select data-quando-name='txt' class='quando-toggle'>
+                <option value='false'>⚡</option>
+                <option value='true'>❓</option>
+            </select>
+            📡 Send
             <select data-quando-name="type">
                 <option value="broadcast">broadcast</option>
                 <option value="local">local</option>
-                <option value="node">Node-RED</option>
+                <option value="node">node🛑</option>
             </select>
             message
             <input data-quando-name="message" type="text" value="" data-quando-encode="normal" />

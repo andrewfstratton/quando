@@ -48,6 +48,8 @@
         self.send_websocket_message(socket, val)
         socket.onmessage = (evt) => { self.send_message(message, evt.data, '', 'local') }
       }
+      } else {
+        console.error("Failed to create Node-RED socket on ", host)
     }
   }
 
