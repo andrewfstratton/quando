@@ -26,10 +26,10 @@
     }
   })
 
-  self.add_message_handler = function (message, fn) {
-    self.socket.on(message, fn)
+  self.add_message_handler = function (message, callback) {
+    self.socket.on(message, (data) => { callback(data.val) })
     self.destructor.add( () => {
-      self.socket.off(message, fn)
+      self.socket.off(message, callback)
     })
   }
 
@@ -42,11 +42,13 @@
         headers: {"Content-Type": "application/json"}
       })
     } else if (host) {
-      var socket = self.create_websocket(host, message)
+      let socket = self.create_websocket(host, message)
 
       if (socket) {
         self.send_websocket_message(socket, val)
-        socket.onmessage = (evt) => { self.send_message(message, evt.data, '', 'local') }
+        socket.onmessage = (evt) => {
+          self.send_message(message, evt.data, '', 'local')
+      }
       }
       } else {
         console.error("Failed to create Node-RED socket on ", host)
@@ -57,7 +59,9 @@
     var socket = self.get_websocket(message)
    
     if (!socket) {
-      if (!/^(?:http|ws)(?:s)?:\/\//.test(host)) { host = 'ws://' + host }
+      if (!/^(?:http|ws)(?:s)?:\/\//.test(host)) {
+        host = 'ws://' + host
+      }
       try {
         let url = new URL(host)
         url = `${url.protocol}//${url.hostname}${url.pathname}/${message}`
@@ -70,18 +74,16 @@
         websockets.push(socket)
       } catch (e) { console.error(e) }
     }
-
     return socket
   }
 
-  self.get_websocket = function (message) {
-    let socket = websockets.find(socket => socket.message == message)
+  self.get_websocket = (message) => {
+    let socket = websockets.find((web_socket) => {return (web_socket.message == message)})
     
-    if (socket && socket.readyState == WebSocket.CLOSED) {
+    if (socket && (socket.readyState == WebSocket.CLOSED)) {
       websockets.splice(websockets.indexOf(socket), 1)
-      return null
+      socket = null
     }
-
     return socket
   }
 

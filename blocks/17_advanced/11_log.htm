@@ -1,13 +1,14 @@
-<div class="quando-block" data-quando-javascript="console.log($(eq$,${txt}$,true$,txt$,'${text}')$)">
+<div class="quando-block" data-quando-javascript="console.log($(eq$,${txtval}$,input$,'${text}'$,${txtval})$)">
     <div class="quando-left quando-advanced"></div>
     <div class="quando-right">
         <div class="quando-row quando-advanced">
-            <select data-quando-name='txt' class='quando-toggle'>
-                <option value='false'>❔</option>
-                <option value='true'>❓</option>
+            <select data-quando-name='txtval' class='quando-toggle'>
+                <option value='input'>❔</option>
+                <option value='txt'>❓</option>
+                <option value='val'>⚡</option>
             </select>
             Log
-            <span data-quando-toggle='txt=false'>
+            <span data-quando-toggle='txtval=input'>
                 &quot;<input data-quando-name='text' type='text' value='' placeholder=''
                     data-quando-encode='normal' />&quot;
             </span>
