@@ -3,9 +3,8 @@
     if (!quando) {
       alert('Fatal Error: AR must be included after quando_browser')
     }
-    var self = quando.ar = {}
-    self.width = screen.width
-    self.height = screen.height
+  self.width = window.innerWidth
+  self.height = window.innerHeight
 
     self.initScene = function() {
       //init scene

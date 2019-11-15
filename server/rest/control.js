@@ -52,7 +52,7 @@ module.exports = (app) => {
       let smooth = false
       robotjs.setMouseDelay(10)
       if (val.hasOwnProperty('x')) {
-        mouse.x = val.x * display.width
+        mouse.x = val.x * display.width // N.B. Correctly against screen width
       }
       if (val.hasOwnProperty('y')) {
         mouse.y = (1-val.y) * display.height // Invert automatically...

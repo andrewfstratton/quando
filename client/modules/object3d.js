@@ -4,8 +4,8 @@
       alert('Fatal Error: object3d must be included after client.js')
     }
     let self = quando.object3d = {}
-    self.width = screen.width
-    self.height = screen.height
+    self.width = window.innerWidth
+    self.height = window.innerHeight
     let scene = false
     let renderer = false
     let camera = false
