@@ -1,5 +1,7 @@
 <div class="quando-block" data-quando-javascript="quando.ar.whenMarker('${marker_id}', ()=>{
- ${box}
+  ${box}
+}, ()=>{
+  ${box_lost}
 })">
     <div class="quando-left quando-AR"></div>
     <div class="quando-right">
@@ -18,6 +20,8 @@
           Marker
         </div>
         <div data-quando-name="box" class="quando-box"></div>
+        <div class="quando-row quando-AR">... then When Lost</div>
+        <div data-quando-name="box_lost" class="quando-box"></div>
         <div class="quando-row quando-AR"></div>
     </div>
 </div>

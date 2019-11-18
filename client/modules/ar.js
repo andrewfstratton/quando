@@ -44,6 +44,7 @@
         marker.setAttribute('preset', 'custom')
         marker.setAttribute('type', 'pattern')
         marker.setAttribute('id', marker_id)
+        marker.setAttribute('emitEvents', true)
         //NOTE: below URLs must be hosted online instead of relatively for some dumb reason
         marker.setAttribute('url', '/client/media/markers/'+marker_id+'.patt')
       }
@@ -54,10 +55,15 @@
     return marker
   }
 
-  self.whenMarker = (marker_id, callback) => {
+  self.whenMarker = (marker_id, found_fn, lost_fn) => {
     scene = self.getScene()
     marker = _getMarker(marker_id, scene)
-    marker.addEventListener('markerFound', callback)
+    marker.addEventListener('markerFound', found_fn)
+    marker.addEventListener('markerLost', lost_fn)
+    quando.destructor.add(() => {
+      marker.removeEventListener('markerFound', found_fn)
+      marker.removeEventListener('markerLost', lost_fn)
+    })
   }
 
   self.showGLTF = (marker_id, model_URL, scale = 100) => {
