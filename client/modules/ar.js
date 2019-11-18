@@ -45,7 +45,7 @@
         marker.setAttribute('type', 'pattern')
         marker.setAttribute('id', marker_id)
         //NOTE: below URLs must be hosted online instead of relatively for some dumb reason
-        marker.setAttribute('url', 'https://raw.githubusercontent.com/andrewfstratton/quando/ar_dev/client/media/markers/'+marker_id+'.patt')
+        marker.setAttribute('url', '/client/media/markers/'+marker_id+'.patt')
       }
       if (scene != null) {
         scene.prepend(marker)
@@ -63,12 +63,7 @@
     })
   }
 
-  self.showGLTF = (marker_id, model_URL, scale = 100, above_marker = true) => {
-    if (above_marker) {
-      position = '0 1 0'
-    } else { // on marker
-      position = '0 0 0'
-    }
+  self.showGLTF = (marker_id, model_URL, scale = 100) => {
     if (model_URL) {
       scene = self.getScene()
       model_URL = '/client/media/' + encodeURI(model_URL)
@@ -76,12 +71,11 @@
       if (model == null) { // model needs displaying, i.e. not currently shown
         let marker = _getMarker(marker_id, scene)
         clearMarkerChildren(marker_id)
-        // create user chosen model - GLTF 2.0 - uncompressed
         model = document.createElement('a-gltf-model')
-        model.setAttribute('gltf-model', 'url('+model_URL+')') //id model from url
-        scale = (scale/100).toString() // Not sure if toString is needed...
+        model.setAttribute('gltf-model', 'url('+model_URL+')')
+        scale /= 100
         model.setAttribute('scale', scale + ' '+ scale +' '+ scale)
-        model.setAttribute('position', position)
+        model.setAttribute('position', '0 0.001 0')
         model.setAttribute('id', (model_URL+marker_id))
         marker.appendChild(model) //add to hierarchy
       } 
@@ -158,7 +152,7 @@
         //the below width and height settings are bad
         textElem.setAttribute('height', scale.toString())
         textElem.setAttribute('width', scale.toString())
-        textElem.setAttribute('position', '0 0.01 0')
+        textElem.setAttribute('position', '0 0.001 0')
         textElem.setAttribute('rotation', '-90 0 0')
         marker.appendChild(textElem)
       }
