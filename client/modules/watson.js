@@ -42,20 +42,7 @@
 
   self.call_vis_rec = function(goalClass, fn) {
     goalClass = goalClass.toLowerCase()
-    let scene = document.getElementById('scene')
-    if (scene == null) { 
-      //if scene DOES NOT exist
-      let scene = quando.ar.initScene()
-      let hiddenCanvas = quando.ar.initHiddenCanvas()
-      let camera = quando.ar.initCam()
-
-      //add all elements to DOM
-      scene.appendChild(camera)
-      document.getElementById('quando_AR').append(scene)
-      document.getElementById('quando_AR').appendChild(hiddenCanvas)
-    }
-
-    //now the scene deffo does exist
+    quando.ar.getScene() // forces scene creation
     const canvas = document.getElementById('hiddenCanvas')
     const context = canvas.getContext('2d')
     //placeholder variables

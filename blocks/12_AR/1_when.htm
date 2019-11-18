@@ -1,4 +1,6 @@
-<div class="quando-block" data-quando-javascript="quando.ar.whenMarker('${marker_id}', '${marker_position}', (markerID = '${marker_id}')=>{$(nl)$${box}})">
+<div class="quando-block" data-quando-javascript="quando.ar.whenMarker('${marker_id}', (marker_id = '${marker_id}')=>{
+ ${box}
+})">
     <div class="quando-left quando-AR"></div>
     <div class="quando-right">
         <div class="quando-row quando-AR"><span class='iconify'>AR</span>
@@ -14,18 +16,6 @@
               <option value='hiro'>hiro</option>
               <option value='scan_me'>scan me!</option>
           </select>
-          <select data-quando-name='extras' class='quando-toggle'>
-            <option value='hidden'>+</option>
-            <option value='show'>-</option>
-          </select>
-          <span data-quando-toggle='extras=show'>
-            <br />
-            <select data-quando-name="marker_position">
-                <option value='flat'>flat</option>
-                <option value='wall'>wall</option>
-                <option value='ceiling'>ceiling</option>
-            </select>
-          </span>
         </div>
         <div data-quando-name="box" class="quando-box"></div>
         <div class="quando-row quando-AR"></div>
