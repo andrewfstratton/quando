@@ -138,19 +138,19 @@
     }
   }
 
-  self.showText = function(marker_id, text, scale) {
+  const QUANDO_TEXT_AR_PREFIX = 'quando_text_'
+  self.showText = (marker_id, text, scale, append=false) => {
     scale *= 4/100 //scale supplied in %, adjusted for x times visibility
     if (text) {
       scene = self.getScene()
-      let textElem = document.getElementById(text+marker_id)
+      let textElem = document.getElementById(QUANDO_TEXT_AR_PREFIX + marker_id)
       if (textElem == null) {
         let marker = _getMarker(marker_id, scene)
         clearMarkerChildren(marker_id)
         //init user text
         textElem = document.createElement('a-text')
-        textElem.setAttribute('value', text)
         textElem.setAttribute('align', 'center')
-        textElem.setAttribute('id',text+marker_id)
+        textElem.setAttribute('id', QUANDO_TEXT_AR_PREFIX + marker_id)
         //the below width and height settings are bad
         textElem.setAttribute('height', scale.toString())
         textElem.setAttribute('width', scale.toString())
@@ -158,12 +158,16 @@
         textElem.setAttribute('rotation', '-90 0 0')
         marker.appendChild(textElem)
       }
+      if (append) {
+        text = textElem.getAttribute('value') + text
+      }
+      textElem.setAttribute('value', text)
     } else {
       clearMarkerChildren(marker_id)
     }
   }
 
-  self.clear = function() {
+  self.clear = () => {
     var arDiv = document.getElementById('quando_AR')
 
     /*Get all video elements, then delete the one that's

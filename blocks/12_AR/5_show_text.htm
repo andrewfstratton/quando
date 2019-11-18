@@ -1,10 +1,22 @@
-<div class="quando-block" data-quando-id="true" data-quando-javascript="quando.ar.showText('${marker_id}', '${text}', ${scale})">
+<div class="quando-block" data-quando-id="true" data-quando-javascript="quando.ar.showText('${marker_id}', $(eq$,${txtval}$,input$,'${text}'$,${txtval})$, ${scale}, ${append})">
     <div class="quando-left quando-AR"></div>
     <div class="quando-right">
         <div class="quando-row quando-AR">
+            <select data-quando-name='txtval' class='quando-toggle'>
+                <option value='input'>❔</option>
+                <option value='txt'>❓</option>
+                <option value='val'>⚡</option>
+            </select>
             <span class='iconify'>AR</span>
-            Show <span class="iconify">abc</span> Text
-            <input data-quando-name="text" type="text" value="" data-quando-encode="normal"/>
+            <select data-quando-name="append" class='quando-toggle'>
+                <option value="false">Show</option>
+                <option value="true">Add</option>
+            </select>
+            <span class="iconify">abc</span> Text
+            <span data-quando-toggle='txtval=input'>
+                &quot;<input data-quando-name="text" type="text" value=""
+                    data-quando-encode='normal' />&quot;
+            </span>
             on
             <select data-quando-name="marker_id">
                 <option value='hiro'>Hiro</option>
