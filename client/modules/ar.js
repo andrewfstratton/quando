@@ -9,7 +9,7 @@
 
   self.getScene = () => {
     let scene = document.getElementById('scene')
-    if (scene == null) { //if scene DOES NOT exist
+    if (scene == null) {
       scene = document.createElement('a-scene')
       scene.setAttribute('arjs', 'debugUIEnabled: false')
       scene.setAttribute('embedded', '')
@@ -25,7 +25,7 @@
   }
 
   function _createHiddenCanvas() {
-    //init hidden canvas - used for drawing snapshot of webcam feed
+    // used for drawing snapshot of webcam feed
     let hiddenCanvas = document.createElement('canvas')
     hiddenCanvas.setAttribute('id', 'hiddenCanvas')
     hiddenCanvas.setAttribute('width', 250)
@@ -45,7 +45,6 @@
         marker.setAttribute('type', 'pattern')
         marker.setAttribute('id', marker_id)
         marker.setAttribute('emitEvents', true)
-        //NOTE: below URLs must be hosted online instead of relatively for some dumb reason
         marker.setAttribute('url', '/client/media/markers/'+marker_id+'.patt')
       }
     }
@@ -57,7 +56,7 @@
 
   self.whenMarker = (marker_id, found_fn, lost_fn) => {
     scene = self.getScene()
-    marker = _getMarker(marker_id, scene)
+    let marker = _getMarker(marker_id, scene)
     marker.addEventListener('markerFound', found_fn)
     marker.addEventListener('markerLost', lost_fn)
     quando.destructor.add(() => {
@@ -97,7 +96,6 @@
       image_URL = '/client/media/' + encodeURI(image_URL)
       let image = document.getElementById(QUANDO_IMAGE_AR_PREFIX + marker_id)
       if (image == null) { // model needs displaying, i.e. not currently shown
-        let marker = _getMarker(marker_id, scene)
         clearMarkerChildren(marker_id)
         image = document.createElement('a-image')
         image.setAttribute('id', QUANDO_IMAGE_AR_PREFIX + marker_id) //set image id
@@ -105,7 +103,7 @@
         source aspect ratio, so will display the image in a 1:1 ratio */
         image.setAttribute('height', scale.toString())
         image.setAttribute('width', scale.toString())
-        marker.appendChild(image)
+        _getMarker(marker_id, scene).appendChild(image)
       }
       if (image.getAttribute('src') != image_URL) {
         image.setAttribute('src', image_URL)
@@ -122,19 +120,17 @@
       scene = self.getScene()
       video_URL = '/client/media/' + encodeURI(video_URL)
       let video = document.getElementById(video_URL+marker_id)
-      if (video == null) { //if video DOES NOT already exist
-        let marker = _getMarker(marker_id, scene)
+      if (video == null) {
         clearMarkerChildren(marker_id)
-        // create user chosen video
         video = document.createElement('a-video')
-        video.setAttribute('src', video_URL) //id model from url
+        video.setAttribute('src', video_URL)
         video.setAttribute('id', video_URL+marker_id)
         /* the below width and height settings do not retain 
         source aspect ratio, so will display the video in a 1:1 ratio */
         video.setAttribute('height', scale.toString())
         video.setAttribute('width', scale.toString())
         video.setAttribute('loop', 'false')
-        marker.appendChild(video)
+        _getMarker(marker_id, scene).appendChild(video)
       }
     } else {
       clearMarkerChildren(marker_id)
@@ -148,17 +144,15 @@
       scene = self.getScene()
       let textElem = document.getElementById(QUANDO_TEXT_AR_PREFIX + marker_id)
       if (textElem == null) {
-        let marker = _getMarker(marker_id, scene)
         clearMarkerChildren(marker_id)
-        //init user text
         textElem = document.createElement('a-text')
         textElem.setAttribute('align', 'center')
         textElem.setAttribute('id', QUANDO_TEXT_AR_PREFIX + marker_id)
-        //the below width and height settings are bad
+        //the below width and height settings need attention
         textElem.setAttribute('height', scale.toString())
         textElem.setAttribute('width', scale.toString())
         textElem.setAttribute('position', '0 0.001 0')
-        marker.appendChild(textElem)
+        _getMarker(marker_id, scene).appendChild(textElem)
       }
       if (append && textElem.getAttribute('value')) {
         text = textElem.getAttribute('value') + text
@@ -194,7 +188,6 @@
 
   self.clear = () => {
     var arDiv = document.getElementById('quando_AR')
-
     /*Get all video elements, then delete the one that's
     direct parent is the body.*/
     var videos = document.getElementsByTagName('video')
@@ -203,12 +196,10 @@
         body.removeChild(videos[i])
       }
     }
-
     //clear AR div
     while (arDiv.firstChild) {
       arDiv.removeChild(arDiv.firstChild)
     }
-
     //TODO -- delete VR button w attribute 'AR-injected'
   }
 
