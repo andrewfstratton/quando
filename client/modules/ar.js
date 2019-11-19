@@ -48,10 +48,10 @@
         //NOTE: below URLs must be hosted online instead of relatively for some dumb reason
         marker.setAttribute('url', '/client/media/markers/'+marker_id+'.patt')
       }
-      if (scene != null) {
+    }
+    if (scene != null && scene.hasChildNodes() && (scene.children[0] != marker)) {
         scene.prepend(marker)
       }
-    }
     return marker
   }
 
@@ -66,45 +66,49 @@
     })
   }
 
+  const QUANDO_3DOBJECT_AR_PREFIX = 'quando_3dobject_'
   self.showGLTF = (marker_id, model_URL, scale = 100) => {
     if (model_URL) {
       scene = self.getScene()
       model_URL = '/client/media/' + encodeURI(model_URL)
-      let model = document.getElementById(model_URL+marker_id)
+      let model = document.getElementById(QUANDO_3DOBJECT_AR_PREFIX + marker_id)
       if (model == null) { // model needs displaying, i.e. not currently shown
-        let marker = _getMarker(marker_id, scene)
         clearMarkerChildren(marker_id)
         model = document.createElement('a-gltf-model')
-        model.setAttribute('gltf-model', 'url('+model_URL+')')
         scale /= 100
         model.setAttribute('scale', scale + ' '+ scale +' '+ scale)
         model.setAttribute('position', '0 0.001 0')
-        model.setAttribute('id', (model_URL+marker_id))
-        marker.appendChild(model) //add to hierarchy
-      } 
+        model.setAttribute('id', QUANDO_3DOBJECT_AR_PREFIX + marker_id)
+        _getMarker(marker_id, scene).appendChild(model) //add to hierarchy
+      }
+      if (model.getAttribute('gltf-model') != model_URL) {
+        model.setAttribute('gltf-model', model_URL)
+      }
     } else {
       clearMarkerChildren(marker_id)
     }
   }
 
+  const QUANDO_IMAGE_AR_PREFIX = 'quando_image_'
   self.showImage = (marker_id, image_URL, scale = 100) => {
     scale = (scale+5)/100 //scale supplied in %, +5 to overlap the marker
     if (image_URL) {
       scene = self.getScene()
       image_URL = '/client/media/' + encodeURI(image_URL)
-      let image = document.getElementById(image_URL+marker_id)
+      let image = document.getElementById(QUANDO_IMAGE_AR_PREFIX + marker_id)
       if (image == null) { // model needs displaying, i.e. not currently shown
         let marker = _getMarker(marker_id, scene)
         clearMarkerChildren(marker_id)
-        img = document.createElement('a-image')
-        img.setAttribute('src', image_URL) //point at image file
-        img.setAttribute('id', image_URL+marker_id) //set image id
+        image = document.createElement('a-image')
+        image.setAttribute('id', QUANDO_IMAGE_AR_PREFIX + marker_id) //set image id
         /* the below width and height settings do not retain 
         source aspect ratio, so will display the image in a 1:1 ratio */
-        img.setAttribute('height', scale.toString())
-        img.setAttribute('width', scale.toString())
-        img.setAttribute('rotation', '-90 0 0')
-        marker.appendChild(img)
+        image.setAttribute('height', scale.toString())
+        image.setAttribute('width', scale.toString())
+        marker.appendChild(image)
+      }
+      if (image.getAttribute('src') != image_URL) {
+        image.setAttribute('src', image_URL)
       }
     } else {
       clearMarkerChildren(marker_id)
@@ -129,7 +133,6 @@
         source aspect ratio, so will display the video in a 1:1 ratio */
         video.setAttribute('height', scale.toString())
         video.setAttribute('width', scale.toString())
-        video.setAttribute('rotation', '-90 0 90')
         video.setAttribute('loop', 'false')
         marker.appendChild(video)
       }
@@ -155,16 +158,38 @@
         textElem.setAttribute('height', scale.toString())
         textElem.setAttribute('width', scale.toString())
         textElem.setAttribute('position', '0 0.001 0')
-        textElem.setAttribute('rotation', '-90 0 0')
         marker.appendChild(textElem)
       }
-      if (append) {
+      if (append && textElem.getAttribute('value')) {
         text = textElem.getAttribute('value') + text
       }
       textElem.setAttribute('value', text)
     } else {
       clearMarkerChildren(marker_id)
     }
+  }
+
+  function _rotate(marker_id, val, mid, range, inverted, fn) {
+    let rad = quando.convert_angle(val, mid, range, inverted)
+    let marker = _getMarker(marker_id)
+    if (marker.hasChildNodes()) {
+      let elem = marker.children[0]
+      let rot = elem.object3D.rotation
+      fn(rad, rot)
+    }
+  }
+
+  const HalfPi = Math.PI/2
+  self.roll = (marker_id, val, mid, range, inverted) => {
+    _rotate(marker_id, val, mid, range, !inverted, (rad, rot) => { rot.set(rot.x, rot.y, rad) })
+  }
+
+  self.pitch = (marker_id, val, mid, range, inverted) => {
+    _rotate(marker_id, val, mid, range, !inverted, (rad, rot) => { rot.set(rad - HalfPi, rot.y, rot.z) })
+  }
+
+  self.yaw = (marker_id, val, mid, range, inverted) => {
+    _rotate(marker_id, val, mid, range, inverted, (rad, rot) => { rot.set(rot.x, rad, rot.z) })
   }
 
   self.clear = () => {
@@ -189,8 +214,10 @@
 
   function clearMarkerChildren(marker_id) {
     let marker_elem = document.getElementById(marker_id)
-    while (marker_elem.hasChildNodes()) {
-      marker_elem.removeChild(marker_elem.firstChild)
+    if (marker_elem != null) {
+      while (marker_elem.hasChildNodes()) {
+        marker_elem.removeChild(marker_elem.firstChild)
+      }
     }
   }
 }) ()

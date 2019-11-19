@@ -18,10 +18,14 @@
               <option value='G'>G</option>
           </select>
           Marker
+          <select data-quando-name='row_box_lost' class='quando-toggle'>
+              <option value='row'>+</option>
+              <option value='box'>-</option>
+          </select>
         </div>
         <div data-quando-name="box" class="quando-box"></div>
-        <div class="quando-row quando-AR">... then When Lost</div>
-        <div data-quando-name="box_lost" class="quando-box"></div>
+        <div data-quando-toggle="row_box_lost=box" class="quando-row quando-AR">... then When Lost</div>
+        <div data-quando-toggle="row_box_lost=box" data-quando-name="box_lost" class="quando-box"></div>
         <div class="quando-row quando-AR"></div>
     </div>
 </div>
