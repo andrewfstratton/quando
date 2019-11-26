@@ -90,7 +90,7 @@ Then use nodemon instead of node
 
 ### Block Development
 
-[Block Development](inventor/README.md)
+[Block Development](docs/creating_new_blocks.md)
 
 ### Installing in IBM Cloud
 
