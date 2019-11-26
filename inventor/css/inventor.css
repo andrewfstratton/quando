@@ -183,10 +183,10 @@ input[type="color"] {
   /* border-right: 6px double rgba(255, 255, 255, 0.6); */
   /* border-right: 3px double rgba(255, 255, 255, 0.6); */
   /* border-right: 4px solid rgba(255, 0, 0, 0.3); */
-  border-left: 3px solid rgba(128, 64, 64, 0.5);
+  border-left: 8px solid #880000;
 }
 
-.quando-inventor { background: black; }
+.quando-inventor { background: #880000; }
 .quando-display { background: #EEBB70; }
 .quando-media { background: #C5E1A5; }
 .quando-time { background: #ddd47c; }

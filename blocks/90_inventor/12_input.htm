@@ -1,10 +1,11 @@
-<div class="quando-block" data-quando-javascript="<input data-quando-name='${input}'
+<div class="quando-block"
+  data-quando-javascript="<input data-quando-name='${input}'
 type='${type}' value='${default}' placeholder='${placeholder}'
 $(eq$,${type}$,number$,style='width: ${number_width}em' min='${number_min}' max='${number_max}')$ data-quando-encode='${encode}'/>">
 <div class="quando-left quando-inventor-input"></div>
 <div class="quando-right">
 <div class="quando-row quando-inventor-input">Input
-      <input data-quando-name="input" type="text" value="" data-quando-encode="normal" />
+      <input data-quando-name="input" type="text" value="" placeholder="name" data-quando-encode="normal" />
 Default
       <input data-quando-name="default" type="text" value="" data-quando-encode="normal" />
 Empty
@@ -24,11 +25,13 @@ Empty
           max <input data-quando-name='number_max' type='number' value='100' data-quando-encode='normal' style='width: 4em'/>
           width <input data-quando-name='number_width' type='number' value='4' data-quando-encode='normal' style='width: 3em'/>
         </span>
-        <select data-quando-name='encode' class='quando-toggle'>
-          <option value='normal'>Encode</option>
-<option value='raw'>Raw</option>
-</select>
-</span>
+        <span data-quando-toggle="type=text">
+          <select data-quando-name='encode' class='quando-toggle'>
+            <option value='normal'>Encode</option>
+            <option value='raw'>Raw</option>
+          </select>
+        </span>
+      </span>
 </div>
 </div>
 </div>

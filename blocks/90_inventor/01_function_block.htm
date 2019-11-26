@@ -13,7 +13,10 @@ $(visible$,_quando_inventor_row3_$,<div data-quando-name="${_quando_box_name2_}"
 <div class="quando-right">
     <div class="quando-row quando-inventor-control">
         💼
-        Class
+        <span class="iconify">
+            UI
+        </span>
+        &nbsp;Class
         <select data-quando-name="class">
             <option value="quando-display">Display</option>
             <option value="quando-media">Media</option>
@@ -53,10 +56,19 @@ $(visible$,_quando_inventor_row3_$,<div data-quando-name="${_quando_box_name2_}"
     </div>
     <div data-quando-toggle="box_row2=yes" data-quando-name="_quando_inventor_row3_" class="quando-box" title="Last row - often empty"></div>
     <div class="quando-row quando-inventor-control">
-        Generator <input data-quando-name="library" type="text" value="" placeholder="library" data-quando-encode="raw" style="width: 59px;">
-        .
-        <input data-quando-name="function" type="text" value="" placeholder="function" data-quando-encode="raw" style="width: 72px;"> 
-        (
+        <select data-quando-name="generator" class="quando-toggle">
+            <option value="raw">block</option>
+            <option value="api">API</option>
+        </select>
+        <span class="iconify">
+            Generator
+        </span>
+        <span data-quando-toggle="generator=api">
+            <input data-quando-name="library" type="text" value="" placeholder="[library]" data-quando-encode="raw">
+            .
+            <input data-quando-name="function" type="text" value="" placeholder="function" data-quando-encode="raw"> 
+            (
+        </span>
     </div>
     <div data-quando-name="_quando_inventor_generator_" class="quando-box" title="Parameters"></div>
     <div class="quando-row quando-inventor-control">)</div>
