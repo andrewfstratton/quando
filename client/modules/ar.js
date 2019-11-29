@@ -66,7 +66,7 @@
   }
 
   const QUANDO_3DOBJECT_AR_PREFIX = 'quando_3dobject_'
-  self.showGLTF = (marker_id, model_URL, scale = 100) => {
+  self.showGLTF = (marker_id, model_URL) => {
     if (model_URL) {
       scene = self.getScene()
       model_URL = '/client/media/' + encodeURI(model_URL)
@@ -74,8 +74,7 @@
       if (model == null) { // model needs displaying, i.e. not currently shown
         clearMarkerChildren(marker_id)
         model = document.createElement('a-gltf-model')
-        scale /= 100
-        model.setAttribute('scale', scale + ' '+ scale +' '+ scale)
+        model.setAttribute('scale', '1.05 1.05 1.05')
         model.setAttribute('position', '0 0.001 0')
         model.setAttribute('id', QUANDO_3DOBJECT_AR_PREFIX + marker_id)
         _getMarker(marker_id, scene).appendChild(model) //add to hierarchy
@@ -89,8 +88,7 @@
   }
 
   const QUANDO_IMAGE_AR_PREFIX = 'quando_image_'
-  self.showImage = (marker_id, image_URL, scale = 100) => {
-    scale = (scale+5)/100 //scale supplied in %, +5 to overlap the marker
+  self.showImage = (marker_id, image_URL) => {
     if (image_URL) {
       scene = self.getScene()
       image_URL = '/client/media/' + encodeURI(image_URL)
@@ -101,8 +99,8 @@
         image.setAttribute('id', QUANDO_IMAGE_AR_PREFIX + marker_id) //set image id
         /* the below width and height settings do not retain 
         source aspect ratio, so will display the image in a 1:1 ratio */
-        image.setAttribute('height', scale.toString())
-        image.setAttribute('width', scale.toString())
+        image.setAttribute('height', 1.05)
+        image.setAttribute('width', 1.05)
         _getMarker(marker_id, scene).appendChild(image)
       }
       if (image.getAttribute('src') != image_URL) {
@@ -113,9 +111,7 @@
     }
   }
 
-  self.showVideo = (marker_id, video_URL, scale = 100) => { 
-    scale = (scale+5)/100 /* scale supplied in %, 5 added on to give video some
-    overlap around the marker, so it's less visible behind the video */
+  self.showVideo = (marker_id, video_URL) => { 
     if (video_URL) {
       scene = self.getScene()
       video_URL = '/client/media/' + encodeURI(video_URL)
@@ -127,8 +123,8 @@
         video.setAttribute('id', video_URL+marker_id)
         /* the below width and height settings do not retain 
         source aspect ratio, so will display the video in a 1:1 ratio */
-        video.setAttribute('height', scale.toString())
-        video.setAttribute('width', scale.toString())
+        video.setAttribute('height', 1.05)
+        video.setAttribute('width', 1.05)
         video.setAttribute('loop', 'false')
         _getMarker(marker_id, scene).appendChild(video)
       }
@@ -138,8 +134,7 @@
   }
 
   const QUANDO_TEXT_AR_PREFIX = 'quando_text_'
-  self.showText = (marker_id, text, scale, append=false) => {
-    scale *= 4/100 //scale supplied in %, adjusted for x times visibility
+  self.showText = (marker_id, text, append=false) => {
     if (text) {
       scene = self.getScene()
       let textElem = document.getElementById(QUANDO_TEXT_AR_PREFIX + marker_id)
@@ -149,8 +144,8 @@
         textElem.setAttribute('align', 'center')
         textElem.setAttribute('id', QUANDO_TEXT_AR_PREFIX + marker_id)
         //the below width and height settings need attention
-        textElem.setAttribute('height', scale.toString())
-        textElem.setAttribute('width', scale.toString())
+        textElem.setAttribute('height', 1.05)
+        textElem.setAttribute('width', 1.05)
         textElem.setAttribute('position', '0 0.001 0')
         _getMarker(marker_id, scene).appendChild(textElem)
       }
@@ -186,6 +181,23 @@
     _rotate(marker_id, val, mid, range, inverted, (rad, rot) => { rot.set(rot.x, rad, rot.z) })
   }
 
+  self.zoom = (marker_id, val, min, max, inverted) => {
+    if (!val) {
+        val = 0; // this forces the minimum value - not the middle
+    }
+    min /= 100
+    max /= 100
+    let mid = (min + max) /2
+    let range = (max - min) / 2
+    let scale = quando.convert_linear(val, mid, range, inverted)
+    let marker = _getMarker(marker_id)
+    if (marker.hasChildNodes()) {
+      let elem = marker.children[0]
+      elem.object3D.scale.set(scale, scale, scale)
+    }
+
+  }
+  
   self.clear = () => {
     var arDiv = document.getElementById('quando_AR')
     /*Get all video elements, then delete the one that's

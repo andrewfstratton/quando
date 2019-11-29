@@ -109,27 +109,22 @@
         _update_scene()
     }
 
-    function _convert_linear(val, mid, range, inverted) {
-        if (val === false) { val = 0.5 }
-        if (inverted) { val = 1 - val }
-        let min = 10 * (mid - range)
-        let max = 10 * (mid + range)
-        return min + (val * (max-min))
+    self.in_out = (val, mid, range, inverted, fixed=false) => {
+        var buffered = fixed?update_fixed:update_object
+        mid *= 10; range *= 10 // convert to mm
+        buffered.z = quando.convert_linear(val, mid, range, inverted)
     }
 
-    self.in_out = function (val, mid, range, inverted, fixed=false) {
-        var buffered = fixed?update_fixed:update_object
-        buffered.z = _convert_linear(val, mid, range, inverted)
+    self.left_right = (val, mid, range, inverted, fixed=false) => {
+        let buffered = fixed?update_fixed:update_object
+        mid *= 10; range *= 10 // convert to mm
+        buffered.x = quando.convert_linear(val, mid, range, !inverted) // yes - inverted must be inverted...
     }
 
-    self.left_right = function (val, mid, range, inverted, fixed=false) {
-        var buffered = fixed?update_fixed:update_object
-        buffered.x = _convert_linear(val, mid, range, !inverted) // yes - inverted must be inverted...
-    }
-
-    self.up_down = function (val, mid, range, inverted, fixed=false) {
-        var buffered = fixed?update_fixed:update_object
-        buffered.y = _convert_linear(val, mid, range, inverted)
+    self.up_down = (val, mid, range, inverted, fixed=false) => {
+        let buffered = fixed?update_fixed:update_object
+        mid *= 10; range *= 10 // convert to mm
+        buffered.y = quando.convert_linear(val, mid, range, inverted)
     }
 
     self.roll = function (val, mid, range, inverted, fixed=false) {

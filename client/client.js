@@ -571,6 +571,14 @@
     return min + (val * (max-min))
   }
 
+  self.convert_linear = (val, mid, range, inverted) => {
+    if (val === false) { val = 0.5 }
+    if (inverted) { val = 1 - val }
+    let min = mid - range
+    let max = mid + range
+    return min + (val * (max-min))
+  }
+
   self.clear = (display, title, text, image, video, audio, object3d, speech) => {
     if (title) { self.title(display) }
     if (text) { self.text(display) }

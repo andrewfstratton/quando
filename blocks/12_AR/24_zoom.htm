@@ -1,0 +1,36 @@
+<div class="quando-block" data-quando-javascript="quando.ar.zoom('${marker_id}',val,${min},${max},${inverted})">
+  <div class="quando-left quando-AR"></div>
+  <div class="quando-right">
+    <div class="quando-row quando-AR">
+      ⚡
+      <span class="iconify">
+        AR
+      </span>
+      Zoom marker
+      <select data-quando-name="marker_id">
+        <option value='hiro'>Hiro</option>
+        <option value='A'>A</option>
+        <option value='B'>B</option>
+        <option value='C'>C</option>
+        <option value='D'>D</option>
+        <option value='E'>E</option>
+        <option value='F'>F</option>
+        <option value='G'>G</option>
+      </select>
+      <select data-quando-name='extras' class='quando-toggle'>
+        <option value='hidden'>+</option>
+        <option value='show'>-</option>
+      </select>
+      <span data-quando-toggle='extras=show'>
+        <br />
+        Min <input data-quando-name="min" type="text" value="50" data-quando-encode="normal" />%
+        to <input data-quando-name="max" type="text" value="200" data-quando-encode="normal" />%
+        times
+        <select data-quando-name='inverted' class='quando-toggle'>
+          <option value='false'>Normal</option>
+          <option value='true'>Inverted</option>
+        </select>
+      </span>
+    </div>
+  </div>
+</div>
