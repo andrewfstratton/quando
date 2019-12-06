@@ -182,7 +182,7 @@ fn.inDisplay = (block) => {
     return fn.hasAncestorClass(block, 'display-when-display')
 }
 
-fn.rgb = (block, colour, alpha) => {
+fn.rgb = (block, colour) => {
     // Modifed from https://stackoverflow.com/questions/36697749/html-get-color-in-rgb for conversion function
     // Converts #rrggbb to 'rrr, ggg, bbb'`
     return colour.match(/[A-Za-z0-9]{2}/g).map((v) => { return parseInt(v, 16) }).join(",")
