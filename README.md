@@ -90,6 +90,8 @@ Then use nodemon instead of node
 
 ### Block Development
 
+The (in progress) [Manifesto](docs/manifesto.md) is likely to be useful.
+
 [Block Development](docs/creating_new_blocks.md)
 
 ### Installing in IBM Cloud
