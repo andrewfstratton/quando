@@ -32,7 +32,7 @@
     })
   }
 
-  function _unit_to_time(units) {
+  self.unit_to_time = (units) => {
     let time = 1
     if (units == 'minute') {
       time = 60
@@ -44,8 +44,8 @@
     return time
   }
 
-  self.per = (times = 1, units = 'second', callback) => {
-    let time = _unit_to_time(units)
+  self.per = (times, units, callback) => {
+    let time = self.unit_to_time(units)
     let count = time / times
     self.every(count, 'seconds', callback)
   }
@@ -111,11 +111,11 @@
   let _filters = {}
   const MAX_PS = 1000/150 // limit updates to 1500/second
   self.filter = (type, times_per, units, near, id, val, callback) => {
-    let time = _unit_to_time(units)
-    let per_ms = 1000 * time / times_per
-    if (per_ms < MAX_PS) { per_ms = MAX_PS }
     let _filter = _filters[id]
     if (!_filter) {
+      let time = self.unit_to_time(units)
+      let per_ms = 1000 * time / times_per
+      if (per_ms < MAX_PS) { per_ms = MAX_PS }
       _filters[id] = _filter = {times: [], segments:[]}
       _filter.check = setInterval(()=>{
         _tidy_filter(_filter, near)

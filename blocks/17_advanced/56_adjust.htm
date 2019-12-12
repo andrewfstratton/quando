@@ -1,0 +1,41 @@
+<div class="quando-block" data-quando-id="true"
+  data-quando-javascript="quando.misc.adjust(${data-quando-id},val,${time},'${duration}',${per},'${per_duration}',${wrap},${inverted},(val)=>{${box}})">
+  <div class="quando-left quando-advanced"></div>
+  <div class="quando-right">
+    <div class="quando-row quando-advanced">⚡ ️⚙️ Adjust in <span class="iconify">≥</span>
+      <input data-quando-name='time' type='number' value='1' placeholder='' style='width: 3em' min='0' max='100'
+        data-quando-encode='normal' />
+      <select data-quando-name="duration">
+        <option value='seconds'>seconds</option>
+        <option value='minutes'>minutes</option>
+        <option value='hours'>hours</option>
+      </select>
+      ⚡
+      <select data-quando-name="extras" class="quando-toggle">
+        <option value="hidden">+</option>
+        <option value="show">-</option>
+      </select>
+      <span data-quando-toggle="extras=show">
+        <br>
+        <select data-quando-name='wrap' class='quando-toggle'>
+          <option value='false'>stick at limit</option>
+          <option value='true'>wrap around</option>
+        </select> &nbsp;
+        <input data-quando-name='per' type='number' value='20' placeholder='' style='width: 3em' min='0' max='100'
+          data-quando-encode='normal' />
+        times per
+        <select data-quando-name="per_duration">
+          <option value='second'>second</option>
+          <option value='minute'>minute</option>
+          <option value='hour'>hour</option>
+        </select>
+        <select data-quando-name='inverted' class='quando-toggle'>
+          <option value='false'>normal</option>
+          <option value='true'>inverted</option>
+        </select>
+      </span>
+    </div>
+    <div data-quando-name="box" class="quando-box"></div>
+    <div class="quando-row quando-advanced"></div>
+  </div>
+</div>
