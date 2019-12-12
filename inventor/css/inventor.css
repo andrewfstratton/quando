@@ -227,6 +227,7 @@ select.quando-toggle {
   appearance:none;
   padding-left: 4px;
   padding-right: 4px;
+  text-align-last: center;
 }
 
 .quando-info {
