@@ -42,10 +42,16 @@ body {
   border-radius: 6px;
 }
 
+.quando-block select,
+select.quando-toggle {
+  box-shadow: 1px 0px  rgba(0,0,0,0.6);
+}
+
 input, #_hidden_width_element_ {
   padding-left: 4px;
   min-width: 10px;
   width: auto;
+  box-shadow: 1px 0px 2px inset rgba(0,0,0,0.4);
 }
 
 #editor,

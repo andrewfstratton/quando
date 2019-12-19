@@ -11,20 +11,6 @@ Prerequisites: Chrome browser, Node JS **Do not use Current - Use LTS version** 
 
 ### Setting up Quando for first time for offline and local
 
-#### Docker
-
-If you have Docker installed, you can build and run Quando as follows:
-
-```
-docker build -t quando . && docker run --rm -p 80:80 quando
-```
-
-<!-- Exposing :5984 too is currently not yet working, at least for me -->
-
-This builds a Docker container tagged `quando`, then runs and exposes it on port 80 of your local machine. Navigate to `http://localhost/` or `http://127.0.0.1` in your web browser of choice to begin.
-
-#### Standard method
-
 1. Run 'npm run install_local' to install pouchdb, serialport and robotjs - you should only need to do this once
 2. If you see errors for building sqlite3, try (for windows):
   * In an admin shell, run 'npm install -g windows-build-tools'

@@ -1,10 +1,18 @@
 <div class="quando-block" data-quando-drop-valid="inventor-toggle,inventor-menu"
-  data-quando-javascript="<option value='${value}'>${choice}</option>">
+    data-quando-javascript="<option value='${value}'>$(eq$,${txtval}$,input$,${choice}$,${txtval})$</option>">
     <div class="quando-left quando-inventor-picker"></div>
     <div class="quando-right">
         <div class="quando-row quando-inventor-picker">
-            Choice <input data-quando-name="choice" type="text" value="" data-quando-encode="normal"/>
-            value <input data-quando-name="value" type="text" value="" data-quando-encode="normal"/>
+            Choice
+            <select data-quando-name='txtval' class='quando-toggle'>
+                <option value='input'>❔</option>
+                <option value='❓'>❓</option>
+                <option value='⚡'>⚡</option>
+            </select>
+            <span data-quando-toggle='txtval=input'>
+                <input data-quando-name="choice" type="text" value="" data-quando-encode="normal" />
+            </span>
+            value <input data-quando-name="value" type="text" value="" data-quando-encode="normal" />
         </div>
     </div>
 </div>
