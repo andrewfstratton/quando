@@ -1,0 +1,35 @@
+<div class="quando-block" data-quando-javascript="quando.message.http('${message}', $(eq$,${txt_val}$,txt$,txt$,val)$, '${host}',
+$(hasValue$,${port}$,${port}$,undefined)$,${txt},($(eq$,${txt}$,true$,txt$,val)$)=>{${box}})">
+  <div class="quando-left quando-advanced"></div>
+  <div class="quando-right">
+    <div class="quando-row quando-advanced"><select data-quando-name='txt_val' class='quando-toggle'>
+        <option value='txt'>❓</option>
+        <option value='val'>⚡</option>
+      </select>
+      📡
+      <span class="iconify">
+        http
+      </span>
+      GET
+      <input data-quando-name='message' type='text' value='' placeholder='path' data-quando-encode='normal' />
+      <select data-quando-name='txt' class='quando-toggle'>
+          <option value='false'>⚡</option>
+          <option value='true'>❓</option>
+      </select>
+      <select data-quando-name="extras" class="quando-toggle">
+        <option value="hidden">+</option>
+        <option value="show">-</option>
+      </select>
+      <span data-quando-toggle="extras=show">
+        <br>
+        host
+        <input data-quando-name='host' type='text' value='' placeholder='127.0.0.1' data-quando-encode='normal' />
+        port
+        <input data-quando-name='port' type='number' value='' placeholder='' style='width: 5em' min='0' max='65535'
+          data-quando-encode='normal' />
+      </span>
+    </div>
+    <div data-quando-name="box" class="quando-box"></div>
+    <div class="quando-row quando-advanced"></div>
+  </div>
+</div>
