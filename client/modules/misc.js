@@ -64,4 +64,8 @@
       delete _adjusters[id]
     })
   }
+
+  self.scale = (val, max, callback) => {
+    callback(''+Math.round(val*max))
+  }
 })()
