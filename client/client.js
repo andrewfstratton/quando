@@ -241,8 +241,8 @@
     if (inverted) {
       x = 1 - x // starts normal
     }
-    var scr_min = min * _displayWidth()
-    var scr_max = max * _displayWidth()
+    var scr_min = min * (_displayWidth()-1)
+    var scr_max = max * (_displayWidth()-1)
     self._x = scr_min + (x * (scr_max-scr_min))
     _cursor_adjust()
   }

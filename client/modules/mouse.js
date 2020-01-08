@@ -15,7 +15,7 @@
       button_down = true
     }
     if (event.clientX != last_x) {
-      let val = event.clientX / window.innerWidth
+      let val = event.clientX / (window.innerWidth-1)
       for (let id in mouse_move_x) {
         mouse_move_x[id](val, button_down)
       }
@@ -23,7 +23,7 @@
     }
     if (event.clientY != last_y) {
       // invert the mouse coordinates so up screen is positive
-      let val = 1 - (event.clientY / window.innerHeight)
+      let val = 1 - (event.clientY / (window.innerHeight-1))
       for (let id in mouse_move_y) {
         mouse_move_y[id](val, button_down)
       }
