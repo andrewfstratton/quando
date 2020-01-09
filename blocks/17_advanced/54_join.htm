@@ -5,20 +5,27 @@ ${box}
   <div class="quando-left quando-advanced"></div>
   <div class="quando-right">
     <div class="quando-row quando-advanced">
-      <select data-quando-name='txt_val' class='quando-toggle'>
-        <option value='val'>⚡</option>
-        <option value='txt'>❓</option>
+      <span data-quando-toggle='txt_val=txt'>❓</span>
+      <span data-quando-toggle='txt_val=val'>⚡</span>
+      📄 Join &nbsp;
+      <input data-quando-name='before' type='text' value='' placeholder='' data-quando-encode='normal' />
+      </span>
+      <span data-quando-toggle='txt_val=txt'>❓</span>
+      <span data-quando-toggle='txt_val=val'>⚡</span>
+      <input data-quando-name='after' type='text' value='' placeholder='' data-quando-encode='normal' />
+      </span>
+      → ❓
+      <select data-quando-name="extras" class="quando-toggle">
+        <option value="hidden">+</option>
+        <option value="show">-</option>
       </select>
-      📄 Join
-      &quot;<input data-quando-name='before' type='text' value='' placeholder='' data-quando-encode='normal' />&quot;
+      <span data-quando-toggle="extras=show">
+        <br>
+        <select data-quando-name='txt_val' class='quando-toggle'>
+          <option value='val'>⚡</option>
+          <option value='txt'>❓</option>
+        </select>
       </span>
-      <span data-quando-toggle='txt_val=txt'>❓
-      </span>
-      <span data-quando-toggle='txt_val=val'>⚡
-      </span>
-      &quot;<input data-quando-name='after' type='text' value='' placeholder='' data-quando-encode='normal' />&quot;
-      </span>
-      &nbsp; ❓
     </div>
     <div data-quando-name="box" class="quando-box"></div>
     <div class="quando-row quando-advanced"></div>
