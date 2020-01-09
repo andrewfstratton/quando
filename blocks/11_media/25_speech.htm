@@ -1,22 +1,26 @@
-<div class="quando-block" data-quando-javascript="quando.speech.say($(eq$,${txtval}$,input$,'${text}'$,${txtval})$, ${speed}, ${pitch}, ${volume})">
+<div class="quando-block"
+  data-quando-javascript="quando.speech.say($(eq$,${txtval}$,input$,'${text}'$,${txtval})$, ${speed}, ${pitch}, ${volume})">
   <div class="quando-left quando-media"></div>
   <div class="quando-right">
     <div class="quando-row quando-media">
-      <select data-quando-name='txtval' class='quando-toggle'>
-          <option value='input'>❔</option>
-          <option value='txt'>❓</option>
-          <option value='val'>⚡</option>
-      </select>
+      <span data-quando-toggle='txtval=txt'>❓</span>
+      <span data-quando-toggle='txtval=val'>⚡</span>
       💬 Say
+      <span data-quando-toggle='txtval=txt'>❓</span>
+      <span data-quando-toggle='txtval=val'>⚡</span>
       <span data-quando-toggle='txtval=input'>
-          &quot;<input data-quando-name="text" type="text" value=""
-              data-quando-encode='normal' />&quot;
+        &quot;<input data-quando-name="text" type="text" value="" data-quando-encode='normal' />&quot;
       </span>
       <select data-quando-name='extras' class='quando-toggle'>
         <option value='hidden'>+</option>
         <option value='show'>-</option>
       </select>
       <span data-quando-toggle='extras=show'><br />
+        <select data-quando-name='txtval' class='quando-toggle'>
+          <option value='input'>""</option>
+          <option value='val'>⚡</option>
+          <option value='txt'>❓</option>
+        </select>
         Speed
         <input data-quando-name="speed" type="text" value="100" data-quando-encode="normal" />
         % Pitch
