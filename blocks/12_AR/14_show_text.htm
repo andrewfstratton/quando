@@ -3,11 +3,8 @@ data-quando-javascript="quando.ar.showText('${marker_id}', $(eq$,${txtval}$,inpu
     <div class="quando-left quando-AR"></div>
     <div class="quando-right">
         <div class="quando-row quando-AR">
-            <select data-quando-name='txtval' class='quando-toggle'>
-                <option value='input'>❔</option>
-                <option value='txt'>❓</option>
-                <option value='val'>⚡</option>
-            </select>
+            <span data-quando-toggle='txtval=txt'>❓</span>
+            <span data-quando-toggle='txtval=val'>⚡</span>
             <span class='iconify'>AR</span>
             <select data-quando-name="append" class='quando-toggle'>
                 <option value="false">Show</option>
@@ -31,6 +28,18 @@ data-quando-javascript="quando.ar.showText('${marker_id}', $(eq$,${txtval}$,inpu
                 <option value='F'>F</option>
                 <option value='G'>G</option>
             </select>
+            <select data-quando-name="extras" class="quando-toggle">
+                <option value="hidden">+</option>
+                <option value="show">-</option>
+            </select>
+            <span data-quando-toggle="extras=show">
+                <br>
+                <select data-quando-name='txtval' class='quando-toggle'>
+                    <option value='input'>""</option>
+                    <option value='val'>⚡</option>
+                    <option value='txt'>❓</option>
+                </select>
+            </span>
         </div>
     </div>
 </div>
