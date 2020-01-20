@@ -8,12 +8,12 @@
   self.height = window.innerHeight
 
   self.getScene = () => {
-    let scene = document.getElementById('scene')
+    let scene = document.getElementById('quando_AR_js_scene')
     if (scene == null) {
       scene = document.createElement('a-scene')
       scene.setAttribute('arjs', 'debugUIEnabled: false')
       scene.setAttribute('embedded', '')
-      scene.setAttribute('id', 'scene')
+      scene.setAttribute('id', 'quando_AR_js_scene')
       // setup camera
       let camera = document.createElement('a-camera-static') 
       camera.setAttribute('id', 'camera')
