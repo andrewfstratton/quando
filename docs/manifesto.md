@@ -13,8 +13,8 @@ Quando hides/avoids programming concepts from editors.  Apart from the Inventor 
   - iteration exists, but there are no logic or counters for loops.  Event handling allows similar features with Every/Per and Vary
 - no maths
   - maths is implicit, e.g. rotation is by a 0 to 1 value around a range 0f -180 to +180 degrees
-  - there is no addition, sintraction, multiplication, division
-- no if conditonal code
+  - there is no addition, subtraction, multiplication, division
+- no if conditional code
   - An if within a loop doesn't exist. There are many conditional blocks, but 'if' is not used since it is **heavily loaded**, i.e. it has too many sequential connotations.  Instead, When is used, such as 'When an AR marker is seen'.  This is an event handler that only matches at the right **time**.
 - no else statements
   - There is no 'else' statement.  Since the main concept is an Event, it makes little sense to have an 'if not' or else, since this would be the same as 'whenever not' - which is most of the time.  There are similar blocks, but they are currently time and state dependant, i.e. happening later, e.g. When AR marker seen, followed by, then when lost.  Another example is When Idle...then when Active.
@@ -24,7 +24,7 @@ Quando hides/avoids programming concepts from editors.  Apart from the Inventor 
   
 ## Blocks should be simple
 
-This puts the honus on the developer to create a predicatble, simple system of blocks that together can be used to describe most situations (but likely not all).
+This puts the honus on the developer to create a predictable, simple system of blocks that together can be used to describe most situations (but likely not all).
 
 ## Develop what is needed now
 

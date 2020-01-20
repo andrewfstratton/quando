@@ -271,7 +271,7 @@
         'roll_shoulder':{joint:'shoulder', direction:'roll', min:0.3142, max:-1.3265, mirror:true},
         'pitch_shoulder':{joint:'shoulder', direction:'pitch', min:2.0857, max:-2.0857}, // max and min inverted so bigger is up
         'yaw_elbow':{joint:'elbow', direction:'yaw', min:-2.0857, max:2.0857, mirror:true},
-        'roll_elbow':{joint:'elbow', direction:'roll', min:0.0349, max:1.5446, negate:true}, // only one to negate only...
+        'roll_elbow':{joint:'elbow', direction:'roll', min:1.5446, max:0.0349, mirror:false, negate:true}, // only one to negate only...
         'yaw_wrist':{joint:'wrist', direction:'yaw', min:-1.8238, max:1.8238, mirror:true}
     }
 
@@ -283,14 +283,14 @@
         if (mirror) {
             val = 1-val // and value is swapped?!
         }
+        if (negate) {
+          [max, min] = [min, max] // Note: this logic makes sense eventually...
+        }
       } // When mirrored, left and right are swapped?!
       if (left) {
-          if (negate) {
-            [max, min] = [-max, -min]
-          } else {
             [max, min] = [-min, -max]
-          }
       }
+
       let range = max - min
       // now range may be changed by the min and max percent
       max = (range*max_percent/100)+min // N.B. Do not put this statement after the next
