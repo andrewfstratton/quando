@@ -11,7 +11,7 @@ The PC and Nao should be plugged in/accessing the same network, preferably by co
 When the Nao has booted, you can now:
 
 - If using a router, discover the Nao IP address, e.g. through the Network table.
-- iOtherwise, you can press the chest button briefly (do not hold the chest button in - that will shut it down). The Nao will read out it's IP address, e.g. 192.168.1.77.  If it doesn't it may need a bit more time, or the volume may be too low.
+- Otherwise, you can press the chest button briefly (do not hold the chest button in - that will shut it down). The Nao will read out it's IP address, e.g. 192.168.1.77.  If it doesn't it may need a bit more time, or the volume may be too low.
 
 On a PC, open the IP address in a browser, e.g. http://192.168.1.77.
 
