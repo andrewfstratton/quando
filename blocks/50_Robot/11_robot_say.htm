@@ -1,34 +1,42 @@
 <div class="quando-block" data-quando-id="true"
-  data-quando-javascript="quando.robot.speechHandler('${animation}', '${say}', ${pitch}, ${speed}, ${echo}, ${interrupt}, val)">
+  data-quando-javascript="quando.robot.speechHandler('${animation}', '${say}', ${pitch}, ${speed}, ${doubleVoicePitch}, ${doubleVoiceLevel}, ${doubleVoiceTimeShift}, ${interrupt}, val)">
   <div class="quando-left quando-robot"></div>
   <div class="quando-right">
     <div class="quando-row quando-robot">🤖💬 Robot Say
-      <input data-quando-name="say" data-quando-robot="say" type="text" value="" data-quando-encode="normal" />
+      "<input data-quando-name="say" data-quando-robot="say" type="text" value="" data-quando-encode="normal" />"
       with
+      <br>
       <select data-quando-name='animation' class='quando-toggle'>
-        <option value='None'>No</option>
-        <option value='Contextual'>Contextual</option>
-        <option value='Random'>Random</option>
+        <option value='None'>no gestures
+        </option>
+        <option value='Contextual'>contextual gestures</option>
+        <option value='Random'>random gestures</option>
       </select>
-      Animation
+      <select data-quando-name='interrupt' class='quando-toggle'>
+        <option value='true'>Interrupting</option>
+        <option value='false'>Buffering</option>
+      </select>
       <select data-quando-name="extras" class="quando-toggle">
         <option value="hidden">+</option>
         <option value="show">-</option>
       </select>
       <span data-quando-toggle="extras=show">
         <br>
-        Pitch:
-        <input data-quando-name="pitch" type="text" value="1" data-quando-encode="normal" />
-        Speed:
-        <input data-quando-name="speed" type="text" value="1" data-quando-encode="normal" />
-        <select data-quando-name='echo' class='quando-toggle'>
-          <option value='false'>No Echo</option>
-          <option value='true'>Echo</option>
-        </select>
-        <select data-quando-name='interrupt' class='quando-toggle'>
-          <option value='true'>Interrupt</option>
-          <option value='false'>Buffer</option>
-        </select>
+        <br>
+        <span class="bold">Voice</span>
+        Pitch:  <!-- (1.0-4.0) -->
+        <input data-quando-name="pitch" type="text" value="1.0" data-quando-encode="normal" />
+        Speed:  <!-- (%, 50-) -->
+        <input data-quando-name="speed" type="text" value="100" data-quando-encode="normal" />
+        
+        <br>
+        <span class="bold">Double Voice</span>
+        Pitch: <!-- (1.0-4.0) -->
+        <input data-quando-name="doubleVoicePitch" type="text" value="1.0" data-quando-encode="normal" />
+        Level: <!-- (0-4.0) -->
+        <input data-quando-name="doubleVoiceLevel" type="text" value="0" data-quando-encode="normal" />
+        Delay: <!-- (s, 0-0.5) -->
+        <input data-quando-name="doubleVoiceTimeShift" type="text" value="0" data-quando-encode="normal" />s
       </span>
     </div>
   </div>

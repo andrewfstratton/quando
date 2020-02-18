@@ -158,12 +158,13 @@
         session.service('ALAudioDevice').then(ad => ad.setOutputVolume(volume)).fail(log_error)
     }
 
-    self.speechHandler = (anim, text, pitch, speed, echo, interrupt=false, val) => {
+    self.speechHandler = (anim, text, pitch, speed, doubleVoice, doubleVoiceLevel, doubleVoiceTimeShift, interrupt=false, val) => {
       if (typeof val === 'string' && val.length) {
           text = val
       }
 
-      self.changeVoice(pitch, speed, echo)
+      self.changeVoice(pitch, speed, doubleVoice, doubleVoiceLevel, doubleVoiceTimeShift)
+
       if (interrupt) audioSequence = []
       audioInterrupt = interrupt
       
@@ -198,19 +199,17 @@
     }
 
 
-    self.changeVoice = (pitch, speed, echo) => {
+    self.changeVoice = (pitch, speed, doubleVoicePitch, doubleVoiceLevel, doubleVoiceTimeShift) => {
         session.service("ALTextToSpeech").then((tts) => {
             tts.setParameter("pitchShift", pitch)
             tts.setParameter("speed", speed)
-            if (echo) {
-                tts.setParameter("doubleVoice", 1.1)
-                tts.setParameter("doubleVoiceLevel", 0.5)
-                tts.setParameter("doubleVoiceTimeShift", 0.1)
-            } else {
-                tts.setParameter("doubleVoice", 1)
-                tts.setParameter("doubleVoiceLevel", 0)
-                tts.setParameter("doubleVoiceTimeShift", 0.0)
-            }
+            tts.setParameter("doubleVoice", doubleVoicePitch)
+            tts.setParameter("doubleVoiceLevel", doubleVoiceLevel)
+            tts.setParameter("doubleVoiceTimeShift", doubleVoiceTimeShift)
+            // tts.setParameter("doubleVoice", 1)
+            // tts.setParameter("doubleVoiceLevel", 0)
+            // tts.setParameter("doubleVoiceTimeShift", 0.0)
+            
         }).fail(log_error)
     }
 
