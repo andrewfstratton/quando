@@ -18,14 +18,14 @@ setInterval(check_send, 1000/24) // i.e. 24 times a second
 function find_microbit(error, success) {
   if (serialport) {
     serialport.list().then((ports) => {
-      let comName = null
+      let path = null
       ports.forEach((port) => {
         if ((port.vendorId == '0D28') && (port.productId == '0204')) {
-          comName = port.comName
+          path = port.path
         }
       })
-      if (comName != null) {
-        success(comName)
+      if (path != null) {
+        success(path)
       } else {
         error('Could not find micro:bit.')
       }
@@ -62,9 +62,9 @@ function check_send() {
 }
 
 function get_serial(error, success) {
-  find_microbit(error, (comName) => {
+  find_microbit(error, (path) => {
     if (serialport) {
-      serial = new serialport(comName, {baudRate: 115200}, (err) => {
+      serial = new serialport(path, {baudRate: 115200}, (err) => {
         if (err) { 
           serial = false
           error(err)
