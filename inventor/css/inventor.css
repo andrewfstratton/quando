@@ -290,3 +290,8 @@ select.quando-toggle {
 input[type=number] { 
   -moz-appearance: textfield;
 }
+
+.quando-robot-say input {
+  min-width: 225px;
+  margin: 0 0 3px 0;
+}

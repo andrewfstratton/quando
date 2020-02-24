@@ -172,6 +172,8 @@
         audioSequence = []
       }
 
+
+      
       audioSequence.push(() => {
           if (anim == "None") {
               self.say(text)
@@ -235,6 +237,19 @@
         }).fail(log_error)
     }
         
+    self.playAnimationTag = (animTag) => {
+      session.service("ALAnimatedSpeech").then((aas) => {
+        currentBLMode = aas.getBodyLanguageMode()
+        if (currentBLMode != 2) {
+          aas.setBodyLanguageMode(0) //contextual body language
+        }
+
+        audioSequence.unshift(() => {
+          self.animatedSay('', '^startTag(' + animTag + ')' + '^waitTag(' + animTag + ')' )
+        })
+      }).fail(log_error)
+    }
+
     self.playSine = (frequency, gain, duration) => {
         session.service("ALAudioDevice").then((aadp) => {
             aadp.playSine(frequency, gain, 0, duration)
