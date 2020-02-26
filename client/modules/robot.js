@@ -277,16 +277,7 @@
     }
         
     self.playAnimationTag = (animTag) => {
-      session.service("ALAnimatedSpeech").then((aas) => {
-        currentBLMode = aas.getBodyLanguageMode()
-        if (currentBLMode != 2) {
-          aas.setBodyLanguageMode(0) //contextual body language
-        }
-
-        audioSequence.unshift(() => {
-          self.animatedSay('', '^startTag(' + animTag + ')' + '^waitTag(' + animTag + ')' )
-        })
-      }).fail(log_error)
+      self.speechHandler('Contextual', '^startTag(' + animTag + ') ^waitTag(' + animTag + ')', 0, 0, 0, 0, 0, 'continue', val)
     }
 
     self.playSine = (frequency, gain, duration) => {
