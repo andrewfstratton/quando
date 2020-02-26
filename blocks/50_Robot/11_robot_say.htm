@@ -2,8 +2,8 @@
   data-quando-javascript="quando.robot.speechHandler('${animation}', '${say}', ${pitch}, ${speed}, ${doubleVoicePitch}, ${doubleVoiceLevel}, ${doubleVoiceTimeShift}, ${interrupt}, val)">
   <div class="quando-left quando-robot"></div>
   <div class="quando-right">
-    <div class="quando-row quando-robot quando-robot-say">🤖💬 Say
-      "<input data-quando-name="say" data-quando-robot="say" type="text" value="" data-quando-encode="normal" />"
+    <div class="quando-row quando-robot ">🤖💬 Say
+      "<input class="quando-robot-say" data-quando-name="say" data-quando-robot="say" type="text" value="" data-quando-encode="normal" />"
       <br>
       with
       <select data-quando-name='animation' class='quando-toggle'>
@@ -23,20 +23,35 @@
       <span data-quando-toggle="extras=show">
         <br>
         <br>
-        <span class="bold">Voice</span>
-        Pitch:  <!-- (1.0-4.0) -->
-        <input data-quando-name="pitch" type="text" value="1.0" data-quando-encode="normal" />
+        <span class="bold">Voice - </span>
+        Pitch:  <!-- (1.0-4.0) --> 
+        <div class="hover">
+          <input data-quando-name="pitch" type="text" value="1.0" data-quando-encode="normal" />
+          <span class="hovertext">Range: (1.0 - 4.0)</span>
+        </div> 
         Speed:  <!-- (%, 50-) -->
-        <input data-quando-name="speed" type="text" value="100" data-quando-encode="normal" />
+        <div class="hover">
+          <input data-quando-name="speed" type="text" value="100" data-quando-encode="normal" />%
+          <span class="hovertext">Range: (50% - ?)</span>
+        </div> 
         
         <br>
-        <span class="bold">Double Voice</span>
+        <span class="bold">Double Voice - </span>
         Pitch: <!-- (1.0-4.0) -->
-        <input data-quando-name="doubleVoicePitch" type="text" value="1.0" data-quando-encode="normal" />
+        <div class="hover">
+          <input data-quando-name="doubleVoicePitch" type="text" value="1.0" data-quando-encode="normal" />
+          <span class="hovertext">Range: (1.0 - 4.0)</span>
+        </div> 
         Level: <!-- (0-4.0) -->
-        <input data-quando-name="doubleVoiceLevel" type="text" value="0" data-quando-encode="normal" />
+        <div class="hover">
+          <input data-quando-name="doubleVoiceLevel" type="text" value="0" data-quando-encode="normal" />
+          <span class="hovertext">Range: (0.0 - 4.0)</span>
+        </div> 
         Delay: <!-- (s, 0-0.5) -->
-        <input data-quando-name="doubleVoiceTimeShift" type="text" value="0" data-quando-encode="normal" />s
+        <div class="hover">
+          <input data-quando-name="doubleVoiceTimeShift" type="text" value="0" data-quando-encode="normal" />s
+          <span class="hovertext">Range: (0.0 - 0.5)</span>
+        </div> 
       </span>
     </div>
   </div>
