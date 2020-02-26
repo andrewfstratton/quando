@@ -39,11 +39,13 @@
     "mocha": "^4.1.0"
   },
   "nodemonConfig": {
-    "ignore": ["client/",
+    "ignore": [
+      "client/",
       "device_setup/",
       "inventor/",
       "pouchdb/",
       "hub/",
-      "blocks/"]
+      "blocks/"
+    ]
   }
 }

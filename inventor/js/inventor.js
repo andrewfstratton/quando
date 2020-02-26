@@ -39,6 +39,22 @@ function _show_right_menu(elem) {
   let clone = menu.cloneNode(true)
   menu.parentNode.replaceChild(clone, menu)
   menu = clone
+  let choosen_block = elem
+  if (!elem.classList.contains("quando-block")) {
+    choosen_block = _getAncestor(elem, "quando-block")
+  }
+  if (choosen_block){
+    let quando_expand_box = choosen_block.children
+    console.log(quando_expand_box[0])
+    //if quando block already expand, hide "expand" button quando_expand_box[0].style.display == ""
+    if (choosen_block.title == "expand") {
+      menu.children[1].style.display = ""
+      menu.children[2].style.display = "none"
+    }else{
+      menu.children[1].style.display = "none"
+      menu.children[2].style.display = ""
+    }
+  }
   menu.style.visibility = "visible"
   menu.style.left = event.pageX-8 + "px"
   menu.style.top = event.pageY-8 + "px"
@@ -75,7 +91,51 @@ function _show_right_menu(elem) {
       }
     }
   }, false)
+  document.getElementById('block-collapse').addEventListener('click', (ev) => {
+    menu.style.visibility = "hidden"
+    //menu.children[1].style.display = "none"  //hide collapse button
+    //menu.children[2].style.display = ""  //show expand button
+    let containing_block = elem
+    if (!elem.classList.contains("quando-block")) {
+      containing_block = _getAncestor(elem, "quando-block")
+    }
+    if (containing_block){
+      containing_block.title = "collapse"
+      let quando_expand_box = containing_block.children
+      quando_expand_box[0].style.display = "none" //quando_left
+      quando_expand_box[1].style.display = "none" //quando_right
+      quando_expand_box[2].style.display = "" //collapse box
+    }
+  },false)
+  document.getElementById('block-expand').addEventListener('click', (ev) => {
+    menu.style.visibility = "hidden"
+    //menu.children[1].style.display = ""  //show collapse button
+    //menu.children[2].style.display = "none"  //hide expand button
+    let containing_block = elem
+    if (!elem.classList.contains("quando-block")) {
+      containing_block = _getAncestor(elem, "quando-block")
+    }
+    if (containing_block){
+      containing_block.title = "expand"
+      let quando_expand_box = containing_block.children
+      quando_expand_box[0].style.display = "" //quando_left
+      quando_expand_box[1].style.display = "" //quando_right
+      quando_expand_box[2].style.display = "none" //collapse box
+    }
+  },false)
 }
+
+/*function blockOn(){
+  console.log(this.previousSibling.previousSibling)
+  this.previousSibling.previousSibling.style.display = "" //quando_left
+  this.previousSibling.style.display = "" //quando_right
+  this.style.display = "none" //collapse box
+}*/
+/*function _getRightRow(elem){
+  let children = elem.children
+  let rightrow = children[1].children
+  return rightrow[0]
+}*/
 
 function _leftClickTitle(open_elem) {
   let parent = open_elem.parentNode
@@ -824,6 +884,49 @@ self.handle_test = () => {
       }
     } else {
       alert('Behaviour incomplete.')
+    }
+  }
+
+/*  function _whether_collapse(elem){
+    if(elem.title == "collapse"){
+      return true
+    }else{
+      return false
+    }
+  }*/
+
+  //for previde blocks when mouse on the collapse block
+  self.showBlock = (event) => {
+    _show_block(event.target)
+    return false
+  }
+
+  function _show_block(elem){
+    let collapsed_block = elem
+    if (!elem.classList.contains("quando-block")){
+      collapsed_block = _getAncestor(elem, "quando-block")
+    }
+    if (collapsed_block.title == "collapse"){
+      collapsed_block.children[0].style.display = ""
+      collapsed_block.children[1].style.display = ""
+      collapsed_block.children[2].style.display = "none"
+    }
+  }
+
+  self.hideBlock = (event) => {
+    _hide_block(event.target)
+    return false
+  }
+
+  function _hide_block(elem){
+    let collapsed_block = elem
+    if (!elem.classList.contains("quando-block")){
+      collapsed_block = _getAncestor(elem, "quando-block")
+    }
+    if (collapsed_block.title == "collapse"){
+      collapsed_block.children[0].style.display = "none"
+      collapsed_block.children[1].style.display = "none"
+      collapsed_block.children[2].style.display = ""
     }
   }
 
