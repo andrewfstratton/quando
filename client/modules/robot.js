@@ -158,7 +158,7 @@
         session.service('ALAudioDevice').then(ad => ad.setOutputVolume(volume)).fail(log_error)
     }
 
-    self.speechHandler = (anim, text, pitch, speed, doubleVoice, doubleVoiceLevel, doubleVoiceTimeShift, interrupt=false, val) => {
+    self.speechHandlerOl = (anim, text, pitch, speed, doubleVoice, doubleVoiceLevel, doubleVoiceTimeShift, interrupt=false, val) => {
       if (typeof val === 'string' && val.length) {
           text = val
       }
@@ -171,8 +171,6 @@
       if (audioSequence.length > 15) {
         audioSequence = []
       }
-
-
       
       audioSequence.push(() => {
           if (anim == "None") {
@@ -187,19 +185,60 @@
       })
     }
 
-    self.speechHandlerTest = (anim, text, pitch, speed, echo, interrupt=false, val) => {
+
+    self.speechHandler = (anim, text, pitch, speed, doubleVoice, doubleVoiceLevel, doubleVoiceTimeShift, interrupt, val) => {
+      //overrie text if the block is being passe a value
       if (typeof val === 'string' && val.length) {
           text = val
       }
 
-        self.changeVoice(pitch, speed, echo)
-        if (anim == "None") {
-            self.say(text, interrupt)
-        } else {
-            self.animatedSay(anim, text, interrupt)
-        }
-    }
+      // self.changeVoice(pitch, speed, doubleVoice, doubleVoiceLevel, doubleVoiceTimeShift)
 
+      if (interrupt == 'full') { //if full interrupt erase audioSequence before saying
+        audioSequence = []
+        audioSequence.push(() => {
+          if (anim == "None") {
+            self.say(text)
+            // console.log('robot: "' + text + "'")
+          } else {
+            self.animatedSay(anim, text)
+            // console.log('robot: "' + text + "'")
+          }
+        })
+      } else if (interrupt == 'continue') { //if continue put interruption at start of sequence
+        audioSequence.unshift(() => {
+          if (anim == "None") {
+            self.say(text)
+            // console.log('robot: "' + text + "'")
+          } else {
+            self.animatedSay(anim, text)
+            // // console.log('robot: "' + text + "'")
+          }
+        })
+      } else { //else just add to end of sequence
+        console.log('none int' + text)
+        audioSequence.push(() => {
+          if (anim == "None") {
+            self.say(text)
+            // console.log('robot: "' + text + "'")
+          } else {
+            self.animatedSay(anim, text)
+            // console.log('robot: "' + text + "'")
+          }
+        })
+      }
+      
+      if (interrupt == 'full') {
+        audioInterrupt = true
+      }
+      // if (audioSequence.length > 15) {
+      //   audioSequence = []
+      // }
+      quando.destructor.add(function () {
+          audioSequence = []
+          audioInterrupt = true
+      })
+    }
 
     self.changeVoice = (pitch, speed, doubleVoicePitch, doubleVoiceLevel, doubleVoiceTimeShift) => {
         session.service("ALTextToSpeech").then((tts) => {
