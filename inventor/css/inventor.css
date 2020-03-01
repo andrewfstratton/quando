@@ -341,3 +341,7 @@ input[type=number] {
   visibility: visible;
   opacity: 1;
 } 
+
+.ip_inp {
+  min-width: 150px;
+}
