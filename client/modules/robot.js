@@ -111,12 +111,33 @@
             return true;
     }
     
-    self.connect = (robotIP) => {
+    self.connect = (robotIP) => { //TOOOOO DOOOOO
+      //ATTEMPT TO CONNECT AUTOMATICALLY HERE
+      // IF NO IPS FOUND FOR ALL VALID MAC ADDRESSES THEN
+      // ALLOW MANUAL
         session = new QiSession(robotIP)
         session.socket().on('connect', () => {
-            console.log('QiSession connected!')
-            set_up()
-            execute_event_listeners()
+          console.log('QiSession connected!')
+          set_up()
+          execute_event_listeners()
+          
+          //MAYBE TIMEOUT A COUPLE SECONDS
+          console.log('attempting to post the deets')
+          fetch('/nao', { 
+            method: 'POST', 
+            body: JSON.stringify({
+              "ip": robotIP,
+              "name": "rooobot"
+            }),
+            headers: {
+              "Content-Type": "application/json",
+              Accept: 'application/json'
+            }
+          }).then(function(response) {
+            response.json().then(function(data) {
+              console.log(data)
+            })
+          })
         }).on('disconnect', () => {
             console.log('QiSession disconnected!')
             nao_reconnect(robotIP)

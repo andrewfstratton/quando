@@ -120,6 +120,7 @@ app.use(body_parser.urlencoded({ extended: true, limit:'10mb' }))
 app.use(body_parser.json())
 
 require('./server/rest/login')(app, success, fail)
+require('./server/rest/nao')(app, success, fail)
 require('./server/rest/script')(app, io, success, fail)
 require('./server/rest/file')(app, MEDIA_FOLDER, MEDIA_MAP, success, fail)
 require('./server/rest/watson')(app, base64, base64Img, watson_db, fs)

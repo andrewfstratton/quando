@@ -7,7 +7,7 @@ exports.getAll = () => {
       (result) => {
         let results = []
         for(let i in result) {
-          let doc = {'ip':result[i]._id, 'name':result[i].name}
+          let doc = {'mac':result[i]._id, 'name':result[i].name}
           results.push(doc)
         }
         success(results)
@@ -15,13 +15,19 @@ exports.getAll = () => {
   })
 }
 
-exports.add = (ip, name="") => {
+exports.add = (mac, name="") => {
   return new Promise((success, fail) => {
-    if (ip) {
-      let doc = {_id: ip, name: name}
+    if (mac) {
+      let doc = {_id: mac, name: name}
       db.save(COLLECTION, doc).then(success, fail)
     } else {
-      fail('No IP passed...')
+      fail('No mac given...')
     }
+  })
+}
+
+exports.wipe = () => {
+  return new Promise((success, fail) => {
+    db.remove(COLLECTION, {}).then(success, fail)
   })
 }

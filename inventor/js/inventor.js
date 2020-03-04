@@ -249,17 +249,31 @@ self.saveIP = () => {
 }
 
 function _updateIPList() {
-  let ips = JSON.parse(localStorage.getItem('ips'))
-  if (ips) { //populate ALL select lists
-    let selects = document.getElementsByClassName("ip_select")
-    let add_to_select = ''
-    for (let x = 0; x < ips.length; x++) {
-      add_to_select += `<option value="${ips[x]}">${ips[x]}</option>\n`
-    }
-    for (let select of selects) {
-    select.innerHTML = add_to_select
-    }
-  }
+  console.log('updating IP list...')
+  //send GET request to server
+  fetch('/nao', { method: 'GET', 
+      headers: {"Content-Type": "application/json",
+                Accept: 'application/json'}
+  }).then(function(response) {
+    response.json().then(function(data) {
+      // let ips = JSON.parse(localStorage.getItem('ips'))
+      if (data.length != 0) { //populate ALL select lists
+        let selects = document.getElementsByClassName("ip_select")
+        // let add_to_select = ''
+        for (let x = 0; x < data.length; x++) {
+          var newOption = document.createElement("option")
+          newOption.value = data[x].ip
+          newOption.innerHTML = data[x].name
+          for (let select of selects) {
+            select.appendChild(newOption)
+          }
+        }
+      } else {
+        console.log('No robots found, trying again...')
+        window.setTimeout(_updateIPList, 10000)
+      }
+    })
+  })
 }
 
 function _resizeWidth(event) {
