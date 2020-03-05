@@ -64,7 +64,7 @@
       }
       try {
         let url = new URL(host)
-        url = `${url.protocol}//${url.hostname}${url.pathname}/${message}`
+        url = `${url.protocol}//${url.hostname}${url.pathname}${message}`
 
         socket = new WebSocket(url)
         socket.message = message
