@@ -7,7 +7,7 @@
 
   var _lookup = {} // holds run time arrays
 
-  self.socket = io.connect('http://' + window.location.hostname)
+  self.socket = io.connect(window.location.protocol + '//' + window.location.hostname)
 
   var websockets = []
   
@@ -48,10 +48,10 @@
         self.send_websocket_message(socket, val)
         socket.onmessage = (evt) => {
           self.send_message(message, evt.data, '', 'local')
+        }
       }
-      }
-      } else {
-        console.error("Failed to create Node-RED socket on ", host)
+    } else {
+      console.error("Failed to create Node-RED socket on ", host)
     }
   }
 
