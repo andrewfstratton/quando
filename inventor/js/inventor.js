@@ -228,24 +228,8 @@ function _handleListNameChange(event) {
   }
 }
 
-self.saveIP = () => {
-  //get value of the first input field in the drag n drop window
-  let inpFields = document.getElementsByClassName("ip_inp")
-  let newIP = inpFields[1].value
-  alert(newIP)
-  //get IP's array from local storage
-  let ipsRaw = localStorage.getItem('ips')
-  let ips = JSON.parse(ipsRaw)
-  if (!ips) {
-    ips = []
-    ipsRaw = ""
-  }
-  //ADD & SAVE NEW IP
-  if (!ipsRaw.includes(newIP)) {
-    ips.unshift(newIP)
-    localStorage.setItem('ips', JSON.stringify(ips))
-    _updateIPList()
-  }
+self.refreshIP = () => {
+  _updateIPList()
 }
 
 function _updateIPList() {
@@ -269,8 +253,8 @@ function _updateIPList() {
           }
         }
       } else {
-        console.log('No robots found, trying again...')
-        window.setTimeout(_updateIPList, 10000)
+        console.log('No robots found...')
+        // window.setTimeout(_updateIPList, 10000)
       }
     })
   })

@@ -212,8 +212,8 @@
       if (typeof val === 'string' && val.length) {
           text = val
       }
-
-      // self.changeVoice(pitch, speed, doubleVoice, doubleVoiceLevel, doubleVoiceTimeShift)
+      console.log('interrupt ', interrupt)
+      self.changeVoice(pitch, speed, doubleVoice, doubleVoiceLevel, doubleVoiceTimeShift)
 
       if (interrupt == 'full') { //if full interrupt erase audioSequence before saying
         audioSequence = []
