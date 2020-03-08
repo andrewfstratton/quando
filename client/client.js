@@ -59,12 +59,17 @@
     var socket = self.get_websocket(message)
    
     if (!socket) {
-      if (!/^(?:http|ws)(?:s)?:\/\//.test(host)) {
-        host = 'ws://' + host
+      let protocol = 'ws'
+      if (location.protocol == 'https:') {
+        protocol += 's'
       }
+      if (!host.includes('://')) { // This is only to allow URL creation below..
+        host = 'http://' + host
+      }
+      protocol += '://'
       try {
         let url = new URL(host)
-        url = `${url.protocol}//${url.hostname}${url.pathname}${message}`
+        url = `${protocol}//${url.hostname}${url.pathname}${message}`
 
         socket = new WebSocket(url)
         socket.message = message
