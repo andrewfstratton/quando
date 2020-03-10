@@ -26,19 +26,6 @@
       })
     })
   } 
-    
-  // self.call_ass = function(text) {
-  //   //send POST request to server
-  //   fetch('/watson/ASS_request', { method: 'POST', 
-  //       body: JSON.stringify({'text':text}), 
-  //       headers: {"Content-Type": "application/json",
-  //                 Accept: 'application/json'}
-  //   }).then(function(response) {
-  //     console.log(response)
-  //     let output = JSON.parse(response)
-  //     quando.text(output.generic[0].text, true)
-  //   })
-  // } 
 
   self.call_vis_rec = function(goalClass, fn) {
     goalClass = goalClass.toLowerCase()
@@ -149,6 +136,62 @@
                       input.value = text
                       input.click()
                     }
+                  }
+                })
+              })
+          }
+        }
+      }
+    })
+    div.addEventListener("click", () => {
+      if (!recording) {
+        mediaRecorder.start()
+        div.innerHTML = "Stop listening..."
+        recording = true
+      } else {
+        quando.send_message('rec stop')
+        recording = false
+        mediaRecorder.stop()
+        div.innerHTML = "Working..."
+      }
+    }) 
+    elem.appendChild(div)
+    /*/send POST request to server*/
+  }
+
+  
+  self.call_speech_to_text_payload = function(fn) {  
+    quando.promptInput()
+    let div = document.getElementById('visrec_label')
+    let elem = document.getElementById('quando_labels')
+    //if label doesn't already exist, create label
+    if (div == null) {
+      div = document.createElement('div')
+      div.className = 'quando_label'
+      div.innerHTML = "Click to start listening..."
+      div.setAttribute('id', 'stt_label')
+    }
+    navigator.mediaDevices.getUserMedia({ audio: true, video: false }).then(stream => {
+      mediaRecorder = new MediaRecorder(stream, { mimeType: "audio/webm" })
+      mediaRecorder.ondataavailable = e => {
+        if (mediaRecorder.state == "inactive") {
+          const audioBlob = new Blob([e.data],{type:"audio/webm"});
+          var reader = new window.FileReader();
+          reader.readAsDataURL(audioBlob);
+          reader.onloadend = function() {
+             base64 = reader.result;
+             base64 = base64.split(',')[1];
+             fetch('/watson/SPEECH_request', { method: 'POST', 
+               body: JSON.stringify({'data':base64}), 
+               headers: {"Content-Type": "application/json"}
+             }).then((response) => {
+                response.json().then((data) => {
+                  div.innerHTML = "Click to start listening..."
+                  if (!data.error) {
+                    const txt = data.replace(/"/g, "")
+                    console.log(txt)
+
+                    fn(txt)
                   }
                 })
               })

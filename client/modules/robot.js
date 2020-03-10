@@ -206,13 +206,13 @@
       })
     }
 
-
-    self.speechHandler = (anim, text, pitch, speed, doubleVoice, doubleVoiceLevel, doubleVoiceTimeShift, interrupt, val) => {
+    self.speechHandler = (anim, text, pitch, speed, doubleVoice, doubleVoiceLevel, doubleVoiceTimeShift, interrupt, txt) => {
       //overrie text if the block is being passe a value
-      if (typeof val === 'string' && val.length) {
-          text = val
+      if (typeof txt === 'string' && txt.length) {
+          text = txt
       }
-      console.log('interrupt ', interrupt)
+      console.log('txt said is: ', txt)
+      console.log('text said is: ', text)
       self.changeVoice(pitch, speed, doubleVoice, doubleVoiceLevel, doubleVoiceTimeShift)
 
       if (interrupt == 'full') { //if full interrupt erase audioSequence before saying
