@@ -83,7 +83,7 @@
         session.service("ALMemory").then(function (ALMemory) {
             ALMemory.subscriber("ALTextToSpeech/CurrentSentence").then(function (sub) {
                 sub.signal.connect(function (value) {
-                    console.log(value);
+                    //sconsole.log(value);
                     robot.TextToSpeech.CurrentSentence = value;
                 });
             });
@@ -111,10 +111,7 @@
             return true;
     }
     
-    self.connect = (robotIP) => { //TOOOOO DOOOOO
-      //ATTEMPT TO CONNECT AUTOMATICALLY HERE
-      // IF NO IPS FOUND FOR ALL VALID MAC ADDRESSES THEN
-      // ALLOW MANUAL
+    self.connect = (robotIP) => {
         session = new QiSession(robotIP)
         session.socket().on('connect', () => {
           console.log('QiSession connected!')
@@ -122,7 +119,7 @@
           execute_event_listeners()
           
           //MAYBE TIMEOUT A COUPLE SECONDS
-          console.log('attempting to post the deets')
+          console.log('Posting Robot IP to server...')
           fetch('/nao', { 
             method: 'POST', 
             body: JSON.stringify({
@@ -135,7 +132,7 @@
             }
           }).then(function(response) {
             response.json().then(function(data) {
-              console.log(data)
+              console.log('Post succesful...')
             })
           })
         }).on('disconnect', () => {
@@ -179,40 +176,12 @@
         session.service('ALAudioDevice').then(ad => ad.setOutputVolume(volume)).fail(log_error)
     }
 
-    self.speechHandlerOl = (anim, text, pitch, speed, doubleVoice, doubleVoiceLevel, doubleVoiceTimeShift, interrupt=false, val) => {
-      if (typeof val === 'string' && val.length) {
-          text = val
-      }
-
-      self.changeVoice(pitch, speed, doubleVoice, doubleVoiceLevel, doubleVoiceTimeShift)
-
-      if (interrupt) audioSequence = []
-      audioInterrupt = interrupt
-      
-      if (audioSequence.length > 15) {
-        audioSequence = []
-      }
-      
-      audioSequence.push(() => {
-          if (anim == "None") {
-              self.say(text)
-          } else {
-              self.animatedSay(anim, text)
-          }
-      })
-      quando.destructor.add(function () {
-          audioSequence = []
-          audioInterrupt = true
-      })
-    }
-
-
     self.speechHandler = (anim, text, pitch, speed, doubleVoice, doubleVoiceLevel, doubleVoiceTimeShift, interrupt, val) => {
-      //overrie text if the block is being passe a value
+      //overrie text if the block is being passed a value
       if (typeof val === 'string' && val.length) {
           text = val
       }
-      console.log('interrupt ', interrupt)
+      
       self.changeVoice(pitch, speed, doubleVoice, doubleVoiceLevel, doubleVoiceTimeShift)
 
       if (interrupt == 'full') { //if full interrupt erase audioSequence before saying
@@ -237,7 +206,6 @@
           }
         })
       } else { //else just add to end of sequence
-        console.log('none int' + text)
         audioSequence.push(() => {
           if (anim == "None") {
             self.say(text)
