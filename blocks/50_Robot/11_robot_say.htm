@@ -2,9 +2,16 @@
   data-quando-javascript="quando.robot.speechHandler('${animation}', '${say}', ${pitch}, ${speed}, ${doubleVoicePitch}, ${doubleVoiceLevel}, ${doubleVoiceTimeShift}, '${interrupt}', txt)">
   <div class="quando-left quando-robot"></div>
   <div class="quando-right">
-    <div class="quando-row quando-robot ">🤖💬 Say
-      "<input class="quando-robot-say" data-quando-name="say" data-quando-robot="say" type="text" value="" data-quando-encode="normal" />"
-      <br>
+    <div class="quando-row quando-robot ">
+      <select data-quando-name='txtval' class='quando-toggle'>
+        <option value='input'>💬</option>
+        <option value='txt'>❓</option>
+      </select> 🤖 Say
+      <span data-quando-toggle='txtval=txt'>❓</span>
+      <span data-quando-toggle='txtval=input'>
+        &quot;<input class="quando-robot-say" data-quando-name="say" data-quando-robot="say" type="text" value="" data-quando-encode="normal" />&quot;
+        <br>
+      </span>
       with
       <select data-quando-name='animation' class='quando-toggle'>
         <option value='None'>no gestures
