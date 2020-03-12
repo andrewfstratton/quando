@@ -26,8 +26,10 @@
     }
   })
 
-  self.add_message_handler = function (message, callback) {
-    self.socket.on(message, (data) => { callback(data.val) })
+  self.add_message_handler = (message, callback) => {
+    self.socket.on(message, (data) => {
+      callback(data.val)
+    })
     self.destructor.add( () => {
       self.socket.off(message, callback)
     })
@@ -55,7 +57,7 @@
     }
   }
 
-  self.create_websocket = function (host, message) {
+  self.create_websocket = (host, message) => {
     var socket = self.get_websocket(message)
    
     if (!socket) {
@@ -69,7 +71,11 @@
       protocol += '://'
       try {
         let url = new URL(host)
-        url = `${protocol}//${url.hostname}${url.pathname}${message}`
+        let port = ""
+        if (url.port) {
+          port = ":" + url.port
+        }
+        url = `${protocol}${url.hostname}${port}${url.pathname}${message}`
 
         socket = new WebSocket(url)
         socket.message = message
