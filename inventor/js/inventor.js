@@ -34,6 +34,7 @@ self.handleRightClick = (event) => {
     return false
 }
 
+//collapse/expand selection added
 function _show_right_menu(elem) {
   let menu = document.getElementById('right-click-menu')
   let clone = menu.cloneNode(true)
@@ -46,8 +47,8 @@ function _show_right_menu(elem) {
   if (choosen_block){
     let quando_expand_box = choosen_block.children
     console.log(quando_expand_box[0])
-    //if quando block already expand, hide "expand" button quando_expand_box[0].style.display == ""
-    if (choosen_block.title == "expand") {
+    //if quando block already expand, show "collapse" button
+    if ((choosen_block.dataset.expand == "true") || (choosen_block.getAttribute("data-expand") == null) ) {
       menu.children[1].style.display = ""
       menu.children[2].style.display = "none"
     }else{
@@ -71,6 +72,7 @@ function _show_right_menu(elem) {
       let clone = containing_block.cloneNode(true)
       if (_hasAncestor(containing_block, document.getElementById('menu'))) { // in the menu - so copy to script
         document.getElementById('script').appendChild(clone)
+        console.log(1)
       } else {
         let parent = containing_block.parentNode
         if (parent) {
@@ -89,53 +91,45 @@ function _show_right_menu(elem) {
         _populateLists()
         self.setElementHandlers(clone)
       }
+
     }
   }, false)
   document.getElementById('block-collapse').addEventListener('click', (ev) => {
     menu.style.visibility = "hidden"
-    //menu.children[1].style.display = "none"  //hide collapse button
-    //menu.children[2].style.display = ""  //show expand button
     let containing_block = elem
     if (!elem.classList.contains("quando-block")) {
       containing_block = _getAncestor(elem, "quando-block")
     }
     if (containing_block){
-      containing_block.title = "collapse"
-      let quando_expand_box = containing_block.children
-      quando_expand_box[0].style.display = "none" //quando_left
-      quando_expand_box[1].style.display = "none" //quando_right
-      quando_expand_box[2].style.display = "" //collapse box
+      containing_block.dataset.expand = "false"
+      let relement = containing_block.children[1].children //children of quando_right
+      var collapse_symbol = '<span class="moon" onmouseenter="index.enterPreview(event)">🌑</span>'
+      relement[0].insertAdjacentHTML('beforeend', collapse_symbol)
+      for(i=1; i<relement.length;i++){
+        relement[i].classList.add("collapse")
+      }
     }
   },false)
   document.getElementById('block-expand').addEventListener('click', (ev) => {
     menu.style.visibility = "hidden"
-    //menu.children[1].style.display = ""  //show collapse button
-    //menu.children[2].style.display = "none"  //hide expand button
     let containing_block = elem
     if (!elem.classList.contains("quando-block")) {
       containing_block = _getAncestor(elem, "quando-block")
     }
     if (containing_block){
-      containing_block.title = "expand"
-      let quando_expand_box = containing_block.children
-      quando_expand_box[0].style.display = "" //quando_left
-      quando_expand_box[1].style.display = "" //quando_right
-      quando_expand_box[2].style.display = "none" //collapse box
+      containing_block.dataset.expand = "true"
+      if(containing_block.getAttribute("onmouseleave")){
+        containing_block.removeAttribute("onmouseleave")
+      }
+      let relement = containing_block.children[1].children //children of quando_right
+      var collapse_symbol = relement[0].getElementsByClassName("moon")
+      relement[0].removeChild(collapse_symbol[0])
+      for(i=1; i<relement.length;i++){
+        relement[i].classList.remove("collapse")
+      }
     }
   },false)
 }
-
-/*function blockOn(){
-  console.log(this.previousSibling.previousSibling)
-  this.previousSibling.previousSibling.style.display = "" //quando_left
-  this.previousSibling.style.display = "" //quando_right
-  this.style.display = "none" //collapse box
-}*/
-/*function _getRightRow(elem){
-  let children = elem.children
-  let rightrow = children[1].children
-  return rightrow[0]
-}*/
 
 function _leftClickTitle(open_elem) {
   let parent = open_elem.parentNode
@@ -887,46 +881,65 @@ self.handle_test = () => {
     }
   }
 
-/*  function _whether_collapse(elem){
-    if(elem.title == "collapse"){
-      return true
-    }else{
-      return false
-    }
-  }*/
-
-  //for previde blocks when mouse on the collapse block
-  self.showBlock = (event) => {
-    _show_block(event.target)
+  //enter preview mode
+  self.enterPreview = (event) => {
+    _enter_preview(event.target)
     return false
   }
 
-  function _show_block(elem){
+  function _enter_preview(elem){
     let collapsed_block = elem
-    if (!elem.classList.contains("quando-block")){
-      collapsed_block = _getAncestor(elem, "quando-block")
-    }
-    if (collapsed_block.title == "collapse"){
-      collapsed_block.children[0].style.display = ""
-      collapsed_block.children[1].style.display = ""
-      collapsed_block.children[2].style.display = "none"
-    }
+    collapsed_block = _getAncestor(elem, "quando-block")
+    collapsed_block.classList.add("quando-preview")
+    collapsed_block.setAttribute("onmouseleave","index.exitPreview(event)")
+    let relement = collapsed_block.children[1].children //children of quando_right
+    var collapse_symbol = relement[0].getElementsByClassName("moon")
+    relement[0].removeChild(collapse_symbol[0]) //remove collapse symbol
+    var preview_symbol = '<span class="moon" onclick="index.blockExpand(event)" title="preview mode, click to expand">🌓</span>'
+    relement[0].insertAdjacentHTML('beforeend', preview_symbol)
   }
 
-  self.hideBlock = (event) => {
-    _hide_block(event.target)
+  //exit preview mode
+  self.exitPreview = (event) => {
+    _exit_preview(event.target)
     return false
   }
 
-  function _hide_block(elem){
+  function _exit_preview(elem){
     let collapsed_block = elem
-    if (!elem.classList.contains("quando-block")){
+    if (!elem.classList.contains("quando-block")) {
       collapsed_block = _getAncestor(elem, "quando-block")
     }
-    if (collapsed_block.title == "collapse"){
-      collapsed_block.children[0].style.display = "none"
-      collapsed_block.children[1].style.display = "none"
-      collapsed_block.children[2].style.display = ""
+    collapsed_block.classList.remove("quando-preview")
+    collapsed_block.removeAttribute("onmouseleave")
+    let relement = collapsed_block.children[1].children //children of quando_right
+    var collapse_symbol = relement[0].getElementsByClassName("moon")
+    relement[0].removeChild(collapse_symbol[0]) //remove collapse symbol
+    var preview_symbol = '<span class="moon" onmouseover="index.enterPreview(event)">🌑</span>'
+    relement[0].insertAdjacentHTML('beforeend', preview_symbol)
+  }
+
+  //expand block using moon botton (i.e. expand block when in preview mode)
+  self.blockExpand = (event) => {
+    _block_expand(event.target)
+    return false
+  }
+
+  function _block_expand(elem){
+    let collapsed_block = elem
+    if (!elem.classList.contains("quando-block")) {
+      collapsed_block = _getAncestor(elem, "quando-block")
+    }
+    if(collapsed_block){
+      collapsed_block.dataset.expand = "true"
+      collapsed_block.classList.remove("quando-preview")
+      collapsed_block.removeAttribute("onmouseleave")
+      let relement = collapsed_block.children[1].children //children of quando_right
+      var collapse_symbol = relement[0].getElementsByClassName("moon")
+      relement[0].removeChild(collapse_symbol[0])
+      for(i=1; i<relement.length;i++){
+        relement[i].classList.remove("collapse")
+      }
     }
   }
 
