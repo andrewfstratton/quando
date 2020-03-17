@@ -80,15 +80,15 @@ input, #_hidden_width_element_ {
   background-color: #ffffff;
 }
 
-#script {
+#script, .script {
   background-color: #ffeeee;
 }
 
-#script, #clipboard {
+#script, #clipboard, .script {
   width:100%;
 }
 
-#menu, #script, #clipboard {
+#menu, #script, #clipboard, .script {
   padding: 4px;
   height: 100%;
   margin: 0 auto;
@@ -103,7 +103,7 @@ input, #_hidden_width_element_ {
   z-index:1;
 }
 
-#menu, #script, #clipboard, .quando-box {
+#menu, #script, #clipboard, .quando-box, .script {
   position:relative;
   display: flex;
   flex-flow: column nowrap;
@@ -220,6 +220,28 @@ input[type="color"] {
   color: black;
 }
 
+/*.quando-collapse-template{
+  width: max-content;
+  height: max-content;
+  /*padding: 3px;
+  border-radius: 6px;
+  line-height: 15px;
+  text-align:center;
+  position: relative;
+}*/
+
+.collapse{
+  display:none;
+}
+
+.quando-preview:hover>*>.collapse{
+  display:block;
+  height: max-content;
+}
+
+#status-symbol{
+  visibility: hidden;
+}
 
 /* .quando-separator {
   border-top-style:solid;

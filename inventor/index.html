@@ -42,9 +42,9 @@
                 <div id="clipboard_title" class="quando-title">Clipboard</div>
                 <div id="clipboard" class="quando-block"></div>
             </div>
-            <div id="script" class="col-md-10"></div>
-            </div>
+            <div id="script" class="col-md-10 script"></div>
         </div>
+    </div>
     <nav class="navbar navbar-default navbar-fixed-bottom">
         <div class="container-fluid">
             <div class="navbar-footer">
@@ -457,5 +457,14 @@
     <script src="/inventor/js/inventor.js" type="text/javascript"></script>
     <div id="right-click-menu">
       <span id="block-clone" class="right-click-menu-item">📚 Clone<br/></span>
+      <span id="block-collapse" class="right-click-menu-item">➖ Collapse<br/></span>
+      <span id="block-expand" class="right-click-menu-item">➕ Expand<br/></span>
     </div>
+    <div id="status-symbol">
+        <span class="status" onmouseenter="index.enterPreview(event)">💬</span>
+        <span class="status" onclick="index.blockExpand(event)" onmouseenter="index.showExpandSymbol(event)"
+        onmouseleave="index.showPreviewSymbol(event)" title="preview mode, click to expand">👀</span>
+        <span class="status">➕</span>
+    </div>
+
 </body>

@@ -34,11 +34,30 @@ self.handleRightClick = (event) => {
     return false
 }
 
+//collapse/expand selection added
 function _show_right_menu(elem) {
   let menu = document.getElementById('right-click-menu')
   let clone = menu.cloneNode(true)
   menu.parentNode.replaceChild(clone, menu)
   menu = clone
+  let choosen_block = elem
+  if (!elem.classList.contains("quando-block")) {
+    choosen_block = _getAncestor(elem, "quando-block")
+  }
+  if (choosen_block){
+    if(choosen_block.getElementsByClassName('quando-box').length == 0){
+      menu.children[1].style.display = "none"
+      menu.children[2].style.display = "none"
+    }
+    //if quando block already expand, show "collapse" button
+    else if ((choosen_block.dataset.expand == "true") || (choosen_block.getAttribute("data-expand") == null) ) {
+      menu.children[1].style.display = ""
+      menu.children[2].style.display = "none"
+    }else{
+      menu.children[1].style.display = "none"
+      menu.children[2].style.display = ""
+    }
+  }
   menu.style.visibility = "visible"
   menu.style.left = event.pageX-8 + "px"
   menu.style.top = event.pageY-8 + "px"
@@ -55,6 +74,7 @@ function _show_right_menu(elem) {
       let clone = containing_block.cloneNode(true)
       if (_hasAncestor(containing_block, document.getElementById('menu'))) { // in the menu - so copy to script
         document.getElementById('script').appendChild(clone)
+        console.log(1)
       } else {
         let parent = containing_block.parentNode
         if (parent) {
@@ -75,6 +95,42 @@ function _show_right_menu(elem) {
       }
     }
   }, false)
+  document.getElementById('block-collapse').addEventListener('click', (ev) => {
+    menu.style.visibility = "hidden"
+    let containing_block = elem
+    if (!elem.classList.contains("quando-block")) {
+      containing_block = _getAncestor(elem, "quando-block")
+    }
+    if (containing_block){
+      containing_block.dataset.expand = "false"
+      let status = document.getElementById('status-symbol').children[0]
+      let clone = status.cloneNode(true)
+      let relement = containing_block.children[1].children //children of quando_right
+      relement[0].appendChild(clone)
+      for(i=1; i<relement.length;i++){
+        relement[i].classList.add("collapse")
+      }
+    }
+  },false)
+  document.getElementById('block-expand').addEventListener('click', (ev) => {
+    menu.style.visibility = "hidden"
+    let containing_block = elem
+    if (!elem.classList.contains("quando-block")) {
+      containing_block = _getAncestor(elem, "quando-block")
+    }
+    if (containing_block){
+      containing_block.dataset.expand = "true"
+      if(containing_block.getAttribute("onmouseleave")){
+        containing_block.removeAttribute("onmouseleave")
+      }
+      let relement = containing_block.children[1].children //children of quando_right
+      var status = relement[0].getElementsByClassName("status")
+      relement[0].removeChild(status[0])
+      for(i=1; i<relement.length;i++){
+        relement[i].classList.remove("collapse")
+      }
+    }
+  },false)
 }
 
 function _leftClickTitle(open_elem) {
@@ -825,6 +881,89 @@ self.handle_test = () => {
     } else {
       alert('Behaviour incomplete.')
     }
+  }
+
+  //enter preview mode
+  self.enterPreview = (event) => {
+    _enter_preview(event.target)
+    return false
+  }
+
+  function _enter_preview(elem){
+    let collapsed_block = elem
+    collapsed_block = _getAncestor(elem, "quando-block")
+    collapsed_block.classList.add("quando-preview")
+    collapsed_block.setAttribute("onmouseleave","index.exitPreview(event)")
+    let new_status = document.getElementById('status-symbol').children[1] //preview symbol
+    let clone = new_status.cloneNode(true)
+    let relement = collapsed_block.children[1].children //children of quando_right
+    let status = relement[0].getElementsByClassName('status')[0]
+    relement[0].replaceChild(clone,status)
+  }
+
+  //exit preview mode
+  self.exitPreview = (event) => {
+    _exit_preview(event.target)
+    return false
+  }
+
+  function _exit_preview(elem){
+    let collapsed_block = elem
+    if (!elem.classList.contains("quando-block")) {
+      collapsed_block = _getAncestor(elem, "quando-block")
+    }
+    collapsed_block.classList.remove("quando-preview")
+    collapsed_block.removeAttribute("onmouseleave")
+    let new_status = document.getElementById('status-symbol').children[0] //collapsed symbol
+    let clone = new_status.cloneNode(true)
+    let relement = collapsed_block.children[1].children //children of quando_right
+    let status = relement[0].getElementsByClassName('status')[0]
+    relement[0].replaceChild(clone,status)
+  }
+
+  //expand block using button
+  self.blockExpand = (event) => {
+    _block_expand(event.target)
+    return false
+  }
+
+  function _block_expand(elem){
+    let collapsed_block = elem
+    if (!elem.classList.contains("quando-block")) {
+      collapsed_block = _getAncestor(elem, "quando-block")
+    }
+    if(collapsed_block){
+      collapsed_block.dataset.expand = "true"
+      collapsed_block.classList.remove("quando-preview")
+      collapsed_block.removeAttribute("onmouseleave")
+      let relement = collapsed_block.children[1].children //children of quando_right
+      var collapse_symbol = relement[0].getElementsByClassName("status")
+      relement[0].removeChild(collapse_symbol[0])
+      for(i=1; i<relement.length;i++){
+        relement[i].classList.remove("collapse")
+      }
+    }
+  }
+
+  //(optional) show expand symbol when mouse on preview symbol
+  self.showExpandSymbol = (event) => {
+    _show_expand_symbol(event.target)
+    return false
+  }
+
+  function _show_expand_symbol(elem){
+    let expand_symbol = document.getElementById('status-symbol').children[2].textContent
+    elem.textContent = expand_symbol
+  }
+
+  self.showPreviewSymbol = (event) => {
+    _show_preview_symbol(event.target)
+    return false
+  }
+
+  function _show_preview_symbol(elem){
+    let expand_symbol = document.getElementById('status-symbol').children[1].textContent
+    elem.textContent = expand_symbol
   }
 
   self.handle_save = () => {
