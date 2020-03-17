@@ -8,6 +8,37 @@ let AUTOSAVE = 'quandoAutosave' // used for key to save/load to/from browser
 let PREFIX = 'quando_' // used for key to save/load to/from browser
 let client_script = ""
 
+// self.setA = (event) => {
+//   _set_a(event.target)
+//   return false
+// }
+// function _set_a(){
+//   document.getElementsByClassName('script')[0].id = "script"
+// }
+
+
+// self.cancelA = (event) =>{
+//   _cancel_a(event.target)
+//   return false
+// }
+// function _cancel_a(){
+//   document.getElementsByClassName('script')[0].id = ""
+// }
+// self.setB = (event) => {
+//   _set_b(event.target)
+//   return false
+// }
+// function _set_b(){
+//   document.getElementsByClassName('script')[1].id = "script"
+// }
+// self.cancelB = (event) =>{
+//   _cancel_b(event.target)
+//   return false
+// }
+// function _cancel_b(){
+//   document.getElementsByClassName('script')[1].id = ""
+// }
+
 self.showObject = (obj) => {
   let script = document.getElementById('script')
   script.innerHTML = ''
@@ -45,10 +76,12 @@ function _show_right_menu(elem) {
     choosen_block = _getAncestor(elem, "quando-block")
   }
   if (choosen_block){
-    let quando_expand_box = choosen_block.children
-    console.log(quando_expand_box[0])
+    if(choosen_block.getElementsByClassName('quando-box').length == 0){
+      menu.children[1].style.display = "none"
+      menu.children[2].style.display = "none"
+    }
     //if quando block already expand, show "collapse" button
-    if ((choosen_block.dataset.expand == "true") || (choosen_block.getAttribute("data-expand") == null) ) {
+    else if ((choosen_block.dataset.expand == "true") || (choosen_block.getAttribute("data-expand") == null) ) {
       menu.children[1].style.display = ""
       menu.children[2].style.display = "none"
     }else{
@@ -91,7 +124,6 @@ function _show_right_menu(elem) {
         _populateLists()
         self.setElementHandlers(clone)
       }
-
     }
   }, false)
   document.getElementById('block-collapse').addEventListener('click', (ev) => {
@@ -102,9 +134,10 @@ function _show_right_menu(elem) {
     }
     if (containing_block){
       containing_block.dataset.expand = "false"
+      let status = document.getElementById('status-symbol').children[0]
+      let clone = status.cloneNode(true)
       let relement = containing_block.children[1].children //children of quando_right
-      var collapse_symbol = '<span class="moon" onmouseenter="index.enterPreview(event)">🌑</span>'
-      relement[0].insertAdjacentHTML('beforeend', collapse_symbol)
+      relement[0].appendChild(clone)
       for(i=1; i<relement.length;i++){
         relement[i].classList.add("collapse")
       }
@@ -122,8 +155,8 @@ function _show_right_menu(elem) {
         containing_block.removeAttribute("onmouseleave")
       }
       let relement = containing_block.children[1].children //children of quando_right
-      var collapse_symbol = relement[0].getElementsByClassName("moon")
-      relement[0].removeChild(collapse_symbol[0])
+      var status = relement[0].getElementsByClassName("status")
+      relement[0].removeChild(status[0])
       for(i=1; i<relement.length;i++){
         relement[i].classList.remove("collapse")
       }
@@ -892,11 +925,11 @@ self.handle_test = () => {
     collapsed_block = _getAncestor(elem, "quando-block")
     collapsed_block.classList.add("quando-preview")
     collapsed_block.setAttribute("onmouseleave","index.exitPreview(event)")
+    let new_status = document.getElementById('status-symbol').children[1] //preview symbol
+    let clone = new_status.cloneNode(true)
     let relement = collapsed_block.children[1].children //children of quando_right
-    var collapse_symbol = relement[0].getElementsByClassName("moon")
-    relement[0].removeChild(collapse_symbol[0]) //remove collapse symbol
-    var preview_symbol = '<span class="moon" onclick="index.blockExpand(event)" title="preview mode, click to expand">🌓</span>'
-    relement[0].insertAdjacentHTML('beforeend', preview_symbol)
+    let status = relement[0].getElementsByClassName('status')[0]
+    relement[0].replaceChild(clone,status)
   }
 
   //exit preview mode
@@ -912,14 +945,14 @@ self.handle_test = () => {
     }
     collapsed_block.classList.remove("quando-preview")
     collapsed_block.removeAttribute("onmouseleave")
+    let new_status = document.getElementById('status-symbol').children[0] //collapsed symbol
+    let clone = new_status.cloneNode(true)
     let relement = collapsed_block.children[1].children //children of quando_right
-    var collapse_symbol = relement[0].getElementsByClassName("moon")
-    relement[0].removeChild(collapse_symbol[0]) //remove collapse symbol
-    var preview_symbol = '<span class="moon" onmouseover="index.enterPreview(event)">🌑</span>'
-    relement[0].insertAdjacentHTML('beforeend', preview_symbol)
+    let status = relement[0].getElementsByClassName('status')[0]
+    relement[0].replaceChild(clone,status)
   }
 
-  //expand block using moon botton (i.e. expand block when in preview mode)
+  //expand block using button
   self.blockExpand = (event) => {
     _block_expand(event.target)
     return false
@@ -935,12 +968,33 @@ self.handle_test = () => {
       collapsed_block.classList.remove("quando-preview")
       collapsed_block.removeAttribute("onmouseleave")
       let relement = collapsed_block.children[1].children //children of quando_right
-      var collapse_symbol = relement[0].getElementsByClassName("moon")
+      var collapse_symbol = relement[0].getElementsByClassName("status")
       relement[0].removeChild(collapse_symbol[0])
       for(i=1; i<relement.length;i++){
         relement[i].classList.remove("collapse")
       }
     }
+  }
+
+  //(optional) show expand symbol when mouse on preview symbol
+  self.showExpandSymbol = (event) => {
+    _show_expand_symbol(event.target)
+    return false
+  }
+
+  function _show_expand_symbol(elem){
+    let expand_symbol = document.getElementById('status-symbol').children[2].textContent
+    elem.textContent = expand_symbol
+  }
+
+  self.showPreviewSymbol = (event) => {
+    _show_preview_symbol(event.target)
+    return false
+  }
+
+  function _show_preview_symbol(elem){
+    let expand_symbol = document.getElementById('status-symbol').children[1].textContent
+    elem.textContent = expand_symbol
   }
 
   self.handle_save = () => {

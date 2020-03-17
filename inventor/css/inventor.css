@@ -80,15 +80,15 @@ input, #_hidden_width_element_ {
   background-color: #ffffff;
 }
 
-#script {
+#script, .script {
   background-color: #ffeeee;
 }
 
-#script, #clipboard {
+#script, #clipboard, .script {
   width:100%;
 }
 
-#menu, #script, #clipboard {
+#menu, #script, #clipboard, .script {
   padding: 4px;
   height: 100%;
   margin: 0 auto;
@@ -103,7 +103,7 @@ input, #_hidden_width_element_ {
   z-index:1;
 }
 
-#menu, #script, #clipboard, .quando-box {
+#menu, #script, #clipboard, .quando-box, .script {
   position:relative;
   display: flex;
   flex-flow: column nowrap;
@@ -239,6 +239,9 @@ input[type="color"] {
   height: max-content;
 }
 
+#status-symbol{
+  visibility: hidden;
+}
 
 /* .quando-separator {
   border-top-style:solid;
