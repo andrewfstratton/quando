@@ -25,7 +25,7 @@
       utter.rate = say.rate
       utter.pitch = say.pitch
       utter.volume = say.volume
-      self.utter = utter // attempt to solve Chrome bug - needing a global reference to utter to avoid it being garbage colected before onend is handled
+      self.utter = utter // attempt to solve Chrome bug - need a global reference to utter to avoid garbage collection before onend is handled
       utter.onstart = () => {
           if (self.next) {
               if (equalSay(self.next, say)) {
@@ -38,29 +38,27 @@
       }
       utter.onend = () => {
           if (self.next) { // i.e. something else is waiting to be said
-              if (equalSay(self.saying, self.next)) { // if it's the same thing...
-                  self.next = self.saying = null
-              } else {
-                  let next = self.next
-                  self.next = null
-                  newUtter(next)
-              }
+            self.saying = self.next
+            self.next = null
+            newUtter(self.saying)
           } else {
-              self.saying = null
+            self.saying = null
           }
       }
       self.synth.speak(utter)
     }
   
-    self.say = function(sentence, rate, pitch, volume) {
+    self.say = (sentence, rate, pitch, volume, interrupt=true) => {
       let new_say = {'sentence': sentence, 'rate': rate/100, 'pitch': pitch/100, 'volume': volume/100}
-      if (equalSay(self.saying, new_say)) {
-          // ignore when already saying the same
+      if (equalSay(self.saying, new_say) && interrupt) {
+          // ignore when already saying the same - and asked to interrupt
       } else {
-          if (self.saying) {
+          if (self.synth.speaking) {
               // i.e. currently saying or will do
               self.next = new_say // set next thing to say
-              self.synth.cancel() // Cancel current thing being said
+              if (interrupt) {
+                self.synth.cancel() // Cancel current thing being said - unless buffering
+              }
           } else { // start straight away
               self.next = null
               newUtter(new_say)
@@ -68,6 +66,7 @@
       }
     }
     self.clear = () => {
+        self.next = null
         self.synth.cancel() // Cancel current thing being said
     }
   })()
