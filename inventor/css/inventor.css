@@ -12,7 +12,7 @@ body,
 
 body {
     padding-top: 70px;
-    padding-bottom: 60px;
+    padding-bottom: 43px;
 }
 
 #show_modal_code {
@@ -80,15 +80,12 @@ input, #_hidden_width_element_ {
   background-color: #ffffff;
 }
 
-#script, .script {
-  background-color: #ffeeee;
-}
-
-#script, #clipboard, .script {
+#clipboard, .script {
+  position: relative;
   width:100%;
 }
 
-#menu, #script, #clipboard, .script {
+#menu, #clipboard, .script {
   padding: 4px;
   height: 100%;
   margin: 0 auto;
@@ -99,11 +96,69 @@ input, #_hidden_width_element_ {
   z-index: 0;
 }
 
+#script_box{
+  display: none;
+}
+
+
+.float_menu_left{
+  position: absolute;
+  left: 50%;
+  top: 95px;
+  z-index: 3;
+}
+
+/*之后化简*/
+.float_menu_right{
+  position: absolute;
+  right: 15px;
+  top: 95px;
+  z-index: 3;
+}
+
+.filename_left{
+  position: absolute;
+  left: 50%;
+  top: 75px;
+  z-index: 3;
+}
+/*之后化简*/
+.filename_right{
+  position: absolute;
+  right: 15px;
+  top: 75px;
+  z-index: 3;
+}
+
+#create_script_button{
+  position: absolute;
+  right:2%;
+  top: 10%;
+  z-index: 1;
+  font-size: 27px;
+  font-weight: 800;
+  line-height: 1;
+  color: #2e6da4;
+  text-shadow: 0 1px 0 #fff;
+  opacity: .7;
+}
+
+
+.script{
+  width:100%;
+  height: 100%;
+  margin: 0 auto;
+  background-color: #ffeeee;
+  padding-left: 2px;
+  padding-top: 2px;
+  z-index: 0;
+}
+
 .quando-box {
   z-index:1;
 }
 
-#menu, #script, #clipboard, .quando-box, .script {
+#menu, #clipboard, .quando-box, .script {
   position:relative;
   display: flex;
   flex-flow: column nowrap;
@@ -220,16 +275,7 @@ input[type="color"] {
   color: black;
 }
 
-/*.quando-collapse-template{
-  width: max-content;
-  height: max-content;
-  /*padding: 3px;
-  border-radius: 6px;
-  line-height: 15px;
-  text-align:center;
-  position: relative;
-}*/
-
+/*changes*/
 .collapse{
   display:none;
 }
@@ -239,9 +285,23 @@ input[type="color"] {
   height: max-content;
 }
 
+.buttons-row{
+  float:left;
+  margin:15px;
+}
+
+.hide{
+  display:none;
+}
+
 #status-symbol{
   visibility: hidden;
 }
+
+.disable{
+  filter: grayscale(75%);
+}
+/*end changes*/
 
 /* .quando-separator {
   border-top-style:solid;

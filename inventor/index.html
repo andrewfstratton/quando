@@ -14,6 +14,7 @@
     <link href="/inventor/css/toastr.min.css" type="text/css" rel="stylesheet"/>
     <link href="/inventor/css/dragula.css" type="text/css" rel="stylesheet"/>
     <link rel="icon" href="/favicon.ico">
+
 </head>
 <body role="document">
     <nav id="nav_bar" class="navbar navbar-default navbar-fixed-top">
@@ -28,9 +29,26 @@
                 <h3 class="navbar-text">
                     <span><img src="/favicon.ico" style="height:1.5em;"/></span>
                     Quando Inventor :
-                    <span id='file_name' class="navbar-textlabel">[no file]</span>
                     <span id='top_status' class="label label-success">Guest</span>
                 </h3>
+                <div class="buttons-row">
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#login_modal">
+                            Login
+                        </button>
+                    </div>
+                    <input id="upload_media" class="hidden" type="file" multiple="multiple"
+                        onchange="index.handle_upload_media();"/>
+                    <div class="btn-group" role="group">
+                        <label for="upload_media" type="button" class="btn btn-primary">
+                            <span class="glyphicon glyphicon-cloud-upload"></span> Upload Media
+                        </label>
+                    </div>
+                    <button type="button" class="btn btn-warning" onclick="index.handle_logout();">
+                        Logout
+                    </button>
+                    <span id='status_message' class="label label-default"></span>
+                </div>
             </div>
         </div>
     </nav>
@@ -42,55 +60,42 @@
                 <div id="clipboard_title" class="quando-title">Clipboard</div>
                 <div id="clipboard" class="quando-block"></div>
             </div>
-            <div id="script" class="col-md-10 script"></div>
-        </div>
-    </div>
-    <nav class="navbar navbar-default navbar-fixed-bottom">
-        <div class="container-fluid">
-            <div class="navbar-footer">
-                <div>
-                    <div class="btn-group" role="group">
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#login_modal">
-                            Login
-                        </button>
-                    </div>
-                    <div class="btn-group" role="group">
-                        <button type="button" class="btn btn-primary" onclick="index.handle_load();">
-                            <span class="glyphicon glyphicon-open"></span> Load
-                        </button>
-                        <button type="button" class="btn btn-primary" onclick="index.handle_save();">
-                            <span class="glyphicon glyphicon-save"></span> Save
-                        </button>
-                        <button type="button" class="btn btn-warning" onclick="index.handle_clear();">
-                            <span class="glyphicon glyphicon-remove-sign"></span> Clear
-                        </button>
-                    </div>
-                    <input id="upload_media" class="hidden" type="file" multiple="multiple"
-                        onchange="index.handle_upload_media();"/>
-                    <div class="btn-group" role="group">
-                        <label for="upload_media" type="button" class="btn btn-primary">
-                            <span class="glyphicon glyphicon-cloud-upload"></span> Upload Media
-                        </label>
-                    </div>
-                    <div class="btn-group" role="group">
-                        <button type="button" class="btn btn-primary" onclick="index.handle_test();">
-                            <span class="glyphicon glyphicon-eye-open"></span> Test
-                        </button>
-                        <button type="button" class="btn btn-primary" onclick="index.handle_deploy();">
-                            <span class="glyphicon glyphicon-briefcase"></span> Deploy
-                        </button>
-                        <button type="button" class="btn btn-warning" onclick="index.handle_show_code();">
-                            <span class="glyphicon glyphicon-eye-open"></span> Code
-                        </button>
-                    </div>
-                    <button type="button" class="btn btn-warning" onclick="index.handle_logout();">
-                        Logout
-                    </button>
-                    <span id='status_message' class="label label-default"></span>
-                </div>
+            <span id="name_0" class="filename_left">[No File]</span>
+            <div class="dropdown float_menu_left" data-current-index="0">
+                <span type="button" class="dropdown-toggle" data-toggle="dropdown"> ⋮ menu </span>
+                <ul class="dropdown-menu dropdown-menu-right">
+                    <li type="button" onclick="index.handle_script_expand();"><a> Help </a></li>
+                    <li type="button" onclick="index.handle_new_script();"><a> New script </a></li>
+                    <li class="divider"></li>
+                    <li type="button" onclick="index.handle_load();"><a> Load </a></li>
+                    <li type="button" onclick="index.handle_save();"><a> Save </a></li>
+                    <li type="button" onclick="index.handle_clear();"><a> Clear </a></li>
+                    <li class="divider"></li>
+                    <li type="button" onclick="index.handle_test();"><a> Test </a></li>
+                    <li type="button" onclick="index.handle_deploy();"><a> Deploy </a></li>
+                    <li type="button" onclick="index.handle_show_code();"><a> Code </a></li>
+                </ul>
             </div>
+            <span id="name_1" class="filename_right">[No File1]</span>
+            <div class="dropdown float_menu_right" data-current-index="1">
+                <span type="button" class="dropdown-toggle" data-toggle="dropdown"> ⋮ menu </span>
+                <ul class="dropdown-menu dropdown-menu-right">
+                    <li type="button" onclick="index.handle_new_script();"><a> New script </a></li>
+                    <li class="divider"></li>
+                    <li type="button" onclick="index.handle_load();"><a> Load </a></li>
+                    <li type="button" onclick="index.handle_save();"><a> Save </a></li>
+                    <li type="button" onclick="index.handle_clear();"><a> Clear </a></li>
+                    <li class="divider"></li>
+                    <li type="button" onclick="index.handle_test();"><a> Test </a></li>
+                    <li type="button" onclick="index.handle_deploy();"><a> Deploy </a></li>
+                    <li type="button" onclick="index.handle_show_code();"><a> Code </a></li>
+                </ul>
+            </div>
+            <div id="script_0" class="script col-md-5" data-status="left" data-script-index="0"></div>
+            <div id="script_1" class="script col-md-5" data-status="right" data-script-index="1"></div>
         </div>
-    </nav>
+        
+    </div>
     <div class="modal fade" id="login_modal" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -202,9 +207,10 @@
                     <div class="form-group">
                         <label>Save to local/browser storage</label>
                     </div>
-                    <div class="form-group">
+                    <div id="local_s_input" class="form-group">
                         <label for="local_save_key">Key</label>
-                        <input type="text" class="form-control" id="local_save_key">
+                        <input id="local_save_key_0" type="text" class="form-control">
+                        <input id="local_save_key_1" type="text" class="form-control">
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -225,9 +231,10 @@
                     <div class="form-group">
                         <label>Save to remote storage</label>
                     </div>
-                    <div class="form-group">
+                    <div id="remote_s_input" class="form-group">
                         <label for="remote_save_key">Key</label>
-                        <input type="text" class="form-control" id="remote_save_key">
+                        <input id="remote_save_key_0" type="text" class="form-control">
+                        <input id="remote_save_key_1" type="text" class="form-control">
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -446,6 +453,31 @@
         </div>
     </div>
 
+    <div id="script_template" class="script col-md-5 hide"></div>
+    <input id="key_template" type="text" class="form-control">
+    <!--<div id="script_tab">
+        <li class="single_tab" data-tab-index="0">
+            <a href="" data-toggle="tab" class="tab_file_name">[No file]
+                <span class="close tab_close" onclick="index.handle_close_script()">×</span>
+            </a>
+        </li>
+    </div>
+    
+    <div id="" class="script col-md-5" data-status="" data-script-index=""></div>
+    
+    <div class="dropdown float_menu">
+        <span type="button" class="dropdown-toggle" data-toggle="dropdown"> ⋮ </span>
+        <ul class="dropdown-menu dropdown-menu-right">
+            <li type="button" onclick="index.handle_load();"><a> Load </a></li>
+            <li type="button" onclick="index.handle_save();"><a> Save </a></li>
+            <li type="button" onclick="index.handle_clear();"><a> Clear </a></li>
+            <li class="divider"></li>
+            <li type="button" onclick="index.handle_test();"><a> Test </a></li>
+            <li type="button" onclick="index.handle_deploy();"><a> Deploy </a></li>
+            <li type="button" onclick="index.handle_show_code();"><a> Code </a></li>
+        </ul>
+    </div>-->
+    
     <script src="/inventor/js/jquery-2.2.0.js"></script>
     <script src="/inventor/js/bootstrap.min.js"></script>
     <script src="/inventor/js/bootbox.min.js"></script>
@@ -459,12 +491,13 @@
       <span id="block-clone" class="right-click-menu-item">📚 Clone<br/></span>
       <span id="block-collapse" class="right-click-menu-item">➖ Collapse<br/></span>
       <span id="block-expand" class="right-click-menu-item">➕ Expand<br/></span>
+      <span id="block-disable" class="right-click-menu-item">❎️ Disable<br/></span>
+      <span id="block-enable" class="right-click-menu-item">✅ Enable<br/></span>
+      <span id="block-help" class="right-click-menu-item">🧐 Help<br/></span>
     </div>
     <div id="status-symbol">
-        <span class="status" onmouseenter="index.enterPreview(event)">💬</span>
-        <span class="status" onclick="index.blockExpand(event)" onmouseenter="index.showExpandSymbol(event)"
-        onmouseleave="index.showPreviewSymbol(event)" title="preview mode, click to expand">👀</span>
-        <span class="status">➕</span>
+        <span class="status" onmouseenter="index.enterPreview(event)" 
+        onclick="index.blockExpand(event)" title="click to expand">▪️▪️▪️</span>
     </div>
 
 </body>

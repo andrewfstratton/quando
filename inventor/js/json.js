@@ -33,6 +33,14 @@ self.scriptToArray = (script) => {
       block_persist["id"] = block.dataset.quandoId
     }
     block_persist["block_type"] = block.dataset.quandoBlockType
+    // persist expand/collapse status
+    if (block.dataset && block.dataset.expand) {
+      block_persist["expand"] = block.dataset.expand
+    }
+    // persist enable/disable status
+    if (block.dataset && block.dataset.enable) {
+      block_persist["enable"] = block.dataset.enable
+    }
     let values = {}
     let boxes = []
     // Find the quando-right
@@ -89,6 +97,14 @@ self.addObjectToElement = (obj, elem) => {
         if (block.id) {
           clone.dataset.quandoId = self.nextDataQuandoId(block.id)
         }
+        // expand status
+        if (block.expand){
+          clone.dataset.expand = block.expand
+        }
+        // enable status
+        if (block.enable){
+          clone.dataset.enable = block.enable
+        }
         clone.style.display = "" // removes display none ?!
         for (let key in block.values) {
           let element = clone.querySelector("[data-quando-name='"+ key +"']")
@@ -113,6 +129,24 @@ self.addObjectToElement = (obj, elem) => {
             console.log(block.values[key])
           }
         }
+        //if block status is "collapse", collapse its quando box
+        if(block.expand == "false"){ 
+          let status = document.getElementById('status-symbol').children[0]
+          let collapse_icon = status.cloneNode(true)
+          let relement = clone.children[1].children //children of quando_right
+          relement[0].appendChild(collapse_icon)
+          for(u=1; u<relement.length;u++){
+            relement[u].classList.add("collapse")
+          }
+        }
+        //if block status is "disable", disable the block
+        if(block.enable == "false"){ 
+          clone.dataset.enable = "false"
+          let code = clone.dataset.quandoJavascript
+          let new_code = "/*" + code + "*/"
+          clone.dataset.quandoJavascript = new_code
+          clone.classList.add("disable")
+        }
         for (let key in block.boxes) {
           let obj = block.boxes[key]
           let element = clone.querySelector(".quando-box[data-quando-name='"+ obj.id +"']")
@@ -125,8 +159,9 @@ self.addObjectToElement = (obj, elem) => {
   }
 }
 
-self.setOptions = () => {
-  let script = document.getElementById("script")
+self.setOptions = (current_script) => {
+  //let script = document.getElementById("script")
+  let script = current_script
   for(let elem of script.querySelectorAll("[data-quando-tmp-value]")) {
     if (elem.dataset.quandoTmpValue) {
       let found = elem.querySelector("option[value='" + elem.dataset.quandoTmpValue + "']")
