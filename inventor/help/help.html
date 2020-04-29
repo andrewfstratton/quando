@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Quando Help</title>
+    <!--<link href="../css/bootstrap.min.css" rel="stylesheet" />-->
+    <link href="/inventor/css/bootstrap.min.css" type="text/css" rel="stylesheet">
+    <link href="/inventor/css/bootstrap-theme.min.css" type="text/css" rel="stylesheet">
+    <link href="/inventor/help/help.css" type="text/css" rel="stylesheet">
+  </head>
+  <body>
+    <script src="/inventor/js/jquery-2.2.0.js"></script>
+    <script src="/inventor/js/bootstrap.min.js"></script>
+    <script src="/inventor/js/bootbox.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <!--<script src="../js/bootstrap.min.js"></script>-->
+    <div class="row" >
+      <nav class="col-sm-2 col-md-3 col-xl-4" style="border-right-style: solid; border-right-width: 1px;">
+        <ul class="nav">
+          <h1 class="display-3" style="align-content: center;">
+              <span><img src="../favicon.ico" style="height:1.5em; margin-left: 10px;"/></span>
+              Quando Help
+          </h1>
+          <li><a href="#display">Display</a>
+            <ul>
+              <li><a href="#display-when-display">When display</a></li>
+              <li><a href="#display-label-to">Label to</a></li>
+            </ul>
+          </li>
+          <li><a href="#media">Media</a></li>
+          <li><a href="#AR">AR</a></li>
+          <li><a href="#style">Style</a>
+            <ul>
+              <li><a href="#style-text-style">Text style</a></li>
+            </ul>
+          </li>
+          <li><a href="#time">Time</a>
+            <ul>
+              <li><a href="#time-every">Every</a></li>
+            </ul>
+          </li>
+          <li><a href="#game">Game</a></li>
+          <li><a href="#advanced">Advanced</a></li>
+          <li><a href="#eeg">Eeg</a></li>
+          <li><a href="#devices">Devices</a></li>
+          <li><a href="#watson">Watson</a></li>
+        </ul>
+      </nav>
+      <main class="col-md-9 col-xl-8 container-fluid" role="main" style="padding-right: 40px;">
+        <div class="introduction-container">
+          <h1 id="display">Display</h1>
+          <p id="display-introduction" class="class-introduction">Display blocks provide a series of window action under specified circumstances defined by users. For example, showing the content and choices, or prompt out input box.</p>
+          <div>
+            <h2 id="display-when-display">When display</h2>
+            <p class="block-introduction">
+              <img src="images/display-when-display.jpg" alt="display-when-display"/><br>
+              When-display block means “When there shows something, then do something.”<br>
+              In default, this block displays the input content as a title on the window to indicate the current state (similar to the condition of “if” – the title shows which condition you reach now). You can set trigger conditions for some actions by putting blocks inside this block. <br>
+              If there exist label-to blocks, the input will be added as an option to label-to block automatically.
+            </p>
+          </div>
+          <div>
+            <h2 id="display-label-to" class="title">Label to</h2>
+            <p class="block-introduction">
+              <img src="images/display-label-to.jpg" alt="display-label-to"/><br>
+              Label-to block is used to switch conditions. In label-to block, inputs of when-display blocks are the switching options. The selected option will display as a link related to the When-display block that has the same input content.<br>
+              Should be noticed, there will be no option in the Label-to block if there is no When-display block in the script.
+            </p>
+          </div>
+          <div>
+            <h2 id="display-show-display" class="title">Show display</h2>
+            <p class="block-introduction"></p>
+          </div>
+        </div>
+        <div class="introduction-container">
+            <h1 id="media">Media</h1>
+        </div>
+        <div class="introduction-container">
+          <h1 id="style">Style</h1>
+          <p id="style-introduction" class="class-introduction">Style blocks can modify the style of the components that display on the code execution window, including background, title, text and label.</p>
+          <div>
+            <h2 id="style-text-style">Text style</h2>
+            <p class="block-introduction">
+              <img src="images/style-text-style.jpg" alt="style-text-style"/><br>
+              Text-style can change the text colour or its background colour. Text can from title, text or label.
+            </p>
+          </div>
+        </div>
+        <div class="introduction-container">
+          <h1 id="time">Time</h1>
+          <p id="time-introduction" class="class-introduction">Time blocks allow you to use time as a condition for performing actions.</p>
+          <div>
+            <h2 id="time-every">Every</h2>
+            <p class="block-introduction">
+              <img src="images/time-every.png" alt="time-every"/><br>
+              This block indicates “do something in every time scale”.  This block only can be dragged into the When-display block.</p>
+          </div>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>

@@ -34,12 +34,12 @@ self.scriptToArray = (script) => {
     }
     block_persist["block_type"] = block.dataset.quandoBlockType
     // persist expand/collapse status
-    if (block.dataset && block.dataset.expand) {
-      block_persist["expand"] = block.dataset.expand
+    if (block.dataset && block.dataset.quandoBlockExpand) {
+      block_persist["block_expand"] = block.dataset.quandoBlockExpand
     }
     // persist enable/disable status
-    if (block.dataset && block.dataset.enable) {
-      block_persist["enable"] = block.dataset.enable
+    if (block.dataset && block.dataset.quandoBlockEnable) {
+      block_persist["block_enable"] = block.dataset.quandoBlockEnable
     }
     let values = {}
     let boxes = []
@@ -98,12 +98,12 @@ self.addObjectToElement = (obj, elem) => {
           clone.dataset.quandoId = self.nextDataQuandoId(block.id)
         }
         // expand status
-        if (block.expand){
-          clone.dataset.expand = block.expand
+        if (block.block_expand){
+          clone.dataset.quandoBlockExpand = block.block_expand
         }
         // enable status
-        if (block.enable){
-          clone.dataset.enable = block.enable
+        if (block.block_enable){
+          clone.dataset.quandoBlockEnable = block.block_enable
         }
         clone.style.display = "" // removes display none ?!
         for (let key in block.values) {
@@ -130,7 +130,7 @@ self.addObjectToElement = (obj, elem) => {
           }
         }
         //if block status is "collapse", collapse its quando box
-        if(block.expand == "false"){ 
+        if(block.block_expand == "false"){ 
           let status = document.getElementById('status-symbol').children[0]
           let collapse_icon = status.cloneNode(true)
           let relement = clone.children[1].children //children of quando_right
@@ -140,11 +140,8 @@ self.addObjectToElement = (obj, elem) => {
           }
         }
         //if block status is "disable", disable the block
-        if(block.enable == "false"){ 
-          clone.dataset.enable = "false"
-          let code = clone.dataset.quandoJavascript
-          let new_code = "/*" + code + "*/"
-          clone.dataset.quandoJavascript = new_code
+        if(block.block_enable == "false"){ 
+          //clone.dataset.enable = "false"
           clone.classList.add("disable")
         }
         for (let key in block.boxes) {

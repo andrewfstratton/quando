@@ -1,0 +1,44 @@
+body{
+    height: 100%;
+    overflow: auto;
+}
+
+nav,main{
+    position: relative;
+    overflow: auto;
+    height: 925px;
+}
+
+a{
+    font-size: 1.2em;
+}
+
+@media screen and (max-width: 800px) {
+    nav { display: none; } 
+    .container-fluid {padding-left: 30px;}
+  }
+
+h2{
+    display: inline-block;
+    padding-right: 50px;
+    border-bottom: 1px groove #888;
+    margin-bottom: 10px;
+}
+
+p{
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+.introduction-container{
+    margin-bottom: 70px;
+}
+
+.block-introduction, .class-introduction{
+    font-size: 1.2em;
+    line-height: 25px
+}
+
+img{
+    margin-bottom: 15px;
+}

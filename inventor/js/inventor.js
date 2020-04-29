@@ -7,13 +7,52 @@ let _remote_list = []
 let PREFIX = 'quando_' // used for key to save/load to/from browser
 let client_script = ""
 
-let CURRENT_INDEX = 0 //use to get the script index
+let CURRENT_INDEX = 0 //used for getting the script index
+
+let TARGET_SCRIPT = document.getElementById('script_0')//used for getting actived script
+
+let IS_SHOW_CODE = 0 //use for switch function used in generateCode
+
+//when mouse click on script, active script
+//(currently used in "right-click clone the block from menu")
+self.activeScript = () => {
+  if((event.target).classList.contains('status')){
+    //
+  }else if(_hasAncestor(event.target,"script")){
+    TARGET_SCRIPT = _getAncestor(event.target,"script")
+  }else{
+    let script_container = _getAncestor(event.target,"script_container")
+    TARGET_SCRIPT = script_container.getElementsByClassName("script")[0]
+  }
+  active_script()
+}
+
+//active icon appears on the actived script, lights actived script's background 
+function active_script(){
+  let index = TARGET_SCRIPT.getAttribute("data-script-index")
+  let active_icon = document.getElementById('active_'+index)
+  let script = document.getElementById('script_'+index)
+  if(script.classList.contains('inactive')){
+    script.classList.remove('inactive')
+  }
+  if (active_icon.classList.contains('hide')){
+    active_icon.classList.remove('hide')
+  }
+  if(index == 1){
+    index = 0
+  }else{
+    index = 1
+  }
+  let icon_inactive = document.getElementById('active_'+index)
+  icon_inactive.classList.add('hide')
+  let script_inactive = document.getElementById('script_'+index)
+  script_inactive.classList.add('inactive')
+}
 
 //get index of current script from the button's attribute (data-current-index)
 function _get_current_index(select){
   let menu_button = _getAncestor(select,"dropdown")
   CURRENT_INDEX = menu_button.getAttribute("data-current-index")
-  console.log(CURRENT_INDEX)
 }
 
 //get id according given script_index, and find the element
@@ -57,7 +96,7 @@ self.handleRightClick = (event) => {
     return false
 }
 
-//collapse/expand selection added
+//collapse/expand, disable/enable, help selection added
 function _show_right_menu(elem) {
   let menu = document.getElementById('right-click-menu')
   let clone = menu.cloneNode(true)
@@ -68,21 +107,33 @@ function _show_right_menu(elem) {
     choosen_block = _getAncestor(elem, "quando-block")
   }
   if (choosen_block){
+    //if block only have one row, hide "collapse" & "expand" button
     if(choosen_block.getElementsByClassName('quando-box').length == 0){
       _set_menu_option_status('block-collapse',"none",'block-expand',"none")
     }
     //if quando block collapsed, show "expand" button
-    else if ((choosen_block.dataset.expand == "false")) {
+    else if ((choosen_block.dataset.quandoBlockExpand == "false")) {
       _set_menu_option_status('block-collapse',"none",'block-expand',"")
     }else{
       _set_menu_option_status('block-collapse',"",'block-expand',"none")
     }
     //if quando block is disable, show "enable" button
-    if((choosen_block.dataset.enable == "false")){
+    if((choosen_block.dataset.quandoBlockEnable == "false")){
       _set_menu_option_status('block-disable',"none",'block-enable',"")
     }else{
       _set_menu_option_status('block-disable',"",'block-enable',"none")
     }
+    //if block is in menu, hide collapse,expand,disable,enable button
+    if(_hasAncestor(choosen_block, document.getElementById('menu'))){
+      _set_menu_option_status('block-collapse',"none",'block-expand',"none")
+      _set_menu_option_status('block-disable',"none",'block-enable',"none")
+    }
+    
+    //if block in script, active current script
+    if(_getAncestor(choosen_block,"script") != null){
+      TARGET_SCRIPT = _getAncestor(choosen_block,"script")
+      active_script()
+    } 
   }
   menu.style.visibility = "visible"
   menu.style.left = event.pageX-8 + "px"
@@ -99,8 +150,8 @@ function _show_right_menu(elem) {
     if (containing_block)  {
       let clone = containing_block.cloneNode(true)
       if (_hasAncestor(containing_block, document.getElementById('menu'))) { // in the menu - so copy to script
-        document.getElementById('script').appendChild(clone)
-        console.log(1 +"在从menu上复制")
+        TARGET_SCRIPT.appendChild(clone)//clone block to the script that user's last action on
+        console.log(1)
       } else {
         let parent = containing_block.parentNode
         if (parent) {
@@ -128,7 +179,7 @@ function _show_right_menu(elem) {
       containing_block = _getAncestor(elem, "quando-block")
     }
     if (containing_block){
-      containing_block.dataset.expand = "false"
+      containing_block.dataset.quandoBlockExpand = "false"
       let status = document.getElementById('status-symbol').children[0]
       let clone = status.cloneNode(true)
       let relement = containing_block.children[1].children //children of quando_right
@@ -149,10 +200,7 @@ function _show_right_menu(elem) {
       containing_block = _getAncestor(elem, "quando-block")
     }
     if (containing_block){
-      containing_block.dataset.enable = "false"
-      let code = containing_block.dataset.quandoJavascript
-      let new_code = "/*" + code + "*/"
-      containing_block.dataset.quandoJavascript = new_code
+      containing_block.dataset.quandoBlockEnable = "false"
       containing_block.classList.add("disable")
     }
   },false)
@@ -163,10 +211,7 @@ function _show_right_menu(elem) {
       containing_block = _getAncestor(elem, "quando-block")
     }
     if (containing_block){
-      containing_block.dataset.enable = "true"
-      let code = containing_block.dataset.quandoJavascript
-      let new_code = code.substring(2,(code.length-2))
-      containing_block.dataset.quandoJavascript = new_code
+      containing_block.dataset.quandoBlockEnable = "true"
       containing_block.classList.remove("disable")
     }
   },false)
@@ -178,10 +223,8 @@ function _show_right_menu(elem) {
     }
     if (containing_block){
       let type = containing_block.dataset.quandoBlockType
-      let position = type.indexOf("-")
-      let id = "#"+type.substring(position+1)
-      let relative_url = type.slice(0,1).toUpperCase() + type.slice(1,position)
-      let url = "https://github.com/chungyanlee/blocks_help/wiki/"+relative_url+id
+      let id = "#"+ type
+      let url = "/inventor/help/help.html"+id
       window.open(url)
     }
   },false)
@@ -510,12 +553,10 @@ function _hasAncestor(elem, ancestor) {
 
 function _findTarget(target){
   let scripts = document.getElementsByClassName('script')
-  console.log("finding target")
   for(let script of scripts){
     if(target === script){
-      console.log("equal")
-      console.log(script)
-      console.log(target)
+      TARGET_SCRIPT = target //use for finding actived script
+      active_script()
       return true
     }
   }
@@ -523,7 +564,6 @@ function _findTarget(target){
 }
 
 function _setupDragula() {
-  console.log("setup dragula")
   let menu = document.getElementById('menu')
   let elems = menu.querySelectorAll("input, select")
   for(let elem of elems) {
@@ -533,7 +573,6 @@ function _setupDragula() {
   let collections = []
   //push all scripts to collections
   let scripts = document.getElementsByClassName('script')
-  console.log(scripts)
   for(let script of scripts){
     collections.push(script)
   }
@@ -619,46 +658,27 @@ self.setup = () => {
     //Autosave all opended scripts
     let scripts = document.getElementsByClassName('script')
     let num_of_saves = 2
+    let script_mode = 2 //0=only show script_0, 1=only show script_1, 2=show two scripts
     for(a=0; a<(scripts.length-1); a++){
       CURRENT_INDEX = scripts[a].getAttribute("data-script-index")
-      let status = scripts[a].getAttribute("data-status")
-      console.log("autosave status = "+status)
       let script = self.getScriptAsObject(scripts[a])
+      let script_container = _getAncestor(scripts[a],"script_container")
 
-      //if current is active and on the left side
-      if(status == "left"){ 
-        let key = 'quandoAutoSave_0'
+      let key = 'quandoAutoSave_'+CURRENT_INDEX
         if(script.length){
           local_save(key, script)
         }else{
           localStorage.removeItem(key)
         }
-        continue
-      }
-
-      //if current is active and on the right side
-      if(status == "right"){ 
-        let key = 'quandoAutoSave_1'
-        if(script.length){
-          local_save(key, script)
-        }else{
-          localStorage.removeItem(key)
+        if(script_container.classList.contains("col-md-10")){
+          script_mode = CURRENT_INDEX
         }
-        continue
-      }
-
-      //other script (which are open but inactive when close the window)
-      if(script.length){
-        let key = 'quandoAutoSave_'+ (a+2) //other scripts autosave index count from 2
-        local_save(key,script)
-        num_of_saves += 1   //count as autosave
-      }else{
-        //if current script inactive and have nothing, remove it local storage
-        let key = 'quandoAutoSave_'+CURRENT_INDEX
-        localStorage.removeItem(key)
-      }
     }
     localStorage.setItem("numOfAutoSaves", JSON.stringify(num_of_saves))
+    //store the index of actived script
+    let actived_script_index = TARGET_SCRIPT.dataset.scriptIndex
+    localStorage.setItem("activeScriptIndex", JSON.stringify(actived_script_index))
+    localStorage.setItem("scriptMode", JSON.stringify(script_mode))
   }
 
   toastr.options = {
@@ -679,19 +699,25 @@ self.setup = () => {
     hideMethod: 'fadeOut'
   }
 
-  //if number of autosave file greater than 2, means there are some scirpt that
-  //are opened but inactive (did't show on screen) when window close
-  //hence create blank script for them
-  //let num_of_saves = JSON.parse(localStorage.getItem("numOfAutoSaves"))
-  //if(num_of_save>2){
-    //for(i=2;i<(num_of_save-2);i++){
-      //clone script,inputs
-      //use i as index to create id of script,name place,inputs
-      //set id and index attribute to script and input
-      //append script and inputs to specified place
-      //add the script current filename to "switching script" menu
-    //}
-  //}
+  //keep script status (collapse/expand,actived/inactived) same as the last time
+  let activeScriptIndex = 2
+  if(localStorage.getItem("activeScriptIndex") != "undefined"){
+    activeScriptIndex = JSON.parse(localStorage.getItem("activeScriptIndex"))
+  }
+  let script_mode = 2
+  if(localStorage.getItem("scriptMode") !="undefined"){
+    script_mode = JSON.parse(localStorage.getItem("scriptMode"))
+  }
+
+  if (activeScriptIndex < 2){
+    TARGET_SCRIPT = document.getElementById('script_'+activeScriptIndex)
+    active_script()
+  }
+  
+  if (script_mode != 2){
+    let expand_button = document.getElementById('s_expand_'+script_mode)
+    _script_expand(expand_button)
+  }
 
   $('#login_modal').keypress((e) => {
     if (e.which === 13) {
@@ -749,8 +775,6 @@ self.setup = () => {
             if (!name) {
               name = block.type
             }
-            console.log("Error with block '" + name + "'")
-            console.log(block)
           }
         }
       } else {
@@ -759,12 +783,10 @@ self.setup = () => {
       $('#loading_modal').modal('hide')
 
       //autoload files
-      console.log("loading script")
       let num_of_saves = JSON.parse(localStorage.getItem("numOfAutoSaves"))
       for(q=0; q<num_of_saves; q++){
         let key='quandoAutoSave_' + q
         local_load(key,q)
-        console.log("loading = "+ q)
       }
       
       for (let elem of document.getElementsByClassName("quando-title")) {
@@ -869,7 +891,6 @@ function _warning (message) {
   self.loaded = (obj, modal_id,script_index) => {
     //get current script
     let current_script = _get_current_script(script_index)
-    console.log(current_script)
     self.showObject(obj.script,current_script)
     _deploy = obj.deploy
     name = obj.filename
@@ -886,7 +907,6 @@ function _warning (message) {
 
   function _saved (name) {
     _success('Saved...')
-    console.log("_saved index = "+CURRENT_INDEX)
     let ids = _get_inputs_name_id(CURRENT_INDEX) //[remote_id,local_id,name_id]
     document.getElementById(ids[2]).innerHTML = name
     document.getElementById(ids[0]).value = name
@@ -971,7 +991,11 @@ self.generateCode = (elem) => {
   let children = elem.children
   let result = ""
   for (let child of children) {
-    result += generator.getCode(child)
+    if(IS_SHOW_CODE == 0){
+      result += generator.getCode(child)
+    }else{
+      result += generator.getCommentedCode(child)
+    }
   }
   let prefix = generator.prefix()
   if (prefix) {
@@ -1049,107 +1073,50 @@ self.handle_test = () => {
     }
   }
 
-  //close current script //Pseudocode
-  self.handle_close_script = () => {
-    //let closebutton = event.target
-    //let index = closebutton.getAttribut("index")
-    //let side = closebutton.getAttribut("side") //"left-side" or "right-side"
-    //let ids = _get_inputs_name_id(index) //[remote_id,local_id,name_id]
-    //let remote = document.getElementById('remote_s_input')
-    //let remote_input = document.getElementById(ids[0])
-    //remote.removeChild(remote_input)  //remove the remote save inputs of the  current script
-    //let local = document.getElementById('local_s_input')
-    //let local_input = document.getElementById(ids[1])
-    //local.removeChild(local_input) 
-    //let script_id = "script_"+index
-    //document.getElementById('editor_cntent').removeChild(script_id) //remove current script
-    //let remain_scripts = document.getElementByClassName("script")
-    //for(let script of scripts){
-      //if(script.classList.indexOf('hide')>-1){ 
-        //if script have class "hide",means it is not shown on screen now,
-        //hence can choose it to show on screen after close one script
-        //if(...) {//find the current visiable script is on left or right
-        //then add class to the script that will display to adjust position
-        //script.classList.remove('hide')
-        //let new_index = script.getAttribute("data-script-index")
-        //let name_id = "name_"+ new_index
-        //document.getelementById(ids[2]).setAttribute("id",name_id) //change new name id
-        //get that filename place with new id,and find the files name from the relative input, 
-        //put inside the filename place
-        //}
-        //break
-      //}
-    //}
+  //expand current script
+  self.scriptExpand = (event) =>{
+    _script_expand(event.target)
+    return false
   }
 
-  //Find next avilable index to create new ids
-  function _get_avilable_ids(){
-    let ids = []
-    let max_index = 0
-    let scripts = document.getElementsByClassName("script")
-    for(b=0;b<(scripts.length-1);b++){
-      let current_index = scripts[b].getAttribute("data-script-index")
-      if(max_index < current_index){
-        max_index = current_index
+  function _script_expand(elem){
+    let index = elem.dataset.currentIndex
+    let script_container = _getAncestor(elem,"script_container")
+    script_container.classList.remove("col-md-5")
+    script_container.classList.add("col-md-10")
+    let containers = document.getElementsByClassName('script_container')
+    for(a=0;a<containers.length;a++){ 
+      if((containers[a] == script_container)||containers[a].classList.contains("hide")){
+        continue
       }
+      containers[a].classList.add('hide')
     }
-    let available_index = parseInt(max_index) + 1
-    let remote_id = "remote_save_key_" + available_index
-    let local_id = "local_save_key_" + available_index
-    let name_id = "name_" + available_index
-    let script_id = "script_" + available_index
-    ids = [available_index, script_id, name_id, remote_id, local_id]
-
-    return ids
+    elem.classList.add('hide')
+    let collapse_button = document.getElementById('s_collapse_'+index)
+    collapse_button.classList.remove('hide')
   }
 
-  //create a new script  -- currently the _setupDragula doesn't work?
-  self.handle_new_script = () => {
-    _get_current_index(event.target)
-    _get_current_script(CURRENT_INDEX).classList.add("hide")
-    let infos = _get_avilable_ids()
-    let index = infos[0]
-    //script
-    let script_template = document.getElementById('script_template')
-    let clone = script_template.cloneNode(false)
-    clone.setAttribute("id",infos[1])
-    clone.setAttribute("data-script-index",index)
-    clone.classList.remove("hide")
-
-    //remote & local save key input
-    let remote = document.getElementById('key_template')
-    let remote_clone = remote.cloneNode(false)
-    remote_clone.setAttribute("id",infos[3])
-    document.getElementById('remote_s_input').appendChild(remote_clone)
-    let local = document.getElementById('key_template')
-    let local_clone = local.cloneNode(false)
-    local_clone.setAttribute("id",infos[4])
-    document.getElementById('local_s_input').appendChild(local_clone)
-
-    if(_getAncestor(event.target,"float_menu_left")){
-      let menu = _getAncestor(event.target,"float_menu_left")
-      menu.setAttribute("data-current-index",index)
-      //Pseudocode->get:close script button,setAttribute:"index"=index
-      let name = document.getElementsByClassName("filename_left")[0]
-      name.setAttribute("id",infos[2])
-      name.innerHTML = "[No File]"
-      clone.classList.add("col-md-pull-5")
-    }else{
-      let menu = _getAncestor(event.target,"float_menu_right")
-      menu.setAttribute("data-current-index",index)
-      //Pseudocode->get:close script button,setAttribute:"index"=index
-      let name = document.getElementsByClassName("filename_right")[0]
-      name.setAttribute("id",infos[2])
-      name.innerHTML = "[No File]"
+  //collapse current script (show two scripts at the same time)
+  self.scriptCollapse = (event) =>{
+    _script_collapse(event.target)
+    return false
+  }
+  
+  function _script_collapse(elem){
+    let index = elem.dataset.currentIndex
+    let script_container = _getAncestor(elem,"script_container")
+    script_container.classList.remove("col-md-10")
+    script_container.classList.add("col-md-5")
+    let containers = document.getElementsByClassName('script_container')
+    for(a=0;a<containers.length;a++){ //the last one is template, already hided
+      if((containers[a] == script_container)||!containers[a].classList.contains("hide")){
+        continue
+      }
+      containers[a].classList.remove('hide')
     }
-    document.getElementById('editor_content').appendChild(clone)
-    
-    _setupDragula()
-
-    //for (let item of document.getElementsByClassName("quando-block")) {
-    //  self.setElementHandlers(item)
-    //}
-    
+    elem.classList.add('hide')
+    let expand_button = document.getElementById('s_expand_'+index)
+    expand_button.classList.remove('hide')
   }
 
   //enter preview mode
@@ -1161,7 +1128,7 @@ self.handle_test = () => {
   function _enter_preview(elem){
     let collapsed_block = elem
     collapsed_block = _getAncestor(elem, "quando-block")
-    collapsed_block.classList.add("quando-preview")
+    collapsed_block.classList.add("quando-block-preview")
     collapsed_block.setAttribute("onmouseleave","index.exitPreview(event)")
   }
 
@@ -1173,7 +1140,7 @@ self.handle_test = () => {
 
   function _exit_preview(elem){
     let collapsed_block = elem
-    collapsed_block.classList.remove("quando-preview")
+    collapsed_block.classList.remove("quando-block-preview")
     collapsed_block.removeAttribute("onmouseleave")
   }
 
@@ -1189,12 +1156,10 @@ self.handle_test = () => {
       collapsed_block = _getAncestor(elem, "quando-block")
     }
     if(collapsed_block){
-      collapsed_block.dataset.expand = "true"
-      if(collapsed_block.classList.contains("quando-preview")){
+      collapsed_block.dataset.quandoBlockExpand = "true"
+      if(collapsed_block.classList.contains("quando-block-preview")){
         //if block is in preview mode, then remove preview class when click the expand button
-        collapsed_block.classList.remove("quando-preview")
-      }
-      if(collapsed_block.getAttribute("onmouseleave")){
+        collapsed_block.classList.remove("quando-block-preview")
         collapsed_block.removeAttribute("onmouseleave")
       }
       let relement = collapsed_block.children[1].children //children of quando_right
@@ -1203,6 +1168,9 @@ self.handle_test = () => {
       for(i=1; i<relement.length;i++){
         relement[i].classList.remove("collapse")
       }
+      //active the script that user expand the block
+      TARGET_SCRIPT = _getAncestor(collapsed_block,"script")
+      active_script()
     }
   }
 
@@ -1228,7 +1196,6 @@ self.handle_test = () => {
   self.handle_save = () => {
     _get_current_index(event.target) //get id of current script that user want to save file on
     _show_input_box()
-    console.log("first save button index"+CURRENT_INDEX)
     if (_userid) {
       $('#remote_save_modal').modal('show')
     } else {
@@ -1254,7 +1221,6 @@ self.handle_test = () => {
   
   self.handle_local_save = () => {
     let key = _get_input_value("local",CURRENT_INDEX)
-    console.log("key"+key)
     let current_script = _get_current_script(CURRENT_INDEX)
     local_save(PREFIX + key, self.getScriptAsObject(current_script))
     $('#local_save_modal').modal('hide')
@@ -1463,8 +1429,10 @@ self.handle_test = () => {
       }
       txt += ']'
     } else { // must be Code
+      IS_SHOW_CODE = 1
       btn.text('Code') // In case the first time it's called
       txt = self.generateCode(script)
+      IS_SHOW_CODE = 0
     }
     $('#show_modal_clip_paste_button').prop('disabled', disabled)
     $('#show_modal_code').prop('readonly', false)

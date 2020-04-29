@@ -31,7 +31,7 @@
                     Quando Inventor :
                     <span id='top_status' class="label label-success">Guest</span>
                 </h3>
-                <div class="buttons-row">
+                <div class="buttons-row collapse navbar-collapse" id="editor_navbar_collapse">
                     <div class="btn-group" role="group">
                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#login_modal">
                             Login
@@ -60,39 +60,57 @@
                 <div id="clipboard_title" class="quando-title">Clipboard</div>
                 <div id="clipboard" class="quando-block"></div>
             </div>
-            <span id="name_0" class="filename_left">[No File]</span>
-            <div class="dropdown float_menu_left" data-current-index="0">
-                <span type="button" class="dropdown-toggle" data-toggle="dropdown"> ⋮ menu </span>
-                <ul class="dropdown-menu dropdown-menu-right">
-                    <li type="button" onclick="index.handle_script_expand();"><a> Help </a></li>
-                    <li type="button" onclick="index.handle_new_script();"><a> New script </a></li>
-                    <li class="divider"></li>
-                    <li type="button" onclick="index.handle_load();"><a> Load </a></li>
-                    <li type="button" onclick="index.handle_save();"><a> Save </a></li>
-                    <li type="button" onclick="index.handle_clear();"><a> Clear </a></li>
-                    <li class="divider"></li>
-                    <li type="button" onclick="index.handle_test();"><a> Test </a></li>
-                    <li type="button" onclick="index.handle_deploy();"><a> Deploy </a></li>
-                    <li type="button" onclick="index.handle_show_code();"><a> Code </a></li>
-                </ul>
+            <div class="script_container col-md-5" onclick="index.activeScript()">
+                <div class = "title">
+                    <div id="active_0" class="active_icon"></div>
+                    <span id="name_0">[No File]</span>
+                </div>
+                <div class="toolbox">
+                    <div class="script_menu">
+                        <span id="s_expand_0" type="button" class="button-font" style="line-height: 35px;" data-current-index="0" onclick="index.scriptExpand(event)" title="Expand script">˂˃</span>
+                        <span id="s_collapse_0" type="button" class="button-font hide" style="line-height: 35px;" data-current-index="0" onclick="index.scriptCollapse(event)" title="Collapse script">˃˂</span>
+                    </div>
+                    <div class="dropdown script_menu" data-current-index="0" title="Menu">
+                        <span type="button" class="dropdown-toggle button-font" data-toggle="dropdown" style="line-height: 25px;">☰</span>
+                        <ul class="dropdown-menu dropdown-menu-right">
+                            <li type="button" onclick="index.handle_load();"><a> Load </a></li>
+                            <li type="button" onclick="index.handle_save();"><a> Save </a></li>
+                            <li class="divider"></li>
+                            <li type="button" onclick="index.handle_clear();"><a> Clear </a></li>
+                            <li class="divider"></li>
+                            <li type="button" onclick="index.handle_test();"><a> Test </a></li>
+                            <li type="button" onclick="index.handle_deploy();"><a> Deploy </a></li>
+                            <li type="button" onclick="index.handle_show_code();"><a> Code </a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div id="script_0" class="script" data-script-index="0"></div>
             </div>
-            <span id="name_1" class="filename_right">[No File1]</span>
-            <div class="dropdown float_menu_right" data-current-index="1">
-                <span type="button" class="dropdown-toggle" data-toggle="dropdown"> ⋮ menu </span>
-                <ul class="dropdown-menu dropdown-menu-right">
-                    <li type="button" onclick="index.handle_new_script();"><a> New script </a></li>
-                    <li class="divider"></li>
-                    <li type="button" onclick="index.handle_load();"><a> Load </a></li>
-                    <li type="button" onclick="index.handle_save();"><a> Save </a></li>
-                    <li type="button" onclick="index.handle_clear();"><a> Clear </a></li>
-                    <li class="divider"></li>
-                    <li type="button" onclick="index.handle_test();"><a> Test </a></li>
-                    <li type="button" onclick="index.handle_deploy();"><a> Deploy </a></li>
-                    <li type="button" onclick="index.handle_show_code();"><a> Code </a></li>
-                </ul>
+            <div class="script_container col-md-5" onclick="index.activeScript()">
+                <div class = "title">
+                    <div id="active_1" class="active_icon hide"></div>
+                    <span id="name_1">[No File]</span>
+                </div>
+                <div class="toolbox">
+                    <div class="script_menu">
+                        <span id="s_expand_1" type="button" class="button-font" style="line-height: 35px;" data-current-index="1" onclick="index.scriptExpand(event)" title="Expand script">˂˃</span>
+                        <span id="s_collapse_1" type="button" class="button-font hide" style="line-height: 35px;" data-current-index="1" onclick="index.scriptCollapse(event)" title="Collapse script">˃˂</span>
+                    </div>
+                    <div class="dropdown script_menu" data-current-index="1" title="Menu">
+                        <span type="button" class="dropdown-toggle button-font" data-toggle="dropdown" style="line-height: 25px;">☰</span>
+                        <ul class="dropdown-menu dropdown-menu-right">
+                            <li type="button" onclick="index.handle_load();"><a> Load </a></li>
+                            <li type="button" onclick="index.handle_save();"><a> Save </a></li>
+                            <li type="button" onclick="index.handle_clear();"><a> Clear </a></li>
+                            <li class="divider"></li>
+                            <li type="button" onclick="index.handle_test();"><a> Test </a></li>
+                            <li type="button" onclick="index.handle_deploy();"><a> Deploy </a></li>
+                            <li type="button" onclick="index.handle_show_code();"><a> Code </a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div id="script_1" class="script inactive" data-script-index="1"></div>
             </div>
-            <div id="script_0" class="script col-md-5" data-status="left" data-script-index="0"></div>
-            <div id="script_1" class="script col-md-5" data-status="right" data-script-index="1"></div>
         </div>
         
     </div>
@@ -454,29 +472,7 @@
     </div>
 
     <div id="script_template" class="script col-md-5 hide"></div>
-    <input id="key_template" type="text" class="form-control">
-    <!--<div id="script_tab">
-        <li class="single_tab" data-tab-index="0">
-            <a href="" data-toggle="tab" class="tab_file_name">[No file]
-                <span class="close tab_close" onclick="index.handle_close_script()">×</span>
-            </a>
-        </li>
-    </div>
-    
-    <div id="" class="script col-md-5" data-status="" data-script-index=""></div>
-    
-    <div class="dropdown float_menu">
-        <span type="button" class="dropdown-toggle" data-toggle="dropdown"> ⋮ </span>
-        <ul class="dropdown-menu dropdown-menu-right">
-            <li type="button" onclick="index.handle_load();"><a> Load </a></li>
-            <li type="button" onclick="index.handle_save();"><a> Save </a></li>
-            <li type="button" onclick="index.handle_clear();"><a> Clear </a></li>
-            <li class="divider"></li>
-            <li type="button" onclick="index.handle_test();"><a> Test </a></li>
-            <li type="button" onclick="index.handle_deploy();"><a> Deploy </a></li>
-            <li type="button" onclick="index.handle_show_code();"><a> Code </a></li>
-        </ul>
-    </div>-->
+    <input id="key_template" type="text" class="form-control hide">
     
     <script src="/inventor/js/jquery-2.2.0.js"></script>
     <script src="/inventor/js/bootstrap.min.js"></script>

@@ -43,6 +43,8 @@ function nextMatch(str, open, close) {
     return [parsed, matched, remaining]
 }
 
+let IS_SHOW_CODE =0
+let IS_IN_COMMENT = 0
 self.getCodeInBlock = function(block) {
     let code = ''
     if (block.dataset && block.dataset.quandoJavascript) {
@@ -76,7 +78,18 @@ self.getCodeInBlock = function(block) {
                 }
                 let infix = ''
                 for (let block of row_box.children) {
-                    box_code += infix + prefix + self.getCode(block) + postfix
+                    if(IS_SHOW_CODE==0){
+                        box_code += infix + prefix + self.getCode(block) + postfix
+                    }else{
+                        
+                        // if(IS_IN_COMMENT == 0){
+                        //     box_code += infix + prefix + self.getCommentedCode(block) + postfix
+                        // }else{
+                        //     box_code += infix + prefix + " " + self.getCommentedCode(block) + postfix
+                        // }
+                        box_code += infix + prefix + self.getCommentedCode(block) + postfix
+                    }
+                    
                     if (infix == '') {
                         infix = separator
                     }
@@ -124,8 +137,28 @@ self.getCodeInBlock = function(block) {
 }
     
 self.getCode = function(block) {
+    IS_SHOW_CODE = 0
     let result = '' 
-    if (block.dataset.quandoJavascript) {
+    //If the block have js code and also enable, then get its code
+    if (block.dataset.quandoJavascript && (block.dataset.quandoBlockEnable != "false")) {
+      result = self.getCodeInBlock(block)
+      if (result != '') { result += '\n' }
+    }
+    return result
+}
+
+self.getCommentedCode = function(block) {
+    IS_SHOW_CODE = 1
+    let result = '' 
+    //If the block have js code and also enable, then get its code
+    if (block.dataset.quandoJavascript && (block.dataset.quandoBlockEnable == "false")) {
+        IS_IN_COMMENT = 1
+      result = self.getCodeInBlock(block)
+      if (result != '') { 
+          result = "/* "+ result
+          result += ' */\n' }
+        IS_IN_COMMENT = 0
+    }else if(block.dataset.quandoJavascript){
       result = self.getCodeInBlock(block)
       if (result != '') { result += '\n' }
     }
