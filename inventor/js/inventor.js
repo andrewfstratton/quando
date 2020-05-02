@@ -701,11 +701,11 @@ self.setup = () => {
 
   //keep script status (collapse/expand,actived/inactived) same as the last time
   let activeScriptIndex = 2
-  if(localStorage.getItem("activeScriptIndex") != "undefined"){
+  if(localStorage.getItem("activeScriptIndex") != "undefined" && localStorage.getItem("activeScriptIndex") != null){
     activeScriptIndex = JSON.parse(localStorage.getItem("activeScriptIndex"))
   }
   let script_mode = 2
-  if(localStorage.getItem("scriptMode") !="undefined"){
+  if(localStorage.getItem("scriptMode") !="undefined" && localStorage.getItem("scriptMode") != null){
     script_mode = JSON.parse(localStorage.getItem("scriptMode"))
   }
 
@@ -1615,6 +1615,11 @@ self.handle_test = () => {
     if (files.length > 0) {
       _upload_next_file(files, remote_path)
     }
+  }
+
+  self.handle_help = () => {
+    let url = "/inventor/help/help.html"
+    window.open(url)
   }
 
   self.handle_logout = () => {
