@@ -26,10 +26,10 @@ module.exports = (app) => {
     app.post('/control/key', (req, res) => {
       let val = req.body.val
       let modifier = []
-      if (val.shift) { modifer.push('shift') }
-      if (val.ctrl) { modifer.push('control') }
-      if (val.alt) { modifer.push('alt') }
-      if (val.command) { modifer.push('command') }
+      if (val.shift) { modifier.push('shift') }
+      if (val.ctrl) { modifier.push('control') }
+      if (val.alt) { modifier.push('alt') }
+      if (val.command) { modifier.push('command') }
       robotjs.keyTap(val.key, modifier)
       res.json({})
     })
