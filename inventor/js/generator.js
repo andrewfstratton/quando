@@ -44,7 +44,6 @@ function nextMatch(str, open, close) {
 }
 
 let IS_SHOW_CODE =0
-let IS_IN_COMMENT = 0
 self.getCodeInBlock = function(block) {
     let code = ''
     if (block.dataset && block.dataset.quandoJavascript) {
@@ -81,13 +80,7 @@ self.getCodeInBlock = function(block) {
                     if(IS_SHOW_CODE==0){
                         box_code += infix + prefix + self.getCode(block) + postfix
                     }else{
-                        
-                        // if(IS_IN_COMMENT == 0){
-                        //     box_code += infix + prefix + self.getCommentedCode(block) + postfix
-                        // }else{
-                        //     box_code += infix + prefix + " " + self.getCommentedCode(block) + postfix
-                        // }
-                        box_code += infix + prefix + self.getCommentedCode(block) + postfix
+                        box_code += infix + prefix + self.getCodeForShow(block) + postfix
                     }
                     
                     if (infix == '') {
@@ -147,17 +140,15 @@ self.getCode = function(block) {
     return result
 }
 
-self.getCommentedCode = function(block) {
+self.getCodeForShow = function(block) {
     IS_SHOW_CODE = 1
     let result = '' 
     //If the block have js code and also enable, then get its code
     if (block.dataset.quandoJavascript && (block.dataset.quandoBlockEnable == "false")) {
-        IS_IN_COMMENT = 1
       result = self.getCodeInBlock(block)
       if (result != '') { 
           result = "/* "+ result
           result += ' */\n' }
-        IS_IN_COMMENT = 0
     }else if(block.dataset.quandoJavascript){
       result = self.getCodeInBlock(block)
       if (result != '') { result += '\n' }

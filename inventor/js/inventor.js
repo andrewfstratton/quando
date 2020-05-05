@@ -341,7 +341,6 @@ function _populateListOptions(list_name) {
         add_to_select += `<option value="${id}">${value}</option>\n`
       }
     }
-    //selects = document -> script
     let selects = script.querySelectorAll("select[data-quando-list='" + list_name + "']") // all the selectors to reset
     for(let select of selects) {
       let value = select.value
@@ -367,7 +366,7 @@ function _populateLists() {
       let list_name = input.dataset.quandoList
       if (list_name && !list_names.includes(list_name)) {
         list_names.push(list_name)
-        _populateListOptions(list_name)
+        _populateListOptions(list_name,script)
       }
     }
   }
@@ -555,8 +554,6 @@ function _findTarget(target){
   let scripts = document.getElementsByClassName('script')
   for(let script of scripts){
     if(target === script){
-      TARGET_SCRIPT = target //use for finding actived script
-      active_script()
       return true
     }
   }
@@ -634,6 +631,10 @@ function _setupDragula() {
   }
   self.drake = dragula(collections, options).on('drop', (elem) => {
     self.setElementHandlers(elem)
+    if(_getAncestor(elem,"script")){
+      TARGET_SCRIPT = _getAncestor(elem,"script")
+      active_script()
+    }
     _populateLists() // refresh options in label everytime when drop block
   }).on('cloned', (clone, old, type) => {
     if (type == 'copy') {
@@ -994,7 +995,7 @@ self.generateCode = (elem) => {
     if(IS_SHOW_CODE == 0){
       result += generator.getCode(child)
     }else{
-      result += generator.getCommentedCode(child)
+      result += generator.getCodeForShow(child)
     }
   }
   let prefix = generator.prefix()
@@ -1394,7 +1395,7 @@ self.handle_test = () => {
     $('#show_modal').modal('show')
     $('#show_modal_code').removeClass('language-xml').addClass('language-javascript')
     _get_current_index(event.target) //get current script index
-    update_code_clip(CURRENT_INDEX)
+    update_code_clip()
   }
 
   //Add '_get_current_index', '_get_current_script','_get_inputs_name_id'
@@ -1412,11 +1413,11 @@ self.handle_test = () => {
     self.showObject(undefined,current_script)
   }
 
-  function update_code_clip(script_index) {
+  function update_code_clip() {
     let disabled = true
     let btn = $('#show_modal_code_toggle_button')
     let txt = ""
-    let script = _get_current_script(script_index) //get current script user is on
+    let script = _get_current_script(CURRENT_INDEX) //get current script user is on
     if (btn.text() == 'Clip') { // i.e. if is Clip
       disabled = false
       let arr = json.scriptToArray(script)
@@ -1447,7 +1448,7 @@ self.handle_test = () => {
     } else { // was Clip, now Code
       btn.text('Code')
     }
-    update_code_clip(CURRENT_INDEX)
+    update_code_clip()
   }
 
   self.handle_clip_paste = () => {
