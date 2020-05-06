@@ -3,6 +3,7 @@
 (() => {
     let self = this['json'] = {} // for access from the web page, etc.
 
+let NEXT_ID = 0
 self.nextDataQuandoId = (id) => {
   let result = id
   if (isNaN(id)) {
@@ -11,6 +12,7 @@ self.nextDataQuandoId = (id) => {
   while (document.querySelector(`[data-quando-id='${result}']`)) {
     result++
   }
+  NEXT_ID = result
   return result
 }
 
@@ -72,9 +74,12 @@ self.scriptToArray = (script) => {
   return arr
 }
 
+let PREVIOUS_IDS = []
+let NEW_IDS = []
 self.addObjectToElement = (obj, elem) => {
   let menu = document.getElementById("menu")
   if (obj) {
+    let ids_index = 0
     for(let block of obj) {
       if (block.block_type == 'devices-rotate-object3d') {
         block.block_type = 'media-rotate-object3d'
@@ -96,6 +101,15 @@ self.addObjectToElement = (obj, elem) => {
         }
         if (block.id) {
           clone.dataset.quandoId = self.nextDataQuandoId(block.id)
+          if(block.block_type == "display-when-display"){
+            //if is block display-when-display, as option value of display-label-to
+            //and display-show-display are set according to its id,
+            //its previous id (in script) and new id will be save in array
+            //provide clue for block to getting the correct option value
+            PREVIOUS_IDS[ids_index] = block.id
+            NEW_IDS[ids_index] = NEXT_ID
+            ids_index +=1
+          } 
         }
         // expand status
         if (block.block_expand){
@@ -157,17 +171,27 @@ self.addObjectToElement = (obj, elem) => {
 }
 
 self.setOptions = (current_script) => {
-  //let script = document.getElementById("script")
   let script = current_script
   for(let elem of script.querySelectorAll("[data-quando-tmp-value]")) {
     if (elem.dataset.quandoTmpValue) {
       let found = elem.querySelector("option[value='" + elem.dataset.quandoTmpValue + "']")
+      //find whether the quandoTmpValue relates with display-when-display block
+      let index_of_tmp = PREVIOUS_IDS.indexOf(elem.dataset.quandoTmpValue)
+      //if so, according to index of block's (previous) id in PREVIOUS_IDS
+      //to get the blocks' new id in NEW_IDS array, get the option with correct value
+      if (index_of_tmp >-1){
+        let new_tmp_value = NEW_IDS[index_of_tmp]
+        found = elem.querySelector("option[value='" + new_tmp_value + "']")
+      }
       if (found) {
         found.selected = true
       }
       delete elem.dataset.quandoTmpValue
     }
   }
+  //As all option value are correct and set, these two arrays are empty for next use
+  PREVIOUS_IDS=[]
+  NEW_IDS=[]
 }
 
 })()

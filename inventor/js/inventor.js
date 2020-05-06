@@ -1418,7 +1418,6 @@ self.handle_test = () => {
     let btn = $('#show_modal_code_toggle_button')
     let txt = ""
     let script = _get_current_script(CURRENT_INDEX) //get current script user is on
-    console.log(script)
     if (btn.text() == 'Clip') { // i.e. if is Clip
       disabled = false
       let arr = json.scriptToArray(script)
