@@ -1418,6 +1418,7 @@ self.handle_test = () => {
     let btn = $('#show_modal_code_toggle_button')
     let txt = ""
     let script = _get_current_script(CURRENT_INDEX) //get current script user is on
+    console.log(script)
     if (btn.text() == 'Clip') { // i.e. if is Clip
       disabled = false
       let arr = json.scriptToArray(script)
@@ -1437,7 +1438,7 @@ self.handle_test = () => {
     }
     $('#show_modal_clip_paste_button').prop('disabled', disabled)
     $('#show_modal_code').prop('readonly', false)
-    $('#show_modal_code').text(txt)
+    $('#show_modal_code').val(txt)  //change .text(txt) to .val(txt)
     $('#show_modal_code').prop('readonly', disabled)
   }
 
