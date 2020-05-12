@@ -1,0 +1,21 @@
+<div class="quando-block" data-quando-javascript="quando.pitchChanger(${audio_file}, ${delay}, ${transpose});
+">
+    <div class="quando-left quando-advanced"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-advanced">🖐
+            Pitch Changer
+        </div>
+        <div data-quando-name="myname" class="quando-box"></div>
+        <div class="quando-row quando-advanced">
+            delay
+            <input data-quando-name='delay' type='number' value='0' placeholder='delay' style='width: 4em' min='-10'
+                max='30' data-quando-encode='normal' />
+            transpose
+            <input data-quando-name='transpose' type='number' value='0' placeholder='transpose' style='width: 4em'
+                min='-25' max='25' data-quando-encode='normal' />
+            file name
+            <input data-quando-name='audio_file' type='text' value='&quot;media/voice.mp3&quot;' placeholder='file name'
+                data-quando-encode='raw' />
+        </div>
+    </div>
+</div>

@@ -1,0 +1,26 @@
+<div class="quando-block" data-quando-javascript="quando.synth.call_advancedVoiceCreator('${tag}', '${type}',
+                                                                        ${voice_frequency}, ${intensity})">
+    <div class="quando-left quando-style"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-style">
+            🎨🗣 Voice Shaper
+            <select data-quando-name="extras" class="quando-toggle">
+                <option value="hidden">+</option>
+                <option value="show">-</option>
+            </select>
+            <span data-quando-toggle="extras=show">
+                <br>
+                Tag
+                <input data-quando-name='tag' type='text' value='' placeholder='tag' data-quando-encode='normal' />
+                Type
+                <input data-quando-name='type' type='text' value='' placeholder='sine' data-quando-encode='normal' />
+                V.frequency
+                <input data-quando-name='voice_frequency' type='number' value='' placeholder='0-100'
+                    data-quando-encode='normal' style='width: 4.7em' />
+                Intensity
+                <input data-quando-name='intensity' type='number' value='' placeholder='0-100' 
+                data-quando-encode='normal' style='width: 4.7em' />
+            </span>
+        </div>
+    </div>
+</div>

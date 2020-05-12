@@ -603,7 +603,174 @@
   self.prompt = (text, callback) => {
     callback(prompt(decodeURI(text)))
   }
-})()
+
+  
+  // START OF Web audio api fcts        <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+  
+  self.getLiveAudio = (audioContext) => {
+    return navigator.mediaDevices.getUserMedia({audio: true})
+    .then(stream => audioContext.createMediaStreamSource(stream));
+};
+
+  const getImpulseBuffer = (audioContext, impulseUrl) => {
+    return fetch(impulseUrl)
+    .then(response => response.arrayBuffer())
+    .then(arrayBuffer => audioContext.decodeAudioData(arrayBuffer))
+};
+
+  self.reverb = () => {
+    const audioContext = new AudioContext(); 
+    // const gainNode = audioContext.createGain();
+    // const live_audio = getLiveAudio(audioContext);
+    // let gainNod = audioContext.createGain();
+    // gainNod.gain.value = 2;
+    // var reverb_convolver = audioContext.createConvolver();
+    // reverb_convolver.buffer = await getImpulseBuffer(audioContext, '/cardiod-rear-levelled.wav');
+    // live_audio.connect(gainNode).connect(reverb_convolver).connect(audioContext.destination);
+    // reverb.load();
+};
+
+
+  self.makeOscillator = ( frequency=80, audioContext, gainNode, type ) => {
+    // const audioContext = new AudioContext();
+    // gainNode = audioContext.createGain();
+    const oscillator = audioContext.createOscillator();
+    oscillator.type = type;
+    oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
+    oscillator.start();
+    // gainNode.connect(oscillator.detune);
+    oscillator.connect(gainNode).connect(audioContext.destination);
+};
+
+/**
+ * 
+ * need to move the grabByTag function
+ * but where?? 
+ */
+// TODO: delete this
+function grabByTag(tag) {
+  fs.readdir("./client/media/watson/", function (err, list) {
+    list.forEach(function (filename) {
+      if (filename.includes(tag)) {
+        console.log('\tfound filename with tag ', tag);
+        console.log('\tfilename = ', filename);
+        // stats = fs.statSync(filename);
+        // console.log(stats.mtime);
+        // console.log(stats.ctime);
+      }
+      else if (err) {
+        console.error('no filename found with tag * ', tag, ' *');
+      }
+    })
+  })
+};
+
+  self.pitchChanger = ( tag, delay=0, transpose=0, audioContext=(new AudioContext()) ) => {// # duration=5
+    // var audioContext = new AudioContext()
+    var loc = window.location.pathname;
+    var dir = loc.substring(0, loc.lastIndexOf('/'));
+    console.log('current directory ', dir);
+    var startTime = audioContext.currentTime + 0.1
+    
+    // let file_name = grabByTag(tag);
+    let file_name = tag;
+    getAudio('./media/watson/' + file_name, function (buffer) {
+      
+      play(delay, transpose)
+ 
+      
+      function play (delay, transpose) {
+        var player = audioContext.createBufferSource()
+        player.buffer = buffer
+        player.connect(audioContext.destination)
+    
+        player.playbackRate.value = Math.pow(2, transpose / 12)
+    
+        player.start(startTime + delay, 0)
+      }
+    })
+    
+    function getAudio ( url, cb ) {
+      var request = new XMLHttpRequest()
+      request.open('GET', url)
+      request.responseType = 'arraybuffer'
+      request.onload = function () {
+        audioContext.decodeAudioData(request.response, cb)
+      }
+      request.send()
+  }}
+
+  self.pp_delay = (amplifier) => { 
+    var audioContext = new AudioContext()
+
+    var input = audioContext.createGain()
+    var merger = audioContext.createChannelMerger(2)
+    var output = audioContext.createGain()
+
+    var leftDelay = audioContext.createDelay()
+    var rightDelay = audioContext.createDelay()
+    var feedback = audioContext.createGain()
+
+    self.audio('voice.mp3', false);
+    const audioElement = document.querySelector('audio');
+    console.log('am here <<<<')
+    const track = audioContext.createMediaElementSource(audioElement);
+
+
+    input.connect(feedback, 0)
+    leftDelay.connect(rightDelay)
+    rightDelay.connect(feedback)
+    feedback.connect(leftDelay)
+    merger.connect(output)
+    input.connect(output)
+    output.connect(audioContext.destination)
+
+    feedback.gain.value = amplifier
+
+    leftDelay.connect(merger, 0, 0)
+    rightDelay.connect(merger, 0, 1)
+
+    leftDelay.delayTime.value = 3 / 8
+    rightDelay.delayTime.value = 3 / 8
+
+    play(1 / 8, 3, 0.05)
+    play(2 / 8, 7, 0.05)
+    play(3 / 8, 15, 0.05)
+
+    function play (startAfter, pitch, duration) {
+      var time = audioContext.currentTime + startAfter
+      track.connect(input);
+      audioElement.play();
+}}
+
+  self.biquadf = ( audioContext, gainNode, track ) => {
+    console.log('been here<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<');
+    let lpf1 = audioContext.createBiquadFilter();
+    lpf1.type = "lowpass";
+    lpf1.frequency.value = 2000;
+    let lpf2 = audioContext.createBiquadFilter();
+    lpf2.type = "lowpass";
+    lpf2.frequency.value = 2000;
+    let hpf1 = audioContext.createBiquadFilter();
+    hpf1.type = "highpass";
+    hpf1.frequency.value = 500;
+    let hpf2 = audioContext.createBiquadFilter();
+    hpf2.type = "highpass";
+    hpf2.frequency.value = 500;
+    
+    lpf1.connect(lpf2);
+    lpf2.connect(hpf1);
+    hpf1.connect(hpf2);
+    hpf2.connect(gainNode).connect(audioContext.destination);
+    track.connect(hpf2).connect(audioContext.destination);
+};
+
+
+
+
+
+
+})()  // END of function
 
 var val = false // force handlers to manage when not embedded
 var txt = false // assume default is ignore

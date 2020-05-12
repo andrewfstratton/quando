@@ -123,6 +123,7 @@ require('./server/rest/login')(app, success, fail)
 require('./server/rest/script')(app, io, success, fail)
 require('./server/rest/file')(app, MEDIA_FOLDER, MEDIA_MAP, success, fail)
 require('./server/rest/watson')(app, base64, base64Img, watson_db, fs)
+require('./server/rest/synth')(app, fs)
 
 // Static for inventor
 app.use('/inventor', express_static(join(__dirname, 'inventor')))

@@ -24,26 +24,31 @@
     "file-base64": "^1.0.0",
     "formidable": "^1.2.1",
     "graceful-fs": "4.1.10",
-    "ibm-watson": "^4.5.1",
+    "ibm-cloud-sdk-core": "^2.3.0",
+    "ibm-watson": "^5.4.0",
     "leapjs": "^0.6.4",
     "memorystore": "^1.6.1",
     "morgan": "^1.9.1",
     "node-gyp": "^5.0.3",
     "npm": "^6.11.3",
+    "pouchdb": "^7.2.1",
+    "pouchdb-find": "^7.2.1",
+    "pouchdb-server": "^4.2.0",
     "promise": "^8.0.3",
-    "socket.io": "^2.3.0",
-    "watson-developer-cloud": "^3.18.3"
+    "socket.io": "^2.3.0"
   },
   "devDependencies": {
     "chai": "^4.2.0",
     "mocha": "^4.1.0"
   },
   "nodemonConfig": {
-    "ignore": ["client/",
+    "ignore": [
+      "client/",
       "device_setup/",
       "inventor/",
       "pouchdb/",
       "hub/",
-      "blocks/"]
+      "blocks/"
+    ]
   }
 }

@@ -214,6 +214,8 @@ input[type="color"] {
 .quando-inventor-collection { background: hsl(274, 50%, 90%); }
 .quando-inventor-picker { background: hsl(80, 50%, 90%); }
 .quando-eeg { color: white; background: #f75a00; }
+.quando-whe { background: #f75a00; }
+
 
 
 .quando-eeg input, .quando-eeg select {

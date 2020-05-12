@@ -7,19 +7,20 @@
   let mediaRecorder = null
   let recording = false
 
-  self.call_tts = function(text, val) {        
-    if (typeof val === 'string' && val.length) {
-      text = val
-    }
+  self.call_tts = function(text, tag='') {        
+    // if (typeof val === 'string' && val.length) {
+    //   text = val
+    // }
     //send POST request to server
     fetch('/watson/TTS_request', { method: 'POST', 
-        body: JSON.stringify({'text':text}), 
+        body: JSON.stringify({'text':text,
+                              'tag':tag}), 
         headers: {"Content-Type": "application/json",
                   Accept: 'application/json'}
     }).then(function(response) {
       response.json().then(function(data) {
-        console.log(data)
-        //play audio after 
+        //play audio after
+        // TODO: fix this 
         window.setTimeout(()=> {
           quando.audio(data+'.wav', false)
         }, 0)
@@ -112,7 +113,40 @@
         }
       )
   }
+
+
+  /**
+    * STT test
+    */
+    
+  self.call_speech_to_text_2 = function (audio_in, loop = false) {
+    console.log('speech_to_text_2() called ..........................');
+    console.log('Audio file grabbed => ', audio_in);
+    // if (audio_in) {
+    //   audio_in = '/client/media/' + encodeURI(audio_in);
+    // }
+    // var audio = document.getElementById('quando_audio')
+    // audio.loop = loop
+    // if (audio.src != encodeURI(window.location.origin + audio_in)) { // src include http://127.0.0.1/
+    //   if (audio.src) {
+    //     audio.pause()
+    //   }
+    //   audio.src = audio_in
+    //   audio.autoplay = true
+    //   audio.addEventListener('ended', self.clear_audio)
+      // audio.load()  // --play the audio file
+    
+    fetch('/watson/SPEECH_from_file_request', {
+      method: 'POST',
+      body: JSON.stringify({ 'filename': audio_in }),
+      headers: { "Content-Type": "application/json" }
+    })
+    }
+
+    
   
+
+
   self.call_speech_to_text = function() {  
     quando.promptInput()
     let div = document.getElementById('visrec_label')
@@ -134,10 +168,12 @@
           reader.onloadend = function() {
              base64 = reader.result;
              base64 = base64.split(',')[1];
-             fetch('/watson/SPEECH_request', { method: 'POST', 
+             fetch('/watson/SPEECH_request', 
+             { method: 'POST', 
                body: JSON.stringify({'data':base64}), 
                headers: {"Content-Type": "application/json"}
-             }).then((response) => {
+             })
+             .then((response) => {
                 response.json().then((data) => {
                   div.innerHTML = "Click to start listening..."
                   if (!data.error) {
