@@ -329,7 +329,7 @@ function _getAncestorId(elem, _class) {
 
 function _populateListOptions(list_name) {
   let scripts = document.getElementsByClassName("script")
-  let scripts_num = (scripts.length-1) //there is one template script also be counted
+  let scripts_num = (scripts.length) //there is one template script also be counted
   for(b=0; b<scripts_num; b++){
     let script = scripts[b]
     let inputs = script.querySelectorAll("input[data-quando-list='" + list_name + "']") // the elements containing the values and text
@@ -358,7 +358,7 @@ function _populateListOptions(list_name) {
 
 function _populateLists() {
   let script_arr = document.getElementsByClassName("script")
-  for(a=0; a<(script_arr.length-1); a++){ //for all opened scripts, expect the script template
+  for(a=0; a<(script_arr.length); a++){ //for all opened scripts, expect the script template
     let script = script_arr[a]
     let inputs = script.querySelectorAll("input[data-quando-list]")
     let list_names =[]
@@ -660,7 +660,7 @@ self.setup = () => {
     let scripts = document.getElementsByClassName('script')
     let num_of_saves = 2
     let script_mode = 2 //0=only show script_0, 1=only show script_1, 2=show two scripts
-    for(a=0; a<(scripts.length-1); a++){
+    for(a=0; a<(scripts.length); a++){
       CURRENT_INDEX = scripts[a].getAttribute("data-script-index")
       let script = self.getScriptAsObject(scripts[a])
       let script_container = _getAncestor(scripts[a],"script_container")
@@ -1165,8 +1165,8 @@ self.handle_test = () => {
       }
       let relement = collapsed_block.children[1].children //children of quando_right
       var collapse_symbol = relement[0].getElementsByClassName("status")
-      relement[0].removeChild(collapse_symbol[0])
-      for(i=1; i<relement.length;i++){
+      relement[0].removeChild(collapse_symbol[0]) //remove "collapsed" icon
+      for(i=1; i<relement.length;i++){ //show the hidden elements
         relement[i].classList.remove("collapse")
       }
       //active the script that user expand the block
@@ -1175,7 +1175,7 @@ self.handle_test = () => {
     }
   }
 
-  //show input boxes of the choosen script in remote & local save, using the index of sscript
+  //show input boxes of the choosen script in remote & local save, using the index of script
   function _show_input_box(){
     let remote_id = "remote_save_key_" + CURRENT_INDEX
     let remote_inputs = document.getElementById('remote_save_modal').getElementsByTagName("input")
