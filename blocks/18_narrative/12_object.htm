@@ -1,0 +1,19 @@
+<div class="quando-block" data-quando-drop-valid="narrative-area" data-quando-javascript="quando.narrative.add_object('${name}','${description}',(val)=>{${box}})">
+    <div class="quando-left quando-display"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-display">
+            <span class="iconify">Object</span>
+            <input data-quando-name='name' type='text' value='' placeholder='Name' data-quando-encode='normal'/>
+            <select data-quando-name='collapse' class='quando-toggle'>
+                <option value='hide'>Expand</option>
+                <option value='show'>Collapse</option>
+            </select>
+            <br>
+            Description
+            <input data-quando-name='description' type='text' value='' placeholder='' data-quando-encode='normal'/>
+            
+        </div>
+        <div data-quando-toggle="collapse=show" data-quando-name="box" class="quando-box quando-character"></div>
+        <div data-quando-toggle="collapse=show" class="quando-row quando-display"></div>
+    </div>
+</div>

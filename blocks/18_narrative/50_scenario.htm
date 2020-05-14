@@ -1,0 +1,40 @@
+<div class="quando-block" data-quando-javascript="quando.narrative.play_scenario('${scenario_name}','${start_area}','${goal}',${goal_chapter_num},'${item_name}','${character_name}','${mood}')">
+    <div class="quando-left quando-display"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-display">
+            <span class="iconify">Scenario</span>
+            <input data-quando-name='scenario_name' type='text' value='' placeholder='Name' data-quando-encode='normal'/>
+            <br>
+            Player starts in 
+            <input data-quando-name='start_area' type='text' value='' placeholder='Start Area' data-quando-encode='normal'/>
+            <br>
+            Goal of scenario
+            <select data-quando-name='goal' class='quando-toggle'>
+                <option value='chapter'>Reach a chapter</option>
+                <option value='item'>Aquire an item</option>
+                <option value='feel'>Make a character feel _</option>
+            </select>
+            <br>
+            <span data-quando-toggle='goal=chapter'>
+                &gt; Chapter number
+                <input data-quando-name='goal_chapter_num' type='number' value='0' placeholder='' style='width: 4em' min='0' max='100' data-quando-encode='normal'/>
+            </span>
+            <span data-quando-toggle='goal=item'>
+                &gt; Item name
+                <input data-quando-name='item_name' type='text' value='' placeholder='' data-quando-encode='normal'/>
+            </span>
+            <span data-quando-toggle='goal=feel'>
+                &gt; Make
+                <input data-quando-name='character_name' type='text' value='' placeholder='Name of Character' data-quando-encode='normal'/>
+                feel
+                <select data-quando-name="mood">
+                    <option value='friendly'>Friendly</option>
+                    <option value='happy'>Happy</option>
+                    <option value='neutral'>Neutral</option>
+                    <option value='unhappy'>Unhappy</option>
+                    <option value='angry'>Angry</option>
+                </select>
+            </span>
+        </div>
+    </div>
+</div>

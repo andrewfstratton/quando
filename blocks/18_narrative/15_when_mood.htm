@@ -1,0 +1,21 @@
+<div class="quando-block" data-quando-drop-valid="narrative-character" data-quando-javascript="quando.narrative.add_mood('${mood}',(val)=>{${box}})">
+    <div class="quando-left quando-display"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-display">
+            When this character is
+            <select data-quando-name="mood">
+                <option value='friendly'>Friendly</option>
+                <option value='happy'>Happy</option>
+                <option value='neutral'>Neutral</option>
+                <option value='unhappy'>Unhappy</option>
+                <option value='angry'>Angry</option>
+            </select>
+            <select data-quando-name='collapse' class='quando-toggle'>
+                <option value='hide'>Expand</option>
+                <option value='show'>Collapse</option>
+            </select>
+        </div>
+        <div data-quando-toggle="collapse=show" data-quando-name="box" class="quando-box quando-character"></div>
+        <div data-quando-toggle="collapse=show" class="quando-row quando-display"></div>
+    </div>
+</div>

@@ -1,0 +1,104 @@
+<div class="quando-block" data-quando-drop-valid="narrative-interaction" data-quando-javascript="quando.narrative.add_option('${option}','${reaction}',['${contype1}','${contype2}','${contype3}'],['${additionalcon1}','${additionalcon2}'],[${unlocked_chapter_num1},${unlocked_chapter_num2},${unlocked_chapter_num3}],[${locked_chapter_num1},${locked_chapter_num2},${locked_chapter_num3}],['${item_name1}','${item_name2}','${item_name3}'],['${area_name1}','${item_name2}','${item_name3}'])">
+    <div class="quando-left quando-display"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-display">
+            <b>Option</b>
+            <input data-quando-name='option' type='text' value='' placeholder='How the player could respond' data-quando-encode='normal'/>
+            <br>
+            Reaction
+            <input data-quando-name='reaction' type='text' value='' placeholder='What is said back' data-quando-encode='normal'/>
+            <br>
+            Option Consequences
+            <br>
+            1. 
+            <select data-quando-name='contype1' class='quando-toggle'>
+                <option value='nothing'>None</option>
+                <option value='unlock'>A chapter is unlocked</option>
+                <option value='lock'>A chapter is locked</option>
+                <option value='item'>Player recieves an item</option>
+                <option value='area'>An area is unlokced</option>
+            </select>
+            <select data-quando-name='additionalcon1' class='quando-toggle'>
+                <option value='no'>+</option>
+                <option value='yes'>-</option>
+            </select>
+            <br>
+            <span data-quando-toggle='contype1=unlock'>
+                &gt; Chapter Number
+                <input data-quando-name='unlocked_chapter_num1' type='number' value='0' placeholder='' style='width: 4em' min='0' max='100' data-quando-encode='normal'/>
+            </span>
+            <span data-quando-toggle='contype1=lock'>
+                &gt; Chapter Number
+                <input data-quando-name='locked_chapter_num1' type='number' value='0' placeholder='' style='width: 4em' min='0' max='100' data-quando-encode='normal'/>
+            </span>
+            <span data-quando-toggle='contype1=item'> 
+                &gt; Item Recieved
+                <input data-quando-name='item_name1' type='text' value='' placeholder='' data-quando-encode='normal'/>
+            </span>
+            <span data-quando-toggle='contype1=area'> 
+                &gt; Area Unlocked
+                <input data-quando-name='area_name1' type='text' value='' placeholder='' data-quando-encode='normal'/>
+            </span>
+            <span data-quando-toggle='additionalcon1=yes'>
+                <br>
+                2. 
+                <select data-quando-name='contype2' class='quando-toggle'>
+                    <option value='nothing'>None</option>
+                    <option value='unlock'>A chapter is unlocked</option>
+                    <option value='lock'>A chapter is locked</option>
+                    <option value='item'>Player recieves an item</option>
+                    <option value='area'>An area is unlokced</option>
+                </select>
+                <select data-quando-name='additionalcon2' class='quando-toggle'>
+                    <option value='no'>+</option>
+                    <option value='yes'>-</option>
+                </select>
+                <br>
+                <span data-quando-toggle='contype2=unlock'>
+                    &gt; Chapter Number
+                    <input data-quando-name='unlocked_chapter_num2' type='number' value='0' placeholder='' style='width: 4em' min='0' max='100' data-quando-encode='normal'/>
+                </span>
+                <span data-quando-toggle='contype2=lock'>
+                    &gt; Chapter Number
+                    <input data-quando-name='locked_chapter_num2' type='number' value='0' placeholder='' style='width: 4em' min='0' max='100' data-quando-encode='normal'/>
+                </span>
+                <span data-quando-toggle='contype2=item'> 
+                    &gt; Item Recieved
+                    <input data-quando-name='item_name2' type='text' value='' placeholder='' data-quando-encode='normal'/>
+                </span>
+                <span data-quando-toggle='contype2=area'> 
+                    &gt; Area Unlocked
+                    <input data-quando-name='area_name2' type='text' value='' placeholder='' data-quando-encode='normal'/>
+                </span>
+                <span data-quando-toggle='additionalcon2=yes'>
+                    <br>
+                    3. 
+                    <select data-quando-name='contype3' class='quando-toggle'>
+                        <option value='nothing'>None</option>
+                        <option value='unlock'>A chapter is unlocked</option>
+                        <option value='lock'>A chapter is locked</option>
+                        <option value='item'>Player recieves an item</option>
+                        <option value='area'>An area is unlokced</option>
+                    </select>
+                    <br>
+                    <span data-quando-toggle='contype3=unlock'>
+                        &gt; Chapter Number
+                        <input data-quando-name='unlocked_chapter_num3' type='number' value='0' placeholder='' style='width: 4em' min='0' max='100' data-quando-encode='normal'/>
+                    </span>
+                    <span data-quando-toggle='contype3=lock'>
+                        &gt; Chapter Number
+                        <input data-quando-name='locked_chapter_num3' type='number' value='0' placeholder='' style='width: 4em' min='0' max='100' data-quando-encode='normal'/>
+                    </span>
+                    <span data-quando-toggle='contype3=item'> 
+                        &gt; Item Recieved
+                        <input data-quando-name='item_name3' type='text' value='' placeholder='' data-quando-encode='normal'/>
+                    </span>
+                    <span data-quando-toggle='contype3=area'> 
+                        &gt; Area Unlocked
+                        <input data-quando-name='area_name3' type='text' value='' placeholder='' data-quando-encode='normal'/>
+                    </span>
+                </span>
+            </span>
+        </div>
+    </div>
+</div>
