@@ -56,10 +56,10 @@ function _get_current_index(select){
 }
 
 //get id according given script_index, and find the element
- function _get_current_script(script_index){
-   let id = "script_" + script_index
-   return document.getElementById(id)
- }
+function _get_current_script(script_index){
+  let id = "script_" + script_index
+  return document.getElementById(id)
+}
 
 //Add 'current_script' parameter
 self.showObject = (obj, current_script) => {
