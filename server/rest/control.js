@@ -1,5 +1,15 @@
 module.exports = (app) => {
   let robotjs = false
+  let request = require('request'); // TODO request is depricated - but this is only for transferring across to java...
+  let TO_JAVA = (req, res, path) => {
+    console.log("FORWARD TO JAVA: " + JSON.stringify(req.body))
+    request({url: "http://localhost:8080" + path,
+      method: "POST", json: true, body: req.body
+    }, (error, response, body) => {
+      res.json(response.json)
+    })
+  }
+
   try {
     robotjs = require("robotjs")
     const { spawn } = require('child_process')
@@ -18,9 +28,7 @@ module.exports = (app) => {
     })
 
     app.post('/control/type', (req, res) => {
-      let str = decodeURI(req.body.val)
-      robotjs.typeString(str)
-      res.json({})
+      TO_JAVA(req, res, '/control/type')
     })
 
     app.post('/control/key', (req, res) => {
