@@ -1,2 +1,5 @@
 {
+  "java.project.referencedLibraries": [
+    "local_server/lib/**/*.jar"
+]
 }
