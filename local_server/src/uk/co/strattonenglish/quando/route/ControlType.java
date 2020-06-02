@@ -9,36 +9,43 @@ import uk.co.strattonenglish.quando.device.LocalControl;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.json.JSONException;
+
 public class ControlType extends RESTRoute {
 	// REST access to controlling the keyboard and mouse on the local machine
 	// Note: the factory should return a dummy KeyControl for servers
 	private static BaseKeyControl keyControl = LocalControl.getKeyControl();
-	
+
 	@Override
 	public String handle_REST(HttpServletRequest request) throws IOException {
-		setJSONObjectOnRequest(request);
 		StringBuffer result = new StringBuffer();
-		String val = getJSONString("val");
+		try {
+			setJSONObjectOnRequest(request);
+			String val = getJSONString("val");
 
-		if (val != null) {
-			System.out.println(val);
-			
-			try {
-				keyControl.pressKeyCode(KeyEvent.VK_CONTROL);
-				keyControl.typeKeyCode(KeyEvent.VK_ESCAPE, 100);
-		        keyControl.releaseKeyCode(KeyEvent.VK_CONTROL);
-		        for (char ch: val.toCharArray()) {
-		        	keyControl.typeChar(ch, KeyControl.DEFAULT_TYPING_DELAY);
-		        }
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+			if (val != null) {
+				System.out.println(val);
+
+				try {
+					keyControl.pressKeyCode(KeyEvent.VK_CONTROL);
+					keyControl.typeKeyCode(KeyEvent.VK_ESCAPE, 100);
+					keyControl.releaseKeyCode(KeyEvent.VK_CONTROL);
+					for (char ch : val.toCharArray()) {
+						keyControl.typeChar(ch, KeyControl.DEFAULT_TYPING_DELAY);
+					}
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
+
+			System.out.println("handled by Control Route");
+
+			result.append("{}");
+		} catch (JSONException ex) {
+			System.out.println("Malformed JSON received");
+			result.append("{err: 'Malformed JSON received'}");
 		}
-
-		System.out.println("handled by Control Route");
-
-        result.append("{}");
-        return result.toString();
+		return result.toString();
 	}
 
 }

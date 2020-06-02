@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public abstract class RESTRoute extends Route {
@@ -15,7 +16,7 @@ public abstract class RESTRoute extends Route {
 
 	private JSONObject jsonObject;
 	
-	protected void setJSONObjectOnRequest(HttpServletRequest request) throws IOException {
+	protected void setJSONObjectOnRequest(HttpServletRequest request) throws IOException, JSONException {
 		StringBuffer buffer = new StringBuffer();
 		BufferedReader reader = request.getReader();
 		String line;
