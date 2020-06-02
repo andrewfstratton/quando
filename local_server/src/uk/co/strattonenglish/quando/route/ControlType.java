@@ -1,6 +1,5 @@
 package uk.co.strattonenglish.quando.route;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.awt.event.KeyEvent;
 
