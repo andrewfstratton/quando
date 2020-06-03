@@ -1,13 +1,18 @@
 module.exports = (app) => {
   let robotjs = false
-  let request = require('request'); // TODO request is depricated - but this is only for transferring across to java...
-  let TO_JAVA = (req, res, path) => {
-    console.log("FORWARD TO JAVA: " + JSON.stringify(req.body))
-    request({url: "http://localhost:8080" + path,
-      method: "POST", json: true, body: req.body
-    }, (error, response, body) => {
-      res.json(response.json)
-    })
+  let request = require('request') // TODO request is depricated - but this is only for transferring across to java...
+  let java = {
+    'post': (path) => {
+      app.post(path, (req, res) => {
+        console.log("FORWARD TO JAVA: " + JSON.stringify(req.body))
+        request({
+          url: "http://localhost:8080" + path,
+          method: "POST", json: true, body: req.body
+        }, (error, response, body) => {
+          res.json(response.json)
+        })
+      })
+    }
   }
 
   try {
@@ -27,9 +32,7 @@ module.exports = (app) => {
       }
     })
 
-    app.post('/control/type', (req, res) => {
-      TO_JAVA(req, res, '/control/type')
-    })
+    java.post('/control/type')
 
     app.post('/control/key', (req, res) => {
       let val = req.body.val
