@@ -26,8 +26,16 @@ public abstract class RESTRoute extends Route {
 		jsonObject = new JSONObject(buffer.toString());
 	}
 	
+	protected void setJSONObjectOnKey(String key) {
+		jsonObject = jsonObject.getJSONObject(key);
+	}
+	
 	protected String getJSONString(String key) {
 		return jsonObject.getString(key);
+	}
+	
+	protected boolean getJSONBoolean(String key) {
+		return jsonObject.getBoolean(key);
 	}
 	
 	@Override
