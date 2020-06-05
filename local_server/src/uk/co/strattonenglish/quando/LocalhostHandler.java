@@ -21,6 +21,7 @@ public class LocalhostHandler extends AbstractHandler {
 //		routes.put("/ip", new IP());
 		routes.put("/", new Home());
 		routes.put("/control/type", new ControlType());
+		routes.put("/control/key", new ControlKey());
 	}
 	static Route unknown = new Unknown();
 	

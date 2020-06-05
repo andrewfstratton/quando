@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.json.JSONException;
 
-public class ControlType extends RESTRoute {
+public class ControlKey extends RESTRoute {
 	// REST access to controlling the keyboard and mouse on the local machine
 	// Note: the factory should return a dummy KeyControl for servers
 	private static BaseKeyControl keyControl = LocalControl.getKeyControl();
@@ -21,24 +21,29 @@ public class ControlType extends RESTRoute {
 		StringBuffer result = new StringBuffer();
 		try {
 			setJSONObjectOnRequest(request);
-			String val = getJSONString("val");
+			setJSONObjectOnKey("val");
 
-			if (val != null) {
-				System.out.println(val);
+			String key = getJSONString("key");
+			boolean shift = getJSONBoolean("shift");
+			boolean ctrl = getJSONBoolean("ctrl");
+			boolean alt = getJSONBoolean("alt");
+			boolean command = getJSONBoolean("command");
 
 				try {
-					keyControl.pressKeyCode(KeyEvent.VK_CONTROL);
-					keyControl.typeKey("escape", 100);
-					keyControl.releaseKeyCode(KeyEvent.VK_CONTROL);
-					for (char ch : val.toCharArray()) {
-						keyControl.typeKey(Character.toString(ch), KeyControl.DEFAULT_TYPING_DELAY);
-					}
+					if (shift) { keyControl.pressKeyCode(KeyEvent.VK_SHIFT); }
+					if (ctrl) { keyControl.pressKeyCode(KeyEvent.VK_CONTROL); }
+					if (alt) { keyControl.pressKeyCode(KeyEvent.VK_ALT); }
+					if (command) { keyControl.pressKeyCode(KeyEvent.VK_META); }
+					keyControl.typeKey(key, KeyControl.DEFAULT_TYPING_DELAY);
+					if (command) { keyControl.releaseKeyCode(KeyEvent.VK_META); }
+					if (alt) { keyControl.releaseKeyCode(KeyEvent.VK_ALT); }
+					if (ctrl) { keyControl.releaseKeyCode(KeyEvent.VK_CONTROL); }
+					if (shift) { keyControl.releaseKeyCode(KeyEvent.VK_SHIFT); }
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-			}
 
-			System.out.println("handled by Control Route");
+			System.out.println("handled by Control Key Route");
 
 			result.append("{}");
 		} catch (JSONException ex) {

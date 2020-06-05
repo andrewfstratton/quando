@@ -9,7 +9,11 @@ module.exports = (app) => {
           url: "http://localhost:8080" + path,
           method: "POST", json: true, body: req.body
         }, (error, response, body) => {
-          res.json(response.json)
+          if (error) {
+            console.log("Error: " + error)
+          } else {
+            res.json(response.json)
+          }
         })
       })
     }
@@ -34,16 +38,7 @@ module.exports = (app) => {
 
     java.post('/control/type')
 
-    app.post('/control/key', (req, res) => {
-      let val = req.body.val
-      let modifier = []
-      if (val.shift) { modifier.push('shift') }
-      if (val.ctrl) { modifier.push('control') }
-      if (val.alt) { modifier.push('alt') }
-      if (val.command) { modifier.push('command') }
-      robotjs.keyTap(val.key, modifier)
-      res.json({})
-    })
+    java.post('/control/key')
 
     function _mouse_click(val, button) {
       if (val.hasOwnProperty(button)) {
