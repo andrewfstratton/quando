@@ -34,8 +34,16 @@ public abstract class RESTRoute extends Route {
 		return jsonObject.getString(key);
 	}
 	
-	protected boolean getJSONBoolean(String key) {
-		return jsonObject.getBoolean(key);
+	protected int getJSONInteger(String key, int null_value) {
+		return jsonObject.getInt(key);
+	}
+	
+	protected boolean getJSONBoolean(String key, boolean null_value) {
+		boolean result = null_value;
+		if (jsonObject.has(key)) {
+			result = jsonObject.getBoolean(key);
+		}
+		return result;
 	}
 	
 	@Override

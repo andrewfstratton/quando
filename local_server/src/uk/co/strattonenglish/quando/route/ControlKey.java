@@ -24,10 +24,10 @@ public class ControlKey extends RESTRoute {
 			setJSONObjectOnKey("val");
 
 			String key = getJSONString("key");
-			boolean shift = getJSONBoolean("shift");
-			boolean ctrl = getJSONBoolean("ctrl");
-			boolean alt = getJSONBoolean("alt");
-			boolean command = getJSONBoolean("command");
+			boolean shift = getJSONBoolean("shift", false);
+			boolean ctrl = getJSONBoolean("ctrl", false);
+			boolean alt = getJSONBoolean("alt", false);
+			boolean command = getJSONBoolean("command", false);
 
 				try {
 					if (shift) { keyControl.pressKeyCode(KeyEvent.VK_SHIFT); }

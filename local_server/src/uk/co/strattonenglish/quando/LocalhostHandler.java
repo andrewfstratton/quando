@@ -22,6 +22,7 @@ public class LocalhostHandler extends AbstractHandler {
 		routes.put("/", new Home());
 		routes.put("/control/type", new ControlType());
 		routes.put("/control/key", new ControlKey());
+		routes.put("/control/mouse", new ControlMouse());
 	}
 	static Route unknown = new Unknown();
 	

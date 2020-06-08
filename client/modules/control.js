@@ -98,5 +98,5 @@
     }
   }
 
-  setInterval(_updateMouse, 1/20 * 1000)
+  setInterval(_updateMouse, 1/20 * 1000) // 20 times per second
 })()

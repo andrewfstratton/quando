@@ -50,6 +50,8 @@ If everything is fine - then try restarting to see if everything boots correctly
 ### Optional - Leap Motion
 The standard Leap Motion (Orion) software needs to be installed on the Client PC, i.e. where the Leap motion is plugged in and where the browser will be run. The SDK is not needed.
 
+Note: Web Apps must be enabled for using the leap Motion - in Windows, you may need to see https://forums.leapmotion.com/t/allow-web-apps-setting-resets-on-pc-on-computer-restart/8057
+
 ### Updating using Git
 To update (assuming quando has changed), first kill, or exit, the Node.js process in the task manager,
 then use:
