@@ -277,7 +277,7 @@ function _resizeWidth(event) {
     width = Math.max(width, 24)
     target.style.width = width + 'px'
 }
-  
+
 self.setElementHandlers = (block) => {
   if (block.id != 'clipboard') { // contextmenu is not shown for clipboard
     block.addEventListener('contextmenu', self.handleRightClick, false)
@@ -718,7 +718,7 @@ function _warning (message) {
       '</div>\n'
     return result
   }
-  
+
   function _remote_load_list_add_fn(index, id, obj, icon, infix) {
     let result = ''
     if (obj.fn.length > index) {
@@ -740,9 +740,9 @@ function _warning (message) {
       '<a class="list-group-item col-md-5"' + _load_list_add_fn(id, main)
       + '>' + main.name + '</a>' +
         '<div class="col-sm-4 dropdown">' + data.name + '</div>' +
-        '<div class="col-sm-1' + _remote_load_list_add_fn(0, id, obj, 'glyphicon-remove', 'latest') + '</div>' + 
-        '<div class="col-sm-1' + _remote_load_list_add_fn(1, id, obj, 'glyphicon-erase', 'oldest') + '</div>' + 
-        '<div class="col-sm-1' + _remote_load_list_add_fn(2, id, obj, 'glyphicon-remove-sign', 'ALL') + '</div>' + 
+        '<div class="col-sm-1' + _remote_load_list_add_fn(0, id, obj, 'glyphicon-remove', 'latest') + '</div>' +
+        '<div class="col-sm-1' + _remote_load_list_add_fn(1, id, obj, 'glyphicon-erase', 'oldest') + '</div>' +
+        '<div class="col-sm-1' + _remote_load_list_add_fn(2, id, obj, 'glyphicon-remove-sign', 'ALL') + '</div>' +
       '</div>\n'
     return result
   }
@@ -839,7 +839,7 @@ self.handle_test = () => {
     $('#remote_save_modal').modal('hide')
     $('#local_save_modal').modal('show')
   }
-  
+
   self.handle_local_save = () => {
     let key = $('#local_save_key').val()
     local_save(PREFIX + key, self.getScriptAsObject())
@@ -854,7 +854,7 @@ self.handle_test = () => {
       script: _script
     }))
   }
-  
+
   self.handle_remote_save = () => {
     let name = encodeURI($('#remote_save_key').val())
     let obj = JSON.stringify({ deploy: _deploy, script: self.getScriptAsObject()})
@@ -891,7 +891,7 @@ self.handle_test = () => {
     $('#remote_load_modal').modal('hide')
     $('#local_load_modal').modal('show')
   }
-  
+
   self.handle_remote_to_local_save = () => {
     $('#remote_save_modal').modal('hide')
     $('#local_save_modal').modal('show')
@@ -913,7 +913,7 @@ self.handle_test = () => {
       }
     }
   }
-  
+
   self.remote_load = (index) => {
     $.ajax({
       url: '/script/id/' + _remote_list[index].id,
@@ -1331,6 +1331,14 @@ self.handle_test = () => {
     input.val(value.substring(0, cursor_pos) + tuning + value.substring(cursor_pos))
     input.focus()
     input.prop('selectionEnd', cursor_pos + tuning.length)
+  }
+
+  self.handle_record = () => {
+
+  }
+
+  self.handle_coverttoscript = () => {
+
   }
 
 

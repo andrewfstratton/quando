@@ -1,0 +1,46 @@
+<div class="quando-block"
+  data-quando-javascript="quando.control.combo('${key}',${shift},${control},${alt})">
+
+    <div class="quando-left quando-test"></div>
+    <div class="quando-right">
+      <div class="quando-row quando-test">
+        Press
+        <br>
+        <select data-quando-name='shift' class='quando-toggle'>
+          <option value='false'>no shift</option>
+          <option value='true'>shift</option>
+        </select>
+
+        <select data-quando-name='control' class='quando-toggle'>
+          <option value='false'>no control</option>
+          <option value='true'>control</option>
+        </select>
+
+        <select data-quando-name='alt' class='quando-toggle'>
+          <option value='false'>no alt</option>
+          <option value='true'>alt</option>
+        </select>
+      </br>
+
+      <div class="quando-row quando-test">
+          After
+          <input data-quando-name="count" type="number" min="0" max="99" maxLength="2" value="1" style="width: 4em" />
+          <select data-quando-name="units">
+            <option value="seconds">Seconds</option>
+            <option value="minutes">Minutes</option>
+            <option value="hours">Hours</option>
+          </select>
+      </div>
+
+
+        <div class="quando-row quando-test">
+          Press
+          <input data-quando-name='key' type='text' value='' placeholder='' data-quando-encode='normal' />
+          Key
+        </div>
+
+
+      </div>
+
+    </div>
+  </div>

@@ -23,14 +23,72 @@ module.exports = (app) => {
       res.json({})
     })
 
+    app.post('/control/holdf', (req, res) => {
+      let val = req.body.val
+      robotjs.keyToggle(val.key, 'down')
+      res.json({})
+    })
+
+    app.post('/control/hold', (req, res) => {
+      let val = req.body.val
+      robotjs.keyToggle(val.key, 'down')
+      res.json({})
+    })
+
+    app.post('/control/release', (req, res) => {
+      let val = req.body.val
+      robotjs.keyToggle(val.key, 'up')
+      res.json({})
+    })
+
     app.post('/control/key', (req, res) => {
       let val = req.body.val
       let modifier = []
-      if (val.shift) { modifer.push('shift') }
-      if (val.ctrl) { modifer.push('control') }
-      if (val.alt) { modifer.push('alt') }
-      if (val.command) { modifer.push('command') }
+      if (val.shift) { modifier.push('shift') }
+      if (val.ctrl) { modifier.push('control') }
+      if (val.alt) { modifier.push('alt') }
+      if (val.command) { modifier.push('command') }
       robotjs.keyTap(val.key, modifier)
+      res.json({})
+    })
+
+    // app.post('/control/hold', (req, res) => {
+    //   let holdkey = req.body.val
+    //   let modifier = []
+    //   if (holdkey.shift) { modifier.push('shift') }
+    //   if (holdkey.ctrl) { modifier.push('control') }
+    //   if (holdkey.alt) { modifier.push('alt') }
+    //   if (holdkey.command) { modifier.push('command') }
+    //   robotjs.keyToggle(holdkey.key, 'down', modifier)
+    //   setTimeout(function() {
+    //     robotjs.keyToggle(holdkey.key, 'up', modifier)
+    //   }, 2000)
+    //   res.json({})
+    // })
+
+    app.post('/control/combo', (req, res) => {
+      let val = req.body.val
+      let modifier = []
+      if (val.shift) { modifier.push('shift') }
+      if (val.ctrl) { modifier.push('control') }
+      if (val.alt) { modifier.push('alt') }
+      if (val.command) { modifier.push('command') }
+      robotjs.keyTap(modifier)
+      robotjs.setKeyboardDelay(1)
+      robotjs.keyTap(val.key)
+      res.json({})
+    })
+
+    app.post('/control/combox', (req, res) => {
+      let val = req.body.val
+      let modifier = []
+      if (val.shift) { modifier.push('shift') }
+      if (val.ctrl) { modifier.push('control') }
+      if (val.alt) { modifier.push('alt') }
+      if (val.command) { modifier.push('command') }
+      robotjs.keyTap(modifier)
+      robotjs.setKeyboardDelay(1)
+      robotjs.keyTap(val.key)
       res.json({})
     })
 

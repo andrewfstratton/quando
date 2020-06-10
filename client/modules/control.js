@@ -7,8 +7,8 @@
   let mouse = {}
 
   function _send(command, arg) {
-    fetch('/control/' + command, { method: 'POST', 
-      body: JSON.stringify({'val':arg}), 
+    fetch('/control/' + command, { method: 'POST',
+      body: JSON.stringify({'val':arg}),
       headers: {"Content-Type": "application/json"}
     })
   }
@@ -29,7 +29,42 @@
     _send('type', decodeText(str))
   }
 
-  self.key = (ch, shift=false, ctrl=false, alt=false, command=false) => {
+  self.hold = (keyhold)  => {
+    let val = {'key':keyhold}
+    _send('key', val)
+  }
+
+  self.release = (keyhold)  => {
+    let val = {'key':keyhold}
+    _send('key', val)
+  }
+
+  // self.units_to_ms = (units, count) => {
+  //   let result = count
+  //   if (units == "minutes")  {
+  //     result *= 60
+  //   } else if (units == "hours")  {
+  //     result *= 60*60
+  //   }
+  //   return result * 1000 // convert to ms
+  // }
+
+  // self.holdf = (keyhold, count = 1, units = 'seconds', callback)  => {
+  //   let time_ms = self.units_to_ms(units, count)
+  //   self.hold(keyhold)
+  //   let timer = setTimeout(()=> {
+  //     self.release(keyhold)
+  //   }, time_ms)
+  //   let val = {'key':keyhold}
+  //   _send('key', val)
+  // }
+
+  self.key = (ch, shift=false, ctrl=false, alt=false, command=false)  => {
+    let val = {'key':ch, 'shift':shift, 'ctrl':ctrl, 'alt':alt, 'command':command}
+    _send('key', val)
+  }
+
+  self.combo = (ch, shift=false, ctrl=false, alt=false, command=false)  => {
     let val = {'key':ch, 'shift':shift, 'ctrl':ctrl, 'alt':alt, 'command':command}
     _send('key', val)
   }

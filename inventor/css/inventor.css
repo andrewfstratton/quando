@@ -20,7 +20,7 @@ body {
   height:60%;
 }
 
-#_hidden_width_element_ { 
+#_hidden_width_element_ {
   /* Used to calculate the width of text typed in */
   position: absolute;
   height: 0;
@@ -206,7 +206,7 @@ input[type="color"] {
 .quando-watson { background: #97b8f3	; }
 .quando-AR { background: #b0d95e; }
 .quando-game { background: #ffc88c; }
-.quando-test { background: #555555; }
+.quando-test { background: #555555; color: white;}
 .quando-clipboard, #clipboard { background: #888888; }
 .quando-inventor-control { background: hsl(0, 50%, 90%); }
 .quando-inventor-input { background: hsl(112, 50%, 90%); }
@@ -273,7 +273,7 @@ select.quando-toggle {
 ::-webkit-scrollbar {
     width: 15px;
     height: 15px;
-    border-bottom: 1px solid #eee; 
+    border-bottom: 1px solid #eee;
     border-top: 1px solid #eee;
 }
 ::-webkit-scrollbar-thumb {
@@ -283,11 +283,11 @@ select.quando-toggle {
 }
 
 ::-webkit-scrollbar-track {
-    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.2); 
-} 
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.2);
+}
 
 /* Fix for Firefox */
-input[type=number] { 
+input[type=number] {
   -moz-appearance: textfield;
 }
 
@@ -340,4 +340,4 @@ input[type=number] {
 .hover:hover .hovertext {
   visibility: visible;
   opacity: 1;
-} 
+}
