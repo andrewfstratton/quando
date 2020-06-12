@@ -18,7 +18,6 @@ import uk.co.strattonenglish.quando.route.*;
 public class LocalhostHandler extends AbstractHandler {
 	static HashMap<String, Route> routes = new HashMap<>();
 	static {
-//		routes.put("/ip", new IP());
 		routes.put("/", new Home());
 		routes.put("/control/type", new ControlType());
 		routes.put("/control/key", new ControlKey());
@@ -26,14 +25,13 @@ public class LocalhostHandler extends AbstractHandler {
 	}
 	static Route unknown = new Unknown();
 	
-    @Override
-    public void handle(String target,
-       Request baseRequest,
-       HttpServletRequest request,
-       HttpServletResponse response) throws IOException, ServletException
-    {
-//    	System.out.println(request.getMethod() + ": " + target);
-    	routes.getOrDefault(target, unknown).handle(request, response);
-        baseRequest.setHandled(true);
-    }
+	@Override
+	public void handle(String target,
+			Request baseRequest,
+			HttpServletRequest request,
+			HttpServletResponse response) throws IOException, ServletException
+	{
+		routes.getOrDefault(target, unknown).handle(request, response);
+		baseRequest.setHandled(true);
+	}
 }

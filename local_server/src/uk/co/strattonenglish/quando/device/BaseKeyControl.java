@@ -13,4 +13,7 @@ public class BaseKeyControl extends LocalControl {
 	public void releaseKeyCode(int keyCode) throws InterruptedException {
 		// do nothing
 	}
+	public void press_release_Key(String char_or_id, boolean press) {
+		// do nothing
+	}
 }

@@ -21,13 +21,34 @@ public class ControlMouse extends RESTRoute {
 			setJSONObjectOnRequest(request);
 			setJSONObjectOnKey("val");
 
-			int x_val = getJSONInteger("x", -1);
-			int y_val = getJSONInteger("y", -1);
+			float x_val = getJSONFloat("x", -1);
+			float y_val = getJSONFloat("y", -1);
 			if (x_val >= 0 || y_val >= 0) { // i.e. one or both of x and y have been given
-				try {
-					mouseControl.moveXYVal(x_val, y_val);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
+				mouseControl.moveXYVal(x_val, y_val);
+			}
+			int left = getJSONInteger("left", 0);
+			int right = getJSONInteger("right", 0);
+			int middle = getJSONInteger("middle", 0);
+
+			if (left != 0) { // -1 is release, 1 is press
+				if (left == 1) {
+					mouseControl.pressButton(1);
+				} else {
+					mouseControl.releaseButton(1);
+				}
+			}
+			if (middle != 0) {
+				if (middle == 1) {
+					mouseControl.pressButton(2);
+				} else {
+					mouseControl.releaseButton(2);
+				}
+			}
+			if (right != 0) {
+				if (right == 1) {
+					mouseControl.pressButton(3);
+				} else {
+					mouseControl.releaseButton(3);
 				}
 			}
 
@@ -35,6 +56,7 @@ public class ControlMouse extends RESTRoute {
 
 			result.append("{}");
 		} catch (JSONException ex) {
+			ex.printStackTrace();
 			System.out.println("Malformed JSON received");
 			result.append("{err: 'Malformed JSON received'}");
 		}

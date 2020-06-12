@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.awt.event.KeyEvent;
 
 import uk.co.strattonenglish.quando.device.BaseKeyControl;
-import uk.co.strattonenglish.quando.device.KeyControl;
 import uk.co.strattonenglish.quando.device.LocalControl;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,6 +23,7 @@ public class ControlKey extends RESTRoute {
 			setJSONObjectOnKey("val");
 
 			String key = getJSONString("key");
+			boolean press = getJSONBoolean("press", false);
 			boolean shift = getJSONBoolean("shift", false);
 			boolean ctrl = getJSONBoolean("ctrl", false);
 			boolean alt = getJSONBoolean("alt", false);
@@ -34,7 +34,7 @@ public class ControlKey extends RESTRoute {
 					if (ctrl) { keyControl.pressKeyCode(KeyEvent.VK_CONTROL); }
 					if (alt) { keyControl.pressKeyCode(KeyEvent.VK_ALT); }
 					if (command) { keyControl.pressKeyCode(KeyEvent.VK_META); }
-					keyControl.typeKey(key, KeyControl.DEFAULT_TYPING_DELAY);
+					keyControl.press_release_Key(key, press);
 					if (command) { keyControl.releaseKeyCode(KeyEvent.VK_META); }
 					if (alt) { keyControl.releaseKeyCode(KeyEvent.VK_ALT); }
 					if (ctrl) { keyControl.releaseKeyCode(KeyEvent.VK_CONTROL); }
@@ -44,7 +44,6 @@ public class ControlKey extends RESTRoute {
 				}
 
 			System.out.println("handled by Control Key Route");
-
 			result.append("{}");
 		} catch (JSONException ex) {
 			System.out.println("Malformed JSON received");

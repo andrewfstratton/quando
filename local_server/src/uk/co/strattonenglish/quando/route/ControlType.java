@@ -24,12 +24,7 @@ public class ControlType extends RESTRoute {
 			String val = getJSONString("val");
 
 			if (val != null) {
-				System.out.println(val);
-
 				try {
-					keyControl.pressKeyCode(KeyEvent.VK_CONTROL);
-					keyControl.typeKey("escape", 100);
-					keyControl.releaseKeyCode(KeyEvent.VK_CONTROL);
 					for (char ch : val.toCharArray()) {
 						keyControl.typeKey(Character.toString(ch), KeyControl.DEFAULT_TYPING_DELAY);
 					}
@@ -38,7 +33,7 @@ public class ControlType extends RESTRoute {
 				}
 			}
 
-			System.out.println("handled by Control Route");
+			// System.out.println("handled by Control Type Route");
 
 			result.append("{}");
 		} catch (JSONException ex) {

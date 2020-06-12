@@ -35,7 +35,19 @@ public abstract class RESTRoute extends Route {
 	}
 	
 	protected int getJSONInteger(String key, int null_value) {
-		return jsonObject.getInt(key);
+		int result = null_value;
+		if (jsonObject.has(key)) {
+			result = jsonObject.getInt(key);
+		}
+		return result;
+	}
+	
+	protected float getJSONFloat(String key, float null_value) {
+		float result = null_value;
+		if (jsonObject.has(key)) {
+			result = jsonObject.getFloat(key);
+		}
+		return result;
 	}
 	
 	protected boolean getJSONBoolean(String key, boolean null_value) {

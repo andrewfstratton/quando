@@ -29,8 +29,8 @@
     _send('type', decodeText(str))
   }
 
-  self.key = (ch, shift=false, ctrl=false, alt=false, command=false) => {
-    let val = {'key':ch, 'shift':shift, 'ctrl':ctrl, 'alt':alt, 'command':command}
+  self.key = (ch, press=false, shift=false, ctrl=false, alt=false, command=false) => {
+    let val = {'key':ch, 'press':press, 'shift':shift, 'ctrl':ctrl, 'alt':alt, 'command':command}
     _send('key', val)
   }
 
@@ -44,19 +44,16 @@
     mouse.smooth = smooth
   }
 
-  self.mouseClick = (button, double=false) => {
-    let clicks = 1
-    if (double) {
-      clicks = 2
-    }
+  self.mouseClick = (button, press=false) => {
+    let pressCode = press?1:-1 // 1 for press, -1 for release, 0 could be false...
     if (button == 'left') {
-      mouse.left = clicks
+      mouse.left = pressCode
     }
     if (button == 'middle') {
-      mouse.middle = clicks
+      mouse.middle = pressCode
     }
     if (button == 'right') {
-      mouse.right = clicks
+      mouse.right = pressCode
     }
   }
 
@@ -72,11 +69,11 @@
       send.valid = true
       delete mouse.y
     }
-    if (mouse.hasOwnProperty('smooth')) {
-      send.smooth = mouse.smooth
-      send.valid = true
-      delete mouse.smooth
-    }
+    // if (mouse.hasOwnProperty('smooth')) {
+    //   send.smooth = mouse.smooth
+    //   send.valid = true
+    //   delete mouse.smooth
+    // }
     if (mouse.hasOwnProperty('left')) {
       send.left = mouse.left
       send.valid = true
