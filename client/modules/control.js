@@ -7,7 +7,8 @@
   let mouse = {}
 
   function _send(command, arg) {
-    fetch('/control/' + command, { method: 'POST', 
+    fetch('http://localhost:8080/control/' + command, { method: 'POST', 
+      mode: "no-cors",
       body: JSON.stringify({'val':arg}), 
       headers: {"Content-Type": "application/json"}
     })
