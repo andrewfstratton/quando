@@ -3,7 +3,7 @@ package uk.co.strattonenglish.quando.device;
 import java.awt.event.KeyEvent;
 import java.util.HashMap;
 
-public class KeyControl extends BaseKeyControl {
+public class KeyControl extends LocalControl {
 	// For controlling the keyboard on the local machine
 	
 	// Default time between press and release (to type) is 50ms, i.e. ~20 char/second, ~240 wpm
@@ -204,7 +204,6 @@ public class KeyControl extends BaseKeyControl {
 		try { robot.keyRelease(keyCode); } catch (IllegalArgumentException e) { /* ignore silently */ }
 	}
 
-	@Override
 	public void typeKey(String char_or_id, int delay) {
 		if (!typed_id(char_or_id, delay)) {
 			if (char_or_id.length() == 1) {
@@ -220,7 +219,6 @@ public class KeyControl extends BaseKeyControl {
 		}
 	}
 
-	@Override
 	public void press_release_Key(String char_or_id, boolean press) {
 		if (!press_release_id(char_or_id, press)) {
 			if (char_or_id.length() == 1) {

@@ -19,9 +19,10 @@ public class LocalhostHandler extends AbstractHandler {
 	static HashMap<String, Route> routes = new HashMap<>();
 	static {
 		routes.put("/", new Home());
-		routes.put("/control/type", new ControlType());
-		routes.put("/control/key", new ControlKey());
-		routes.put("/control/mouse", new ControlMouse());
+		routes.put("/control/type", new KeyboardType());
+		routes.put("/control/key", new KeyboardKey());
+		routes.put("/control/mouse", new Mouse());
+		routes.put("/ubit/display", new UbitDisplay());
 	}
 	static Route unknown = new Unknown();
 	

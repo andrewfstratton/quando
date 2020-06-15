@@ -5,7 +5,7 @@ import java.awt.Point;
 import java.awt.PointerInfo;
 import java.awt.event.InputEvent;
 
-public class MouseControl extends BaseMouseControl {
+public class MouseControl extends LocalControl {
 	private int screenWidth;
 	private int screenHeight;
 	private int button_mask = 0;
@@ -21,7 +21,6 @@ public class MouseControl extends BaseMouseControl {
 	}
 
 
-	@Override
 	public synchronized void moveXYVal(float x_val, float y_val) {
 		int x = last_x;
 		int y = last_y;
@@ -41,7 +40,6 @@ public class MouseControl extends BaseMouseControl {
 		robot.mouseMove(x, y);
 	}
 
-	@Override
 	public void pressButton(final int button) {
 		int new_mask = button_mask | InputEvent.getMaskForButton(button);
 		if (new_mask != button_mask) {
@@ -50,7 +48,6 @@ public class MouseControl extends BaseMouseControl {
 		}
 	}
 
-	@Override
 	public void releaseButton(final int button) {
 		int mask_for_button = InputEvent.getMaskForButton(button);
 		int new_mask = button_mask & mask_for_button;
