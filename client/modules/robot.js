@@ -144,7 +144,7 @@
     }
 
     let audioSequence = []
-    let audioInterrupt = true
+    let audioInterrupt = false  //TODO: Figure out what the F the default state of this should be
 
     self.audio = (fileName, scope) => {
         let path = '/home/nao/audio/'
@@ -177,11 +177,11 @@
     }
     
     self.speechHandler = (anim, text, pitch, speed, doubleVoice, doubleVoiceLevel, doubleVoiceTimeShift, interrupt, txt) => {
-      //overrie text if the block is being passe a value
+      //override text if the block is being passed a value
       if (typeof txt === 'string' && txt.length) {
           text = txt
+          console.log('Payload: ', txt)
       }
-      console.log('txt said is: ', txt)
       console.log('text said is: ', text)
       self.changeVoice(pitch, speed, doubleVoice, doubleVoiceLevel, doubleVoiceTimeShift)
 
@@ -221,12 +221,15 @@
       if (interrupt == 'full') {
         audioInterrupt = true
       }
+
+      console.log('aud seq: ', audioSequence)
+      console.log('aud interrput: ', audioInterrupt)
       // if (audioSequence.length > 15) {
       //   audioSequence = []
       // }
       quando.destructor.add(function () {
           audioSequence = []
-          audioInterrupt = true
+        //   audioInterrupt= true
       })
     }
 
