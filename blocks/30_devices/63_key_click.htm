@@ -1,35 +1,44 @@
-<div class="quando-block" data-quando-javascript="quando.control.key('${key}', press=${press}, shift=${shift}, ctrl=${ctrl}, alt=${alt}, command=${command})">
+<div class="quando-block" data-quando-javascript="quando.control.key($(eq$,${txt}$,input$,'${shift}${ctrl}${alt}${command}${text}'$,txt)$, press=${press})">
   <div class="quando-left quando-devices"></div>
   <div class="quando-right">
     <div class="quando-row quando-devices">
+      <span data-quando-toggle='txt=txt'>❓</span>
       ⌨️ Key
       <select data-quando-name='press' class='quando-toggle'>
         <option value='true'>press</option>
         <option value='false'>release</option>
       </select>
-      <input data-quando-name='key' type='text' value='' placeholder='' maxLength="1"  data-quando-encode='normal' />
+      <span data-quando-toggle='txt=input'>
+          &quot;<input data-quando-name="text" type="text" value="" maxLength="1" data-quando-encode='normal' />&quot;
+      </span>
       <select data-quando-name="extras" class="quando-toggle">
         <option value="hidden">+</option>
         <option value="show">-</option>
       </select>
       <span data-quando-toggle="extras=show">
         <br>
-        <select data-quando-name='shift' class='quando-toggle'>
-          <option value='false'>no shift</option>
-          <option value='true'>Shift</option>
+        <select data-quando-name='txt' class='quando-toggle'>
+            <option value='input'>""</option>
+            <option value='txt'>❓</option>
         </select>
-        <select data-quando-name='ctrl' class='quando-toggle'>
-          <option value='false'>no ctrl</option>
-          <option value='true'>Ctrl</option>
-        </select>
-        <select data-quando-name='alt' class='quando-toggle'>
-          <option value='false'>no alt</option>
-          <option value='true'>Alt</option>
-        </select>
-        <select data-quando-name='command' class='quando-toggle'>
-          <option value='false'>no command</option>
-          <option value='true'>Command</option>
-        </select>
+        <span data-quando-toggle='txt=input'>
+          <select data-quando-name='shift' class='quando-toggle'>
+            <option value=' '>no shift</option>
+            <option value='+'>Shift</option>
+          </select>
+          <select data-quando-name='ctrl' class='quando-toggle'>
+            <option value=' '>no ctrl</option>
+            <option value='+'>Ctrl</option>
+          </select>
+          <select data-quando-name='alt' class='quando-toggle'>
+            <option value=' '>no alt</option>
+            <option value='+'>Alt</option>
+          </select>
+          <select data-quando-name='command' class='quando-toggle'>
+            <option value=' '>no command</option>
+            <option value='+'>Command</option>
+          </select>
+        </span>
       </span>
     </div>
   </div>

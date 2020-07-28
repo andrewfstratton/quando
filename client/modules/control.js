@@ -30,7 +30,14 @@
     _send('type', decodeText(str))
   }
 
-  self.key = (ch, press=false, shift=false, ctrl=false, alt=false, command=false) => {
+  self.key = (coded_char, press=false) => {
+    // coded_char is a string representing shift/ctrl/alt/command and a character, where a +/' ' indicate
+    // whether the modifer key needs to be included
+    let shift = coded_char[0] == '+'
+    let ctrl = coded_char[1] == '+'
+    let alt = coded_char[2] == '+'
+    let command = coded_char[3] == '+'
+    let ch = coded_char.substring(4)
     let val = {'key':ch, 'press':press, 'shift':shift, 'ctrl':ctrl, 'alt':alt, 'command':command}
     _send('key', val)
   }
