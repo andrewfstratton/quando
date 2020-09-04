@@ -37,7 +37,7 @@
     let ctrl = coded_char[1] == '+'
     let alt = coded_char[2] == '+'
     let command = coded_char[3] == '+'
-    let ch = coded_char.substring(4)
+    let ch = coded_char.slice(4)
     let val = {'key':ch, 'press':press, 'shift':shift, 'ctrl':ctrl, 'alt':alt, 'command':command}
     _send('key', val)
   }
@@ -77,11 +77,6 @@
       send.valid = true
       delete mouse.y
     }
-    // if (mouse.hasOwnProperty('smooth')) {
-    //   send.smooth = mouse.smooth
-    //   send.valid = true
-    //   delete mouse.smooth
-    // }
     if (mouse.hasOwnProperty('left')) {
       send.left = mouse.left
       send.valid = true

@@ -138,6 +138,6 @@ app.post('/socket/:id', (req, res) => {
 })
 
 require('./server/rest/blocks')(app, __dirname, success, fail)
-require('./server/rest/ubit')(app, io)
+// require('./server/rest/ubit')(app, io)
 require('./server/rest/ip')(app, appEnv, success, fail)
 require('./server/rest/user')(app, appEnv, success, fail)
