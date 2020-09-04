@@ -1,27 +1,31 @@
 <div class="quando-block"
-data-quando-javascript="quando.ubit.turn(val, ${servo}, ${middle}, ${plus_minus}, ${inverted})">
-<div class="quando-left quando-devices"></div>
-<div class="quando-right">
-<div class="quando-row quando-devices">⚡
-📟
-Turn
-<span class='iconify'>μbit</span>
-<select data-quando-name="servo"><option value='0'>0</option>
-<option value='1'>1</option>
-<option value='2'>2</option>
-</select>
-<select data-quando-name='extras' class='quando-toggle'><option value='hide'>+</option>
-<option value='show'>-</option>
-</select>
-<br/>
-<span data-quando-toggle='extras=show'><input data-quando-name="middle" type="text" value="0" data-quando-encode="normal"/>
-degrees ±
-<input data-quando-name="plus_minus" type="text" value="90" data-quando-encode="normal"/>
-degrees
-<select data-quando-name='inverted' class='quando-toggle'><option value='false'>Normal</option>
-<option value='true'>Inverted</option>
-</select>
-</span>
-</div>
-</div>
+  data-quando-javascript="quando.ubit.turn(val, ${servo}, ${middle}, ${plus_minus}, ${inverted})">
+  <div class="quando-left quando-devices"></div>
+  <div class="quando-right">
+    <div class="quando-row quando-devices">⚡
+      📟
+      Turn
+      <span class='iconify'>μbit</span>
+      <select data-quando-name="servo">
+        <option value='0'>0</option>
+        <option value='1'>1</option>
+        <option value='2'>2</option>
+      </select>
+      <select data-quando-name='extras' class='quando-toggle'>
+        <option value='hide'>+</option>
+        <option value='show'>-</option>
+      </select>
+      <br />
+      <span data-quando-toggle='extras=show'><input data-quando-name="middle" type="text" value="90"
+          data-quando-encode="normal" />
+        degrees ±
+        <input data-quando-name="plus_minus" type="text" value="90" data-quando-encode="normal" />
+        degrees
+        <select data-quando-name='inverted' class='quando-toggle'>
+          <option value='false'>Normal</option>
+          <option value='true'>Inverted</option>
+        </select>
+      </span>
+    </div>
+  </div>
 </div>
