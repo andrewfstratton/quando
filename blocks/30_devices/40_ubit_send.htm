@@ -1,10 +1,24 @@
-<div class="quando-block" data-quando-javascript="quando.ubit.display('${text}')">
+<div class="quando-block" data-quando-javascript="quando.ubit.display($(eq$,${txt}$,input$,'${text}'$,${txt})$)">
   <div class="quando-left quando-devices"></div>
   <div class="quando-right">
     <div class="quando-row quando-devices">📟
+      <span data-quando-toggle='txt=txt'>❓</span>
       <span class='iconify'>µbit</span>
       Display
-      <input data-quando-name="text" type="text" value="" data-quando-encode="normal" />
+      <span data-quando-toggle='txt=input'>
+        <input data-quando-name="text" type="text" value="" data-quando-encode="normal" />
+      </span>
+      <select data-quando-name="extras" class="quando-toggle">
+        <option value="hidden">+</option>
+        <option value="show">-</option>
+      </select>
+      <span data-quando-toggle="extras=show">
+        <br>
+        <select data-quando-name='txt' class='quando-toggle'>
+          <option value='input'>""</option>
+          <option value='txt'>❓</option>
+        </select>
+      </span>
     </div>
   </div>
 </div>
