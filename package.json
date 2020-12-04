@@ -10,7 +10,7 @@
     "start": "node .",
     "dev": "node dev.js",
     "nodemon": "nodemon server.js",
-    "install_local": "npm install --no-save --unsafe-perm node-red pouchdb pouchdb-server pouchdb-find robotjs serialport"
+    "install_local": "npm install --no-save --unsafe-perm node-red pouchdb pouchdb-server pouchdb-find"
   },
   "author": "Andrew Stratton",
   "license": "ISC",
