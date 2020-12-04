@@ -1,15 +1,13 @@
-(function () {
-  var self = this['quando'] = {}
-  self.idle_reset_ms = 0
-  self.idle_callback_id = 0
-  self._displays = new Map()
-  self.pinching = false
+import * as destructor from "./modules/destructor.js";
 
-  var _lookup = {} // holds run time arrays
+let self = window.quando = {}
+self.destructor = destructor;
 
-  self.socket = io.connect(window.location.protocol + '//' + window.location.hostname)
-
-  var websockets = []
+let idle_reset_ms = 0
+let idle_callback_id = 0
+let _displays = new Map()
+let socket = io.connect(window.location.protocol + '//' + window.location.hostname)
+let websockets = []
   
   function _displayWidth() {
     return window.innerWidth
@@ -19,19 +17,19 @@
     return window.innerHeight
   }
 
-  self.socket.on('deploy', function (data) {
-    var locStr = decodeURIComponent(window.location.href)
+  socket.on('deploy', function (data) {
+    let locStr = decodeURIComponent(window.location.href)
     if (locStr.endsWith('/'+data.script)) {
       window.location.reload(true) // nocache reload - probably not necessary
     }
   })
 
   self.add_message_handler = (message, callback) => {
-    self.socket.on(message, (data) => {
+    socket.on(message, (data) => {
       callback(data.val)
     })
-    self.destructor.add( () => {
-      self.socket.off(message, callback)
+    destructor.add( () => {
+      socket.off(message, callback)
     })
   }
 
@@ -39,7 +37,7 @@
     if (['broadcast', 'local'].includes(type)) {
       fetch('/message/' + message, { method: 'POST',
         body: JSON.stringify({ 
-          'val':val, 'host':host, 'local':type == 'local', 'socketId':self.socket.id 
+          'val':val, 'host':host, 'local':type == 'local', 'socketId':socket.id 
         }),
         headers: {"Content-Type": "application/json"}
       })
@@ -58,7 +56,7 @@
   }
 
   self.create_websocket = (host, message) => {
-    var socket = self.get_websocket(message)
+    let socket = self.get_websocket(message)
    
     if (!socket) {
       let protocol = 'ws'
@@ -101,17 +99,13 @@
   self.send_websocket_message = function (socket, val) {
     if (socket.readyState == WebSocket.OPEN) {
       socket.send(val)
-    } else {
-      socket.onopen = function () {
-        socket.send(val)
-      }
-    }
+    }  // else don't send - to avoid buffering everything
   }
 
   self.idle_reset = function () {
-    if (self.idle_reset_ms > 0) {
-      clearTimeout(self.idle_callback_id)
-      self.idle_callback_id = setTimeout(self.idle_callback, self.idle_reset_ms)
+    if (idle_reset_ms > 0) {
+      clearTimeout(idle_callback_id)
+      idle_callback_id = setTimeout(self.idle_callback, idle_reset_ms)
     } else { // this means we are now idle and must wakeup
       if (self.idle_active_callback) {
         self.idle_active_callback()
@@ -134,15 +128,15 @@
 
   self.add_handler = function (event, callback) {
     document.addEventListener(event, callback)
-    self.destructor.add( () => {
+    destructor.add( () => {
       document.removeEventListener(event, callback)
     })
   }
 
   self.add_scaled_handler = function (event_name, callback, scaler) {
     let last_value = null
-    var handler = function (ev) {
-      var value = scaler(ev.detail)
+    let handler = function (ev) {
+      let value = scaler(ev.detail)
       if (value !== null) {
         if (value != last_value) {
           last_value = value
@@ -156,7 +150,7 @@
   self.new_scaler = function (min, max, inverted = false) {
     return function (value) {
       // convert to range 0 to 1 for min to max
-      var result = (value - min) / (max - min)
+      let result = (value - min) / (max - min)
       result = Math.min(1, result)
       result = Math.max(0, result)
       if (inverted) {
@@ -167,23 +161,23 @@
   }
 
   self.new_angle_scaler = function (mid, plus_minus, inverted = false) {
-    var mod = function(x, n) {
+    let mod = function(x, n) {
         return ((x%n)+n)%n
     }
-    var last_result = 0
-    var crossover = mod(mid+180, 360)
+    let last_result = 0
+    let crossover = mod(mid+180, 360)
     // i.e. 25% of the non used range
-    var crossover_range = (180 - Math.abs(plus_minus)) / 4
+    let crossover_range = (180 - Math.abs(plus_minus)) / 4
     return function (value) {
-      var x = mod(value - mid, 360)
+      let x = mod(value - mid, 360)
       if (x > 180) { x -= 360}
-      var result = (x + plus_minus) / (2 * plus_minus)
+      let result = (x + plus_minus) / (2 * plus_minus)
       if (inverted) {
         result = 1 - result
       }
       if ((result < 0) || (result > 1)) { // i.e. result is out of range
             // identify if result should be used
-            var diff = Math.abs(crossover - mod(value, 360))
+            let diff = Math.abs(crossover - mod(value, 360))
             if (diff <= crossover_range) { // inside crossover range, so use the last result 
                 result = last_result
             }
@@ -225,8 +219,8 @@
   }
 
   self.cursor_up_down = function (mid, range, inverted, y) {
-    min = mid-range
-    max = mid+range
+    let min = mid-range
+    let max = mid+range
     min /= 100
     max /= 100
     if (y === false) {
@@ -235,15 +229,15 @@
     if (!inverted) {
       y = 1 - y // starts inverted
     }
-    var scr_min = min * _displayHeight()
-    var scr_max = max * _displayHeight()
+    let scr_min = min * _displayHeight()
+    let scr_max = max * _displayHeight()
     self._y = scr_min + (y * (scr_max-scr_min))
     _cursor_adjust()
   }
 
   self.cursor_left_right = function (mid, range, inverted, x) {
-    min = mid-range
-    max = mid+range
+    let min = mid-range
+    let max = mid+range
     min /= 100
     max /= 100
     if (x === false) {
@@ -252,31 +246,28 @@
     if (inverted) {
       x = 1 - x // starts normal
     }
-    var scr_min = min * (_displayWidth()-1)
-    var scr_max = max * (_displayWidth()-1)
+    let scr_min = min * (_displayWidth()-1)
+    let scr_max = max * (_displayWidth()-1)
     self._x = scr_min + (x * (scr_max-scr_min))
     _cursor_adjust()
   }
 
-  var Config = self.Config = {
-  }
-
   self.idle = function (count, units, idle_fn, active_fn) {
-    clearTimeout(self.idle_callback_id)
-    let time_secs = self.idle_reset_ms = self.time.units_to_ms(units, count)
+    clearTimeout(idle_callback_id)
+    let time_secs = idle_reset_ms = self.time.units_to_ms(units, count)
     self.idle_callback = () => {
-      self.idle_reset_ms = 0 // why - surely I need to intercept self.idle_reset
+      idle_reset_ms = 0 // why - surely I need to intercept self.idle_reset
             // actually - this will work to force self.idle_reset to call idle_active_callback instead
       idle_fn()
     }
     self.idle_active_callback = () => {
-      clearTimeout(self.idle_callback_id)
-      self.idle_reset_ms = time_secs // resets to idle detection
-      self.idle_callback_id = setTimeout(self.idle_callback, self.idle_reset_ms)
+      clearTimeout(idle_callback_id)
+      idle_reset_ms = time_secs // resets to idle detection
+      idle_callback_id = setTimeout(self.idle_callback, idle_reset_ms)
             // so, restarts timeout when active
       active_fn()
     }
-    self.idle_callback_id = setTimeout(self.idle_callback, self.idle_reset_ms)
+    idle_callback_id = setTimeout(self.idle_callback, idle_reset_ms)
   }
 
   function _set_or_append_tag_text(txt, tag, append) {
@@ -387,9 +378,9 @@
   }
 
   self.hands = function (count, do_fn) {
-    var hands = 'None'
-    var handler = function () {
-      frame = self.leap.frame()
+    let hands = 'None'
+    let handler = function () {
+      let frame = self.leap.frame()
       if (frame.hands) {
         self.idle_reset() // any hand data means there is a visitor present...
         if (frame.hands.length !== hands) {
@@ -412,17 +403,17 @@
   }
 
   self.handed = function (left, right, do_fn) {
-    var handler = function () {
+    let handler = function () {
 // FIX very inefficient...
-      frame = self.leap.frame()
-      var now_left = false
-      var now_right = false
+      let frame = self.leap.frame()
+      let now_left = false
+      let now_right = false
       if (frame.hands) {
         self.idle_reset() // any hand data means there is a visitor present...
         if (frame.hands.length !== 0) {
-          var hands = frame.hands
+          let hands = frame.hands
           for (var i = 0; i < hands.length; i++) {
-            var handed = hands[i].type
+            let handed = hands[i].type
             if (handed === 'left') {
               now_left = true
             }
@@ -448,12 +439,12 @@
   }
 
   self.display = function (key, fn) { // Yes this is all of it...
-    self._displays.set(key, fn)
+    _displays.set(key, fn)
   }
 
   self._removeFocus = function () {
-    var focused = document.getElementsByClassName('focus')
-    for (var focus of focused) {
+    let focused = document.getElementsByClassName('focus')
+    for (let focus of focused) {
       focus.classList.remove('focus')
       focus.removeEventListener('transitionend', self._handle_transition)
     }
@@ -475,9 +466,8 @@
                 window.location.href = '../../client/setup'
                 return false
               }, false)
-      self.pinching = false
       exec() // this is the function added by the generator
-      let first = self._displays.keys().next()
+      let first = _displays.keys().next()
       if (first && !first.done) {
         self.showDisplay(first.value) // this runs the very first display :)
       }
@@ -503,7 +493,7 @@
   self.showDisplay = function (id) {
     // perform any destructors - which will cancel pending events, etc.
     // assumes that display is unique...
-    self.destructor.destroy()
+    destructor.destroy()
     // Clear current labels, title and text
     document.getElementById('quando_labels').innerHTML = ''
     self.title()
@@ -513,7 +503,7 @@
 //        self.video() removed to make sure video can continue playing between displays
     self.style.reset()
     // Find display and execute...
-    self._displays.get(id)()
+    _displays.get(id)()
   }
 
   self.addLabel = function (id, title) {
@@ -555,23 +545,9 @@
     }
   }
 
-  self.setOnId = (id, val) => {
-    _lookup[id] = val
-  }
-
-  self.getOnId = (id) => {
-    return _lookup[id]
-  }
-
-  self.tempIf = (val, goal, fn) => {
-    if (val.contains(goal)) {
-      fn(val)
-    }
-  }
-
   function _degrees_to_radians (degrees) {
-      var radians = Math.PI * degrees / 180
-      return radians
+    let radians = Math.PI * degrees / 180
+    return radians
   }
 
   self.convert_angle = (val, mid, range, inverted) => {
@@ -603,8 +579,8 @@
   self.prompt = (text, callback) => {
     callback(prompt(decodeURI(text)))
   }
-})()
 
+// N.B. the next two variables MUST be Global/var
 var val = false // force handlers to manage when not embedded
 var txt = false // assume default is ignore
 
@@ -615,5 +591,5 @@ if (document.title == "[[TITLE]]") { // this was opened by Inventor >> Test
     script.parentNode.removeChild(script)
   }
   let exec = window.opener.index.clientScript()
-  eval("this['exec'] =  () => {\n" + exec + "\n}")
+  eval("window['exec'] =  () => {\n" + exec + "\n}")
 }
