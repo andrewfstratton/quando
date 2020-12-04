@@ -56,9 +56,7 @@ input, #_hidden_width_element_ {
 
 #editor,
 #editor * {
-  -webkit-box-sizing: border-box;
-     -moz-box-sizing: border-box;
-          box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 #editor .ui-content {
@@ -174,9 +172,10 @@ input, #_hidden_width_element_ {
 
 input[type="color"] {
   border: none;
-  margin: none;
+  margin: 0 auto;
   width: 22px;
   padding: 0px;
+  box-shadow: none;
 }
 
 /* Colours for block backgrounds and title */
