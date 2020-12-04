@@ -8,6 +8,7 @@
     "pouchd": "pouchdb-server --port 5984 --dir pouchdb --config pouchdb-config.json",
     "quando": "node server.js",
     "start": "node .",
+    "dev": "node dev.js",
     "nodemon": "nodemon server.js",
     "install_local": "npm install --no-save --unsafe-perm node-red pouchdb pouchdb-server pouchdb-find robotjs serialport"
   },

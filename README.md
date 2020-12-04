@@ -6,16 +6,13 @@ Prerequisites: Chrome browser, Node JS **Do not use Current - Use LTS version** 
 
 1. Download the zip and extract into C:\quando, or Clone the repository in C: using git clone https://github.com/andrewfstratton/quando.git
 2. In the command line, in C:\quando, npm update - this will likely take a while
-3. You may see errors installing/building serialport - this should only happen with 'obscure' operating systems, e.g. non x64 windows.  The only missing feature will be (currently) USB micro:bit access - if you need this, then follow the relevant guide at https://serialport.io/docs/guide-installation
-  * Note: You may need to install windows developer tools - run an admin shell, then 'npm install -g windows-build-tools'
 
-### Setting up Quando for first time for offline and local
+### Setting up Quando for first time for (local) development
 
-1. Run 'npm run install_local' to install pouchdb, serialport and robotjs - you should only need to do this once
+1. Run 'npm run install_local' to install pouchdb - you should only need to do this once
 2. If you see errors for building sqlite3, try (for windows):
   * In an admin shell, run 'npm install -g windows-build-tools'
-
-3. Run quando (which will try to run the local pouchdb server and the quando node server).  Note that the PouchDB log file is in pouchdb/log.txt
+3. Run quando using 'npm run dev' (which will try to run the local pouchdb server and the quando node server).  Note that the PouchDB log file is in pouchdb/log.txt
 4. Open the Control Panel through http://127.0.0.1 in chrome
 5. Create a new user, e.g. 'test' with password 'test' and 'Add User'.
     * Note: you can change a user's password (or delete a user) through the PouchDB Control Panel - available through the hub page, or at http://127.0.0.1:5984/_utils.
@@ -84,6 +81,6 @@ The (in progress) [Manifesto](docs/manifesto.md) is likely to be useful.
 
 ### Installing in IBM Cloud
 
-This is for deploying to IBM Cloud - not yet tested/working
+Quando can be deployed to IBM Cloud - note that this has not been tested.
 
 [![Deploy to IBM Cloud](https://cloud.ibm.com/devops/setup/deploy/button.png)](https://cloud.ibm.com/devops/setup/deploy?repository=https%3A%2F%2Fgithub.com%2Fandrewfstratton%2Fquando.git&branch=master)
