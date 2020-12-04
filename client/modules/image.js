@@ -89,7 +89,7 @@
     }
 
     self.zoom = (display, val, min, max, inverted) => {
-        if (!val) {
+        if (val === false) {
             val = 0; // this forces the minimum value - not the middle
         }
         let mid = (min + max) /2

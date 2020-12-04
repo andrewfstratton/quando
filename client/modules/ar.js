@@ -182,7 +182,7 @@
   }
 
   self.zoom = (marker_id, val, min, max, inverted) => {
-    if (!val) {
+    if (val === false) {
         val = 0; // this forces the minimum value - not the middle
     }
     min /= 100
