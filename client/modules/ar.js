@@ -3,6 +3,7 @@
   if (!quando) {
     alert('Fatal Error: AR must be included after quando_browser')
   }
+  THREEx.ArToolkitContext.baseURL = '/client/lib/data/';
   let self = quando.ar = {}
   self.width = window.innerWidth
   self.height = window.innerHeight
@@ -54,6 +55,15 @@
     return marker
   }
 
+  function _setupARRotation(marker) {
+    let elem = marker.children[0]
+    setTimeout(() => {
+      let rot = elem.object3D.rotation
+      console.log(" "+rot)
+      rot.set(rot.x, rot.y, rot.z)
+    }, 0);
+  }
+
   self.whenMarker = (marker_id, found_fn, lost_fn) => {
     scene = self.getScene()
     let marker = _getMarker(marker_id, scene)
@@ -101,7 +111,9 @@
         source aspect ratio, so will display the image in a 1:1 ratio */
         image.setAttribute('height', 1.05)
         image.setAttribute('width', 1.05)
-        _getMarker(marker_id, scene).appendChild(image)
+        let marker = _getMarker(marker_id, scene)
+        marker.appendChild(image)
+        _setupARRotation(marker)
       }
       if (image.getAttribute('src') != image_URL) {
         image.setAttribute('src', image_URL)
@@ -147,7 +159,9 @@
         textElem.setAttribute('height', 1.05)
         textElem.setAttribute('width', 1.05)
         textElem.setAttribute('position', '0 0.001 0')
-        _getMarker(marker_id, scene).appendChild(textElem)
+        let marker = _getMarker(marker_id, scene)
+        marker.appendChild(textElem)
+        _setupARRotation(marker)
       }
       if (append && textElem.getAttribute('value')) {
         text = textElem.getAttribute('value') + text
