@@ -1,11 +1,32 @@
-(function () {
-  let quando = this['quando']
-  if (!quando) {
-    alert('Fatal Error: ubit must be included after client.js')
-  }
+let quando = window.quando
+if (!quando) {
+  alert('Fatal Error: ubit must be included after client.js')
+}
+
   let self = quando.ubit = {}
   let last_gesture = ''
   self.last_servo = []
+  const SOCKET_URI = "ws://127.0.0.1:8080/ws/";
+  const RETRY_SOCKET = 3 * 1000; // 3 Seconds
+
+  function connect() {
+    self.socket = new WebSocket(SOCKET_URI);
+
+    self.socket.onopen = () => {
+      console.log("Hub web socket open..");
+      self.socket.onmessage = handle_message;
+    }
+    self.socket.onerror = () => {
+      self.socket.close();
+    }
+    self.socket.onclose = () => {
+      setTimeout(() => {
+        connect();
+      }, RETRY_SOCKET);
+    }
+  }
+
+  connect();
 
   function dispatch_gesture (gesture_name) {
     if (gesture_name != last_gesture) {
@@ -60,37 +81,47 @@
   }
 
   self.handleHeading = function (mid, range, inverted, callback) {
-    _handleAngle('ubitHeading', callback, mid, range, !inverted) // heading inversion is inverted ?!
+    _handleAngle('ubitHeading', callback, mid, range, inverted)
   }
 
-  quando.socket.on('ubit', function (data) {
+  function handle_message(ev) {
+    let data = JSON.parse(ev.data);
     if (data.ir) {
       quando.idle_reset()
     } else if (data.orientation) {
       quando.idle_reset() // this is only received when the orientation changes
-      if (data.orientation == 'forward') {
-        dispatch_gesture('ubitForward')
-      } else if (data.orientation == 'backward') {
-        dispatch_gesture('ubitBackward')
-      } else if (data.orientation == 'up') {
-        dispatch_gesture('ubitUp')
-      } else if (data.orientation == 'down') {
-        dispatch_gesture('ubitDown')
-      } else if (data.orientation == 'left') {
-        dispatch_gesture('ubitLeft')
-      } else if (data.orientation == 'right') {
-        dispatch_gesture('ubitRight')
-      } else if (data.orientation == '') { // this is the micro bit started
-        last_gesture = ''
+      switch (data.orientation) {
+        case 'forward':
+          dispatch_gesture('ubitForward')
+          break
+        case 'backward':
+          dispatch_gesture('ubitBackward')
+          break
+        case 'up':
+          dispatch_gesture('ubitUp')
+          break
+        case 'down':
+          dispatch_gesture('ubitDown')
+          break
+        case 'left':
+          dispatch_gesture('ubitLeft')
+          break
+        case 'right':
+          dispatch_gesture('ubitRight')
+          break
+        default:
+          last_gesture = '' // this is the micro bit started
       }
-    } else if (data.button) {
+    } else if (data.button_a) {
       quando.idle_reset()
-      if (data.button == 'a') {
-        quando.dispatch_event('ubitA')
-      }
-      if (data.button == 'b') {
-        quando.dispatch_event('ubitB')
-      }
+      quando.dispatch_event('ubitA')
+    } else if (data.button_b) {
+      quando.idle_reset()
+      quando.dispatch_event('ubitB')
+    } else if (data.button_ab) {
+      quando.idle_reset()
+      quando.dispatch_event('ubitA')
+      quando.dispatch_event('ubitB')
     } else if (data.heading) {
       quando.idle_reset()
       quando.dispatch_event('ubitHeading', {'detail': data.heading})
@@ -103,7 +134,7 @@
       }
       quando.idle_reset()
     }
-  })
+  }
 
   function _ubit_send(key, val) {
     fetch('http://localhost:8080/ubit/' + key, { method: 'POST', 
@@ -136,4 +167,3 @@
       _ubit_send('turn', {'servo':servo+1, 'angle':angle}) // also add 1 to servo for no number aswell
     }
   }
-})()
