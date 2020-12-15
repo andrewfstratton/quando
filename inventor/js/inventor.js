@@ -34,19 +34,7 @@ self.handleRightClick = (event) => {
     return false
 }
 
-function _show_right_menu(elem) {
-  let menu = document.getElementById('right-click-menu')
-  let clone = menu.cloneNode(true)
-  menu.parentNode.replaceChild(clone, menu)
-  menu = clone
-  menu.style.visibility = "visible"
-  menu.style.left = event.pageX-8 + "px"
-  menu.style.top = event.pageY-8 + "px"
-  menu.addEventListener('mouseleave', (e) => {
-    menu.style.visibility = "hidden"
-  })
-  document.getElementById('block-clone').addEventListener('click', (ev) => {
-    menu.style.visibility = "hidden"
+function _handle_click_clone(elem) {
     let containing_block = elem
     if (!elem.classList.contains("quando-block")) {
       containing_block = _getAncestor(elem, "quando-block")
@@ -73,6 +61,33 @@ function _show_right_menu(elem) {
         _populateLists()
         self.setElementHandlers(clone)
       }
+    }
+}
+
+function _show_right_menu(elem) {
+  let menu = document.getElementById('right-click-menu')
+  let clone = menu.cloneNode(true)
+  menu.parentNode.replaceChild(clone, menu)
+  menu = clone
+  menu.style.visibility = "visible"
+  menu.style.left = event.pageX-8 + "px"
+  menu.style.top = event.pageY-8 + "px"
+  menu.addEventListener('mouseleave', (ev) => {
+    menu.style.visibility = "hidden"
+  })
+  document.getElementById('block-clone').addEventListener('click', (ev) => {
+    menu.style.visibility = "hidden"
+    _handle_click_clone(elem)
+  }, false)
+  document.getElementById('block-help').addEventListener('click', (ev) => {
+    menu.style.visibility = "hidden"
+    let containing_block = elem
+    // need to find the quando-block - may be ancestor
+    if (!elem.classList.contains("quando-block")) {	
+      containing_block = _getAncestor(elem, "quando-block")	
+    }	
+    if (containing_block){	
+      self.handle_help(containing_block.dataset.quandoBlockType)
     }
   }, false)
 }
@@ -1333,6 +1348,11 @@ self.handle_test = () => {
     input.prop('selectionEnd', cursor_pos + tuning.length)
   }
 
+  self.handle_help = (type = false) => {
+    let url = "/inventor/help/help.html"
+    if (type) { url += "#" + type }
+    window.open(url, "quando_help").focus()
+  }
 
 })(this['generator'], this['json'])
 
