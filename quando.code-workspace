@@ -5,6 +5,12 @@
 		}
 	],
 	"settings": {
-		"workbench.colorTheme": "Monokai"
+		"workbench.colorTheme": "Kimbie Dark",
+		"workbench.colorCustomizations": {
+			"activityBar.background": "#4F0F55",
+			"titleBar.activeBackground": "#6F1577",
+			"titleBar.activeForeground": "#FEFCFE"
+		},
+		"liveServer.settings.port": 5501
 	}
 }
