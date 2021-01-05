@@ -7,6 +7,7 @@ let _remote_list = []
 let AUTOSAVE = 'quandoAutosave' // used for key to save/load to/from browser
 let PREFIX = 'quando_' // used for key to save/load to/from browser
 let client_script = ""
+const QUANDO_DISABLED = 'quando-disabled';
 
 self.showObject = (obj) => {
   let script = document.getElementById('script')
@@ -136,6 +137,15 @@ self.toggleRelativesOnElement = (elem) => {
           let [key, value] = toggle.split('=')
           if (key == elem_name) { // only toggle when the key is the same...
             child.style.display = (value == elem.value ? '' : 'none')
+          }
+        } else if (toggle.includes('@')) { // change the class to be enabled/disabled
+          let [key, value] = toggle.split('@')
+          if (key == elem_name) {
+            if (value == elem.value) { // remove disabled when enabled?!
+              block.classList.remove(QUANDO_DISABLED)
+            } else {
+              block.classList.add(QUANDO_DISABLED)
+            }
           }
         } else { // simple test
           child.style.display = (toggle == elem.value ? '' : 'none')
@@ -470,6 +480,8 @@ function _setupDragula() {
   }
   self.drake = dragula(collections, options).on('drop', (elem) => {
     self.setElementHandlers(elem)
+//  }).on('drag', (elem, src) => {
+//  }).on('dragend', (elem) => {
   }).on('cloned', (clone, old, type) => {
     if (type == 'copy') {
       self.copyBlock(old, clone)

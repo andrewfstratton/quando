@@ -165,7 +165,7 @@ input, #_hidden_width_element_ {
 
 .quando-box {
   margin: 0px 8px 0px 4px;
-  padding: 4px 0px 0px 0px;
+  padding: 4px 0px 4px 0px;
   min-height: 24px;
   width: 100%;
 }
@@ -242,10 +242,6 @@ select.quando-toggle {
   background-color: rgba(255,255,255, 0.4);
 }
 
-.quando-comment {
-  filter: grayscale(100%);
-}
-
 .iconify {
   padding:1px;
   color: #000;
@@ -264,7 +260,7 @@ select.quando-toggle {
   box-shadow: 0 0 2px 4px  rgb(0, 0, 0, 0.7);
 }
 
-.right-click-menu-item:hover {
+.right-click-menu-item:hover:not([disabled]) {
   background-color: lightblue;
 }
 
@@ -340,3 +336,7 @@ input[type=number] {
   visibility: visible;
   opacity: 1;
 } 
+
+.quando-disabled * {
+  filter: grayscale(100%);
+}

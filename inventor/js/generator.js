@@ -125,7 +125,7 @@ self.getCodeInBlock = function(block) {
     
 self.getCode = function(block) {
     let result = '' 
-    if (block.dataset.quandoJavascript) {
+    if (block.dataset.quandoJavascript && !block.classList.contains("quando-disabled")) {
       result = self.getCodeInBlock(block)
       if (result != '') { result += '\n' }
     }

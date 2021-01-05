@@ -77,7 +77,8 @@ self.addObjectToElement = (obj, elem) => {
       // find block_type
       let src_block = menu.querySelector("[data-quando-block-type='"+ block.block_type +"']")
       if (!src_block) {  // Block is no longer in the menu and is most likely out of date...
-        alert('Failed to create Block:'+block.block_type)
+        toastr.options.timeOut = 2500,
+        toastr.error('Failed to create Block:'+block.block_type)
         console.log('Unknown Block: '+JSON.stringify(block))
       }
       if (src_block) { // clone to script

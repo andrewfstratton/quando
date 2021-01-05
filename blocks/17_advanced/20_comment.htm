@@ -1,18 +1,30 @@
-<div class="quando-block" data-quando-javascript='// ${description} 
-'>
+<div class="quando-block" data-quando-toggle="enabled@true" data-quando-javascript="// ${description} 
+$(eq$,${enabled}$,true$,${box})$">
     <div class="quando-left quando-advanced"></div>
     <div class="quando-right">
         <div class="quando-row quando-advanced">
-            <span class='quando-info' title='Any blocks can be dragged into this block, when expanded, to disable them...'>⍰</span>
-            Comment
             <input data-quando-name="description" type="text" value="" data-quando-encode="" />
-            &nbsp;
-            <select data-quando-name='row_box' class='quando-toggle'>
-                <option value='row'>+</option>
-                <option value='box'>-</option>
+            <select data-quando-name="extras" class="quando-toggle">
+                <option value="hidden">+</option>
+                <option value="show">-</option>
             </select>
+            <div class="hover" data-quando-toggle='collapsed=true'>
+                <span class="hovertext">The contents of this block are &apos;Hidden&apos; </span>
+                <span class="iconfiy">...️️</span>
+            </div>
+            <span data-quando-toggle="extras=show">
+                <br>
+                <select data-quando-name='enabled' class='quando-toggle'>
+                    <option value='true'>enabled</option>
+                    <option value='false'>disabled</option>
+                </select>
+                <select data-quando-name='collapsed' class='quando-toggle'>
+                    <option value='false'>Visible</option>
+                    <option value='true'>Hidden</option>
+                </select>
+            </span>
         </div>
-        <div data-quando-toggle="row_box=box" data-quando-name="box" class="quando-box quando-comment"></div>
-        <div data-quando-toggle="row_box=box" class="quando-row quando-advanced"></div>
+        <div data-quando-name="box" data-quando-toggle='collapsed=false' class="quando-box"></div>
+        <div data-quando-toggle='collapsed=false' class="quando-row quando-advanced"></div>
     </div>
 </div>
