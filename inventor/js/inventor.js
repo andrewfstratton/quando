@@ -109,6 +109,21 @@ function _leftClickTitle(open_elem) {
   }
 }
 
+function _buildDisableList(elem) {
+  let result = []
+  // append if data-quando-disable exists...
+  if (elem.dataset && elem.dataset.quandoDisable) {
+    result.push(elem)
+  }
+  // don't descend into quando-box
+  if (!elem.classList.contains("quando-box")) {
+    for (let child of elem.children) {
+      result = result.concat(_buildDisableList(child))
+    }
+  }
+  return result
+}
+
 function _buildToggleList(elem) {
   let result = []
   // append if quandoToggle exists...
@@ -132,23 +147,24 @@ self.toggleRelativesOnElement = (elem) => {
     for (let child of toggles) {
       // now match all toggles
       let toggle = child.dataset && child.dataset.quandoToggle
-      if (toggle) {
-        if (toggle.includes('=')) { // check for name and value
-          let [key, value] = toggle.split('=')
-          if (key == elem_name) { // only toggle when the key is the same...
-            child.style.display = (value == elem.value ? '' : 'none')
+      if (toggle && toggle.includes('=')) { // check for name and value
+        let [key, value] = toggle.split('=')
+        if (key == elem_name) { // key must be specified - only toggle when the key is the same...
+          child.style.display = (value == elem.value ? '' : 'none')
+        }
+      }
+    }
+    let disables = _buildDisableList(block)
+    for (let child of disables) {
+      let disable_class = child.dataset && child.dataset.quandoDisable 
+      if (disable_class && disable_class.includes("=")) {
+        let [key, value] = disable_class.split('=')
+        if (key == elem_name) {
+          if (value == elem.value) { // add disabled when it matches?!
+            block.classList.add(QUANDO_DISABLED)
+          } else {
+            block.classList.remove(QUANDO_DISABLED)
           }
-        } else if (toggle.includes('@')) { // change the class to be enabled/disabled
-          let [key, value] = toggle.split('@')
-          if (key == elem_name) {
-            if (value == elem.value) { // remove disabled when enabled?!
-              block.classList.remove(QUANDO_DISABLED)
-            } else {
-              block.classList.add(QUANDO_DISABLED)
-            }
-          }
-        } else { // simple test
-          child.style.display = (toggle == elem.value ? '' : 'none')
         }
       }
     }
