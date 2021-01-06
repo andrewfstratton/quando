@@ -1,35 +1,36 @@
 // support the inventor (editor) page
-((generator, json) => {
-let self = this['index'] = {}
+import * as generator from "./generator.js";
+import * as json from "./json.js";
+
 let _userid = null
 let _deploy = ''
 let _remote_list = []
 let AUTOSAVE = 'quandoAutosave' // used for key to save/load to/from browser
 let PREFIX = 'quando_' // used for key to save/load to/from browser
-let client_script = ""
+export let client_script = ""
 const QUANDO_DISABLED = 'quando-disabled';
 
-self.showObject = (obj) => {
+export function showObject(obj) {
   let script = document.getElementById('script')
   script.innerHTML = ''
-  self.appendObject(obj)
+  appendObject(obj)
 }
 
-self.appendObject = (obj) => {
+export function appendObject(obj) {
   let script = document.getElementById('script')
   json.addObjectToElement(obj, script)
   _populateLists()
   json.setOptions()
   for (let item of script.getElementsByClassName("quando-block")) {
-    self.setElementHandlers(item)
+    setElementHandlers(item)
   }
 }
 
-self.getScriptAsObject = () => {
+export function getScriptAsObject() {
    return json.scriptToArray(document.getElementById('script'))
 }
 
-self.handleRightClick = (event) => {
+export function handleRightClick(event) {
     event.preventDefault()
     _show_right_menu(event.target)
     return false
@@ -57,10 +58,10 @@ function _handle_click_clone(elem) {
         }
       }
       if (clone) {
-        clone.addEventListener('contextmenu', self.handleRightClick, false)
-        self.copyBlock(containing_block, clone)
+        clone.addEventListener('contextmenu', handleRightClick, false)
+        copyBlock(containing_block, clone)
         _populateLists()
-        self.setElementHandlers(clone)
+        setElementHandlers(clone)
       }
     }
 }
@@ -88,7 +89,7 @@ function _show_right_menu(elem) {
       containing_block = _getAncestor(elem, "quando-block")	
     }	
     if (containing_block){	
-      self.handle_help(containing_block.dataset.quandoBlockType)
+      handle_help(containing_block.dataset.quandoBlockType)
     }
   }, false)
 }
@@ -139,7 +140,7 @@ function _buildToggleList(elem) {
   return result
 }
 
-self.toggleRelativesOnElement = (elem) => {
+export function toggleRelativesOnElement(elem) {
   let elem_name = elem.dataset.quandoName
   let block = _getAncestor(elem, "quando-block")
   if (block) {
@@ -171,7 +172,7 @@ self.toggleRelativesOnElement = (elem) => {
   }
 }
 
-self.handleToggle = (event) => {
+export function handleToggle(event) {
   event.preventDefault()
   let select = event.target
   let selectedIndex = select.selectedIndex + 1
@@ -180,11 +181,11 @@ self.handleToggle = (event) => {
   }
   select.selectedIndex = selectedIndex
   // now update the visibles...
-  self.toggleRelativesOnElement(select)
+  toggleRelativesOnElement(select)
   return false
 }
 
-self.handleLeftClick = function(event) {
+export function handleLeftClick(event) {
   event.preventDefault()
   _leftClickTitle(event.target)
   return false
@@ -269,7 +270,7 @@ function _handleListNameChange(event) {
   }
 }
 
-self.saveIP = () => {
+export function saveIP() {
   //get value of the first input field in the drag n drop window
   let inpFields = document.getElementsByClassName("ip_inp")
   let newIP = inpFields[1].value
@@ -319,9 +320,9 @@ function _resizeWidth(event) {
     target.style.width = width + 'px'
 }
   
-self.setElementHandlers = (block) => {
+export function setElementHandlers (block) {
   if (block.id != 'clipboard') { // contextmenu is not shown for clipboard
-    block.addEventListener('contextmenu', self.handleRightClick, false)
+    block.addEventListener('contextmenu', handleRightClick, false)
   }
   // add handler for list item change
   let id = null
@@ -335,14 +336,14 @@ self.setElementHandlers = (block) => {
     }
   }
   for (let elem of block.querySelectorAll("input[data-quando-media]")) {
-    elem.addEventListener('click', self.handleFile, false)
+    elem.addEventListener('click', handleFile, false)
   }
   for (let elem of block.querySelectorAll("input[data-quando-robot='say']")) {
-    elem.addEventListener('click', self.handleRobotModal, false)
+    elem.addEventListener('click', handleRobotModal, false)
   }
   for (let elem of block.querySelectorAll("select.quando-toggle")) {
-    elem.addEventListener('click', self.handleToggle, true)
-    self.toggleRelativesOnElement(elem)
+    elem.addEventListener('click', handleToggle, true)
+    toggleRelativesOnElement(elem)
     elem.addEventListener('mousedown', (ev)=>{ev.preventDefault();return false})
   }
   //add update handler for IP datalist on click
@@ -358,7 +359,7 @@ self.setElementHandlers = (block) => {
   }
 }
 
-self.copyBlock = (old, clone) => { // Note that Clone is a 'simple' copy of old
+export function copyBlock(old, clone) { // Note that Clone is a 'simple' copy of old
   // copy across selected indexes
   if (old.hasChildNodes()) {
     let selector = "select"
@@ -402,7 +403,7 @@ self.copyBlock = (old, clone) => { // Note that Clone is a 'simple' copy of old
   }
 }
 
-self.removeBlock = (elem) => {
+export function removeBlock(elem) {
   let id = elem.dataset.quandoId
   if (id) {
     let options = document.querySelectorAll("option[value='" + id + "']")
@@ -494,31 +495,31 @@ function _setupDragula() {
   options.invalid = (elem, handle) => {
     return elem.classList.contains("quando-title")
   }
-  self.drake = dragula(collections, options).on('drop', (elem) => {
-    self.setElementHandlers(elem)
+  let drake = dragula(collections, options).on('drop', (elem) => {
+    setElementHandlers(elem)
 //  }).on('drag', (elem, src) => {
 //  }).on('dragend', (elem) => {
   }).on('cloned', (clone, old, type) => {
     if (type == 'copy') {
-      self.copyBlock(old, clone)
+      copyBlock(old, clone)
     }
   }).on('remove', (elem) => {
-    self.removeBlock(elem)
+    removeBlock(elem)
   })
   collections.forEach((collection)=>{
     collection.addEventListener('touchmove', (event) => {
-      if (self.drake.dragging) {
+      if (drake.dragging) {
         event.preventDefault()
       }
     })
   })
 }
 
-self.setup = () => {
+export function setup() {
   //OK this is bad but temporary my bad
   _updateIPList()
   window.onbeforeunload = () => {
-    let obj = self.getScriptAsObject()
+    let obj = getScriptAsObject()
     if (obj.length) {
       local_save(AUTOSAVE, obj)
     } else {
@@ -546,7 +547,7 @@ self.setup = () => {
 
   $('#login_modal').keypress((e) => {
     if (e.which === 13) {
-      self.handle_login()
+      handle_login()
     }
   })
   $('#loading_modal_message').html('Checking for user session...')
@@ -609,10 +610,10 @@ self.setup = () => {
       }
       $('#loading_modal').modal('hide')
       for (let elem of document.getElementsByClassName("quando-title")) {
-        elem.addEventListener('click', self.handleLeftClick)
+        elem.addEventListener('click', handleLeftClick)
       }
       for (let item of document.getElementsByClassName("quando-block")) {
-        self.setElementHandlers(item)
+        setElementHandlers(item)
       }
       let first_title = document.getElementsByClassName("quando-title")[0]
       if (first_title) {
@@ -696,8 +697,8 @@ function _warning (message) {
     }
   }
 
-  self.loaded = (obj, modal_id) => {
-    self.showObject(obj.script)
+export function loaded(obj, modal_id) {
+    showObject(obj.script)
     _deploy = obj.deploy
     name = obj.filename
     $(modal_id).modal('hide')
@@ -790,7 +791,7 @@ function _warning (message) {
     return result
   }
 
-self.generateCode = (elem) => {
+export function generateCode(elem) {
   let children = elem.children
   let result = ""
   for (let child of children) {
@@ -804,7 +805,7 @@ self.generateCode = (elem) => {
   return result
 }
 
-self.handle_login = () => {
+export function handle_login() {
     let userid = $('#userid').val()
     let password = $('#password').val()
     let message_elem = $('#login_modal_footer_message')
@@ -830,11 +831,7 @@ self.handle_login = () => {
     })
 }
 
-self.clientScript = () => {
-  return client_script
-}
-
-self.testCreator = (code) => {
+export function testCreator(code) {
   let filename = '-'
   client_script = code
   $.ajax({
@@ -852,25 +849,25 @@ self.testCreator = (code) => {
   })
 }
 
-self.handle_test = () => {
-    let code = self.generateCode(document.getElementById('script'))
+export function handle_test() {
+    let code = generateCode(document.getElementById('script'))
     if (code) {
       let clipboard = document.getElementById('clipboard')
       if (clipboard && code.startsWith('<div class="quando-block"')) { // if inventing a block
         let tmp = document.createElement('div')
         tmp.innerHTML = code
-        self.setElementHandlers(tmp.firstChild)
+        setElementHandlers(tmp.firstChild)
         clipboard.appendChild(tmp.firstChild)
         _leftClickTitle(document.getElementById('clipboard_title'))
       } else {
-        self.testCreator(code)
+        testCreator(code)
       }
     } else {
       alert('Behaviour incomplete.')
     }
   }
 
-  self.handle_save = () => {
+export function handle_save() {
     if (_userid) {
       $('#remote_save_modal').modal('show')
     } else {
@@ -878,14 +875,14 @@ self.handle_test = () => {
     }
   }
 
-  self.handle_remote_to_local_save = () => {
+export function handle_remote_to_local_save() {
     $('#remote_save_modal').modal('hide')
     $('#local_save_modal').modal('show')
   }
   
-  self.handle_local_save = () => {
+export function handle_local_save() {
     let key = $('#local_save_key').val()
-    local_save(PREFIX + key, self.getScriptAsObject())
+    local_save(PREFIX + key, getScriptAsObject())
     $('#local_save_modal').modal('hide')
     _saved(key)
   }
@@ -898,9 +895,9 @@ self.handle_test = () => {
     }))
   }
   
-  self.handle_remote_save = () => {
+export function handle_remote_save() {
     let name = encodeURI($('#remote_save_key').val())
-    let obj = JSON.stringify({ deploy: _deploy, script: self.getScriptAsObject()})
+    let obj = JSON.stringify({ deploy: _deploy, script: getScriptAsObject()})
     $.ajax({
       url: '/script',
       type: 'POST',
@@ -919,7 +916,7 @@ self.handle_test = () => {
     })
   }
 
-  self.handle_load = () => {
+export function handle_load() {
     if (_userid) {
       $('#remote_load_modal').modal('show')
       _remote_load_list()
@@ -929,25 +926,16 @@ self.handle_test = () => {
     }
   }
 
-  self.handle_remote_to_local_load = () => {
+export function handle_remote_to_local_load() {
     _local_load_list()
     $('#remote_load_modal').modal('hide')
     $('#local_load_modal').modal('show')
   }
   
-  self.handle_remote_to_local_save = () => {
-    $('#remote_save_modal').modal('hide')
-    $('#local_save_modal').modal('show')
-  }
-
-  function local_load(key) {
-    self.local_load(key)
-  }
-
-  self.local_load = (key) => {
+export function local_load(key) {
     let obj = JSON.parse(localStorage.getItem(key))
     if (obj) {
-      self.loaded(obj, '#local_load_modal')
+      loaded(obj, '#local_load_modal')
     } else {
       if (key == AUTOSAVE) {
         _warning('No Autosave...')
@@ -957,14 +945,14 @@ self.handle_test = () => {
     }
   }
   
-  self.remote_load = (index) => {
+export function remote_load(index) {
     $.ajax({
       url: '/script/id/' + _remote_list[index].id,
       success: (res) => {
         if (res.success) {
           let script = JSON.parse(res.doc.script)
           script.filename = res.doc.name
-          self.loaded(script, '#remote_load_modal')
+          loaded(script, '#remote_load_modal')
         } else {
           alert('Failed to find script')
         }
@@ -975,14 +963,14 @@ self.handle_test = () => {
     })
   }
 
-  self.local_delete = (key) => {
+export function local_delete(key) {
     if (confirm("Delete forever '" + key + "'?")) {
       localStorage.removeItem(key)
       _local_load_list()
     }
   }
 
-  self.remote_delete = (index) => {
+export function remote_delete(index) {
     if (confirm("Delete forever '" + _remote_list[index].name + "' saved " +
             _remote_list[index].date + ' ?')) {
       $.ajax({
@@ -1003,7 +991,7 @@ self.handle_test = () => {
     }
   }
 
-  self.remote_tidy = (index) => {
+export function remote_tidy(index) {
     let id = _remote_list[index].id
     let name = _remote_list[index].name
     $.ajax({
@@ -1023,7 +1011,7 @@ self.handle_test = () => {
     })
   }
 
-  self.remote_delete_all = (index) => {
+export function remote_delete_all(index) {
     let name = _remote_list[index].name
     if (confirm("Delete ALL '" + name + "' ?")) {
       $.ajax({
@@ -1044,24 +1032,24 @@ self.handle_test = () => {
     }
   }
 
-  self.handle_show_version = () => {
+export function handle_show_version() {
     _update_remote_list()
   }
 
-  self.handle_show_code = () => {
+export function handle_show_code() {
     $('#show_modal').modal('show')
     $('#show_modal_code').removeClass('language-xml').addClass('language-javascript')
     update_code_clip()
   }
 
-  self.handle_clear = () => {
+export function handle_clear() {
     _info('Cleared...')
     _deploy = ''
     localStorage.removeItem(AUTOSAVE)
     $('#file_name').html('[no file]')
     $('#local_save_key').val('')
     $('#remote_save_key').val('')
-    self.showObject()
+    showObject()
   }
 
   function update_code_clip() {
@@ -1082,7 +1070,7 @@ self.handle_test = () => {
       txt += ']'
     } else { // must be Code
       btn.text('Code') // In case the first time it's called
-      txt = self.generateCode(script)
+      txt = generateCode(script)
     }
     $('#show_modal_clip_paste_button').prop('disabled', disabled)
     $('#show_modal_code').prop('readonly', false)
@@ -1090,7 +1078,7 @@ self.handle_test = () => {
     $('#show_modal_code').prop('readonly', disabled)
   }
 
-  self.handle_code_clip_toggle = () => {
+export function handle_code_clip_toggle() {
     let btn = $('#show_modal_code_toggle_button')
     if (btn.text() != 'Clip') { // i.e. if was Code, or blank (!), now to be Clip
       btn.text('Clip')
@@ -1100,10 +1088,10 @@ self.handle_test = () => {
     update_code_clip()
   }
 
-  self.handle_clip_paste = () => {
+export function handle_clip_paste() {
     let txt = $('#show_modal_code').val()
     let obj = JSON.parse(txt)
-    self.appendObject(obj)
+    appendObject(obj)
     $('#show_modal').modal('hide')
     toastr.success("Clipboard pasted to script...")
   }
@@ -1136,7 +1124,7 @@ self.handle_test = () => {
     return result
   }
 
-  self.handleFile = (event) => {
+export function handleFile(event) {
     event.preventDefault()
     let elem = event.target
     let path = elem.value
@@ -1202,11 +1190,11 @@ self.handle_test = () => {
     })
   }
 
-  self.handle_folder_selected = (media, block_id, elem_name, path) => {
+export function handle_folder_selected(media, block_id, elem_name, path) {
     _handle_file(media, block_id, elem_name, path)
   }
 
-  self.handle_file_selected = (filename, block_id, elem_name) => {
+export function handle_file_selected(filename, block_id, elem_name) {
         // When blocK-id is null, then this is an upload - so do nothing...
     if (block_id != null) {
       let block = document.querySelector('[data-quando-id="'+block_id+'"]')
@@ -1221,7 +1209,7 @@ self.handle_test = () => {
     }
   }
 
-  self.handle_upload_media = () => {
+export function handle_upload_media() {
     if ($('#upload_media').val()) {
       _handle_file('UPLOAD', null, null, '')
     }
@@ -1258,7 +1246,7 @@ self.handle_test = () => {
     })
   }
 
-  self.handle_upload = () => {
+export function handle_upload() {
     let files = Array.from($('#upload_media')[0].files)
     let remote_path = encodeURI($('#file_modal_path').html())
     if (files.length > 0) {
@@ -1266,7 +1254,7 @@ self.handle_test = () => {
     }
   }
 
-  self.handle_logout = () => {
+export function handle_logout() {
     $.ajax({
       url: '/login',
       type: 'DELETE',
@@ -1281,8 +1269,8 @@ self.handle_test = () => {
     })
   }
 
-  self.handle_deploy = () => {
-    let code = self.generateCode(document.getElementById('script'))
+export function handle_deploy() {
+    let code = generateCode(document.getElementById('script'))
     if (code) {
       code = "let exec = () => {\n" + code + "}"
       let filename = 'guest'
@@ -1312,7 +1300,7 @@ self.handle_test = () => {
     }
   }
 
-  self.handleRobotModal = (event) => {
+export function handleRobotModal(event) {
     event.preventDefault()
 
     let elem = event.target
@@ -1324,7 +1312,7 @@ self.handle_test = () => {
     return false
   }
 
-  self.handle_robot_say = (event) => {
+export function handle_robot_say(event) {
     event.preventDefault()
 
     let robot_say_modal = $('#robot_say_modal')
@@ -1351,7 +1339,7 @@ self.handle_test = () => {
     robot_say_modal.modal('show')
   }
 
-  self.add_robot_voice_tuning = (event) => {
+export function add_robot_voice_tuning(event) {
     let elem = $(event.target)
     let type = elem.attr('data-type')
     let tuning = ''
@@ -1376,12 +1364,10 @@ self.handle_test = () => {
     input.prop('selectionEnd', cursor_pos + tuning.length)
   }
 
-  self.handle_help = (type = false) => {
+export function handle_help(type = false) {
     let url = "/inventor/help/help.html"
     if (type) { url += "#" + type }
     window.open(url, "quando_help").focus()
   }
 
-})(this['generator'], this['json'])
-
-window.onload = index.setup() // FIX - this should be inventor - but generated html/javascript refers to index
+window.onload = setup()

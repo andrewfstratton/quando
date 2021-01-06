@@ -1,21 +1,13 @@
 // Code Generator APIs
 // Note: likely (at present) to be browser specific - but should work on the persisted data and (expanded) javascript generator string
-(() => {
-  let self = this['generator'] = {} // for access from the web page, etc.
-  let fn = self.fn = {} // for accessing the invocable generator functions
-  let prefix = ''
+import * as text from "/common/text.js";
 
-self.encodeText = (str) => {
-  return str.replace(/&/g, '&amp;')
-          .replace(/</g, '&lt;')
-          .replace(/>/g, '&gt;')
-          .replace(/"/g, '&quot;')
-          .replace(/'/g, '&apos;')
-}
+let fn = {}
+let _prefix = ''
 
-self.prefix = () => {
-    let result = prefix
-    prefix = ''
+export function prefix() {
+    let result = _prefix
+    _prefix = ''
     if (result == '') {
         result = false
     } else {
@@ -43,7 +35,7 @@ function nextMatch(str, open, close) {
     return [parsed, matched, remaining]
 }
 
-self.getCodeInBlock = function(block) {
+export function getCodeInBlock(block) {
     let code = ''
     if (block.dataset && block.dataset.quandoJavascript) {
         code = block.dataset.quandoJavascript
@@ -58,7 +50,7 @@ self.getCodeInBlock = function(block) {
                 if (child.dataset.quandoName) {
                     let value = child.value
                     if ((typeof value) === 'string' && (child.dataset.quandoEncode != "raw")) {
-                        value = self.encodeText(child.value)
+                        value = text.encode(child.value)
                     }
                     matches[child.dataset.quandoName] = value // stores a lookup for the value
                 }
@@ -123,10 +115,10 @@ self.getCodeInBlock = function(block) {
     return code
 }
     
-self.getCode = function(block) {
+export function getCode(block) {
     let result = '' 
     if (block.dataset.quandoJavascript && !block.classList.contains("quando-disabled")) {
-      result = self.getCodeInBlock(block)
+      result = getCodeInBlock(block)
       if (result != '') { result += '\n' }
     }
     return result
@@ -158,7 +150,7 @@ fn.displayTitle = (block, display_id) => {
         let value = select.value // this is the id
         let option = select.querySelector("option[value='" + value + "']")
         if (option) {
-            result = self.encodeText(option.innerHTML)
+            result = text.encode(option.innerHTML)
         }
     }
     return result
@@ -190,7 +182,7 @@ fn.rgb = (block, colour) => {
 
 fn.pre = (block, ...inserts) => {
     for (let insert of inserts) {
-        prefix += insert + '\n'
+        _prefix += insert + '\n'
     }
     return ''
 }
@@ -210,4 +202,3 @@ fn.hasValue = (block, str, gen, gen_else='') => {
     }
     return result
 }
-})()

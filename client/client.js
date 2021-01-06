@@ -1,5 +1,7 @@
 import * as destructor from "./modules/destructor.js";
 
+// Note: This is not a true module - but pretends to be one to include a module itself
+// next line sets quando as a global object to contain all the other client 'modules'
 let self = window.quando = {}
 
 let idle_reset_ms = 0
@@ -589,6 +591,7 @@ if (document.title == "[[TITLE]]") { // this was opened by Inventor >> Test
   if (script) {
     script.parentNode.removeChild(script)
   }
-  let exec = window.opener.index.clientScript()
+  let exec = window.opener.document['index'].client_script
+  // note that window.opener.index doesn't exist...
   eval("window['exec'] =  () => {\n" + exec + "\n}")
 }

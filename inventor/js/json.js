@@ -1,9 +1,7 @@
 // Object APIs
 // Note: browser specific
-(() => {
-    let self = this['json'] = {} // for access from the web page, etc.
 
-self.nextDataQuandoId = (id) => {
+export function nextDataQuandoId (id) {
   let result = id
   if (isNaN(id)) {
     result = 0
@@ -14,7 +12,7 @@ self.nextDataQuandoId = (id) => {
   return result
 }
 
-self.filterClass = (cls, children) => {
+export function filterClass (cls, children) {
   let result = []
   for (let child of children) {
     if (child.classList && child.classList.contains(cls)) {
@@ -24,9 +22,9 @@ self.filterClass = (cls, children) => {
   return result
 }
 
-self.scriptToArray = (script) => {
+export function scriptToArray (script) {
   let arr = []
-  for (let block of self.filterClass("quando-block", script.children)) {
+  for (let block of filterClass("quando-block", script.children)) {
     // persist data-quando-id
     let block_persist = {}
     if (block.dataset && block.dataset.quandoId) {
@@ -36,17 +34,17 @@ self.scriptToArray = (script) => {
     let values = {}
     let boxes = []
     // Find the quando-right
-    for (let right of self.filterClass("quando-right", block.children)) {
+    for (let right of filterClass("quando-right", block.children)) {
       // Then loop through all the rows and boxes in the quando-right
-      for (let row of self.filterClass("quando-row", right.children)) {
+      for (let row of filterClass("quando-row", right.children)) {
         // now find all quando-value with values
         for (let named of row.querySelectorAll("[data-quando-name]")) {
           values[named.dataset.quandoName] = named.value
         }
       }
-      for (let box of self.filterClass("quando-box", right.children)) {
+      for (let box of filterClass("quando-box", right.children)) {
         // recurse
-        let contents = self.scriptToArray(box)
+        let contents = scriptToArray(box)
         let obj = {}
         obj.id = box.dataset.quandoName
         if (contents.length > 0) {
@@ -64,7 +62,7 @@ self.scriptToArray = (script) => {
   return arr
 }
 
-self.addObjectToElement = (obj, elem) => {
+export function addObjectToElement (obj, elem) {
   let menu = document.getElementById("menu")
   if (obj) {
     for(let block of obj) {
@@ -88,7 +86,7 @@ self.addObjectToElement = (obj, elem) => {
           elem.disabled = false
         }
         if (block.id) {
-          clone.dataset.quandoId = self.nextDataQuandoId(block.id)
+          clone.dataset.quandoId = nextDataQuandoId(block.id)
         }
         clone.style.display = "" // removes display none ?!
         for (let key in block.values) {
@@ -118,7 +116,7 @@ self.addObjectToElement = (obj, elem) => {
           let obj = block.boxes[key]
           let element = clone.querySelector(".quando-box[data-quando-name='"+ obj.id +"']")
           if (element && obj.box) {
-            self.addObjectToElement(obj.box, element)
+            addObjectToElement(obj.box, element)
           }
         }
       }
@@ -126,7 +124,7 @@ self.addObjectToElement = (obj, elem) => {
   }
 }
 
-self.setOptions = () => {
+export function setOptions () {
   let script = document.getElementById("script")
   for(let elem of script.querySelectorAll("[data-quando-tmp-value]")) {
     if (elem.dataset.quandoTmpValue) {
@@ -138,5 +136,3 @@ self.setOptions = () => {
     }
   }
 }
-
-})()

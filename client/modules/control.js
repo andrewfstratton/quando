@@ -1,8 +1,10 @@
-(() => {
-  let quando = this['quando']
-  if (!quando) {
-    alert('Fatal Error: Control must be included after quando_browser')
-  }
+import * as text from "/common/text.js";
+
+let quando = window['quando']
+if (!quando) {
+  alert('Fatal Error: Control must be included after quando_browser')
+}
+
   let self = quando.control = {}
   let mouse = {}
 
@@ -14,20 +16,12 @@
     })
   }
 
-  function decodeText(str) {
-    return str.replace(/&amp;/g, '&')
-            .replace(/&lt;/g, '<')
-            .replace(/&gt;/g, '>')
-            .replace(/&quot;/g, '"')
-            .replace(/&apos;/g, "'")
-  }
-
   self.run = (exec) => {
     _send('run', exec)
   }
 
   self.type = (str) => {
-    _send('type', decodeText(str))
+    _send('type', text.decode(str))
   }
 
   self.key = (coded_char, press=false) => {
@@ -99,4 +93,3 @@
   }
 
   setInterval(_updateMouse, 1/20 * 1000) // 20 times per second
-})()
