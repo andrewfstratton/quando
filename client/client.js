@@ -1,7 +1,6 @@
 import * as destructor from "./modules/destructor.js";
 
 let self = window.quando = {}
-self.destructor = destructor;
 
 let idle_reset_ms = 0
 let idle_callback_id = 0
