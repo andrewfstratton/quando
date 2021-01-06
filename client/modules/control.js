@@ -66,7 +66,7 @@
   }
 
   function _updateMouse() {
-    send = {}
+    let send = {}
     if (mouse.hasOwnProperty('x')) {
       send.x = mouse.x
       send.valid = true
