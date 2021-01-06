@@ -67,16 +67,16 @@ self.getCodeInBlock = function(block) {
             let box_code = ''
             if (row_box.dataset.quandoName) {
                 let separator = "\n"
-                let prefix = ""
-                let postfix = ""
+                let pre = ""
+                let post = ""
                 if (row_box.dataset.quandoFnArray) {
-                    prefix = "() => {\n"
+                    pre = "() => {\n"
                     separator = ",\n"
-                    postfix = "}"
+                    post = "}"
                 }
                 let infix = ''
                 for (let block of row_box.children) {
-                    box_code += infix + prefix + self.getCode(block) + postfix
+                    box_code += infix + pre + getCode(block) + post
                     if (infix == '') {
                         infix = separator
                     }
