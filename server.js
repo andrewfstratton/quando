@@ -121,6 +121,9 @@ require('./server/rest/script')(app, io, success, fail)
 require('./server/rest/file')(app, MEDIA_FOLDER, MEDIA_MAP, success, fail)
 require('./server/rest/watson')(app, base64, base64Img, watson_db, fs)
 
+// Static for common
+app.use('/common', express_static(join(__dirname, 'common')))
+
 // Static for inventor
 app.use('/inventor', express_static(join(__dirname, 'inventor')))
 app.use('/favicon.ico', express_static(join(__dirname, 'inventor/favicon.ico')))
