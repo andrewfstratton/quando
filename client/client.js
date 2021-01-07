@@ -1,4 +1,5 @@
 import * as destructor from "./modules/destructor.js";
+import * as text from "/common/text.js";
 
 // Note: This is not a true module - but pretends to be one to include a module itself
 // next line sets quando as a global object to contain all the other client 'modules'
@@ -577,8 +578,12 @@ let websockets = []
     if (speech) { self.speech.clear() }
   }
 
-  self.prompt = (text, callback) => {
-    callback(prompt(decodeURI(text)))
+  self.prompt = (txt, callback) => {
+    callback(prompt(text.decode(txt)))
+  }
+
+  self.alert = (txt, callback) => {
+    callback(text.decode(alert(txt)))
   }
 
 // N.B. the next two variables MUST be Global/var
