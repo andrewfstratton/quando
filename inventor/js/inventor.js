@@ -879,12 +879,16 @@ export function handle_remote_to_local_save() {
     $('#remote_save_modal').modal('hide')
     $('#local_save_modal').modal('show')
   }
-  
+
 export function handle_local_save() {
     let key = $('#local_save_key').val()
-    local_save(PREFIX + key, getScriptAsObject())
-    $('#local_save_modal').modal('hide')
-    _saved(key)
+    if (key == "") {
+      _warning("No name given, so not saved")
+    } else {
+      local_save(PREFIX + key, getScriptAsObject())
+      $('#local_save_modal').modal('hide')
+      _saved(key)
+    }
   }
 
   function local_save(key, _script) {
@@ -897,23 +901,27 @@ export function handle_local_save() {
   
 export function handle_remote_save() {
     let name = encodeURI($('#remote_save_key').val())
-    let obj = JSON.stringify({ deploy: _deploy, script: getScriptAsObject()})
-    $.ajax({
-      url: '/script',
-      type: 'POST',
-      data: { userid: _userid, name: name, script: obj },
-      success: (res) => {
-        if (res.success) {
-          $('#remote_save_modal').modal('hide')
-          _saved(decodeURI(name))
-        } else {
-          alert('Failed to save')
+    if (name == "") {
+      _warning("No name given, so not saved")
+    } else {
+      let obj = JSON.stringify({ deploy: _deploy, script: getScriptAsObject()})
+      $.ajax({
+        url: '/script',
+        type: 'POST',
+        data: { userid: _userid, name: name, script: obj },
+        success: (res) => {
+          if (res.success) {
+            $('#remote_save_modal').modal('hide')
+            _saved(decodeURI(name))
+          } else {
+            alert('Failed to save')
+          }
+        },
+        error: () => {
+          alert('Failed to find server')
         }
-      },
-      error: () => {
-        alert('Failed to find server')
-      }
-    })
+      })
+    }
   }
 
 export function handle_load() {
