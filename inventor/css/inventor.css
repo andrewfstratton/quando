@@ -4,15 +4,16 @@
 
 html,
 body,
-#editor {
+#editor_content {
   height: 100%;
   margin: 0;
   padding: 0;
 }
 
 body {
-    padding-top: 70px;
-    padding-bottom: 60px;
+  min-height: 100%;
+  padding-top: 70px;
+  padding-bottom: 60px;
 }
 
 #show_modal_code {
@@ -54,28 +55,16 @@ input, #_hidden_width_element_ {
   box-shadow: 1px 0px 2px inset rgba(0,0,0,0.4);
 }
 
-#editor,
-#editor * {
-  box-sizing: border-box;
-}
-
-#editor .ui-content {
-  height: inherit; /* inherit height without padding nor border */
-}
-
-
 #editor_content {
     display:flex;
     background-color: #ddffff;
-    margin:0px;
-    padding:0px;
-    height:100%;
 }
 
 #menu {
   float: left;
   width: 35%;
   background-color: #ffffff;
+  border-right: 4px;
 }
 
 #script {
@@ -90,7 +79,6 @@ input, #_hidden_width_element_ {
   padding: 4px;
   height: 100%;
   margin: 0 auto;
-  border-right: 4px;
   border-color: #808080;
   border-style: solid;
   overflow: auto;
@@ -264,28 +252,6 @@ select.quando-toggle {
   background-color: lightblue;
 }
 
-/* Fix for iOS */
-::-webkit-scrollbar {
-    width: 15px;
-    height: 15px;
-    border-bottom: 1px solid #eee; 
-    border-top: 1px solid #eee;
-}
-::-webkit-scrollbar-thumb {
-    border-radius: 8px;
-    background-color: #C3C3C3;
-    border: 2px solid #eee;
-}
-
-::-webkit-scrollbar-track {
-    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.2); 
-} 
-
-/* Fix for Firefox */
-input[type=number] { 
-  -moz-appearance: textfield;
-}
-
 .quando-robot-say {
   min-width: 272px;
   margin: 0 0 3px 0;
@@ -339,4 +305,26 @@ input[type=number] {
 
 .quando-disabled * {
   filter: grayscale(100%);
+}
+
+/* Fix for iOS */
+::-webkit-scrollbar {
+    width: 15px;
+    height: 15px;
+    border-bottom: 1px solid #eee; 
+    border-top: 1px solid #eee;
+}
+::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+    background-color: #C3C3C3;
+    border: 2px solid #eee;
+}
+
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.2); 
+} 
+
+/* Fix for Firefox */
+input[type=number] { 
+  -moz-appearance: textfield;
 }
