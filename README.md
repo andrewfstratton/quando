@@ -6,6 +6,7 @@ Prerequisites: Chrome browser, Node JS **Do not use Current - Use LTS version** 
 
 1. Download the zip and extract into C:\quando, or Clone the repository in C: using git clone https://github.com/andrewfstratton/quando.git
 2. In the command line, in C:\quando, npm update - this will likely take a while
+  - N.B. You may need to exit VS Code and/or not used a ashred folder for the install to work - this issue has been seen with a Dropbox folder.
 
 ### Setting up Quando for first time for (local) development
 
