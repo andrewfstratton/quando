@@ -4,7 +4,7 @@ let pouchdb_installed = false
 
 function try_cloudant() {
   let _db = false
-  console.log("Trying cloudant (assuming IBM Cloud)")
+  console.log("Checking for Cloudant...")
   if (require('cfenv').getAppEnv().isLocal == false) {
     console.log("Using Cloudant - i.e. running on IBM Cloud")
     _db = require("./cloudant")
