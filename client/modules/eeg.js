@@ -1,5 +1,6 @@
-(function () {
-  const quando = this['quando'];
+import * as destructor from "./destructor.js";
+
+const quando = window['quando']
   if (!quando) {
     alert('Fatal Error: eeg must be included after quando_browser');
   }
@@ -60,7 +61,7 @@
         quando.add_handler("eegML" + modelName + "Label" + self._labels.indexOf(label), callback);
         model.classifier.setTracking(true);
 
-        quando.destructor.add(() => {
+        destructor.add(() => {
           self._labels = [];
           model.classifier.counter = 0;
           model.classifier.setTracking(false);
@@ -76,7 +77,7 @@
       model.training.setTrackingLabel(label);
       model.training.setTrackingTimeout(seconds);
 
-      quando.destructor.add(() => {
+      destructor.add(() => {
         model.training.setTracking(false);
       });
     });
@@ -368,5 +369,3 @@
       client.session = session;
       client.emit("connected", {}, true);
     });
-
-})();
