@@ -1,6 +1,6 @@
 {
   "name": "quando",
-  "version": "0.8.20191015",
+  "version": "0.9.20210118",
   "description": "Quando Toolset",
   "main": "start.js",
   "scripts": {
@@ -10,7 +10,7 @@
     "start": "node .",
     "dev": "node dev.js",
     "nodemon": "nodemon server.js",
-    "install_local": "npm install --no-save --unsafe-perm node-red pouchdb pouchdb-server pouchdb-find"
+    "install_nodered": "npm install -g --no-save --unsafe-perm node-red"
   },
   "author": "Andrew Stratton",
   "license": "ISC",
@@ -29,22 +29,29 @@
     "leapjs": "^0.6.4",
     "memorystore": "^1.6.1",
     "morgan": "^1.9.1",
-    "node-gyp": "^5.0.3",
+    "node-gyp": "^7.1.2",
     "npm": "^6.11.3",
+    "pouchdb": "^7.2.2",
+    "pouchdb-find": "^7.2.2",
+    "pouchdb-server": "^4.2.0",
     "promise": "^8.0.3",
     "socket.io": "^2.3.0",
     "watson-developer-cloud": "^3.18.3"
   },
   "devDependencies": {
+    "bufferutil": "^4.0.3",
     "chai": "^4.2.0",
-    "mocha": "^4.1.0"
+    "mocha": "^4.1.0",
+    "utf-8-validate": "^5.0.4"
   },
   "nodemonConfig": {
-    "ignore": ["client/",
+    "ignore": [
+      "client/",
       "device_setup/",
       "inventor/",
       "pouchdb/",
       "hub/",
-      "blocks/"]
+      "blocks/"
+    ]
   }
 }
