@@ -1,5 +1,7 @@
-(() => {
-  let quando = this['quando']
+import * as destructor from "./destructor.js";
+
+const quando = window['quando']
+const document = window['document']
   if (!quando) {
     alert('Fatal Error: AR must be included after quando_browser')
   }
@@ -65,11 +67,11 @@
   }
 
   self.whenMarker = (marker_id, found_fn, lost_fn) => {
-    scene = self.getScene()
+    const scene = self.getScene()
     let marker = _getMarker(marker_id, scene)
     marker.addEventListener('markerFound', found_fn)
     marker.addEventListener('markerLost', lost_fn)
-    quando.destructor.add(() => {
+    destructor.add(() => {
       marker.removeEventListener('markerFound', found_fn)
       marker.removeEventListener('markerLost', lost_fn)
     })
@@ -78,7 +80,7 @@
   const QUANDO_3DOBJECT_AR_PREFIX = 'quando_3dobject_'
   self.showGLTF = (marker_id, model_URL) => {
     if (model_URL) {
-      scene = self.getScene()
+      const scene = self.getScene()
       model_URL = '/client/media/' + encodeURI(model_URL)
       let model = document.getElementById(QUANDO_3DOBJECT_AR_PREFIX + marker_id)
       if (model == null) { // model needs displaying, i.e. not currently shown
@@ -100,7 +102,7 @@
   const QUANDO_IMAGE_AR_PREFIX = 'quando_image_'
   self.showImage = (marker_id, image_URL) => {
     if (image_URL) {
-      scene = self.getScene()
+      const scene = self.getScene()
       image_URL = '/client/media/' + encodeURI(image_URL)
       let image = document.getElementById(QUANDO_IMAGE_AR_PREFIX + marker_id)
       if (image == null) { // model needs displaying, i.e. not currently shown
@@ -125,7 +127,7 @@
 
   self.showVideo = (marker_id, video_URL) => { 
     if (video_URL) {
-      scene = self.getScene()
+      const scene = self.getScene()
       video_URL = '/client/media/' + encodeURI(video_URL)
       let video = document.getElementById(video_URL+marker_id)
       if (video == null) {
@@ -148,7 +150,7 @@
   const QUANDO_TEXT_AR_PREFIX = 'quando_text_'
   self.showText = (marker_id, text, append=false) => {
     if (text) {
-      scene = self.getScene()
+      const scene = self.getScene()
       let textElem = document.getElementById(QUANDO_TEXT_AR_PREFIX + marker_id)
       if (textElem == null) {
         clearMarkerChildren(marker_id)
@@ -237,4 +239,3 @@
       }
     }
   }
-}) ()
