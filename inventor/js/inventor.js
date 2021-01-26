@@ -565,7 +565,7 @@ export function setup() {
       $('#loading_modal').modal('hide')
     },
     error: () => {
-      _error('Failed to find server')
+      _error('Failed to find Quando:Cloud')
       $('#loading_modal').modal('hide')
     }
   })
@@ -622,7 +622,7 @@ export function setup() {
       local_load(AUTOSAVE) // load last edit from localstorage
     },
     error: () => {
-      _error('Failed to find server blocks')
+      _error('Failed to find Quando:Cloud blocks')
       $('#loading_modal').modal('hide')
     }
   })
@@ -676,7 +676,7 @@ function _warning (message) {
         }
       },
       error: () => {
-        alert('Failed to find server')
+        alert('Failed to find Quando:Cloud')
       }
     })
   }
@@ -826,7 +826,7 @@ export function handle_login() {
         }
       },
       error: () => {
-        message_elem.html('Failed to find server ')
+        message_elem.html('Failed to find Quando:Cloud ')
       }
     })
 }
@@ -844,7 +844,7 @@ export function testCreator(code) {
       deploy_window.focus() // moveTo(0,0);
     },
     error: () => {
-      alert('Failed to find server')
+      alert('Failed to find Quando:Cloud')
     }
   })
 }
@@ -918,7 +918,7 @@ export function handle_remote_save() {
           }
         },
         error: () => {
-          alert('Failed to find server')
+          alert('Failed to find Quando:Cloud')
         }
       })
     }
@@ -966,7 +966,7 @@ export function remote_load(index) {
         }
       },
       error: () => {
-        alert('Failed to access server')
+        alert('Failed to access Quando:Cloud')
       }
     })
   }
@@ -993,7 +993,7 @@ export function remote_delete(index) {
           _remote_load_list()
         },
         error: () => {
-          alert('Failed to find server')
+          alert('Failed to find Quando:Cloud')
         }
       })
     }
@@ -1014,7 +1014,7 @@ export function remote_tidy(index) {
         _remote_load_list()
       },
       error: () => {
-        alert('Failed to find server')
+        alert('Failed to find Quando:Cloud')
       }
     })
   }
@@ -1034,7 +1034,7 @@ export function remote_delete_all(index) {
           _remote_load_list()
         },
         error: () => {
-          alert('Failed to find server')
+          alert('Failed to find Quando:Cloud')
         }
       })
     }
@@ -1187,12 +1187,12 @@ export function handleFile(event) {
                             'handle_file_selected', block_id, elem_name))
           }
         } else {
-          alert('Failed to find server files')
+          alert('Failed to find Quando:Cloud files')
           $('#file_modal').modal('hide')
         }
       },
       error: () => {
-        alert('Failed to access server')
+        alert('Failed to access Quando:Cloud')
         $('#file_modal').modal('hide')
       }
     })
@@ -1249,7 +1249,7 @@ export function handle_upload_media() {
         }
       },
       error: () => {
-        alert('Failed to find server')
+        alert('Failed to find Quando:Cloud')
       }
     })
   }
@@ -1272,7 +1272,7 @@ export function handle_logout() {
         _show_user_status()
       },
       error: () => {
-        $('#loading_modal_message').html('Failed to find server')
+        $('#loading_modal_message').html('Failed to find Quando:Cloud')
       }
     })
   }
@@ -1298,7 +1298,7 @@ export function handle_deploy() {
               _success("Deployed as '" + filename + ".js'")
             },
             error: () => {
-              alert('Failed to find server')
+              alert('Failed to find Quando:Cloud')
             }
           })
         }

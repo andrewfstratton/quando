@@ -7,7 +7,7 @@ module.exports = (app, appEnv, success, fail) => {
     if (body.userid && body.password) {
       let client_ip = req.ip.replace('::ffff:', '')
       dns.lookup(require('os').hostname(), (err, host_ip) => {
-        let local = appEnv.isLocal // false when running on cloud server
+        let local = appEnv.isLocal // false when running on IBM Cloud
         if (local) {
           local = (client_ip == host_ip) || (client_ip == '127.0.0.1')
         }
@@ -18,7 +18,7 @@ module.exports = (app, appEnv, success, fail) => {
               fail(res, 'Save Error - user probably already exists...')
           })
         } else {
-          fail(res, 'Must be run from local server')
+          fail(res, 'Must be run from Quando:Cloud running locally')
         }
       })
     } else {

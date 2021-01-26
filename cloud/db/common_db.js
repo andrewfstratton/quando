@@ -23,7 +23,7 @@ function try_cloudant() {
 if (db.exists) {
   pouchdb_installed = true
   db.running(()=>{
-    console.log("Found PouchDB installed and running - i.e. on local, offline, server - typically for development")
+    console.log("Found PouchDB installed and running - i.e. Quando:Cloud is running on localhost")
   },()=>{
     console.log("Pouchdb installed but not running")
     db = try_cloudant()

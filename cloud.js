@@ -8,7 +8,7 @@ const fs = require('fs')
 const body_parser = require('body-parser')
 const base64Img = require('base64-img')
 const base64 = require('file-base64')
-const watson_db = require('./server/db/watson_db')
+const watson_db = require('./cloud/db/watson_db')
 const join = require('path').join
 const http = require('http').Server(app)
 const https = require('https')
@@ -28,11 +28,11 @@ function success(response, obj = false) {
 
 let port = process.env.PORT || 80
 let appEnv = require('cfenv').getAppEnv() // For IBM Cloud
-if (appEnv.isLocal == false) { // i.e. if running on cloud server
+if (appEnv.isLocal == false) { // i.e. if running on IBM Cloud
   console.log("INFO: Running on IBM Cloud, port="+port+" >> "+appEnv.port)
   port = appEnv.port // override the port
 } else {
-  console.log("INFO: Running as Hub, port="+port)
+  console.log("INFO: Running as Quando:Cloud on localhost, port="+port)
 }
 
 function drop_client(client) {
@@ -44,7 +44,7 @@ function drop_client(client) {
 
 let server = http.listen(port, () => {
   let host = process.env.IP || server.address().address
-  console.log(`Quando Server listening at http://${host}:${server.address().port}`)
+  console.log(`Quando:Cloud listening at http://${host}:${server.address().port}`)
   io.clients=[]
   io.broadcast = (msg) => {
     io.clients.forEach(client => {
@@ -108,7 +108,7 @@ app.use('/', (req, res, next) => {
     // console.log(">>" + JSON.stringify(req.session.user))
   next()
 })
-app.use('/', express_static(join(__dirname, 'hub')))
+app.use('/', express_static(join(__dirname, 'dashboard')))
 
 //increased limit of bp to allow for visrec 
 app.use(body_parser.json({ limit: '10mb' }))
@@ -116,10 +116,10 @@ app.use(body_parser.urlencoded({ extended: true, limit:'10mb' }))
 
 app.use(body_parser.json())
 
-require('./server/rest/login')(app, success, fail)
-require('./server/rest/script')(app, io, success, fail)
-require('./server/rest/file')(app, MEDIA_FOLDER, MEDIA_MAP, success, fail)
-require('./server/rest/watson')(app, base64, base64Img, watson_db, fs)
+require('./cloud/rest/login')(app, success, fail)
+require('./cloud/rest/script')(app, io, success, fail)
+require('./cloud/rest/file')(app, MEDIA_FOLDER, MEDIA_MAP, success, fail)
+require('./cloud/rest/watson')(app, base64, base64Img, watson_db, fs)
 
 // Static for common
 app.use('/common', express_static(join(__dirname, 'common')))
@@ -129,8 +129,8 @@ app.use('/inventor', express_static(join(__dirname, 'inventor')))
 app.use('/favicon.ico', express_static(join(__dirname, 'inventor/favicon.ico')))
 
 const client_dir = join(__dirname, 'client')
-require('./server/rest/client')(app, client_dir, express_static, success, fail)
-require('./server/rest/message')(app, io, https)
+require('./cloud/rest/client')(app, client_dir, express_static, success, fail)
+require('./cloud/rest/message')(app, io, https)
 
 app.post('/socket/:id', (req, res) => {
   let id = req.params.id
@@ -140,6 +140,6 @@ app.post('/socket/:id', (req, res) => {
   res.json({})
 })
 
-require('./server/rest/blocks')(app, __dirname, success, fail)
-require('./server/rest/ip')(app, appEnv, success, fail)
-require('./server/rest/user')(app, appEnv, success, fail)
+require('./cloud/rest/blocks')(app, __dirname, success, fail)
+require('./cloud/rest/ip')(app, appEnv, success, fail)
+require('./cloud/rest/user')(app, appEnv, success, fail)

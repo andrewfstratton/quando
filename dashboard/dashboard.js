@@ -21,7 +21,7 @@ function add_user() {
       }
     },
     error: () => {
-      set('add_user_message', "Failed to find server")
+      set('add_user_message', "Failed to find Quando:Cloud")
     }
   })
 }
@@ -59,7 +59,7 @@ function onload() {
       }
     },
     error: () => {
-      alert('Failed to find server')
+      alert('Failed to find Quando:Cloud')
     }
   })
 }

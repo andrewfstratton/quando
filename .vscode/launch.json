@@ -2,23 +2,10 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "type": "java",
-            "name": "CodeLens (Launch) - LocalServer",
-            "request": "launch",
-            "mainClass": "uk.co.strattonenglish.quando.LocalServer"
-        },
-        {
-            "type": "java",
-            "name": "CodeLens (Launch) - LocalServer",
-            "request": "launch",
-            "mainClass": "uk.co.strattonenglish.quando.LocalServer",
-            "projectName": "quando_2b71730"
-        },
-        {
             "name": "Launch",
             "type": "node",
             "request": "launch",
-            "program": "${workspaceRoot}/server.js",
+            "program": "${workspaceRoot}/cloud.js",
             "stopOnEntry": false,
             "args": [],
             "cwd": "${workspaceRoot}",

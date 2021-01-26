@@ -48,15 +48,15 @@ You need to, on an online PC (or with temporary internet access):
   - move the PC offline
   - or copy the contents of C:\Quando to a USB and then transfer to the Offline PC
 
-**Updating Quando**
+**Updating Quando:Cloud**
 
-You can update Quando by repeating the above steps.
+You can update Quando:Cloud by repeating the above steps.
 
 </details>
 <details><summary>B. Online Installation - with updates available</summary>
 
 This option allows a PC to be used:
-  - as a 'Server' for other 'Client/Display' PCs.  The Client/Display PCs must be connected to the Server, e.g. by HomePlug, Ethernet or Wifi.
+  - to allow access to a local Quando:Cloud for other 'Client/Display' PCs.  The Client/Display PCs must be connected to the PC running Quando:Cloud, e.g. by HomePlug, Ethernet or Wifi.
   - by non programming skilled _Inventors_ who invent interactions that can be automatically (re)deployed to Display PCs.
   - by programming skilled Block/framework Developers to add new devices, services, etc.  This option is detailed separately.
 
@@ -88,16 +88,16 @@ git pull
 
 </details>
 
-## Running Quando locally
+## Running Quando:Cloud locally
 
-You can run Quando by double clicking `quando.bat` file in the `C:\Quando` directory.
+You can run Quando:Cloud by double clicking `quando.bat` file in the `C:\Quando` directory.
 
 _The command line window should not show any errors._
 <details><summary>First time only setup</summary>
 
 You will likely see a Firewall warning.  You should select at least 'Private Networks', then allow access.
 
-To check Quando server is running, in Chrome, open [The Quando Control Page](http://172.0.0.1) on the **same PC** you installed Quando on.
+To check Quando:Cloud is running, in Chrome, open [The Control Page](http://172.0.0.1) on the **same PC** you installed Quando:Cloud on.
 
 You should see some QR Codes and IP addresses, and at the bottom of the page, 'New User'.  Enter a login/user id and password.  **N.B. These are not secure.**  You should see a message at the bottom saying 'Added 'your user id'.
 
@@ -116,8 +116,7 @@ Setup Quando:Cloud to run on Startup
 
 1. Type Windows+R, then type in `gpedit.msc` and Enter
 2. Choose Computer Configuration->Windows Settings->Scripts->Startup
-    1. Then 'Add' C:\quando\quando.bat
-    2. (optional) follow the next instructions for Client browser setup - *(where you have a client display running on the server as well)*
+3. Then 'Add' C:\quando\quando.bat
 </details>
 <details><summary>
 Edit as Block/API/Framework Developer
@@ -128,9 +127,9 @@ The instructions below assume that you are using Visual Studio Code, though spec
 Run the editor, then:
 1. In a terminal, run pouchdb using `npm run pouchdb`
     - _Note that the PouchDB log file is in pouchdb/log.txt_
-2. Run the server, in another terminal, with nodemon using `npm run nodemon`
+2. Run Quando:Cloud, in another terminal, with nodemon using `npm run nodemon`
 3. Open a Chrome browser to http://127.0.0.1
-    * Note: you can change a user's password (or delete a user) through the PouchDB Control Panel - available through the hub page, i.e. at http://127.0.0.1:5984/_utils.
+    * Note: you can change a user's password (or delete a user) through the PouchDB Control Panel - available through the Dashboard, i.e. at http://127.0.0.1:5984/_utils.
 
 Note: The client screen can be right clicked to allow you to select already deployed/created scripts - whichever one you open will be reopened next time you open 127.0.0.1/client.  This can also be done from the kiosk boot, so that a different interaction is loaded next time the PC reboots.
 

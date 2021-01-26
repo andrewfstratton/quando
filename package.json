@@ -6,10 +6,10 @@
   "scripts": {
     "test": "mocha --ui tdd test",
     "pouchdb": "pouchdb-server --port 5984 --dir pouchdb --config pouchdb-config.json",
-    "quando": "node server.js",
+    "quando": "node cloud.js",
     "start": "node .",
     "dev": "node dev.js",
-    "nodemon": "nodemon server.js",
+    "nodemon": "nodemon cloud.js",
     "nodered": "node ./node_modules/node-red/red.js",
     "install_nodered": "npm install --no-save --unsafe-perm node-red"
   },
@@ -52,7 +52,7 @@
       "device_setup/",
       "inventor/",
       "pouchdb/",
-      "hub/",
+      "dashboard/",
       "blocks/"
     ]
   }
