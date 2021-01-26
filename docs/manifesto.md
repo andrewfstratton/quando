@@ -55,11 +55,11 @@ The 'times per' blocks shows how an Every block can be shown in a more understan
 
 Without loops, there can be no 'game loop'. Something similar can be done with Every/Per/Vary blocks - but these should seek to allow for iterations to be skipped.
 
-Quandio scripts usually are setup scripts that put eveything in place to react to user (or possibly timing) events.
+Quando scripts usually are setup scripts that put everything in place to react to user (or possibly timing) events.
 
 ## Code and Convention over configuration
 
-Configuration is through action blocks, so they can be reused when needed.  e.g. the normal/rear projection block is not a configuration parameter, it is an action block, so can be used anywhere, though it would typically be one of the first blocks a script.
+Configuration is through action blocks, so they can be reused when needed.  e.g. the normal/rear projection block is not a configuration parameter, it is an action block, so can be used anywhere, though it would typically be one of the first blocks in a script.
 
 ## Blocks should do the expected thing
 
