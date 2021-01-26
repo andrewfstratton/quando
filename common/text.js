@@ -1,4 +1,4 @@
-import * as text from "/common/text.js";
+// Common text encode/decode
 
 export function decode(str) {
   return str.replace(/&amp;/g, '&')

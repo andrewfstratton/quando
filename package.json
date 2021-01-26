@@ -5,12 +5,13 @@
   "main": "start.js",
   "scripts": {
     "test": "mocha --ui tdd test",
-    "pouchd": "pouchdb-server --port 5984 --dir pouchdb --config pouchdb-config.json",
+    "pouchdb": "pouchdb-server --port 5984 --dir pouchdb --config pouchdb-config.json",
     "quando": "node server.js",
     "start": "node .",
     "dev": "node dev.js",
     "nodemon": "nodemon server.js",
-    "install_nodered": "npm install -g --no-save --unsafe-perm node-red"
+    "nodered": "node ./node_modules/node-red/red.js",
+    "install_nodered": "npm install --no-save --unsafe-perm node-red"
   },
   "author": "Andrew Stratton",
   "license": "ISC",
@@ -42,6 +43,7 @@
     "bufferutil": "^4.0.3",
     "chai": "^4.2.0",
     "mocha": "^4.1.0",
+    "nodemon": "^2.0.7",
     "utf-8-validate": "^5.0.4"
   },
   "nodemonConfig": {
