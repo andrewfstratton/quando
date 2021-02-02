@@ -5,8 +5,7 @@ import * as json from "./json.js";
 let _userid = null
 let _deploy = ''
 let _remote_list = []
-let AUTOSAVE = 'quandoAutosave' // used for key to save/load to/from browser
-let PREFIX = 'quando_' // used for key to save/load to/from browser
+const AUTOSAVE = 'quandoAutosave' // used for key to save/load to/from browser
 export let client_script = ""
 const QUANDO_DISABLED = 'quando-disabled';
 
