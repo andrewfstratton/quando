@@ -39,7 +39,7 @@ export function handleRightClick(event) {
 function _handle_click_clone(elem) {
     let containing_block = elem
     if (!elem.classList.contains("quando-block")) {
-      containing_block = _getAncestor(elem, "quando-block")
+      containing_block = _getParentBlock(elem)
     }
     if (containing_block)  {
       let clone = containing_block.cloneNode(true)
@@ -86,7 +86,7 @@ function _show_right_menu(elem) {
     let containing_block = elem
     // need to find the quando-block - may be ancestor
     if (!elem.classList.contains("quando-block")) {	
-      containing_block = _getAncestor(elem, "quando-block")	
+      containing_block = _getParentBlock(elem)	
     }	
     if (containing_block){	
       handle_help(containing_block.dataset.quandoBlockType)
@@ -142,7 +142,7 @@ function _buildToggleList(elem) {
 
 export function toggleRelativesOnElement(elem) {
   let elem_name = elem.dataset.quandoName
-  let block = _getAncestor(elem, "quando-block")
+  let block = _getParentBlock(elem)
   if (block) {
     let toggles = _buildToggleList(block) // Note: does NOT descend into contained blocks
     for (let child of toggles) {
@@ -191,14 +191,6 @@ export function handleLeftClick(event) {
   return false
 }
 
-function _getAncestor(elem, _class) {
-  let ancestor = elem.parentElement
-  while (ancestor && !ancestor.classList.contains(_class)) {
-    ancestor = ancestor.parentElement
-  }
-  return ancestor
-}
-
 function _getParentBlock(elem) {
   let ancestor = elem.parentElement
   while (ancestor && !ancestor.classList.contains("quando-block")) {
@@ -207,11 +199,11 @@ function _getParentBlock(elem) {
   return ancestor
 }
 
-function _getAncestorId(elem, _class) {
+function _getParentBlockId(elem) {
   let id = null
-  let ancestor = _getAncestor(elem, _class)
-  if (ancestor) { // with the block id
-    id = ancestor.dataset.quandoId
+  let parent = _getParentBlock(elem)
+  if  (parent) { // with the block id
+    id = parent.dataset.quandoId
   }
   return id
 }
@@ -221,7 +213,7 @@ function _populateListOptions(list_name) {
   let inputs = script.querySelectorAll("input[data-quando-list='" + list_name + "']") // the elements containing the values and text
   let add_to_select = `<option value="-1">----</option>\n`
   for (let input of inputs) {
-    let id = _getAncestorId(input, "quando-block")
+    let id = _getParentBlockId(input)
     if (id != null && id != "true") {
       let value = input.value
       add_to_select += `<option value="${id}">${value}</option>\n`
@@ -255,7 +247,7 @@ function _populateLists() {
 
 function _handleListNameChange(event) {
   let target = event.target
-  let id = _getAncestorId(target, "quando-block")
+  let id = _getParentBlockId(target)
   if (id != null && id != "true") {
     let list_name = target.dataset.quandoList
     if (list_name) { // with the list name
@@ -455,12 +447,13 @@ function _setupDragula() {
       // accept = true
     } else if (target === menu) {
       accept = false
-    } else if (target.classList.contains('quando-box')) { // i.e. a valid container
-      if (_hasAncestor(target, menu)) {
+    } else if (!target.classList.contains('quando-box')) { // target must be a container
         accept = false
+    } else if (_hasAncestor(target, menu)) { // target cannot be inside the menu
+      accept = false
       } else if (_hasAncestor(target, elem)) { // trying to drag into itself
         accept = false
-      } else {
+    } else { // satisfy the valid check
         let limited = elem.dataset.quandoDropValid
         if (limited != undefined) {
           accept = false // assume rejecting for now...
@@ -487,9 +480,6 @@ function _setupDragula() {
           }
         }
       }
-    } else {
-      accept = false
-    }
     return accept
   }
   options.invalid = (elem, handle) => {
@@ -1142,7 +1132,7 @@ export function handleFile(event) {
     } else {
       path = ''
     }
-    let block_id = _getAncestorId(elem, "quando-block")
+    let block_id = _getParentBlockId(elem)
     _handle_file(elem.dataset.quandoMedia, block_id, elem.dataset.quandoName, path)
     return false
   }
@@ -1314,7 +1304,7 @@ export function handleRobotModal(event) {
     let elem = event.target
     let text = elem.value
 
-    let block_id = _getAncestorId(elem, "quando-block")
+    let block_id = _getParentBlockId(elem)
     _handle_robot_modal(text, block_id)
 
     return false
