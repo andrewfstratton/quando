@@ -11,6 +11,7 @@
 			"titleBar.activeBackground": "#6F1577",
 			"titleBar.activeForeground": "#FEFCFE"
 		},
-		"liveServer.settings.port": 5501
+		"liveServer.settings.port": 5501,
+		"typescript.validate.enable": false
 	}
 }
