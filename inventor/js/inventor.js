@@ -1,6 +1,10 @@
 // support the inventor (editor) page
 import * as generator from "./generator.js"
 import * as json from "./json.js"
+import * as undo from "./undo.js"
+let _undo = undo.undo
+let _redo = undo.redo
+export { _undo as undo, _redo as redo } // this allows html/bootstrap button binding to index.undo/redo
 
 let _userid = null
 let _deploy = ''
@@ -395,7 +399,7 @@ export function copyBlock(old, clone) { // Note that Clone is a 'simple' copy of
   }
 }
 
-export function removeBlock(elem) {
+export function removeBlock(elem, parent_node, next_sibling) {
   let id = elem.dataset.quandoId
   if (id) {
     let options = document.querySelectorAll("option[value='" + id + "']")
@@ -403,6 +407,16 @@ export function removeBlock(elem) {
       option.parentNode.removeChild(option)
     }
   }
+  elem.classList.remove("gu-hide") // To reveal the element if undone later
+  let _undo = () => {
+    parent_node.insertBefore(elem, next_sibling)
+}
+  let _redo = () => {
+    parent_node.removeChild(elem)
+    // TODO need to restore options...
+  }
+  undo.done(_undo, _redo, "Delete")
+console.log("done DELETE..." + elem.dataset.quandoId)
 }
 
 /**
@@ -485,16 +499,20 @@ function _setupDragula() {
   options.invalid = (elem, handle) => {
     return elem.classList.contains("quando-title")
   }
+  let last_parent = null
+  let next_sibling = null
   let drake = dragula(collections, options).on('drop', (elem) => {
     setElementHandlers(elem)
-//  }).on('drag', (elem, src) => {
+  }).on('drag', (elem, src) => {
+    last_parent = src
+    next_sibling = elem.nextSibling
 //  }).on('dragend', (elem) => {
   }).on('cloned', (clone, old, type) => {
     if (type == 'copy') {
       copyBlock(old, clone)
     }
   }).on('remove', (elem) => {
-    removeBlock(elem)
+    removeBlock(elem, last_parent, next_sibling)
   })
   collections.forEach((collection)=>{
     collection.addEventListener('touchmove', (event) => {
