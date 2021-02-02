@@ -401,19 +401,34 @@ export function copyBlock(old, clone) { // Note that Clone is a 'simple' copy of
 
 export function removeBlock(elem, parent_node, next_sibling) {
   let id = elem.dataset.quandoId
+  let option_parents = []
   if (id) {
     let options = document.querySelectorAll("option[value='" + id + "']")
     for (let option of options) {
-      option.parentNode.removeChild(option)
+      let parent = option.parentNode
+      if (parent) {
+        if (parent.value == id) {
+          option_parents.push(parent)
+    }
+        parent.removeChild(option)
+  }
     }
   }
   elem.classList.remove("gu-hide") // To reveal the element if undone later
   let _undo = () => {
     parent_node.insertBefore(elem, next_sibling)
+    _populateLists()
+    // Restore selected options
+    for (let parent of option_parents) {
+      let found = parent.querySelector("option[value='" + id + "']")
+      if (found) {
+        found.selected = true
 }
+    }
+  }
   let _redo = () => {
     parent_node.removeChild(elem)
-    // TODO need to restore options...
+    _populateLists()
   }
   undo.done(_undo, _redo, "Delete")
 console.log("done DELETE..." + elem.dataset.quandoId)
