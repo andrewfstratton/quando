@@ -399,10 +399,25 @@ export function copyBlock(old, clone) { // Note that Clone is a 'simple' copy of
   }
 }
 
-export function removeBlock(elem, parent_node, next_sibling) {
+function moveBlock(elem, old_parent, old_sibling) {
+  setElementHandlers(elem)
+  let new_parent = elem.parentNode
+  let new_sibling = elem.nextSibling
+  let _undo = () => {
+    new_parent.removeChild(elem)
+    old_parent.insertBefore(elem, old_sibling)
+  }
+  let _redo = () => {
+    old_parent.removeChild(elem)
+    new_parent.insertBefore(elem, new_sibling)
+  }
+  undo.done(_undo, _redo, "Move")
+}
+
+function removeBlock(elem, parent_node, next_sibling) {
   let id = elem.dataset.quandoId
   let option_parents = []
-  if (id) {
+  if (id) { // Store any references to this option - for undo
     let options = document.querySelectorAll("option[value='" + id + "']")
     for (let option of options) {
       let parent = option.parentNode
@@ -517,7 +532,7 @@ function _setupDragula() {
   let last_parent = null
   let next_sibling = null
   let drake = dragula(collections, options).on('drop', (elem) => {
-    setElementHandlers(elem)
+    moveBlock(elem, last_parent, next_sibling)
   }).on('drag', (elem, src) => {
     last_parent = src
     next_sibling = elem.nextSibling
