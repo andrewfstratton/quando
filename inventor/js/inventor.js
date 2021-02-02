@@ -405,7 +405,9 @@ function moveBlock(elem, old_parent, old_sibling) {
   let new_sibling = elem.nextSibling
   let _undo = () => {
     if (elem.parentNode) { elem.parentNode.removeChild(elem) }
+    if (old_parent) {
     old_parent.insertBefore(elem, old_sibling)
+  }
   }
   let _redo = () => {
     if (elem.parentNode) { elem.parentNode.removeChild(elem) }
@@ -534,7 +536,12 @@ function _setupDragula() {
   let drake = dragula(collections, options).on('drop', (elem) => {
     moveBlock(elem, last_parent, next_sibling)
   }).on('drag', (elem, src) => {
+    // Only use when outside the menu
+    if (_hasAncestor(elem, document.getElementById('menu'))) {
+      last_parent = null
+    } else {
     last_parent = src
+    }
     next_sibling = elem.nextSibling
 //  }).on('dragend', (elem) => {
   }).on('cloned', (clone, old, type) => {
