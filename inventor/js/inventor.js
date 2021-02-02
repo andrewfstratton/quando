@@ -404,11 +404,11 @@ function moveBlock(elem, old_parent, old_sibling) {
   let new_parent = elem.parentNode
   let new_sibling = elem.nextSibling
   let _undo = () => {
-    new_parent.removeChild(elem)
+    if (elem.parentNode) { elem.parentNode.removeChild(elem) }
     old_parent.insertBefore(elem, old_sibling)
   }
   let _redo = () => {
-    old_parent.removeChild(elem)
+    if (elem.parentNode) { elem.parentNode.removeChild(elem) }
     new_parent.insertBefore(elem, new_sibling)
   }
   undo.done(_undo, _redo, "Move")
