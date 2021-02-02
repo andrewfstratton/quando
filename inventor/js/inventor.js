@@ -1,11 +1,12 @@
 // support the inventor (editor) page
-import * as generator from "./generator.js";
-import * as json from "./json.js";
+import * as generator from "./generator.js"
+import * as json from "./json.js"
 
 let _userid = null
 let _deploy = ''
 let _remote_list = []
 const AUTOSAVE = 'quandoAutosave' // used for key to save/load to/from browser
+const PREFIX = 'quando_' // used for key to save/load to/from browser
 export let client_script = ""
 const QUANDO_DISABLED = 'quando-disabled';
 
