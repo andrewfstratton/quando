@@ -10,6 +10,7 @@ export function done(undo_fn, redo_fn, _log = null) {
     redo_stack = []
   }
   undo_stack.push({undo:undo_fn, redo:redo_fn, log:_log})
+if (_log) { console.log(_log)}
 }
 
 export function undo() {

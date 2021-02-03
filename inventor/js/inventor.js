@@ -47,25 +47,21 @@ function _handle_click_clone(elem) {
     }
     if (containing_block)  {
       let clone = containing_block.cloneNode(true)
-      if (_hasAncestor(containing_block, document.getElementById('menu'))) { // in the menu - so copy to script
+      // if in the menu - then append to script
+      if (_hasAncestor(containing_block, document.getElementById('menu'))) {
         document.getElementById('script').appendChild(clone)
-      } else {
+      } else { // add after this element
         let parent = containing_block.parentNode
         if (parent) {
-          if (containing_block.nextSibling) {
-            parent.insertBefore(clone, containing_block.nextSibling)
-          } else {
-            parent.appendChild(clone)
-          }
-        } else {
+          parent.insertBefore(clone, containing_block.nextSibling)
+        } else { // this should never happen
           clone = false
         }
       }
       if (clone) {
-        clone.addEventListener('contextmenu', handleRightClick, false)
         copyBlock(containing_block, clone)
         _populateLists()
-        setElementHandlers(clone)
+        moveBlock(clone, null, null) // Important this follows _populateLists()
       }
     }
 }
@@ -355,7 +351,8 @@ export function setElementHandlers (block) {
   }
 }
 
-export function copyBlock(old, clone) { // Note that Clone is a 'simple' copy of old
+// Note that clone is a 'simple' copy of old, e.g. used for dragging
+function copyBlock(old, clone) { 
   // copy across selected indexes
   if (old.hasChildNodes()) {
     let selector = "select"
@@ -400,48 +397,70 @@ export function copyBlock(old, clone) { // Note that Clone is a 'simple' copy of
 }
 
 function moveBlock(elem, old_parent, old_sibling) {
+  let id = elem.dataset.quandoId
+  let option_parents = []
+  // Store any references to this option if now in menu - for undo
+  if (id && _hasAncestor(elem, document.getElementById('menu'))) {
+    option_parents = _get_parent_options(id)
+    _populateLists()
+  }
   setElementHandlers(elem)
   let new_parent = elem.parentNode
   let new_sibling = elem.nextSibling
   let _undo = () => {
     if (elem.parentNode) { elem.parentNode.removeChild(elem) }
     if (old_parent) {
-    old_parent.insertBefore(elem, old_sibling)
-  }
+      old_parent.insertBefore(elem, old_sibling)
+    } else { // force the update of the display lists
+      _populateLists()
+    }
   }
   let _redo = () => {
     if (elem.parentNode) { elem.parentNode.removeChild(elem) }
     new_parent.insertBefore(elem, new_sibling)
+    _populateLists()
+    _restore_options(id, option_parents)
   }
   undo.done(_undo, _redo, "Move")
+}
+
+function _get_parent_options(id) {
+  let result = []
+  let options = document.querySelectorAll("option[value='" + id + "']")
+  for (let option of options) {
+    let parent = option.parentNode
+    if (parent) {
+      if (parent.value == id) {
+        result.push(parent)
+      }
+    }
+    return result
+  }
+}
+
+// Restore selected options
+function _restore_options(id, list) {
+  for (let parent of list) {
+    let found = parent.querySelector("option[value='" + id + "']")
+    if (found) {
+      found.selected = true
+    }
+  }
+
 }
 
 function removeBlock(elem, parent_node, next_sibling) {
   let id = elem.dataset.quandoId
   let option_parents = []
   if (id) { // Store any references to this option - for undo
-    let options = document.querySelectorAll("option[value='" + id + "']")
-    for (let option of options) {
-      let parent = option.parentNode
-      if (parent) {
-        if (parent.value == id) {
-          option_parents.push(parent)
-    }
-        parent.removeChild(option)
-  }
-    }
+    option_parents = _get_parent_options(id)
+    _populateLists()
   }
   elem.classList.remove("gu-hide") // To reveal the element if undone later
   let _undo = () => {
     parent_node.insertBefore(elem, next_sibling)
     _populateLists()
-    // Restore selected options
-    for (let parent of option_parents) {
-      let found = parent.querySelector("option[value='" + id + "']")
-      if (found) {
-        found.selected = true
-}
-    }
+    _restore_options(id, option_parents)
   }
   let _redo = () => {
     parent_node.removeChild(elem)
@@ -494,38 +513,38 @@ function _setupDragula() {
     } else if (target === menu) {
       accept = false
     } else if (!target.classList.contains('quando-box')) { // target must be a container
-        accept = false
+      accept = false
     } else if (_hasAncestor(target, menu)) { // target cannot be inside the menu
       accept = false
-      } else if (_hasAncestor(target, elem)) { // trying to drag into itself
-        accept = false
+    } else if (_hasAncestor(target, elem)) { // trying to drag into itself
+      accept = false
     } else { // satisfy the valid check
-        let limited = elem.dataset.quandoDropValid
-        if (limited != undefined) {
-          accept = false // assume rejecting for now...
-          if (limited != "") { // i.e. can't be dropped in anything...
-            let parent_block = _getParentBlock(target)
-            if (parent_block) {
-              let block_type = parent_block.dataset.quandoBlockType
-              limited = limited.split(",")
-              for (let tuple of limited) {
-                let [type,box] = tuple.split(".")
-                let box_match = true // i.e. matches when no box name given
-                if (box) {
-                  if (target.dataset) {
-                    box_match = (box == target.dataset.quandoName)
-                  } else {
-                    box_match = false
-                  }
+      let limited = elem.dataset.quandoDropValid
+      if (limited != undefined) {
+        accept = false // assume rejecting for now...
+        if (limited != "") { // i.e. can't be dropped in anything...
+          let parent_block = _getParentBlock(target)
+          if (parent_block) {
+            let block_type = parent_block.dataset.quandoBlockType
+            limited = limited.split(",")
+            for (let tuple of limited) {
+              let [type,box] = tuple.split(".")
+              let box_match = true // i.e. matches when no box name given
+              if (box) {
+                if (target.dataset) {
+                  box_match = (box == target.dataset.quandoName)
+                } else {
+                  box_match = false
                 }
-                if (box_match && (block_type == type)) {
-                  accept = true
-                }
+              }
+              if (box_match && (block_type == type)) {
+                accept = true
               }
             }
           }
         }
       }
+    }
     return accept
   }
   options.invalid = (elem, handle) => {
@@ -540,7 +559,7 @@ function _setupDragula() {
     if (_hasAncestor(elem, document.getElementById('menu'))) {
       last_parent = null
     } else {
-    last_parent = src
+      last_parent = src
     }
     next_sibling = elem.nextSibling
 //  }).on('dragend', (elem) => {
@@ -1091,7 +1110,10 @@ export function handle_show_version() {
 
 export function handle_show_code() {
     $('#show_modal').modal('show')
-    $('#show_modal_code').removeClass('language-xml').addClass('language-javascript')
+    // let class_list = document.getElementById("show_modal_code").classList
+    // class_list.remove("language-xml")
+    // class_list.add("language-javascript")
+    // $('#show_modal_code').removeClass('language-xml').addClass('language-javascript')
     update_code_clip()
   }
 
