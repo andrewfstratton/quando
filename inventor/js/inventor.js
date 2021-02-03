@@ -324,7 +324,7 @@ function handleSelect(event) {
     select.selectedIndex =  new_index;
     toggleRelativesOnElement(select)
   }
-  undo.done(_undo, _redo, "Select Quando List")
+  undo.done(_undo, _redo, "Change Selected")
   return false
 }
   
@@ -440,7 +440,7 @@ function moveBlock(elem, old_parent, old_sibling) {
     _populateLists()
     _restore_options(id, option_parents)
   }
-  undo.done(_undo, _redo, "Move")
+  undo.done(_undo, _redo, "Move Block")
 }
 
 function _get_parent_options(id) {
@@ -485,8 +485,7 @@ function removeBlock(elem, parent_node, next_sibling) {
     parent_node.removeChild(elem)
     _populateLists()
   }
-  undo.done(_undo, _redo, "Delete")
-console.log("done DELETE..." + elem.dataset.quandoId)
+  undo.done(_undo, _redo, "Delete Block")
 }
 
 /**
@@ -794,6 +793,7 @@ export function loaded(obj, modal_id) {
       name = '[no file]'
     }
     $('#file_name').html(name)
+    undo.reset()
   }
 
   function _saved (name) {
