@@ -220,7 +220,7 @@ function _populateListOptions(list_name) {
     }
   }
   let selects = document.querySelectorAll("select[data-quando-list='" + list_name + "']") // all the selectors to reset
-  for(let select of selects) {
+  for (let select of selects) {
     let value = select.value
     let selectedIndex = select.selectedIndex
     select.innerHTML = add_to_select
@@ -236,7 +236,7 @@ function _populateListOptions(list_name) {
 function _populateLists() {
   let inputs = document.querySelectorAll("input[data-quando-list]")
   let list_names = []
-  for(let input of inputs) {
+  for (let input of inputs) {
     let list_name = input.dataset.quandoList
     if (list_name && !list_names.includes(list_name)) {
       list_names.push(list_name)
@@ -252,7 +252,7 @@ function _handleListNameChange(event) {
     let list_name = target.dataset.quandoList
     if (list_name) { // with the list name
       let selects = document.querySelectorAll("select[data-quando-list='" + list_name + "']") // find any selects
-      for(let select of selects) {
+      for (let select of selects) {
         let option = select.querySelector("option[value='" + id + "']") // update the text for any matching options
         if (option) {
           option.textContent = target.value
@@ -313,9 +313,7 @@ function _resizeWidth(event) {
 }
   
 export function setElementHandlers (block) {
-  if (block.id != 'clipboard') { // contextmenu is not shown for clipboard
-    block.addEventListener('contextmenu', handleRightClick, false)
-  }
+  block.addEventListener('contextmenu', handleRightClick, false)
   // add handler for list item change
   let id = null
   if (block.dataset && block.dataset.quandoId) {
@@ -373,7 +371,7 @@ function copyBlock(old, clone) {
     nodes.push(clone)
   }
   nodes = nodes.concat(Array.from(clone.querySelectorAll(`[data-quando-id]`)))
-  for(let node of nodes) {
+  for (let node of nodes) {
     node.dataset.quandoId = _id // next free id
     _id = json.nextDataQuandoId(_id)
     // now add id to select options
@@ -382,7 +380,7 @@ function copyBlock(old, clone) {
       let list_name = input.dataset.quandoList
       if (list_name) {
         let selects = document.querySelectorAll("select[data-quando-list='" + list_name + "']")
-        for(let select of selects) {
+        for (let select of selects) {
           let option = document.createElement('option')
           option.value = _id
           option.innerHTML = '' // starts empty
@@ -391,7 +389,7 @@ function copyBlock(old, clone) {
       }
     }
   }
-  for(let elem of clone.querySelectorAll("input, select")) {
+  for (let elem of clone.querySelectorAll("input, select")) {
     elem.disabled = false
   }
 }
@@ -489,7 +487,7 @@ function _hasAncestor(elem, ancestor) {
 function _setupDragula() {
   let menu = document.getElementById('menu')
   let elems = menu.querySelectorAll("input, select")
-  for(let elem of elems) {
+  for (let elem of elems) {
     elem.disabled = true
   }
   let script = document.getElementById('script')
@@ -1136,7 +1134,7 @@ export function handle_clear() {
       disabled = false
       let arr = json.scriptToArray(script)
       txt = "["
-      for(let i in arr) {
+      for (let i in arr) {
         if (txt != "[") {
           txt += ',\n'
         }
