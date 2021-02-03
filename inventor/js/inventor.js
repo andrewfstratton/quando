@@ -22,12 +22,9 @@ export function showObject(obj) {
 
 export function appendObject(obj) {
   let script = document.getElementById('script')
-  json.addObjectToElement(obj, script)
+  json.addObjectToElement(obj, script, setElementHandlers)
   _populateLists()
   json.setOptions()
-  for (let item of script.getElementsByClassName("quando-block")) {
-    setElementHandlers(item)
-  }
 }
 
 export function getScriptAsObject() {
@@ -698,7 +695,9 @@ export function setup() {
       for (let elem of document.getElementsByClassName("quando-title")) {
         elem.addEventListener('click', handleLeftClick)
       }
-      for (let item of document.getElementsByClassName("quando-block")) {
+      // Set elements in the menu
+      let selector = "#menu .quando-block"
+      for (let item of document.querySelectorAll(selector)) {
         setElementHandlers(item)
       }
       let first_title = document.getElementsByClassName("quando-title")[0]
@@ -1140,14 +1139,31 @@ export function handle_show_code() {
   }
 
 export function handle_clear() {
-    _info('Cleared...')
+  let old_object = getScriptAsObject()
+  let old_deploy = _deploy
+  let old_filename = document.getElementById("file_name").innerHTML
+  let old_local_save_key = document.getElementById("local_save_key").value
+  let old_remote_save_key = document.getElementById("remote_save_key").value
+  undo.reset() // clears all old undo/redo
+  let _undo = () => {
+    showObject(old_object)
+    _deploy = old_deploy
+    document.getElementById("file_name").innerHTML = old_filename
+    document.getElementById("local_save_key").value = old_local_save_key 
+    document.getElementById("remote_save_key").value = old_remote_save_key 
+  }
+  let _redo = () => {
     _deploy = ''
-    localStorage.removeItem(AUTOSAVE)
-    $('#file_name').html('[no file]')
-    $('#local_save_key').val('')
-    $('#remote_save_key').val('')
+    document.getElementById("file_name").innerHTML = '[no file]'
+    document.getElementById("local_save_key").value = ''
+    document.getElementById("remote_save_key").value = ''
     showObject()
   }
+  _redo()
+  _info('Cleared...')
+  localStorage.removeItem(AUTOSAVE)
+  undo.done(_undo, _redo, "Clear Workspace")
+}
 
   function update_code_clip() {
     let disabled = true

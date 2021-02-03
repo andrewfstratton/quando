@@ -31,7 +31,7 @@ if (command.log) { console.log("redo: "+command.log)}
   }
 }
 
-export function clear() {
+export function reset() {
   redo_stack = []
   undo_stack = []
 }
