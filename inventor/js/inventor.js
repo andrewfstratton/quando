@@ -311,6 +311,22 @@ function _resizeWidth(event) {
     width = Math.max(width, 24)
     target.style.width = width + 'px'
 }
+
+function handleSelectQuandoList(event) {
+  event.preventDefault()
+  let select = event.target
+  let old_index = select.dataset.quandoLastIndex
+  let new_index = select.selectedIndex
+  select.dataset.quandoLastIndex = new_index
+  let _undo = () => {
+    select.selectedIndex =  old_index;
+  }
+  let _redo = () => {
+    select.selectedIndex =  new_index;
+  }
+  undo.done(_undo, _redo, "Select Quando List")
+  return false
+}
   
 export function setElementHandlers (block) {
   block.addEventListener('contextmenu', handleRightClick, false)
@@ -335,6 +351,10 @@ export function setElementHandlers (block) {
     elem.addEventListener('click', handleToggle, true)
     toggleRelativesOnElement(elem)
     elem.addEventListener('mousedown', (ev)=>{ev.preventDefault();return false})
+  }
+  for (let select of block.querySelectorAll("select[data-quando-list]")) {
+    select.dataset.quandoLastIndex = select.selectedIndex
+    select.addEventListener("change", handleSelectQuandoList)
   }
   //add update handler for IP datalist on click
   for (let elem of block.querySelectorAll("#robot_ip")) {
