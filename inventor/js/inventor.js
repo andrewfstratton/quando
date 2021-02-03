@@ -312,17 +312,20 @@ function _resizeWidth(event) {
     target.style.width = width + 'px'
 }
 
-function handleSelectQuandoList(event) {
+function handleSelect(event) {
   event.preventDefault()
   let select = event.target
   let old_index = select.dataset.quandoLastIndex
   let new_index = select.selectedIndex
   select.dataset.quandoLastIndex = new_index
+  toggleRelativesOnElement(select)
   let _undo = () => {
     select.selectedIndex =  old_index;
+    toggleRelativesOnElement(select)
   }
   let _redo = () => {
     select.selectedIndex =  new_index;
+    toggleRelativesOnElement(select)
   }
   undo.done(_undo, _redo, "Select Quando List")
   return false
@@ -347,14 +350,15 @@ export function setElementHandlers (block) {
   for (let elem of block.querySelectorAll("input[data-quando-robot='say']")) {
     elem.addEventListener('click', handleRobotModal, false)
   }
-  for (let elem of block.querySelectorAll("select.quando-toggle")) {
-    elem.addEventListener('click', handleToggle, true)
-    toggleRelativesOnElement(elem)
-    elem.addEventListener('mousedown', (ev)=>{ev.preventDefault();return false})
-  }
-  for (let select of block.querySelectorAll("select[data-quando-list]")) {
+  for (let select of block.querySelectorAll("select")) {
     select.dataset.quandoLastIndex = select.selectedIndex
-    select.addEventListener("change", handleSelectQuandoList)
+    if (select.classList.contains("quando-toggle")) {
+      select.addEventListener('click', (ev)=>{handleToggle(ev);handleSelect(ev)}, true)
+      select.addEventListener('mousedown', (ev)=>{ev.preventDefault();return false})
+      toggleRelativesOnElement(select)
+    } else {
+      select.addEventListener("change", handleSelect)
+    }
   }
   //add update handler for IP datalist on click
   for (let elem of block.querySelectorAll("#robot_ip")) {
@@ -412,6 +416,7 @@ function copyBlock(old, clone) {
   for (let elem of clone.querySelectorAll("input, select")) {
     elem.disabled = false
   }
+  setElementHandlers(clone)
 }
 
 function moveBlock(elem, old_parent, old_sibling) {
@@ -422,7 +427,6 @@ function moveBlock(elem, old_parent, old_sibling) {
     option_parents = _get_parent_options(id)
     _populateLists()
   }
-  setElementHandlers(elem)
   let new_parent = elem.parentNode
   let new_sibling = elem.nextSibling
   let _undo = () => {
