@@ -1307,14 +1307,22 @@ export function handle_folder_selected(media, block_id, elem_name, path) {
     _handle_file(media, block_id, elem_name, path)
   }
 
-export function handle_file_selected(filename, block_id, elem_name) {
-        // When blocK-id is null, then this is an upload - so do nothing...
+export function handle_file_selected(new_filename, block_id, elem_name) {
+    // When blocK-id is null, then this is an upload - so do nothing...
     if (block_id != null) {
       let block = document.querySelector('[data-quando-id="'+block_id+'"]')
       if (block) {
         let elem = block.querySelector('[data-quando-name="'+elem_name+'"]')
-        if (elem) {
-          elem.value = filename
+        if (elem && (elem.value != new_filename)) { // i.e. must be different
+          let last_filename = elem.value
+          let _undo = () => {
+            elem.value = last_filename
+          }
+          let _redo = () => {
+            elem.value = new_filename
+          }
+          undo.done(_undo, _redo, "Choose File")
+          _redo()
           _resizeWidth({target:elem})
         }
       }
