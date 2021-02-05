@@ -369,6 +369,12 @@ export function setElementHandlers (block) {
     // Store the initial value
     input.dataset.quandoLastText = input.value
     input.addEventListener('change', handleTextChange)
+    // set auto resize for text input fields
+    if (input.type == "text") {
+      _resizeWidth({target:input})
+      input.addEventListener('input', _resizeWidth)
+      input.addEventListener('change', _resizeWidth)
+    }
   }
   // Modal for robot say
   for (let elem of block.querySelectorAll("input[data-quando-robot='say']")) {
@@ -388,13 +394,6 @@ export function setElementHandlers (block) {
   //add update handler for IP datalist on click
   for (let elem of block.querySelectorAll("#robot_ip")) {
     elem.addEventListener('click', _updateIPList)
-  }
-  // set auto resize for input fields
-  let inputs = block.querySelectorAll("input[type='text']")
-  for (let input of inputs) {
-    _resizeWidth({target:input})
-    input.addEventListener('input', _resizeWidth)
-    input.addEventListener('change', _resizeWidth)
   }
 }
 
