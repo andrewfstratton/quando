@@ -182,6 +182,25 @@ export function handleToggle(event) {
   return false
 }
 
+function handleTextChange(ev) {
+  let elem = ev.target
+  let new_text = elem.value
+  let last_text = elem.dataset.quandoLastText
+  elem.dataset.quandoLastText = new_text
+  if (new_text != last_text) { // i.e. must be different
+    let _undo = () => {
+      elem.value = last_text
+      _resizeWidth({target:elem})
+    }
+    let _redo = () => {
+      elem.value = new_text
+      _resizeWidth({target:elem})
+    }
+    undo.done(_undo, _redo, "Change Text")
+    _redo()
+  }
+}
+
 export function handleLeftClick(event) {
   event.preventDefault()
   _leftClickTitle(event.target)
@@ -336,17 +355,26 @@ export function setElementHandlers (block) {
     id = block.dataset.quandoId
   }
   if (id && id != "true") {
-    let inputs = block.querySelectorAll("input[data-quando-list]")
-    for (let input of inputs) {
+    // List of Display (only currently)
+    for (let input of block.querySelectorAll("input[data-quando-list]")) {
       input.addEventListener('input', _handleListNameChange)
     }
   }
+  // File choice
   for (let elem of block.querySelectorAll("input[data-quando-media]")) {
     elem.addEventListener('click', handleFile, false)
   }
+  // Text (and number) input
+  for (let input of block.querySelectorAll("input")) {
+    // Store the initial value
+    input.dataset.quandoLastText = input.value
+    input.addEventListener('change', handleTextChange)
+  }
+  // Modal for robot say
   for (let elem of block.querySelectorAll("input[data-quando-robot='say']")) {
     elem.addEventListener('click', handleRobotModal, false)
   }
+  // Drop down and toggle
   for (let select of block.querySelectorAll("select")) {
     select.dataset.quandoLastIndex = select.selectedIndex
     if (select.classList.contains("quando-toggle")) {
@@ -1314,16 +1342,9 @@ export function handle_file_selected(new_filename, block_id, elem_name) {
       if (block) {
         let elem = block.querySelector('[data-quando-name="'+elem_name+'"]')
         if (elem && (elem.value != new_filename)) { // i.e. must be different
-          let last_filename = elem.value
-          let _undo = () => {
-            elem.value = last_filename
-          }
-          let _redo = () => {
-            elem.value = new_filename
-          }
-          undo.done(_undo, _redo, "Choose File")
-          _redo()
-          _resizeWidth({target:elem})
+          elem.value = new_filename
+          // This change will also update undo stack and resize
+          elem.dispatchEvent(new Event('change'))
         }
       }
       $('#file_modal').modal('hide')
@@ -1444,7 +1465,11 @@ export function handle_robot_say(event) {
     if (block) {
       let input = block.querySelector('[data-quando-robot="say"]')
 
-      input.value = text.val()
+      if (input.value != text.val()) { // i.e has changed
+        input.value = text.val()
+        // Also update undo stack and resize
+        input.dispatchEvent(new Event('change'))
+      }
       robot_say_modal.modal('hide')
     }
 
