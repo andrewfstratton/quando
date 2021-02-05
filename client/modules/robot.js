@@ -481,7 +481,9 @@ self.walk = (direction, steps, interrupt) => {
     })
 }
 
-self.rotateBody = (angle, direction, interrupt = false) => { //angle in degrees
+self.rotateBody = (angle, left, interrupt = false) => { //angle in degrees
+    let direction = -1
+    if (left) { direction = 1 }
     angle = helper_ConvertAngleToRads(angle)
     let state_motion = state.motion
     if (interrupt) {

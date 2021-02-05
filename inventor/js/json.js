@@ -62,7 +62,7 @@ export function scriptToArray (script) {
   return arr
 }
 
-export function addObjectToElement (obj, elem) {
+export function addObjectToElement (obj, elem, setElementHandlers=null) {
   let menu = document.getElementById("menu")
   if (obj) {
     for(let block of obj) {
@@ -118,6 +118,10 @@ export function addObjectToElement (obj, elem) {
           if (element && obj.box) {
             addObjectToElement(obj.box, element)
           }
+        }
+        // Note - does not recurse, since element handlers must ony be added once
+        if (setElementHandlers) {
+          setElementHandlers(clone)
         }
       }
     }

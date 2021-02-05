@@ -202,14 +202,6 @@ input[type="color"] {
   color: black;
 }
 
-
-/* .quando-separator {
-  border-top-style:solid;
-  border-top-width:10px;
-  border-top-color: rgba(196,0,0,0.5);
-  margin-top: 12px;
-} */
-
 select.quando-toggle {
   -webkit-appearance:none;
   appearance:none;
@@ -245,11 +237,6 @@ select.quando-toggle {
 
 .right-click-menu-item:hover:not([disabled]) {
   background-color: lightblue;
-}
-
-.quando-robot-say {
-  min-width: 272px;
-  margin: 0 0 3px 0;
 }
 
  /* Tooltip container */

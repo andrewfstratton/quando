@@ -3,26 +3,24 @@
   <div class="quando-left quando-robot"></div>
   <div class="quando-right">
     <div class="quando-row quando-robot ">🤖💬 Say
-      "<input class="quando-robot-say" data-quando-name="say" data-quando-robot="say" type="text" value="" data-quando-encode="normal" />"
-      <br>
-      with
-      <select data-quando-name='animation' class='quando-toggle'>
-        <option value='None'>no gestures
-        </option>
-        <option value='Contextual'>contextual gestures</option>
-        <option value='Random'>random gestures</option>
-      </select>
-      <select data-quando-name='interrupt' class='quando-toggle'>
-        <option value='normal'>Buffer</option>
-        <option value='full'>Interrupt and stop</option>
-        <option value='continue'>Interrupt and continue</option>
-      </select>
+      "<input data-quando-name="say" data-quando-robot="say" type="text" value="" data-quando-encode="normal" />"
       <select data-quando-name="extras" class="quando-toggle">
         <option value="hidden">+</option>
         <option value="show">-</option>
       </select>
       <span data-quando-toggle="extras=show">
         <br>
+        with
+        <select data-quando-name='animation'>
+          <option value='None'>no</option>
+          <option value='Contextual'>related</option>
+          <option value='Random'>random</option>
+        </select> gestures, if speaking
+        <select data-quando-name='interrupt'>
+          <option value='full'>Replace</option>
+          <option value='normal'>Wait</option>
+          <option value='continue'>Insert</option>
+        </select>
         <br>
         <span class="bold">Voice - </span>
         Pitch:  <!-- (1.0-4.0) --> 
@@ -35,7 +33,6 @@
           <input data-quando-name="speed" type="text" value="100" data-quando-encode="normal" />%
           <span class="hovertext">Range: (50% - ?)</span>
         </div> 
-        
         <br>
         <span class="bold">Double Voice - </span>
         Pitch: <!-- (1.0-4.0) -->

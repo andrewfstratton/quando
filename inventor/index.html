@@ -34,7 +34,7 @@
             <div id="menu" class="container col-md-2">
                 <div class="quando-title" id="_menu_title" style="display: none;"></div>
                 <div id="clipboard_title" class="quando-title">Clipboard</div>
-                <div id="clipboard" class="quando-block"></div>
+                <div id="clipboard" class="quando-box"></div>
             </div>
             <div id="script" class="col-md-10"></div>
             </div>
@@ -75,6 +75,14 @@
                         </button>
                         <button type="button" class="btn btn-warning" onclick="index.handle_show_code();">
                             <span class="glyphicon glyphicon-eye-open"></span> Code
+                        </button>
+                    </div>
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-primary" onclick="index.undo();">
+                            <span class="glyphicon glyphicon-circle-arrow-left"></span> Undo
+                        </button>
+                        <button type="button" class="btn btn-primary" onclick="index.redo();">
+                            <span class="glyphicon glyphicon-circle-arrow-right"></span> Redo
                         </button>
                     </div>
                     <button type="button" class="btn btn-primary" onclick="index.handle_help();">

@@ -1,6 +1,10 @@
 // support the inventor (editor) page
 import * as generator from "./generator.js"
 import * as json from "./json.js"
+import * as undo from "./undo.js"
+let _undo = undo.undo
+let _redo = undo.redo
+export { _undo as undo, _redo as redo } // this allows html/bootstrap button binding to index.undo/redo
 
 let _userid = null
 let _deploy = ''
@@ -18,12 +22,9 @@ export function showObject(obj) {
 
 export function appendObject(obj) {
   let script = document.getElementById('script')
-  json.addObjectToElement(obj, script)
+  json.addObjectToElement(obj, script, setElementHandlers)
   _populateLists()
   json.setOptions()
-  for (let item of script.getElementsByClassName("quando-block")) {
-    setElementHandlers(item)
-  }
 }
 
 export function getScriptAsObject() {
@@ -43,25 +44,21 @@ function _handle_click_clone(elem) {
     }
     if (containing_block)  {
       let clone = containing_block.cloneNode(true)
-      if (_hasAncestor(containing_block, document.getElementById('menu'))) { // in the menu - so copy to script
+      // if in the menu - then append to script
+      if (_hasAncestor(containing_block, document.getElementById('menu'))) {
         document.getElementById('script').appendChild(clone)
-      } else {
+      } else { // add after this element
         let parent = containing_block.parentNode
         if (parent) {
-          if (containing_block.nextSibling) {
-            parent.insertBefore(clone, containing_block.nextSibling)
-          } else {
-            parent.appendChild(clone)
-          }
-        } else {
+          parent.insertBefore(clone, containing_block.nextSibling)
+        } else { // this should never happen
           clone = false
         }
       }
       if (clone) {
-        clone.addEventListener('contextmenu', handleRightClick, false)
         copyBlock(containing_block, clone)
         _populateLists()
-        setElementHandlers(clone)
+        moveBlock(clone, null, null) // Important this follows _populateLists()
       }
     }
 }
@@ -185,6 +182,25 @@ export function handleToggle(event) {
   return false
 }
 
+function handleTextChange(ev) {
+  let elem = ev.target
+  let new_text = elem.value
+  let last_text = elem.dataset.quandoLastText
+  elem.dataset.quandoLastText = new_text
+  if (new_text != last_text) { // i.e. must be different
+    let _undo = () => {
+      elem.value = last_text
+      _resizeWidth({target:elem})
+    }
+    let _redo = () => {
+      elem.value = new_text
+      _resizeWidth({target:elem})
+    }
+    undo.done(_undo, _redo, "Change Text")
+    _redo()
+  }
+}
+
 export function handleLeftClick(event) {
   event.preventDefault()
   _leftClickTitle(event.target)
@@ -220,7 +236,7 @@ function _populateListOptions(list_name) {
     }
   }
   let selects = document.querySelectorAll("select[data-quando-list='" + list_name + "']") // all the selectors to reset
-  for(let select of selects) {
+  for (let select of selects) {
     let value = select.value
     let selectedIndex = select.selectedIndex
     select.innerHTML = add_to_select
@@ -236,7 +252,7 @@ function _populateListOptions(list_name) {
 function _populateLists() {
   let inputs = document.querySelectorAll("input[data-quando-list]")
   let list_names = []
-  for(let input of inputs) {
+  for (let input of inputs) {
     let list_name = input.dataset.quandoList
     if (list_name && !list_names.includes(list_name)) {
       list_names.push(list_name)
@@ -252,7 +268,7 @@ function _handleListNameChange(event) {
     let list_name = target.dataset.quandoList
     if (list_name) { // with the list name
       let selects = document.querySelectorAll("select[data-quando-list='" + list_name + "']") // find any selects
-      for(let select of selects) {
+      for (let select of selects) {
         let option = select.querySelector("option[value='" + id + "']") // update the text for any matching options
         if (option) {
           option.textContent = target.value
@@ -311,32 +327,63 @@ function _resizeWidth(event) {
     width = Math.max(width, 24)
     target.style.width = width + 'px'
 }
+
+function handleSelect(event) {
+  event.preventDefault()
+  let select = event.target
+  let old_index = select.dataset.quandoLastIndex
+  let new_index = select.selectedIndex
+  select.dataset.quandoLastIndex = new_index
+  toggleRelativesOnElement(select)
+  let _undo = () => {
+    select.selectedIndex =  old_index;
+    toggleRelativesOnElement(select)
+  }
+  let _redo = () => {
+    select.selectedIndex =  new_index;
+    toggleRelativesOnElement(select)
+  }
+  undo.done(_undo, _redo, "Change Selected")
+  return false
+}
   
 export function setElementHandlers (block) {
-  if (block.id != 'clipboard') { // contextmenu is not shown for clipboard
-    block.addEventListener('contextmenu', handleRightClick, false)
-  }
+  block.addEventListener('contextmenu', handleRightClick, false)
   // add handler for list item change
   let id = null
   if (block.dataset && block.dataset.quandoId) {
     id = block.dataset.quandoId
   }
   if (id && id != "true") {
-    let inputs = block.querySelectorAll("input[data-quando-list]")
-    for (let input of inputs) {
+    // List of Display (only currently)
+    for (let input of block.querySelectorAll("input[data-quando-list]")) {
       input.addEventListener('input', _handleListNameChange)
     }
   }
+  // File choice
   for (let elem of block.querySelectorAll("input[data-quando-media]")) {
     elem.addEventListener('click', handleFile, false)
   }
+  // Text (and number) input
+  for (let input of block.querySelectorAll("input")) {
+    // Store the initial value
+    input.dataset.quandoLastText = input.value
+    input.addEventListener('change', handleTextChange)
+  }
+  // Modal for robot say
   for (let elem of block.querySelectorAll("input[data-quando-robot='say']")) {
     elem.addEventListener('click', handleRobotModal, false)
   }
-  for (let elem of block.querySelectorAll("select.quando-toggle")) {
-    elem.addEventListener('click', handleToggle, true)
-    toggleRelativesOnElement(elem)
-    elem.addEventListener('mousedown', (ev)=>{ev.preventDefault();return false})
+  // Drop down and toggle
+  for (let select of block.querySelectorAll("select")) {
+    select.dataset.quandoLastIndex = select.selectedIndex
+    if (select.classList.contains("quando-toggle")) {
+      select.addEventListener('click', (ev)=>{handleToggle(ev);handleSelect(ev)}, true)
+      select.addEventListener('mousedown', (ev)=>{ev.preventDefault();return false})
+      toggleRelativesOnElement(select)
+    } else {
+      select.addEventListener("change", handleSelect)
+    }
   }
   //add update handler for IP datalist on click
   for (let elem of block.querySelectorAll("#robot_ip")) {
@@ -351,7 +398,8 @@ export function setElementHandlers (block) {
   }
 }
 
-export function copyBlock(old, clone) { // Note that Clone is a 'simple' copy of old
+// Note that clone is a 'simple' copy of old, e.g. used for dragging
+function copyBlock(old, clone) { 
   // copy across selected indexes
   if (old.hasChildNodes()) {
     let selector = "select"
@@ -372,7 +420,7 @@ export function copyBlock(old, clone) { // Note that Clone is a 'simple' copy of
     nodes.push(clone)
   }
   nodes = nodes.concat(Array.from(clone.querySelectorAll(`[data-quando-id]`)))
-  for(let node of nodes) {
+  for (let node of nodes) {
     node.dataset.quandoId = _id // next free id
     _id = json.nextDataQuandoId(_id)
     // now add id to select options
@@ -381,7 +429,7 @@ export function copyBlock(old, clone) { // Note that Clone is a 'simple' copy of
       let list_name = input.dataset.quandoList
       if (list_name) {
         let selects = document.querySelectorAll("select[data-quando-list='" + list_name + "']")
-        for(let select of selects) {
+        for (let select of selects) {
           let option = document.createElement('option')
           option.value = _id
           option.innerHTML = '' // starts empty
@@ -390,19 +438,82 @@ export function copyBlock(old, clone) { // Note that Clone is a 'simple' copy of
       }
     }
   }
-  for(let elem of clone.querySelectorAll("input, select")) {
+  for (let elem of clone.querySelectorAll("input, select")) {
     elem.disabled = false
+  }
+  setElementHandlers(clone)
+}
+
+function moveBlock(elem, old_parent, old_sibling) {
+  let id = elem.dataset.quandoId
+  let option_parents = []
+  // Store any references to this option if now in menu - for undo
+  if (id && _hasAncestor(elem, document.getElementById('menu'))) {
+    option_parents = _get_parent_options(id)
+    _populateLists()
+  }
+  let new_parent = elem.parentNode
+  let new_sibling = elem.nextSibling
+  let _undo = () => {
+    if (elem.parentNode) { elem.parentNode.removeChild(elem) }
+    if (old_parent) {
+      old_parent.insertBefore(elem, old_sibling)
+    } else { // force the update of the display lists
+      _populateLists()
+    }
+  }
+  let _redo = () => {
+    if (elem.parentNode) { elem.parentNode.removeChild(elem) }
+    new_parent.insertBefore(elem, new_sibling)
+    _populateLists()
+    _restore_options(id, option_parents)
+  }
+  undo.done(_undo, _redo, "Move Block")
+}
+
+function _get_parent_options(id) {
+  let result = []
+  let options = document.querySelectorAll("option[value='" + id + "']")
+  for (let option of options) {
+    let parent = option.parentNode
+    if (parent) {
+      if (parent.value == id) {
+        result.push(parent)
+      }
+    }
+    return result
   }
 }
 
-export function removeBlock(elem) {
-  let id = elem.dataset.quandoId
-  if (id) {
-    let options = document.querySelectorAll("option[value='" + id + "']")
-    for (let option of options) {
-      option.parentNode.removeChild(option)
+// Restore selected options
+function _restore_options(id, list) {
+  for (let parent of list) {
+    let found = parent.querySelector("option[value='" + id + "']")
+    if (found) {
+      found.selected = true
     }
   }
+
+}
+
+function removeBlock(elem, parent_node, next_sibling) {
+  let id = elem.dataset.quandoId
+  let option_parents = []
+  if (id) { // Store any references to this option - for undo
+    option_parents = _get_parent_options(id)
+    _populateLists()
+  }
+  elem.classList.remove("gu-hide") // To reveal the element if undone later
+  let _undo = () => {
+    parent_node.insertBefore(elem, next_sibling)
+    _populateLists()
+    _restore_options(id, option_parents)
+  }
+  let _redo = () => {
+    parent_node.removeChild(elem)
+    _populateLists()
+  }
+  undo.done(_undo, _redo, "Delete Block")
 }
 
 /**
@@ -424,7 +535,7 @@ function _hasAncestor(elem, ancestor) {
 function _setupDragula() {
   let menu = document.getElementById('menu')
   let elems = menu.querySelectorAll("input, select")
-  for(let elem of elems) {
+  for (let elem of elems) {
     elem.disabled = true
   }
   let script = document.getElementById('script')
@@ -448,53 +559,62 @@ function _setupDragula() {
     } else if (target === menu) {
       accept = false
     } else if (!target.classList.contains('quando-box')) { // target must be a container
-        accept = false
+      accept = false
     } else if (_hasAncestor(target, menu)) { // target cannot be inside the menu
       accept = false
-      } else if (_hasAncestor(target, elem)) { // trying to drag into itself
-        accept = false
+    } else if (_hasAncestor(target, elem)) { // trying to drag into itself
+      accept = false
     } else { // satisfy the valid check
-        let limited = elem.dataset.quandoDropValid
-        if (limited != undefined) {
-          accept = false // assume rejecting for now...
-          if (limited != "") { // i.e. can't be dropped in anything...
-            let parent_block = _getParentBlock(target)
-            if (parent_block) {
-              let block_type = parent_block.dataset.quandoBlockType
-              limited = limited.split(",")
-              for (let tuple of limited) {
-                let [type,box] = tuple.split(".")
-                let box_match = true // i.e. matches when no box name given
-                if (box) {
-                  if (target.dataset) {
-                    box_match = (box == target.dataset.quandoName)
-                  } else {
-                    box_match = false
-                  }
+      let limited = elem.dataset.quandoDropValid
+      if (limited != undefined) {
+        accept = false // assume rejecting for now...
+        if (limited != "") { // i.e. can't be dropped in anything...
+          let parent_block = _getParentBlock(target)
+          if (parent_block) {
+            let block_type = parent_block.dataset.quandoBlockType
+            limited = limited.split(",")
+            for (let tuple of limited) {
+              let [type,box] = tuple.split(".")
+              let box_match = true // i.e. matches when no box name given
+              if (box) {
+                if (target.dataset) {
+                  box_match = (box == target.dataset.quandoName)
+                } else {
+                  box_match = false
                 }
-                if (box_match && (block_type == type)) {
-                  accept = true
-                }
+              }
+              if (box_match && (block_type == type)) {
+                accept = true
               }
             }
           }
         }
       }
+    }
     return accept
   }
   options.invalid = (elem, handle) => {
     return elem.classList.contains("quando-title")
   }
+  let last_parent = null
+  let next_sibling = null
   let drake = dragula(collections, options).on('drop', (elem) => {
-    setElementHandlers(elem)
-//  }).on('drag', (elem, src) => {
+    moveBlock(elem, last_parent, next_sibling)
+  }).on('drag', (elem, src) => {
+    // Only use when outside the menu
+    if (_hasAncestor(elem, document.getElementById('menu'))) {
+      last_parent = null
+    } else {
+      last_parent = src
+    }
+    next_sibling = elem.nextSibling
 //  }).on('dragend', (elem) => {
   }).on('cloned', (clone, old, type) => {
     if (type == 'copy') {
       copyBlock(old, clone)
     }
   }).on('remove', (elem) => {
-    removeBlock(elem)
+    removeBlock(elem, last_parent, next_sibling)
   })
   collections.forEach((collection)=>{
     collection.addEventListener('touchmove', (event) => {
@@ -602,7 +722,9 @@ export function setup() {
       for (let elem of document.getElementsByClassName("quando-title")) {
         elem.addEventListener('click', handleLeftClick)
       }
-      for (let item of document.getElementsByClassName("quando-block")) {
+      // Set elements in the menu
+      let selector = "#menu .quando-block"
+      for (let item of document.querySelectorAll(selector)) {
         setElementHandlers(item)
       }
       let first_title = document.getElementsByClassName("quando-title")[0]
@@ -699,6 +821,7 @@ export function loaded(obj, modal_id) {
       name = '[no file]'
     }
     $('#file_name').html(name)
+    undo.reset()
   }
 
   function _saved (name) {
@@ -1036,19 +1159,39 @@ export function handle_show_version() {
 
 export function handle_show_code() {
     $('#show_modal').modal('show')
-    $('#show_modal_code').removeClass('language-xml').addClass('language-javascript')
+    // let class_list = document.getElementById("show_modal_code").classList
+    // class_list.remove("language-xml")
+    // class_list.add("language-javascript")
+    // $('#show_modal_code').removeClass('language-xml').addClass('language-javascript')
     update_code_clip()
   }
 
 export function handle_clear() {
-    _info('Cleared...')
+  let old_object = getScriptAsObject()
+  let old_deploy = _deploy
+  let old_filename = document.getElementById("file_name").innerHTML
+  let old_local_save_key = document.getElementById("local_save_key").value
+  let old_remote_save_key = document.getElementById("remote_save_key").value
+  undo.reset() // clears all old undo/redo
+  let _undo = () => {
+    showObject(old_object)
+    _deploy = old_deploy
+    document.getElementById("file_name").innerHTML = old_filename
+    document.getElementById("local_save_key").value = old_local_save_key 
+    document.getElementById("remote_save_key").value = old_remote_save_key 
+  }
+  let _redo = () => {
     _deploy = ''
-    localStorage.removeItem(AUTOSAVE)
-    $('#file_name').html('[no file]')
-    $('#local_save_key').val('')
-    $('#remote_save_key').val('')
+    document.getElementById("file_name").innerHTML = '[no file]'
+    document.getElementById("local_save_key").value = ''
+    document.getElementById("remote_save_key").value = ''
     showObject()
   }
+  _redo()
+  _info('Cleared...')
+  localStorage.removeItem(AUTOSAVE)
+  undo.done(_undo, _redo, "Clear Workspace")
+}
 
   function update_code_clip() {
     let disabled = true
@@ -1059,7 +1202,7 @@ export function handle_clear() {
       disabled = false
       let arr = json.scriptToArray(script)
       txt = "["
-      for(let i in arr) {
+      for (let i in arr) {
         if (txt != "[") {
           txt += ',\n'
         }
@@ -1192,15 +1335,16 @@ export function handle_folder_selected(media, block_id, elem_name, path) {
     _handle_file(media, block_id, elem_name, path)
   }
 
-export function handle_file_selected(filename, block_id, elem_name) {
-        // When blocK-id is null, then this is an upload - so do nothing...
+export function handle_file_selected(new_filename, block_id, elem_name) {
+    // When blocK-id is null, then this is an upload - so do nothing...
     if (block_id != null) {
       let block = document.querySelector('[data-quando-id="'+block_id+'"]')
       if (block) {
         let elem = block.querySelector('[data-quando-name="'+elem_name+'"]')
-        if (elem) {
-          elem.value = filename
-          _resizeWidth({target:elem})
+        if (elem && (elem.value != new_filename)) { // i.e. must be different
+          elem.value = new_filename
+          // This change will also update undo stack and resize
+          elem.dispatchEvent(new Event('change'))
         }
       }
       $('#file_modal').modal('hide')
@@ -1321,7 +1465,11 @@ export function handle_robot_say(event) {
     if (block) {
       let input = block.querySelector('[data-quando-robot="say"]')
 
-      input.value = text.val()
+      if (input.value != text.val()) { // i.e has changed
+        input.value = text.val()
+        // Also update undo stack and resize
+        input.dispatchEvent(new Event('change'))
+      }
       robot_say_modal.modal('hide')
     }
 
