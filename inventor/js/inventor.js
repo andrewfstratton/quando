@@ -463,15 +463,17 @@ function moveBlock(elem, old_parent, old_sibling) {
     if (elem.parentNode) { elem.parentNode.removeChild(elem) }
     if (old_parent) {
       old_parent.insertBefore(elem, old_sibling)
-    } else { // force the update of the display lists
-      _populateLists()
     }
-  }
-  let _redo = () => {
-    if (elem.parentNode) { elem.parentNode.removeChild(elem) }
-    new_parent.insertBefore(elem, new_sibling)
+    // force the update of the display lists
     _populateLists()
     _restore_options(id, option_parents)
+  }
+  let _redo = () => {
+    if (elem.parentNode) {
+      elem.parentNode.removeChild(elem)
+    }
+    new_parent.insertBefore(elem, new_sibling)
+    _populateLists()
   }
   undo.done(_undo, _redo, "Move Block")
 }
@@ -486,8 +488,8 @@ function _get_parent_options(id) {
         result.push(parent)
       }
     }
-    return result
   }
+  return result
 }
 
 // Restore selected options
@@ -498,7 +500,6 @@ function _restore_options(id, list) {
       found.selected = true
     }
   }
-
 }
 
 function removeBlock(elem, parent_node, next_sibling) {
@@ -539,8 +540,8 @@ function _hasAncestor(elem, ancestor) {
 
 function _setupDragula() {
   let menu = document.getElementById('menu')
-  let elems = menu.querySelectorAll("input, select")
-  for (let elem of elems) {
+  let elements = menu.querySelectorAll("input, select")
+  for (let elem of elements) {
     elem.disabled = true
   }
   let script = document.getElementById('script')
@@ -736,7 +737,7 @@ export function setup() {
       if (first_title) {
         _leftClickTitle(first_title)
       }
-      local_load(AUTOSAVE) // load last edit from localstorage
+      local_load(AUTOSAVE) // load last edit from localStorage
     },
     error: () => {
       _error('Failed to find Quando:Cloud blocks')
@@ -1318,7 +1319,7 @@ export function handleFile(event) {
                             block_id, elem_name))
           }
           if (path != '') {
-            path = path.substring(1) + '/' // strip off the intial slash and put infront of the file
+            path = path.substring(1) + '/' // strip off the initial slash and put in front of the file
           }
           for (let i in res.files) {
             $('#file_list').append(_file_list_add(res.files[i], path,
