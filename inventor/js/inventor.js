@@ -191,10 +191,16 @@ function handleTextChange(ev) {
     let _undo = () => {
       elem.value = last_text
       _resizeWidth({target:elem})
+      if (elem.dataset.quandoList) {
+        _handleListNameChange({target:elem})
+      }
     }
     let _redo = () => {
       elem.value = new_text
       _resizeWidth({target:elem})
+      if (elem.dataset.quandoList) {
+        _handleListNameChange({target:elem})
+      }
     }
     undo.done(_undo, _redo, "Change Text")
     _redo()
