@@ -190,14 +190,18 @@ function handleTextChange(ev) {
   if (new_text != last_text) { // i.e. must be different
     let _undo = () => {
       elem.value = last_text
-      _resizeWidth({target:elem})
+      if (elem.type == "text") {
+        _resizeWidth({target:elem})
+      }
       if (elem.dataset.quandoList) {
         _handleListNameChange({target:elem})
       }
     }
     let _redo = () => {
       elem.value = new_text
-      _resizeWidth({target:elem})
+      if (elem.type == "text") {
+        _resizeWidth({target:elem})
+      }
       if (elem.dataset.quandoList) {
         _handleListNameChange({target:elem})
       }
