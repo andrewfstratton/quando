@@ -26,7 +26,7 @@ if (!quando) {
 
   self.key = (coded_char, press=false) => {
     // coded_char is a string representing shift/ctrl/alt/command and a character, where a +/' ' indicate
-    // whether the modifer key needs to be included
+    // whether the modifier key needs to be included
     let shift = coded_char[0] == '+'
     let ctrl = coded_char[1] == '+'
     let alt = coded_char[2] == '+'
