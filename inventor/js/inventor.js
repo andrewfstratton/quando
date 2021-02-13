@@ -33,7 +33,7 @@ export function getScriptAsObject() {
 
 export function handleRightClick(event) {
     event.preventDefault()
-    _show_right_menu(event.target)
+    _show_right_menu(event)
     return false
 }
 
@@ -63,17 +63,32 @@ function _handle_click_clone(elem) {
     }
 }
 
-function _show_right_menu(elem) {
+function _show_right_menu(event) {
+  let elem = event.target
   let menu = document.getElementById('right-click-menu')
   let clone = menu.cloneNode(true)
   menu.parentNode.replaceChild(clone, menu)
   menu = clone
-  menu.style.visibility = "visible"
-  menu.style.left = event.pageX-8 + "px"
-  menu.style.top = event.pageY-8 + "px"
   menu.addEventListener('mouseleave', (ev) => {
     menu.style.visibility = "hidden"
   })
+  // next 4 lines ensure bounding rect is correct
+  menu.style.visibility = "visible"
+  menu.style.left = 0 + "px"
+  menu.style.top = 0 + "px"
+  let bounding = menu.getBoundingClientRect()
+  let x = event.pageX-8
+  let y = event.pageY-8
+  let viewport = document.getElementsByTagName("body")[0].getBoundingClientRect()
+  let bottom_bar = document.getElementById("bottom-navbar").getBoundingClientRect()
+  if ((y+bounding.bottom) > viewport.height) {
+    y = viewport.height - bounding.bottom - bottom_bar.height - 8
+  }
+  if ((x+bounding.right) > viewport.width) {
+    x = viewport.width - bounding.right - 8
+  }
+  menu.style.left = x + "px"
+  menu.style.top = y + "px"
   document.getElementById('block-clone').addEventListener('click', (ev) => {
     menu.style.visibility = "hidden"
     _handle_click_clone(elem)
