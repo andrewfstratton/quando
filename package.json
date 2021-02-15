@@ -12,7 +12,7 @@
     "nodemon": "nodemon cloud.js",
     "nodered": "node ./node_modules/node-red/red.js",
     "install_nodered": "npm install --no-save --unsafe-perm node-red",
-    "install_pouchdb": "npm install pouchdb pouchdb-find pouchdb-serve"
+    "install_pouchdb": "npm install pouchdb pouchdb-find pouchdb-serve" 
   },
   "author": "Andrew Stratton",
   "license": "ISC",
