@@ -1,0 +1,4 @@
+---
+applications:
+- name: quando
+  memory: 128M

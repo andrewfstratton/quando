@@ -40,3 +40,4 @@ You will need to install Quando:Cloud locally.
 Quando can be deployed to IBM Cloud - **note that this has not been tested.**
 
 [![Deploy to IBM Cloud](https://cloud.ibm.com/devops/setup/deploy/button.png)](https://cloud.ibm.com/devops/setup/deploy?repository=https%3A%2F%2Fgithub.com%2Fandrewfstratton%2Fquando.git&branch=master)
+[![Deploy dev to IBM Cloud](https://cloud.ibm.com/devops/setup/deploy/button.png)](https://cloud.ibm.com/devops/setup/deploy?repository=https%3A%2F%2Fgithub.com%2Fandrewfstratton%2Fquando.git&branch=dev)
