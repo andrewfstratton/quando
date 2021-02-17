@@ -18,14 +18,14 @@ function _db(name) {
     const appEnv = require('cfenv').getAppEnv()
     let services = appEnv.services['cloudantNoSQLDB']
     for(let service of services) {
-      if (service.name == 'Cloudant-quando-connection') {
+      if (service.name == 'Cloudant-quando') {
         connection = Cloudant(service.credentials)
         // console.log("credentials::"+service.credentials)
       }
     }
   }
   if (connection == null) {
-    console.log("Failed to find Cloudant service 'Cloudant-quando-connection'")
+    console.log("Failed to find Cloudant service 'Cloudant-quando'")
   } else {
     return connection.db.use(name)
   }

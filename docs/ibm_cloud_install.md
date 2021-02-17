@@ -1,50 +1,28 @@
 
 This is not yet working - on Lite account
 
-IBM Cloud can be used to host Quando:Cloud using a free Lite Account by following the instructions below.
+IBM Cloud can be used to host Quando:Cloud using a Lite Account by following the instructions below.
 
-_It is assumed that you already have an IBM Cloud login._
+_You will need to already have an IBM Cloud login._
 
 # Adding the Github Quando:Cloud repository
 
-Follow these instructions to automatically have the latest version of Quando:Cloud
+Follow these instructions to automatically get the latest version of Quando:Cloud.  This will automatically be redeployed when Quando is updated.
 
-1. From the Navigation Menu (top left) choose `DevOps` (circa halfway down)
-2. (if needed) Change Location to London
-3. Choose `Create toolchain +`
-4. Type `Github` in the search box
-5. Choose the option `Develop a Cloud Foundry app with DevOps Insights`
-6. Change toolchain Name to `quando-ibm-cloud-devops`
-7. (if needed)
-   1. Choose `Authorize` (very near the bottom)
-   2. Sign in to Github (Create an Account if you don't have one)
-   3.  **Do Not Create Yet**
-8.  In the Source Repository, paste `https://github.com/andrewfstratton/quando`
-9.  Now choose `Create`
-10. You will be asked to provide an IBM Cloud API key - choose `New +` then `OK`
-11. Wait for a short while, then `Create`
-12. You will see the `quando-cloud-devops` Toolchain page, with Github `Setting up...`
-13. When it has finished setting up, **DO NOT Commit a change...** as suggested.
-14. The `Delivery Pipeline` item (third from the left) should show `In progress`.  This will Fail if left to finish.  
-15. Click on the `Delivery Pipeline` item
-16. In the next page, click on the BUILD item  settings 'cog' (top  right of the BUILD item) and choose `Configure Stage`
-17. Click on the `Unit Test a...` item and then click `Remove` and confirm `Remove`
-18. Change the Builder type to `Simple` (at the top of the list), then `Save`
-19. Click on the Setting cog for `STAGING` then choose `Configure Stage`
-20. Click on `FVT Test` then `Remove` and confirm `Remove`
-21. Scroll to the bottom and change the Deploy script to hold: 
-```
-#!/bin/bash
-cf push "${CF_APP}"
-# View logs
-# cf logs "${CF_APP}" --recent
-```
-22. Next `Save`
-23. On the `GATE` settings cog choose ``
-24. Click on the BUILD item `Run Stage` ('play' icon - left of the settings cog)
-25. This will take a while - you may wish to click on `View logs and history`
+1. Login to IBM Cloud
+2. Open the Quando repository at `https://github.com/andrewfstratton/quando`
+3. Either:
+  - To run (but not develop) Quando: [![Deploy to IBM Cloud](https://cloud.ibm.com/devops/setup/deploy/button.png)](https://cloud.ibm.com/devops/setup/deploy?repository=https%3A%2F%2Fgithub.com%2Fandrewfstratton%2Fquando.git&branch=master&env_id=ibm:yp:eu-gb)
+  - Or to deploy the `dev` version: [Deploy dev to IBM Cloud](https://cloud.ibm.com/devops/setup/deploy?repository=https%3A%2F%2Fgithub.com%2Fandrewfstratton%2Fquando.git&branch=dev&env_id=ibm:yp:eu-gb)
 
-**THIS FAILS - and will not build on Lite**
+4. Select the Delivery Pipeline (Required) 'tab'
+5. Click `new` next to create a new IBM Cloud API key
+6. Click `OK`
+7. Wait, then click `Create`
+8. You will need to wait for a few minutes for the Git `Setting up...` to finish
+9. You should get a message saying `Your app is being created...`
+10. This will take about 2 minutes to build and 5 minutes to deploy
+  - You can click on the `Delivery Pipeline` as suggested.  You should see the `Build Stage` which will show `Queued` (maybe) then `Running` then `Passed now`, then the Deploy Stage showing `Running` then `Passed`
 
 # Setting up the Quando:Cloud Cloudant Database.
 
@@ -66,14 +44,38 @@ To create the database service and start it running:
 7. Change the Instance name to `Cloudant-quando`
 8. Choose `Create` (bottom right)
 
-You will need to wait for the database to be started - the Status will then show as `Active`.  Next setup the connection...
+You will need to wait for the database to be started - the Status will show as `Provisioning in progress` then `Active`.  Next setup the connection...
 
 ## Setting up a connection
 
+**N.B. The quando app must finished being installed first.**
 To create a named connection to the Cloudant database (this will be used by Quando:Cloud):
 
 1. Open the `Resource List` (from the top left menu)
-2. Click on the Service `Cloudant-quando`, i.e. the name of the Cloudant database service.
+2. Click on the Service `Cloudant-quando`, i.e. the name of the (Cloudant) database service.
 3. Choose `Connections` (on the left)
 4. Choose `Create Connection +` (on the right)
-5. 
+5. Select the previously installed App (click the empty circle on the left)
+6. Choose `Next`
+7. Choose `Create`
+8. Wait until the offer to choose `Restage app` is shown
+9. Choose `Restage`
+10. Click on the Resource list (or navigate there by the menu)
+11. You should see, in Cloud Foundry apps, that quando is Started.
+12. Click on the Name of the app.
+13. Click on `Visit App URL`
+14. Click on Inventor - you should see the Quando Editor.
+
+## Adding a user
+You will need to do the following to add a user to your database.
+
+1. From the `Resource List`, choose the Service `Cloudant-quando`
+2. Choose `Dashboard` at the top right
+3. Choose `Create Database` at top
+4. Type `user` as the database name (all lower case)
+5. Choose `non-partitioned`
+6. Choose `Create` (bottom right)
+7. At `All Documents` (top left) click the `+`, then `New Doc`
+8. Replace the text editor contents with `{ "_id": "user", "password": "pass" }` - where you can replace user with a login and pass with a (currently very insecure) password.
+9. Click `Create Document` (top left)
+10. 

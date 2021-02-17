@@ -3,6 +3,9 @@
 Currently, limited use of Quando:Cloud may be available by request from A.Stratton@sheffield.ac.uk.
 
 Quando:Cloud may be installed locally - please [see these instructions](./docs/install_local_cloud.md)
+
+Quando can also be [deployed to IBM Cloud](./docs/ibm_cloud_install.md)
+
 ## Quando:Client Prerequisites
 
 You will need to install Chrome Browser if you don't have it already.
@@ -35,9 +38,4 @@ Note: Web Apps must be enabled for using the leap Motion - in Windows, you may n
 ## Editing as a Developer
 
 You will need to install Quando:Cloud locally.
-### Installing in IBM Cloud - **WARNING - untested**
 
-Quando can be deployed to IBM Cloud - **note that this has not been tested.**
-
-[![Deploy to IBM Cloud](https://cloud.ibm.com/devops/setup/deploy/button.png)](https://cloud.ibm.com/devops/setup/deploy?repository=https%3A%2F%2Fgithub.com%2Fandrewfstratton%2Fquando.git&branch=master)
-[Deploy dev to IBM Cloud](https://cloud.ibm.com/devops/setup/deploy?repository=https%3A%2F%2Fgithub.com%2Fandrewfstratton%2Fquando.git&branch=dev)
