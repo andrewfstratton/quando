@@ -1,4 +1,4 @@
----
 applications:
 - name: quando
+  random-route: true
   memory: 128M
