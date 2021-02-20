@@ -1,0 +1,4 @@
+applications:
+- name: quando-cloud
+  random-route: true
+  memory: 128M
