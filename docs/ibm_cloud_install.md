@@ -6,7 +6,7 @@ IBM Cloud can be used to host Quando:Cloud using a Lite Account by following the
 
 # 1. Adding the Github Quando:Cloud repository
 
-Follow these instructions to deploy the latest version of Quando:Cloud.
+Follow these instructions to deploy the current version of Quando:Cloud, e.g. to try Quando.  The version you are using will not be updated.
 
 1. Login to IBM Cloud
   - N.B. You will need to already have an IBM Cloud login.
