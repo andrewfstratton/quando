@@ -97,7 +97,7 @@ _The command line window should not show any errors._
 
 You will likely see a Firewall warning.  You should select at least 'Private Networks', then allow access.
 
-To check Quando:Cloud is running, in Chrome, open [The Control Page](http://172.0.0.1) on the **same PC** you installed Quando:Cloud on.
+To check Quando:Cloud is running, in Chrome, open [The Control Page](http://127.0.0.1) on the **same PC** you installed Quando:Cloud on.
 
 You should see some QR Codes and IP addresses, and at the bottom of the page, 'New User'.  Enter a login/user id and password.  **N.B. These are not secure.**  You should see a message at the bottom saying 'Added 'your user id'.
 
