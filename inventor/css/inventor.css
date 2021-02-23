@@ -314,3 +314,7 @@ input[type=number] {
 .quando-block:hover {
   margin-left: 16px;
 }
+
+.right {
+  float: right
+}
