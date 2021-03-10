@@ -20,60 +20,32 @@ Tested with v14.15.4.
 
 _Note: Standard installation also includes **npm** (Node package manager)._
 </details>
-<details><summary>(3. npm - Node Package Manager)</summary>
-
-This is included, as standard, in the (previous) installation of NodeJS, so is unlikely to need installing separately.
-</details>
 
 ## Installing Quando:Cloud
 
-There are two main choices.  Where there is little, or no, internet access, then Option A should be chosen.  Otherwise Option B is preferable.
+There are two main choices.  Option A is preferable, but where there is little, or no, internet access, then Option B should be chosen.
 
-<details><summary>A. Offline PC Installation</summary>
-
-This option suits a single PC (Windows 10, 64 bit, has been used at present) being used for interaction, e.g. within an offline area, such as inside a museum where Wifi and Ethernet are not available.  Note that HomeHub/Powerline may be an option to allow internet access without installing ethernet and/or accessing Wifi.
-
-You need to, on an online PC (or with temporary internet access):
-
-1. Download the zipped code from the [Quando Github Page](https://github.com/andrewfstratton/quando).  Choose the 'Code' Option and select 'Download ZIP:
-
-    ![](./docs/images/code_download_zip.png)
-
-2. Unzip the contents into the directory C:\Quando.
-3. Open a command line (Windows-R, type '`cmd`' then press Return), then type in the command line:
-    ```
-    npm install
-    ```
-4. You can now
-  - move the PC offline
-  - or copy the contents of C:\Quando to a USB and then transfer to the Offline PC
-
-**Updating Quando:Cloud**
-
-You can update Quando:Cloud by repeating the above steps.
-
-</details>
-<details><summary>B. Online Installation - with updates available</summary>
+<details><summary>A. Standard (online) Installation - with updates available</summary>
 
 This option allows a PC to be used:
   - to allow access to a local Quando:Cloud for other 'Client/Display' PCs.  The Client/Display PCs must be connected to the PC running Quando:Cloud, e.g. by HomePlug, Ethernet or Wifi.
-  - by non programming skilled _Inventors_ who invent interactions that can be automatically (re)deployed to Display PCs.
-  - by programming skilled Block/framework Developers to add new devices, services, etc.  This option is detailed separately.
+  - by non programming skilled _Authors_ who create interactions that can be automatically (re)deployed to Display PCs.
+  - by programming skilled Block/framework Developers to invent new blocks and add new devices, services, etc.  This option is detailed separately.
 
 You need to:
 
 1. Install [Git for Windows](https://gitforwindows.org/) - if not already installed
 2. Open a command line (Windows-R, '`cmd`'then press Return), then type in the command line:
     ```
-    mkdir C:\Quando
-    cd C:\Quando
+    cd \
     git clone https://github.com/andrewfstratton/quando.git
+    cd quando
     npm install
+    npm run install_pouchdb
     ```
+_Note: This will leave Quando in the C:\Quando directory_
 
-**Possible issues**
-
-If you see errors about building sqlite3 (for windows), then try:
+**If you see errors about building sqlite3 (for windows), then try:**
 
 ```
 npm install -g windows-build-tools
@@ -88,11 +60,43 @@ git pull
 
 </details>
 
+<details><summary>B. Offline (no internet) PC Installation</summary>
+
+This option suits a single PC (Windows 10, 64 bit, has been used at present) being used for interaction, e.g. within an offline area, such as inside a museum where Internet access is unavailable or too slow.
+
+You need to, on an online PC (or with temporary internet access):
+
+1. Download the zipped code from the [Quando Github Page](https://github.com/andrewfstratton/quando).  Choose the 'Code' Option and select 'Download ZIP:
+
+    ![](./docs/images/code_download_zip.png)
+
+2. Unzip the contents into the directory C:\Quando.
+3. Open a command line (Windows-R, type '`cmd`' then press Return), then type in the command line:
+    ```
+    cd C:\Quando
+    npm install
+    npm run install_pouchdb
+    ```
+4. You can now
+  - move the PC offline
+  - or copy the contents of C:\Quando to a USB and then transfer to the Offline PC
+
+**Offline updating Quando:Cloud**
+
+You can update Quando:Cloud by repeating the above steps.
+
+</details>
+
 ## Running Quando:Cloud locally
 
-You can run Quando:Cloud by double clicking `quando.bat` file in the `C:\Quando` directory.
+For creating new interactions, you can run Quando:Cloud by double clicking `quando.bat` file in the `C:\Quando` directory.
 
 _The command line window should not show any errors._
+
+Developers should run the following instead:
+- In one terminal, run pouchdb with `npm run pouchdb`
+- In another terminal run quando with `npm run nodemon`
+
 <details><summary>First time only setup</summary>
 
 You will likely see a Firewall warning.  You should select at least 'Private Networks', then allow access.
