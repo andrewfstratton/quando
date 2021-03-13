@@ -23,14 +23,9 @@ _Note: Standard installation also includes **npm** (Node package manager)._
 
 ## Installing Quando:Cloud
 
-There are two main choices.  Option A is preferable, but where there is little, or no, internet access, then Option B should be chosen.
+Option A should be chosen when possible, but where there is little, or no, internet access, then Option B can be chosen.
 
 <details><summary>A. Standard (online) Installation - with updates available</summary>
-
-This option allows a PC to be used:
-  - to allow access to a local Quando:Cloud for other 'Client/Display' PCs.  The Client/Display PCs must be connected to the PC running Quando:Cloud, e.g. by HomePlug, Ethernet or Wifi.
-  - by non programming skilled _Authors_ who create interactions that can be automatically (re)deployed to Display PCs.
-  - by programming skilled Block/framework Developers to invent new blocks and add new devices, services, etc.  This option is detailed separately.
 
 You need to:
 
@@ -43,7 +38,7 @@ You need to:
     npm install
     npm run install_pouchdb
     ```
-_Note: This will leave Quando in the C:\Quando directory_
+_Note: This will leave Quando in the C:\quando directory_
 
 **If you see errors about building sqlite3 (for windows), then try:**
 
@@ -53,7 +48,7 @@ npm install -g windows-build-tools
 
 **Updating Quando**
 
-You can update quando, in a command line, using:
+You can update quando, in a command line, in C:\quando, using:
 ```
 git pull
 ```
@@ -81,69 +76,9 @@ You need to, on an online PC (or with temporary internet access):
   - move the PC offline
   - or copy the contents of C:\Quando to a USB and then transfer to the Offline PC
 
-**Offline updating Quando:Cloud**
-
 You can update Quando:Cloud by repeating the above steps.
 
 </details>
 
-## Running Quando:Cloud locally
-
-For creating new interactions, you can run Quando:Cloud by double clicking `quando.bat` file in the `C:\Quando` directory.
-
-_The command line window should not show any errors._
-
-Developers should run the following instead:
-- In one terminal, run pouchdb with `npm run pouchdb`
-- In another terminal run quando with `npm run nodemon`
-
-<details><summary>First time only setup</summary>
-
-You will likely see a Firewall warning.  You should select at least 'Private Networks', then allow access.
-
-To check Quando:Cloud is running, in Chrome, open [The Control Page](http://127.0.0.1) on the **same PC** you installed Quando:Cloud on.
-
-You should see some QR Codes and IP addresses, and at the bottom of the page, 'New User'.  Enter a login/user id and password.  **N.B. These are not secure.**  You should see a message at the bottom saying 'Added 'your user id'.
-
-_If you don't see the option, check the command line from before, and also check that you are using the PC you installed Quando on - You can only add users on the PC that Quando is installed on._
-</details>
-
-# Optional Extras
-
-You may wish to:
-
-<details><summary>
-Setup Quando:Cloud to run on Startup
-</summary>
-
-**N.B. This is intended for deployed use - not for development**
-
-1. Type Windows+R, then type in `gpedit.msc` and Enter
-2. Choose Computer Configuration->Windows Settings->Scripts->Startup
-3. Then 'Add' C:\quando\quando.bat
-</details>
-<details><summary>
-Edit as Block/API/Framework Developer
-</summary>
-
-The instructions below assume that you are using Visual Studio Code, though specifics are generally avoided.
-
-Run the editor, then:
-1. In a terminal, run pouchdb using `npm run pouchdb`
-    - _Note that the PouchDB log file is in pouchdb/log.txt_
-2. Run Quando:Cloud, in another terminal, with nodemon using `npm run nodemon`
-3. Open a Chrome browser to http://127.0.0.1
-    * Note: you can change a user's password (or delete a user) through the PouchDB Control Panel - available through the Dashboard, i.e. at http://127.0.0.1:5984/_utils.
-
-Note: The client screen can be right clicked to allow you to select already deployed/created scripts - whichever one you open will be reopened next time you open 127.0.0.1/client.  This can also be done from the kiosk boot, so that a different interaction is loaded next time the PC reboots.
-
-</details>
-<details><summary>
-Develop new Blocks
-</summary>
-
-An (in progress) guide to [Creating new Blocks](creating_new_blocks.md) is available.
-
-The (in progress) [Manifesto](manifesto.md) is likely to be useful.
-
-</details>
+# Running Quando:Cloud locally.
+To run locally, [follow these instructions](./running_local_cloud.md)
