@@ -1,4 +1,4 @@
-<div class="quando-block" data-quando-javascript="quando.eeg.onCommand('${command}', ${min}, ${max}, () => {${box}})">
+<div class="quando-block" data-quando-javascript="quando.eeg.onCommand('${command}', ${confidence}, () => {${box}})">
     <div class="quando-left quando-eeg"></div>
     <div class="quando-right">
         <div class="quando-row quando-eeg">
@@ -17,7 +17,7 @@
                 <option value='RotateBackwards'>Rotate Backwards</option>
                 <option value='RotateLeft'>Rotate Left</option>
                 <option value='RotateRight'>Rotate Right</option>
-                <option value='Dissapear'>Dissapear</option>
+                <option value='Disappear'>Disappear</option>
             </select>
             <select data-quando-name='extras' class='quando-toggle'>
                 <option value='hidden'>+</option>
@@ -25,10 +25,9 @@
             </select>
             <span data-quando-toggle='extras=show'>
                 <br />
-                with intensity between
-                <input data-quando-name="min" type="text" value="0.5" data-quando-encode="normal" />
-                and
-                <input data-quando-name="max" type="text" value="1" data-quando-encode="normal" />
+                with Confidence ≥
+                <input data-quando-name='confidence' type='number' value='50' placeholder='' style='width: 4em' min='0'
+                    max='100' data-quando-encode='normal' /> %
             </span>
         </div>
         <div data-quando-name="box" class="quando-box"></div>

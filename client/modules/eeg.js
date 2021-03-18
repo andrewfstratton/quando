@@ -46,7 +46,9 @@ const quando = window['quando']
     });
   }
 
-  self.onCommand = (command, min, max, callback) => {
+  self.onCommand = (command, confidence, callback) => {
+    let min = confidence/100
+    let max = 1
     _requestData("com").then(() => {
       quando.add_scaled_handler('eegCom' + command, callback, _minMaxScaler(min, max));
     });
