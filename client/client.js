@@ -508,20 +508,42 @@ let websockets = []
     _displays.get(id)()
   }
 
-  self.addLabel = function (id, title) {
-    self.addLabelStatement(title, () => { setTimeout( () => { quando.showDisplay(id) }, 0) })
+  self.addLabel = function (id, padding_size, padding_location, title) {
+    self.addLabelStatement(title, padding_size, padding_location, () => { setTimeout( () => { quando.showDisplay(id) }, 0) })
   }
 
-  self.addLabelStatement = function (title, fn) {
+  function _add_padding_elements(parent, padding_size) {
+    switch (padding_size) {
+      case 'none':
+        break;
+      case 'large':
+        parent.appendChild(document.createElement('br'))
+        // Deliberate drop through to append more line breaks
+      case 'medium':
+        parent.appendChild(document.createElement('br'))
+        // Deliberate drop through
+      case 'small':
+        parent.appendChild(document.createElement('br'))
+    }
+  }
+
+  self.addLabelStatement = function (title, padding_size, padding_location, fn) {
     let elem = document.getElementById('quando_labels')
-    let div = document.getElementById('label'+title)
-    if (div == null) {
+    if (padding_location.match(/^(before|both)$/)) {
+      _add_padding_elements(elem, padding_size)
+    }
+    let div = document.createElement('br') // new element
+    // Show space when no title
+    if (title != "") { // empty title shows empty space
       div = document.createElement('div')
       div.className = 'quando_label'
       div.innerHTML = title
       div.setAttribute('id', 'label'+title)
-      elem.appendChild(div)
       div.onclick = fn
+    }
+    elem.appendChild(div)
+    if (padding_location.match(/^(after|both)$/)) {
+      _add_padding_elements(elem, padding_size)
     }
   }
 
