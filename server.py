@@ -1,7 +1,7 @@
 # Installed: pip install flask pynput pySerial
 
 from flask import Flask, request
-from server.control.mouse import handle as mouse_handle
+from server.control import mouse, keyboard
 import json
 
 app = Flask(__name__)
@@ -14,8 +14,14 @@ def index():
 def mouse():
     str = request.data.decode('utf8')
     data = json.loads(str)
-    # print(data)
-    mouse_handle(data)
+    mouse.handle(data)
+    return ""
+
+@app.route('/control/type', methods=['POST'])
+def type():
+    str = request.data.decode('utf8')
+    data = json.loads(str)
+    keyboard.type(data)
     return ""
 
 if __name__ == '__main__':
