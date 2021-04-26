@@ -16,10 +16,6 @@ if (!quando) {
     })
   }
 
-  self.run = (exec) => {
-    _send('run', exec)
-  }
-
   self.type = (str) => {
     _send('type', text.decode(str))
   }
