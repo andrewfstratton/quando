@@ -1,5 +1,4 @@
 from pynput.mouse import Button, Controller
-
 import tkinter
 
 root = tkinter.Tk()
@@ -10,7 +9,6 @@ last_x, last_y = mouse.position
 
 def move_to(x_val, y_val):
     global last_x, last_y
-    print(last_x, last_y)
     if x_val >= 0:
         x = int(screen_width * x_val)
     else:
@@ -24,13 +22,41 @@ def move_to(x_val, y_val):
     mouse.position = (x,y)
     (last_x, last_y) = (x,y)
 
-# move_to(0.5, -1)
+def press(button):
+    # TODO Check mask for already pressed
+    mouse.press(button)
+
+def release(button):
+    # TODO Check mask for already released
+    mouse.release(button)
+
+def _get_float_or_default(dict, key, default):
+    result = default
+    if key in dict:
+        result = float(dict[key])
+    return result
+
+def _get_val_or_default(dict, key, default):
+    result = default
+    if key in dict:
+        result = dict[key]
+    return result
+
+def _act_on_button(data, key, button):
+    inp = _get_val_or_default(data, key, 0)
+    if inp > 0:
+        press(button)
+    elif inp < 0:
+        release(button)
 
 def handle(data):
-    x = -1
-    if 'x' in data:
-        x = float(data['x'])
-    y = -1
-    if 'y' in data:
-        y = float(data['y'])
-    move_to(x,y)
+    # Check movement
+    x = _get_float_or_default(data, 'x', -1)
+    y = _get_float_or_default(data, 'y', -1)
+    if x >= 0 or y >= 0:
+        move_to(x,y)
+
+    # Check buttons
+    _act_on_button(data, 'left', Button.left)
+    _act_on_button(data, 'right', Button.right)
+    _act_on_button(data, 'middle', Button.middle)

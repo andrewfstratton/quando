@@ -14,7 +14,7 @@ def index():
 def mouse():
     str = request.data.decode('utf8')
     data = json.loads(str)
-    print(data)
+    # print(data)
     mouse_handle(data)
     return ""
 
