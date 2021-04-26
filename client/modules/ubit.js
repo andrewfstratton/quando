@@ -13,7 +13,7 @@ if (!quando) {
     self.socket = new WebSocket(SOCKET_URI);
 
     self.socket.onopen = () => {
-      console.log("Quando:Hub web socket open..");
+      // console.log("Quando:Hub web socket open..");
       self.socket.onmessage = handle_message;
     }
     self.socket.onerror = () => {

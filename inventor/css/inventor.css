@@ -167,7 +167,6 @@ input[type="color"] {
 
 /* Colours for block backgrounds and title */
 
-.quando-inventor { background: #880000; }
 .quando-display { background: #EEBB70; }
 .quando-media { background: #C5E1A5; }
 .quando-time { background: #ddd47c; }
@@ -189,13 +188,14 @@ input[type="color"] {
 .quando-inventor-collection { background: hsl(274, 50%, 90%); }
 .quando-inventor-picker { background: hsl(80, 50%, 90%); }
 .quando-eeg { color: white; background: #f75a00; }
+.quando-inventor { background: #3c0272; }
 
 .quando-right>.quando-row.quando-inventor-control:first-child,
 .quando-right>.quando-row.quando-inventor-input:first-child,
 .quando-right>.quando-row.quando-inventor-display:first-child,
 .quando-right>.quando-row.quando-inventor-collection:first-child,
 .quando-right>.quando-row.quando-inventor-picker:first-child {
-  border-left: 6px solid #880000;
+  border-left: 6px solid #3c0272;
 }
 
 .quando-eeg input, .quando-eeg select {

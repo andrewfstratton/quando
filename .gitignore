@@ -51,3 +51,6 @@ package-lock.json
 client/media/visrec.png
 client/media/stt/*
 cloud/rest/client/media/visrec.png
+
+#Python build
+__pycache__
