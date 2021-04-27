@@ -1,14 +1,22 @@
-# Installed: pip install flask pynput pySerial
+# Installed: pip install flask pynput pySerial flask-socketio
 
 from flask import Flask, request
+from flask_socketio import SocketIO
 from server.control import mouse, keyboard
+from server.handle import ubit
 import json
+import logging
 
 app = Flask(__name__)
+# app.config['SECRET_KEY'] = 'quando_secret'
+socketio = SocketIO(app, cors_allowed_origins="*")
+
+log = logging.getLogger('werkzeug')
+log.setLevel(logging.ERROR)
 
 @app.route('/')
 def index():
-    return 'Quando Python (local) running...'
+    return 'Quando Python (local) server running...'
 
 @app.route('/control/mouse', methods=['POST'])
 def mouse():
@@ -25,4 +33,5 @@ def type():
     return ""
 
 if __name__ == '__main__':
-    app.run()
+    ubit.run(socketio)
+    socketio.run(app)

@@ -6,24 +6,12 @@ if (!quando) {
   let self = quando.ubit = {}
   let last_gesture = ''
   self.last_servo = []
-  const SOCKET_URI = "ws://127.0.0.1:8080/ws/";
-  const RETRY_SOCKET = 3 * 1000; // 3 Seconds
+  const SOCKET_IO_URI = "ws://127.0.0.1:5000";
 
   function connect() {
-    self.socket = new WebSocket(SOCKET_URI);
+    self.socket = io(SOCKET_IO_URI)
 
-    self.socket.onopen = () => {
-      // console.log("Quando:Hub web socket open..");
-      self.socket.onmessage = handle_message;
-    }
-    self.socket.onerror = () => {
-      self.socket.close();
-    }
-    self.socket.onclose = () => {
-      setTimeout(() => {
-        connect();
-      }, RETRY_SOCKET);
-    }
+    self.socket.on("ubit", handle_message)
   }
 
   connect();
@@ -84,8 +72,8 @@ if (!quando) {
     _handleAngle('ubitHeading', callback, mid, range, inverted)
   }
 
-  function handle_message(ev) {
-    let data = JSON.parse(ev.data);
+  function handle_message(data) {
+    // console.log(data)
     if (data.ir) {
       quando.idle_reset()
     } else if (data.orientation) {

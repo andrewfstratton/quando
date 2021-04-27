@@ -30,20 +30,8 @@ def release(button):
     # TODO Check mask for already released
     mouse.release(button)
 
-def _get_float_or_default(dict, key, default):
-    result = default
-    if key in dict:
-        result = float(dict[key])
-    return result
-
-def _get_val_or_default(dict, key, default):
-    result = default
-    if key in dict:
-        result = dict[key]
-    return result
-
 def _act_on_button(data, key, button):
-    inp = _get_val_or_default(data, key, 0)
+    inp = data.get(key, 0)
     if inp > 0:
         press(button)
     elif inp < 0:
@@ -51,8 +39,8 @@ def _act_on_button(data, key, button):
 
 def handle(data):
     # Check movement
-    x = _get_float_or_default(data, 'x', -1)
-    y = _get_float_or_default(data, 'y', -1)
+    x = float(data.get('x', -1))
+    y = float(data.get('y', -1))
     if x >= 0 or y >= 0:
         move_to(x,y)
 
