@@ -78,7 +78,7 @@ if (!quando) {
     if (data.ir) {
       quando.idle_reset()
     } else if (data.orientation) {
-      if (orientation != self.last_orientation) { // i.e. ignore 'keep alive'
+      if (data.orientation != self.last_orientation) { // i.e. ignore 'keep alive'
         quando.idle_reset()
       }
       switch (data.orientation) {
