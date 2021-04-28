@@ -14,22 +14,22 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 log = logging.getLogger('werkzeug')
 log.setLevel(logging.ERROR)
 
+def _decode_json_data(req):
+    str = req.data.decode('utf8')
+    return json.loads(str)
+
 @app.route('/')
 def index():
     return 'Quando Python (local) server running...'
 
 @app.route('/control/mouse', methods=['POST'])
 def mouse():
-    str = request.data.decode('utf8')
-    data = json.loads(str)
-    mouse.handle(data)
+    mouse.handle(_decode_json_data(request))
     return ""
 
 @app.route('/control/type', methods=['POST'])
 def type():
-    str = request.data.decode('utf8')
-    data = json.loads(str)
-    keyboard.type(data)
+    keyboard.type(_decode_json_data(request))
     return ""
 
 if __name__ == '__main__':
