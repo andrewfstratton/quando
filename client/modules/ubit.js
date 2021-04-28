@@ -6,7 +6,8 @@ if (!quando) {
   let self = quando.ubit = {}
   let last_gesture = ''
   self.last_servo = []
-  const SOCKET_IO_URI = "ws://127.0.0.1:5000";
+  const SOCKET_IO_URI = "ws://127.0.0.1:5000"
+  self.last_orientation = ""
 
   function connect() {
     self.socket = io(SOCKET_IO_URI)
@@ -77,7 +78,9 @@ if (!quando) {
     if (data.ir) {
       quando.idle_reset()
     } else if (data.orientation) {
-      quando.idle_reset() // this is only received when the orientation changes
+      if (orientation != self.last_orientation) { // i.e. ignore 'keep alive'
+        quando.idle_reset()
+      }
       switch (data.orientation) {
         case 'forward':
           dispatch_gesture('ubitForward')
