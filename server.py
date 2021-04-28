@@ -2,8 +2,8 @@
 
 from flask import Flask, request
 from flask_socketio import SocketIO
-from server.control import mouse, keyboard
-from server.handle import ubit
+from server.devices.control import mouse, keyboard
+from server.devices.handle import ubit
 import json
 import logging
 
