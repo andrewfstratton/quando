@@ -5,27 +5,48 @@ from threading import Thread
 
 VID = 0x0D28
 PID = 0x0204
-PER_SECOND = 60
-SNOOZE = 1.0/PER_SECOND
+SNOOZE = 0.02
 
-ubit_serial = False
+_serial = False
 io = False
 
+def _close():
+    global _serial
+    if _serial:
+        try:
+            _serial.close()
+            print("ubit disconnected...")
+        except:
+            pass
+    _serial = False
+
 def get_ubit():
-    global ubit_serial
-    result = False
-    if not ubit_serial:
+    global _serial
+    if not _serial:
         ports = serial.tools.list_ports.comports()
         for port in ports:
             if (port.vid == VID) and (port.pid == PID):
+                time.sleep(0.05) # wait for ubit to be ready
                 try:
-                    ubit_serial = serial.Serial(port.device, 115200, timeout=1)
-                    print("ubit Connected on", ubit_serial.name)
+                    _serial = serial.Serial(port.device, 115200, timeout=0.05)
+                    print("ubit Connected on", _serial.name)
                     break
-                except serial.SerialException:
-                    # print("Dropped!", end="")
-                    ubit_serial = False
-    return ubit_serial
+                except serial.SerialException as ex:
+                    print("ubit connection failed...")
+                    # print(ex)
+                    _close()
+    return _serial
+
+def get_ubit_line():
+    result = ""
+    try:
+        if get_ubit():
+            result = get_ubit().readline()
+    except serial.SerialException as ex:
+        print("ubit read exception")
+        print(ex)
+        _close()
+    return result
 
 
 def handle_message(json_in):
@@ -50,37 +71,38 @@ def handle_message(json_in):
             orientation = data.get("Or", False)
             if orientation:
                 result['orientation'] = orientation
-            # In case there is no valid data
+            pin0 = data.get("P0", False)
+            pin1 = data.get("P1", False)
+            pin2 = data.get("P2", False)
+            if pin0:
+                result['pin_0'] = True
+            if pin1:
+                result['pin_1'] = True
+            if pin2:
+                result['pin_2'] = True
+            # In case there is corrupt data
     except json.JSONDecodeError:
+        print("ubit ignoring" + json_in)
         # Ignore random micro:bit corrupted data
         result = False
     return result
 
 def check_message():
-    global ubit_serial, io
+    global io
     while True:
-        sleep = True
-        try:
-            if not ubit_serial:
-                get_ubit()
-            if ubit_serial:
-                line = ubit_serial.readline()
-                # print(line)
-                sleep = False
-                msg = str(line,"utf-8")
-                if msg != "":
-                    _out = handle_message(msg)
-                    if _out:
-                        # print(line.rstrip(), ">>", _out)
-                        io.emit("ubit", _out)
-        except serial.SerialException:
-            print("!")
-            ubit_serial = False
-        if sleep:
+        line = get_ubit_line()
+        # print(line)
+        if line:
+            msg = str(line,"utf-8")
+            if msg != "":
+                _out = handle_message(msg)
+                if _out:
+                    # print(line.rstrip(), ">>", _out)
+                    io.emit("ubit", _out)
+        else:
             time.sleep(SNOOZE)
 
 def run(socket_io):
     global io
     io = socket_io
-    print("start::ubit")
     Thread(target=check_message).start()

@@ -56,6 +56,18 @@ if (!quando) {
     quando.add_handler('ubitB', callback)
   }
 
+  self.ubitP0 = function (callback) {
+    quando.add_handler('ubitP0', callback)
+  }
+
+  self.ubitP1 = function (callback) {
+    quando.add_handler('ubitP1', callback)
+  }
+
+  self.ubitP2 = function (callback) {
+    quando.add_handler('ubitP2', callback)
+  }
+
   function _handleAngle (event, callback, mid, range, inverted) {
     var scale = quando.new_angle_scaler(mid, range, inverted)
     quando.add_scaled_handler(event, callback, scale)
@@ -75,9 +87,10 @@ if (!quando) {
 
   function handle_message(data) {
     // console.log(data)
-    if (data.ir) {
-      quando.idle_reset()
-    } else if (data.orientation) {
+    // if (data.ir) {
+    //   quando.idle_reset()
+    // }
+    if (data.orientation) {
       if (data.orientation != self.last_orientation) { // i.e. ignore 'keep alive'
         quando.idle_reset()
       }
@@ -103,7 +116,8 @@ if (!quando) {
         default:
           last_gesture = '' // this is the micro bit started
       }
-    } else if (data.button_a) {
+    }
+    if (data.button_a) {
       quando.idle_reset()
       quando.dispatch_event('ubitA')
     } else if (data.button_b) {
@@ -113,17 +127,31 @@ if (!quando) {
       quando.idle_reset()
       quando.dispatch_event('ubitA')
       quando.dispatch_event('ubitB')
-    } else if (data.heading) {
+    }
+    if (data.pin_0) {
+      quando.idle_reset()
+      quando.dispatch_event('ubitP0')
+    }
+    if (data.pin_1) {
+      quando.idle_reset()
+      quando.dispatch_event('ubitP1')
+    }
+    if (data.pin_2) {
+      quando.idle_reset()
+      quando.dispatch_event('ubitP2')
+    }
+    if (data.heading) {
       quando.idle_reset()
       quando.dispatch_event('ubitHeading', {'detail': data.heading})
-    } else if (data.roll || data.pitch) {
-      if (data.roll) {
-        quando.dispatch_event('ubitRoll', {'detail': data.roll})
-      }
-      if (data.pitch) {
-        quando.dispatch_event('ubitPitch', {'detail': data.pitch})
-      }
       quando.idle_reset()
+    }
+    if (data.roll) {
+      quando.idle_reset()
+      quando.dispatch_event('ubitRoll', {'detail': data.roll})
+    }
+    if (data.pitch) {
+      quando.idle_reset()
+      quando.dispatch_event('ubitPitch', {'detail': data.pitch})
     }
   }
 
