@@ -4,8 +4,7 @@ from flask import Flask, request
 from flask_socketio import SocketIO
 from server.devices.control import mouse, keyboard
 from server.devices.handle import ubit
-import json
-import logging
+import json, logging
 
 app = Flask(__name__)
 # app.config['SECRET_KEY'] = 'quando_secret'
@@ -21,6 +20,10 @@ def _decode_json_data(req):
 @app.route('/')
 def index():
     return 'Quando Python (local) server running...'
+
+# REST modules
+
+import server.rest.ip
 
 @app.route('/control/mouse', methods=['POST'])
 def mouse():
