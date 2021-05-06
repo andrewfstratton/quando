@@ -41,9 +41,6 @@ def gesture():
                     _p[pin] = True
             elif _p[pin]:
                 _p[pin] = False
-        if pin0.is_touched():
-            # uart.init(115200)
-            machine.reset()
         if gest == last_gesture:
             ticks += 1
             if ticks == 50:
