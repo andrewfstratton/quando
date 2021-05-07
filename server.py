@@ -35,10 +35,11 @@ def index():
 
 # REST modules
 
+import server.rest.common
 import server.rest.ip
 import server.rest.client
 import server.rest.inventor
-import server.rest.common
+import server.rest.blocks
 
 @app.route('/control/mouse', methods=['POST'])
 def mouse():

@@ -59,9 +59,9 @@ def js_file(file_name):
 def js_index_html():
     directory = os_join(app.root_path, 'client', 'deployed_js')
     files = []
-    for file in os.listdir(directory):
-        if file.endswith(".js"):
-            files.append(file)
+    for file_ in os.listdir(directory):
+        if file_.endswith(".js"):
+            files.append(file_)
     data = {"ip": socket.gethostbyname(socket.gethostname()),
         "files":files, "success":True}
     return jsonify(data)
