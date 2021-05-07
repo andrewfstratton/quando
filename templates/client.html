@@ -1,8 +1,7 @@
-<!-- #FIX N.B. This file is legacy for NodeJS and is to be deleted -->
 <html id="html">
 
 <head> 
-    <title>[[TITLE]]</title>
+    <title>{{ title }}</title>
     <meta charset="UTF-8">
     <link href="/client/client.css" rel="stylesheet" type="text/css" />
     <!-- <script defer src="/socket.io/socket.io.js"></script> -->
@@ -61,8 +60,8 @@
         <div id='quando_text'></div>
         <div id="cursor"></div>
     </div>
-    <!-- DO NOT DELETE THE data-deploy in the next tag - Quando relies on it... -->
-    <script id="quando_script" data-deploy=""></script>
+    <!-- DO NOT DELETE THE NEXT LINE - Quando relies on it... -->
+    <script id="quando_script" src="{{ file_js }}"></script>
 </body>
 
 </html>

@@ -8,7 +8,15 @@ let self = window.quando = {}
 let idle_reset_ms = 0
 let idle_callback_id = 0
 let _displays = new Map()
-let socket = io.connect(window.location.protocol + '//' + window.location.hostname)
+if (['wss:','https:'].includes(window.location.protocol)) {
+  alert("Attempt to access secure socket, currently not developed")
+}
+let port = ":" + window.location.port
+if (port == ":80") {
+  port = ''
+}
+let socket = io.connect('ws://' + window.location.hostname + port)
+
 let websockets = []
   
   function _displayWidth() {
