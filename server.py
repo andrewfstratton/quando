@@ -37,6 +37,7 @@ def index():
 
 import server.rest.ip
 import server.rest.client
+import server.rest.inventor
 import server.rest.common
 
 @app.route('/control/mouse', methods=['POST'])
