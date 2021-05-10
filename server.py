@@ -5,12 +5,13 @@ from flask_socketio import SocketIO
 from server.devices.control import mouse, keyboard
 from server.devices.handle import ubit
 import json, logging
+import server.controlpanel
+import  multiprocessing
 
 app = Flask(__name__)
 # app.config['SECRET_KEY'] = 'quando_secret'
-socketio = SocketIO(app, cors_allowed_origins="*")
+socketio = SocketIO(app, cors_allowed_origins="*", use_reloader=False)
 
-# this didn't work - app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0 # globally disable caching - FIX
 @app.after_request
 def add_header(response):
     # Appears necessary for Chrome
@@ -19,7 +20,6 @@ def add_header(response):
     response.headers["Expires"] = "0"
     response.headers["Expires"] = "0"
     response.headers['Access-Control-Allow-Origin'] = '*'
-    # response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
     return response
 
 log = logging.getLogger('werkzeug')
@@ -35,11 +35,12 @@ def index():
 
 # REST modules
 
-import server.rest.common
-import server.rest.ip
-import server.rest.client
-import server.rest.inventor
-import server.rest.blocks
+if __name__ == '__main__':
+    import server.rest.common
+    import server.rest.ip
+    import server.rest.client
+    import server.rest.inventor
+    import server.rest.blocks
 
 @app.route('/control/mouse', methods=['POST'])
 def mouse():
@@ -53,4 +54,5 @@ def type():
 
 if __name__ == '__main__':
     ubit.run(socketio)
+    multiprocessing.Process(target=server.controlpanel.run).start()
     socketio.run(app)
