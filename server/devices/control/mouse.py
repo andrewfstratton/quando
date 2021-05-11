@@ -1,11 +1,15 @@
-from pynput.mouse import Button, Controller
-import tkinter
+from __main__ import app
 
-root = tkinter.Tk()
+from flask import request
+import server.common
+
+from pynput.mouse import Button, Controller
+
+root = server.common.getTkRoot()
 screen_width = root.winfo_screenwidth()
 screen_height = root.winfo_screenheight()
-mouse = Controller()
-last_x, last_y = mouse.position
+_mouse = Controller()
+last_x, last_y = _mouse.position
 
 def move_to(x_val, y_val):
     global last_x, last_y
@@ -19,16 +23,16 @@ def move_to(x_val, y_val):
         y = int(screen_height * y_val)
     else:
         y = last_y
-    mouse.position = (x,y)
+    _mouse.position = (x,y)
     (last_x, last_y) = (x,y)
 
 def press(button):
     # TODO Check mask for already pressed
-    mouse.press(button)
+    _mouse.press(button)
 
 def release(button):
     # TODO Check mask for already released
-    mouse.release(button)
+    _mouse.release(button)
 
 def _act_on_button(data, key, button):
     inp = data.get(key, 0)
@@ -48,3 +52,10 @@ def handle(data):
     _act_on_button(data, 'left', Button.left)
     _act_on_button(data, 'right', Button.right)
     _act_on_button(data, 'middle', Button.middle)
+
+    return ""
+
+@app.route('/control/mouse', methods=['POST'])
+def mouse():
+    data = server.common.decode_json_data(request)
+    return handle(data)

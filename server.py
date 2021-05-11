@@ -2,9 +2,8 @@
 
 from flask import Flask, request
 from flask_socketio import SocketIO
-from server.devices.control import mouse, keyboard
 from server.devices.handle import ubit
-import json, logging
+import logging
 import server.controlpanel
 import  multiprocessing
 
@@ -25,34 +24,23 @@ def add_header(response):
 log = logging.getLogger('werkzeug')
 log.setLevel(logging.ERROR)
 
-def _decode_json_data(req):
-    str = req.data.decode('utf8')
-    return json.loads(str)
-
 @app.route('/')
 def index():
     return 'Quando Python (local) server running...'
 
-# REST modules
-
 if __name__ == '__main__':
+
+    # REST modules
     import server.rest.common
     import server.rest.ip
     import server.rest.client
     import server.rest.inventor
     import server.rest.blocks
+    import server.rest.login
+    import server.devices.control.keyboard
+    import server.devices.control.mouse
 
-@app.route('/control/mouse', methods=['POST'])
-def mouse():
-    mouse.handle(_decode_json_data(request))
-    return ""
-
-@app.route('/control/type', methods=['POST'])
-def type():
-    keyboard.type(_decode_json_data(request))
-    return ""
-
-if __name__ == '__main__':
+    # Multi threading
     ubit.run(socketio)
     multiprocessing.Process(target=server.controlpanel.run).start()
     socketio.run(app)
