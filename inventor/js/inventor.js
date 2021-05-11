@@ -687,22 +687,22 @@ export function setup() {
   })
   $('#loading_modal_message').html('Checking for user session...')
   $('#loading_modal').modal('show')
-  $.ajax({
-    url: '/login',
-    success: (res) => {
-      if (res.success) {
-        _success('Logged in')
-        _userid = res.userid
-        _show_user_status()
-      } else {
-        _warning(res.message)
-      }
-      $('#loading_modal').modal('hide')
-    },
-    error: () => {
-      _error('Failed to find Quando:Cloud')
-      $('#loading_modal').modal('hide')
+  fetch('/login', { // method: 'GET', 
+    mode: "no-cors",
+    headers: ({"Content-Type": "text/plain"})
+  }).then((response) => response.json()
+  ).then((res) => {
+    if (res.success) {
+      _success('Logged in')
+      _userid = res.userid
+      _show_user_status()
+    } else {
+      _warning(res.message)
     }
+    $('#loading_modal').modal('hide')
+  }).catch((err) => {
+    _error('Failed to find Quando:Local')
+    $('#loading_modal').modal('hide')
   })
   _setupDragula()
   $.ajax({
@@ -759,7 +759,7 @@ export function setup() {
       local_load(AUTOSAVE) // load last edit from localStorage
     },
     error: () => {
-      _error('Failed to find Quando:Cloud blocks')
+      _error('Failed to find Quando:Local blocks')
       $('#loading_modal').modal('hide')
     }
   })
@@ -948,24 +948,22 @@ export function handle_login() {
     let password = $('#password').val()
     let message_elem = $('#login_modal_footer_message')
     message_elem.html('Checking... ')
-    $.ajax({
-      url: '/login',
-      type: 'POST',
-      data: { 'userid': userid, 'password': password },
-      success: (res, status, xhr) => {
-        if (res.success) {
-          message_elem.html('')
-          _success('Logged in')
-          $('#login_modal').modal('hide')
-          _userid = userid
-          _show_user_status()
-        } else {
-          message_elem.html('Failed: ' + res.message)
-        }
-      },
-      error: () => {
-        message_elem.html('Failed to find Quando:Cloud ')
+    fetch('/login', { method: 'POST', mode: "no-cors",
+      body: JSON.stringify({ 'userid': userid, 'password': password }), 
+      headers: ({"Content-Type": "text/plain"})
+    }).then((res) => res.json()).then((res) => {
+      if (res.success) {
+        message_elem.html('')
+        _success('Logged in')
+        $('#login_modal').modal('hide')
+        _userid = userid
+        _show_user_status()
+      } else {
+        message_elem.html('Failed: ' + res.message)
       }
+      $('#loading_modal').modal('hide')
+    }).catch((err) => {
+      message_elem.html('Failed to find Quando:Local ')
     })
 }
 

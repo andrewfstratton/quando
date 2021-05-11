@@ -5,10 +5,12 @@ from flask_socketio import SocketIO
 from server.devices.handle import ubit
 import logging
 import server.controlpanel
-import  multiprocessing
+import multiprocessing
+from server.db.common import set_path_for_db 
 
 app = Flask(__name__)
-# app.config['SECRET_KEY'] = 'quando_secret'
+set_path_for_db(app.root_path)
+app.config['SECRET_KEY'] = 'quando_secret'
 socketio = SocketIO(app, cors_allowed_origins="*", use_reloader=False)
 
 @app.after_request
