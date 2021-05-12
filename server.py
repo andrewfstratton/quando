@@ -26,13 +26,10 @@ def add_header(response):
 log = logging.getLogger('werkzeug')
 log.setLevel(logging.ERROR)
 
-@app.route('/')
-def index():
-    return 'Quando Python (local) server running...'
-
 if __name__ == '__main__':
 
     # REST modules
+    import server.rest.dashboard
     import server.rest.common
     import server.rest.ip
     import server.rest.client
@@ -45,4 +42,4 @@ if __name__ == '__main__':
     # Multi threading
     ubit.run(socketio)
     multiprocessing.Process(target=server.controlpanel.run).start()
-    socketio.run(app)
+    socketio.run(app, host='0.0.0.0') # port=80
