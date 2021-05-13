@@ -6,10 +6,10 @@ from server.devices.handle import ubit
 import logging
 import server.controlpanel
 import multiprocessing
-from server.db.common import set_path_for_db 
+from server.db import db 
 
 app = Flask(__name__)
-set_path_for_db(app.root_path)
+db.set_path_for_db(app.root_path)
 app.config['SECRET_KEY'] = 'quando_secret'
 socketio = SocketIO(app, cors_allowed_origins="*", use_reloader=False)
 
@@ -36,10 +36,11 @@ if __name__ == '__main__':
     import server.rest.inventor
     import server.rest.blocks
     import server.rest.login
+    import server.rest.user
     import server.devices.control.keyboard
     import server.devices.control.mouse
 
     # Multi threading
     ubit.run(socketio)
     multiprocessing.Process(target=server.controlpanel.run).start()
-    socketio.run(app, host='0.0.0.0') # port=80
+    socketio.run(app, host='0.0.0.0') # port=5000

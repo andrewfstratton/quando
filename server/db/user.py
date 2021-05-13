@@ -1,13 +1,12 @@
-from __main__ import app
-
 import sqlite3
-from server.db.common import query
+from server.db import db
+COLLECTION = 'user'
 
 if __name__ == '__main__':
     conn = sqlite3.connect('quando.db')
     create_table = """
       CREATE TABLE IF NOT EXISTS user (
-          userid TEXT PRIMARY KEY,
+          userid TEXT PRIMARY KEY NOT NULL,
           password TEXT NOT NULL
       )
     """
@@ -20,6 +19,9 @@ if __name__ == '__main__':
     conn.close()
 
 def get_on_id_password(id, password):
-  get_user = "SELECT * from user WHERE userid=? AND password=?"
-  result = query(get_user, (id, password))
+  result = db.find(COLLECTION, 'userid=? AND password=?', (id, password))
   return len(result) == 1
+
+def create(id, password):
+  result = db.save(COLLECTION, "(userid, password) VALUES (?,?);", (id, password))
+  return result

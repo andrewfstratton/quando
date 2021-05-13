@@ -7,11 +7,11 @@ function set(id, val) {
 function add_user() {
   let userid = document.getElementById('userid')
   let password = document.getElementById('password')
-  $.ajax({
-    url: '/user',
-    type: 'POST',
-    data: { 'userid': userid.value, 'password': password.value },
-    success: (res) => {
+  fetch('/user',
+    { method: 'POST', mode: "no-cors",
+        body: JSON.stringify({ userid: userid.value, password: password.value}),
+        headers: ({"Content-Type": "text/plain"})
+    }).then((res) => res.json()).then((res) => {
       if (res.success) {
         set('add_user_message', "Added user '"+userid.value+"'...")
         password.value = ''
@@ -19,11 +19,9 @@ function add_user() {
       } else {
         set('add_user_message', "Failed to add: " + res.message)
       }
-    },
-    error: () => {
+    }).catch((err) => {
       set('add_user_message', "Failed to find Quando:Cloud")
-    }
-  })
+    })
 }
 
 function onload() {
