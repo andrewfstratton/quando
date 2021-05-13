@@ -968,21 +968,9 @@ export function handle_login() {
 }
 
 export function testCreator(code) {
-  let filename = '-'
-  client_script = code
-  $.ajax({
-    url: '/script/deploy/' + encodeURI(filename),
-    type: 'PUT',
-    data: { javascript: code },
-    success: () => {
-      _success('Opening Test...')
-      let deploy_window = window.open('/client/client.htm', 'quando_deployed_test', 'left=0,top=0,width=9999,height=9999');
-      deploy_window.focus() // moveTo(0,0);
-    },
-    error: () => {
-      alert('Failed to find Quando:Cloud')
-    }
-  })
+  client_script = code  // allows opened window to get generated code
+  let deploy_window = window.open('/client/client.htm', 'quando_deployed_test', 'left=0,top=0,width=9999,height=9999');
+  deploy_window.focus() // moveTo(0,0);
 }
 
 export function handle_test() {
