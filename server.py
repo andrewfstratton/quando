@@ -37,6 +37,7 @@ if __name__ == '__main__':
     import server.rest.blocks
     import server.rest.login
     import server.rest.user
+    import server.rest.script
     import server.devices.control.keyboard
     import server.devices.control.mouse
 

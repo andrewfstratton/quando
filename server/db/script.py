@@ -1,0 +1,42 @@
+import sqlite3, datetime
+from server.db import db
+COLLECTION = 'script'
+
+if __name__ == '__main__':
+    conn = sqlite3.connect('quando.db')
+    create_table = """
+      CREATE TABLE IF NOT EXISTS script (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          userid TEXT NOT NULL,
+          name TEXT NOT NULL,
+          date TEXT NOT NULL,
+          script TEXT NOT NULL
+      )
+    """
+    print("Attempt to create table: " + COLLECTION)
+    conn.execute(create_table)
+    conn.commit()
+    conn.close()
+
+def get_on_userid(userid):
+    rows = db.find(COLLECTION, 'userid=?', (userid,))
+    result = []
+    for row in rows:
+        result.append({'id':row[0], 'userid':row[1], 'name':row[2], 'date':row[3], 'script':row[4]})
+    return result
+
+def create(name, userid, script):
+    date = str(datetime.datetime.now())
+    result = db.save(COLLECTION, "(name, userid, date, script) VALUES (?,?,?,?);",
+        (name, userid, date, script))
+    return result
+
+def get_on_id(id):
+    result = None
+    rows = db.find(COLLECTION, 'id=?', (id,))
+    if len(rows) == 1:
+      row = rows[0]
+      name = row[2]
+      script = row[4]
+      result = (name, script)
+    return result
