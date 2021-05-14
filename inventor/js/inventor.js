@@ -2,6 +2,7 @@
 import * as generator from "./generator.js"
 import * as json from "./json.js"
 import * as undo from "./undo.js"
+import * as common from "./common.js"
 let _undo = undo.undo
 let _redo = undo.redo
 export { _undo as undo, _redo as redo } // this allows html/bootstrap button binding to index.undo/redo
@@ -687,33 +688,23 @@ export function setup() {
   })
   $('#loading_modal_message').html('Checking for user session...')
   $('#loading_modal').modal('show')
-  fetch('/login', { // method: 'GET', 
-    mode: "no-cors",
-    headers: ({"Content-Type": "text/plain"})
-  }).then((response) => response.json()
-  ).then((res) => {
-    if (res.success) {
+  common.get('/login',
+    (success) => {
       _success('Logged in')
-      _userid = res.userid
+      _userid = success.userid
       _show_user_status()
-    } else {
-      _warning(res.message)
-    }
-    $('#loading_modal').modal('hide')
-  }).catch((err) => {
-    _error('Failed to find Quando:Local')
-    $('#loading_modal').modal('hide')
-  })
+    }, (fail) => {
+      _warning(fail.message)
+    })
+  $('#loading_modal').modal('hide')
   _setupDragula()
-  $.ajax({
-    url: '/blocks',
-    success: (res) => {
-      if (res.success) {
+  common.get('/blocks',
+    (success) => {
         _success('Blocks loaded')
         let menu_title = document.getElementById('_menu_title')
         let parent = menu_title.parentNode
         let title = ''
-        for (let block of res.blocks) {
+        for (let block of success.blocks) {
           let elem = null
           if (block.title) {
             elem = menu_title.cloneNode(false)
@@ -740,33 +731,27 @@ export function setup() {
             console.log(block)
           }
         }
-      } else {
-        _warning(res.message)
-      }
-      $('#loading_modal').modal('hide')
-      for (let elem of document.getElementsByClassName("quando-title")) {
-        elem.addEventListener('click', handleLeftClick)
-      }
-      // Set elements in the menu
-      let selector = "#menu .quando-block"
-      for (let item of document.querySelectorAll(selector)) {
-        setElementHandlers(item)
-      }
-      let first_title = document.getElementsByClassName("quando-title")[0]
-      if (first_title) {
-        _leftClickTitle(first_title)
-      }
-      local_load(AUTOSAVE) // load last edit from localStorage
-    },
-    error: () => {
-      _error('Failed to find Quando:Local blocks')
-      $('#loading_modal').modal('hide')
-    }
-  })
-  $('.dropdown-menu select').on('click', function(event) {
-    event.stopPropagation();
-  });
-}
+        for (let elem of document.getElementsByClassName("quando-title")) {
+          elem.addEventListener('click', handleLeftClick)
+        }
+        // Set elements in the menu
+        let selector = "#menu .quando-block"
+        for (let item of document.querySelectorAll(selector)) {
+          setElementHandlers(item)
+        }
+        let first_title = document.getElementsByClassName("quando-title")[0]
+        if (first_title) {
+          _leftClickTitle(first_title)
+        }
+        local_load(AUTOSAVE) // load last edit from localStorage
+      }, (fail) => {
+        _warning(fail.message)
+      })
+    $('#loading_modal').modal('hide')
+    $('.dropdown-menu select').on('click', function(event) {
+      event.stopPropagation();
+    });
+  } // setup
 
 function _show_user_status () {
     if (_userid) {
@@ -797,25 +782,19 @@ function _warning (message) {
 }
 
   function _remote_load_list () {
-    $.ajax({
-      url: '/script/names/' + _userid,
-      success: (res) => {
-        if (res.success) {
-          let list = res.list
-          _remote_list = list
-          if (list.length === 0) {
-            $('#remote_load_list').html('No saves available')
-          } else {
-            _update_remote_list()
-          }
+    common.get('/script/names/' + _userid,
+      (success) => {
+        let list = success.list
+        _remote_list = list
+        if (list.length === 0) {
+          $('#remote_load_list').html('No saves available')
         } else {
-         _error(res.message)
+          _update_remote_list()
         }
-      },
-      error: () => {
-        alert('Failed to find Quando:Cloud')
-      }
-    })
+      }, (fail) => {
+        _error(fail.message)
+      })
+    $('#loading_modal').modal('hide')
   }
 
   function _local_load_list () {
@@ -1078,21 +1057,14 @@ export function local_load(key) {
   }
   
 export function remote_load(index) {
-    $.ajax({
-      url: '/script/id/' + _remote_list[index].id,
-      success: (res) => {
-        if (res.success) {
-          let script = JSON.parse(res.doc.script)
-          script.filename = res.doc.name
-          loaded(script, '#remote_load_modal')
-        } else {
-          alert('Failed to find script')
-        }
-      },
-      error: () => {
-        alert('Failed to access Quando:Cloud')
-      }
-    })
+  common.get('/script/id/' + _remote_list[index].id,
+    (success) => {
+      let script = JSON.parse(success.script)
+      script.filename = success.name
+      loaded(script, '#remote_load_modal')
+    }, (fail) => {
+        alert('Failed to find script')
+  })
   }
 
 export function local_delete(key) {
