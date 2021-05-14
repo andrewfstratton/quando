@@ -927,23 +927,15 @@ export function handle_login() {
     let password = $('#password').val()
     let message_elem = $('#login_modal_footer_message')
     message_elem.html('Checking... ')
-    fetch('/login', { method: 'POST', mode: "no-cors",
-      body: JSON.stringify({ 'userid': userid, 'password': password }), 
-      headers: ({"Content-Type": "text/plain"})
-    }).then((res) => res.json()).then((res) => {
-      if (res.success) {
+    common.post('/login', (success) => {
         message_elem.html('')
         _success('Logged in')
         $('#login_modal').modal('hide')
         _userid = userid
         _show_user_status()
-      } else {
-        message_elem.html('Failed: ' + res.message)
-      }
-      $('#loading_modal').modal('hide')
-    }).catch((err) => {
-      message_elem.html('Failed to find Quando:Local ')
-    })
+    }, (fail) => {
+        message_elem.html('Failed: ' + fail.message)
+    }, {'userid': userid, 'password': password})
 }
 
 export function testCreator(code) {
@@ -1008,22 +1000,14 @@ export function handle_remote_save() {
       _warning("No name given, so not saved")
     } else {
       let obj = JSON.stringify({ deploy: _deploy, script: getScriptAsObject()})
-      $.ajax({
-        url: '/script',
-        type: 'POST',
-        data: { userid: _userid, name: name, script: obj },
-        success: (res) => {
-          if (res.success) {
-            $('#remote_save_modal').modal('hide')
-            _saved(decodeURI(name))
-          } else {
-            alert('Failed to save')
-          }
-        },
-        error: () => {
-          alert('Failed to find Quando:Cloud')
-        }
-      })
+      common.post('/script',
+      (success) => {
+          $('#remote_save_modal').modal('hide')
+          _saved(decodeURI(name))
+      }, (fail) => {
+          alert('Failed to save')
+      }, { userid: _userid, name: name, script: obj })
+      $('#loading_modal').modal('hide')
     }
   }
 

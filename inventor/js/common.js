@@ -22,3 +22,7 @@ function _fetch(method, url, success, fail = false, send_data = false) {
 export function get(url, success, fail, send_data = false) {
     _fetch("GET", url, success, fail, send_data)
 }
+
+export function post(url, success, fail, send_data = false) {
+    _fetch("POST", url, success, fail, send_data)
+}
