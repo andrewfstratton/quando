@@ -24,7 +24,8 @@ def login_post():
 
 @app.route('/login', methods=['DELETE'])
 def login_delete():
-    data = {"success":True, 'message': 'Logged Out'}
+    data = {"success":False, 'message': 'Not Logged in...'}
     if session.get('userid'):
         session.pop('userid')
+        data = {"success":True, 'message': 'Logged Out'}
     return jsonify(data)

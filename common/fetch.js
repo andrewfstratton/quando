@@ -1,7 +1,10 @@
 function _fetch(method, url, success, fail = false, send_data = false) {
     let params = { method: method, 
-        mode: "no-cors",
         headers: ({"Content-Type": "text/plain"})
+    }
+    if (!['DELETE'].includes(method)) {
+        // Can't DELETE in no-cors mode
+        params['mode'] = "no-cors"
     }
     if (send_data) {
         params['body'] = JSON.stringify(send_data)
@@ -19,10 +22,14 @@ function _fetch(method, url, success, fail = false, send_data = false) {
     })
 }
 
-export function get(url, success, fail, send_data = false) {
+export function Get(url, success, fail, send_data = false) {
     _fetch("GET", url, success, fail, send_data)
 }
 
-export function post(url, success, fail, send_data = false) {
+export function Post(url, success, fail, send_data = false) {
     _fetch("POST", url, success, fail, send_data)
+}
+
+export function Delete(url, success, fail, send_data = false) {
+    _fetch("DELETE", url, success, fail, send_data)
 }

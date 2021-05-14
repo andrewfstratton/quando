@@ -688,7 +688,7 @@ export function setup() {
   })
   $('#loading_modal_message').html('Checking for user session...')
   $('#loading_modal').modal('show')
-  common.get('/login',
+  common.Get('/login',
     (success) => {
       _success('Logged in')
       _userid = success.userid
@@ -698,7 +698,7 @@ export function setup() {
     })
   $('#loading_modal').modal('hide')
   _setupDragula()
-  common.get('/blocks',
+  common.Get('/blocks',
     (success) => {
         _success('Blocks loaded')
         let menu_title = document.getElementById('_menu_title')
@@ -782,7 +782,7 @@ function _warning (message) {
 }
 
   function _remote_load_list () {
-    common.get('/script/names/' + _userid,
+    common.Get('/script/names/' + _userid,
       (success) => {
         let list = success.list
         _remote_list = list
@@ -927,7 +927,7 @@ export function handle_login() {
     let password = $('#password').val()
     let message_elem = $('#login_modal_footer_message')
     message_elem.html('Checking... ')
-    common.post('/login', (success) => {
+    common.Post('/login', (success) => {
         message_elem.html('')
         _success('Logged in')
         $('#login_modal').modal('hide')
@@ -1000,7 +1000,7 @@ export function handle_remote_save() {
       _warning("No name given, so not saved")
     } else {
       let obj = JSON.stringify({ deploy: _deploy, script: getScriptAsObject()})
-      common.post('/script',
+      common.Post('/script',
       (success) => {
           $('#remote_save_modal').modal('hide')
           _saved(decodeURI(name))
@@ -1041,7 +1041,7 @@ export function local_load(key) {
   }
   
 export function remote_load(index) {
-  common.get('/script/id/' + _remote_list[index].id,
+  common.Get('/script/id/' + _remote_list[index].id,
     (success) => {
       let script = JSON.parse(success.script)
       script.filename = success.name
@@ -1364,17 +1364,10 @@ export function handle_upload() {
   }
 
 export function handle_logout() {
-    $.ajax({
-      url: '/login',
-      type: 'DELETE',
-      success: (res, status, xhr) => {
-        _info('Logged out')
-        _userid = null
-        _show_user_status()
-      },
-      error: () => {
-        $('#loading_modal_message').html('Failed to find Quando:Cloud')
-      }
+  common.Delete('/login', (success) => {
+      _info('Logged out')
+      _userid = null
+      _show_user_status()
     })
   }
 
