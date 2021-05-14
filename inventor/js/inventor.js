@@ -2,7 +2,7 @@
 import * as generator from "./generator.js"
 import * as json from "./json.js"
 import * as undo from "./undo.js"
-import * as common from "./common.js"
+import * as common from "../../common/fetch.js"
 let _undo = undo.undo
 let _redo = undo.redo
 export { _undo as undo, _redo as redo } // this allows html/bootstrap button binding to index.undo/redo

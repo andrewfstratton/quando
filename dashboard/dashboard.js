@@ -17,7 +17,7 @@ function add_user() {
         password.value = ''
         userid.value = ''
       } else {
-        set('add_user_message', "Failed to add: " + res.message)
+        alert("User not created : " + res.message)
       }
     }).catch((err) => {
       set('add_user_message', "Failed to find Quando:Cloud")
@@ -26,9 +26,7 @@ function add_user() {
 
 function onload() {
   document.getElementById('add_user_button').onclick = add_user
-  $.ajax({
-    url: '/ip',
-    success: (res) => {
+  fetch('/ip').then((res) => res.json()).then((res) => {
       if (res.success) {
         ip = res.ip
         set('ip', ip)
@@ -61,10 +59,9 @@ function onload() {
       } else {
         alert(res.message)
       }
-    },
-    error: () => {
+    }).catch((err) => {
+      console.log(err)
       alert('Failed to find Quando:Cloud')
-    }
-  })
+    })
 }
  
