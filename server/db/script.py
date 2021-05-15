@@ -1,5 +1,6 @@
 import sqlite3, datetime
 from server.db import db
+from urllib.parse import unquote
 COLLECTION = 'script'
 
 if __name__ == '__main__':
@@ -19,14 +20,14 @@ if __name__ == '__main__':
     conn.close()
 
 def get_on_userid(userid):
-    rows = db.find(COLLECTION, 'userid=?', (userid,))
+    rows = db.find(COLLECTION, 'userid=? ORDER BY date DESC', (userid,))
     result = []
     for row in rows:
-        result.append({'id':row[0], 'userid':row[1], 'name':row[2], 'date':row[3], 'script':row[4]})
+        result.append({'id':row[0], 'userid':row[1], 'name':unquote(row[2]), 'date':row[3], 'script':row[4]})
     return result
 
 def create(name, userid, script):
-    date = str(datetime.datetime.now())
+    date = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
     result = db.save(COLLECTION, "(name, userid, date, script) VALUES (?,?,?,?);",
         (name, userid, date, script))
     return result
@@ -36,7 +37,7 @@ def get_on_id(id):
     rows = db.find(COLLECTION, 'id=?', (id,))
     if len(rows) == 1:
       row = rows[0]
-      name = row[2]
+      name = unquote(row[2])
       script = row[4]
       result = (name, script)
     return result
