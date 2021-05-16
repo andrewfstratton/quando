@@ -38,6 +38,7 @@ if __name__ == '__main__':
     import server.rest.login
     import server.rest.user
     import server.rest.script
+    import server.rest.file
     import server.devices.control.keyboard
     import server.devices.control.mouse
 
