@@ -13,6 +13,7 @@ def _get_conn():
 
 def find(table, where, tuple):
     conn = _get_conn()
+    conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
     qry = "SELECT * from " + table + " WHERE " + where
     cursor.execute(qry, tuple)

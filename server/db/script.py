@@ -23,7 +23,8 @@ def get_on_userid(userid):
     rows = db.find(COLLECTION, 'userid=? ORDER BY date DESC', (userid,))
     result = []
     for row in rows:
-        result.append({'id':row[0], 'userid':row[1], 'name':unquote(row[2]), 'date':row[3], 'script':row[4]})
+        result.append({'id':row['id'], 'userid':row['userid'],
+            'name':unquote(row['name']), 'date':row['date'], 'script':row['script']})
     return result
 
 def create(name, userid, script):
@@ -37,7 +38,7 @@ def get_on_id(id):
     rows = db.find(COLLECTION, 'id=?', (id,))
     if len(rows) == 1:
       row = rows[0]
-      name = unquote(row[2])
-      script = row[4]
+      name = unquote(row['name'])
+      script = row['script']
       result = (name, script)
     return result
