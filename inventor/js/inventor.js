@@ -1261,7 +1261,7 @@ export function handleFile(event) {
     file_modal.modal('show')
     $('#file_list').html('Loading...')
     $.ajax({
-      url: '/file/type' + path + '/' + media,
+      url: '/file/type/' + media + path, // path starts with /
       success: (res) => {
         if (res.success) {
           $('#file_modal_path').html(path)
