@@ -1,5 +1,7 @@
 from __main__ import app
 
+import os
+from os.path import join as os_join
 from flask import jsonify, request, session
 import server.common
 from server.db import script
@@ -43,4 +45,17 @@ def script_tidy_on_id(name, id):
 def script_delete_on_name(name):
     script.delete_on_name(name)
     data = {"success":True}
+    return jsonify(data)
+
+@app.route('/script/deploy/<filename>', methods=["PUT"])
+def script_deploy(filename):
+    data = server.common.decode_json_data(request)
+    code = data['javascript']
+    file_loc = os_join(app.root_path, 'client', 'deployed_js', filename + '.js')
+    try:
+        with open(file_loc, "w") as file_out:
+            file_out.write(code)
+        data = {"success":True}
+    except Exception as ex:
+        data = {"success":False, "message":str(ex)}
     return jsonify(data)

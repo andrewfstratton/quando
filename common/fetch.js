@@ -2,8 +2,8 @@ function _fetch(method, url, success, fail = false, send_data = false) {
     let params = { method: method, 
         headers: ({"Content-Type": "text/plain"})
     }
-    if (!['DELETE'].includes(method)) {
-        // Can't DELETE in no-cors mode
+    if (!['DELETE', 'PUT'].includes(method)) {
+        // Can't DELETE/PUT in no-cors mode
         params['mode'] = "no-cors"
     }
     if (send_data) {
@@ -32,4 +32,8 @@ export function Post(url, success, fail, send_data = false) {
 
 export function Delete(url, success, fail, send_data = false) {
     _fetch("DELETE", url, success, fail, send_data)
+}
+
+export function Put(url, success, fail, send_data = false) {
+    _fetch("PUT", url, success, fail, send_data)
 }

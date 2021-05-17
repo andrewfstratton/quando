@@ -1353,18 +1353,16 @@ export function handle_deploy() {
         if (filename == '') {
           alert('Filename cannot be blank')
         } else {
-          $.ajax({
-            url: '/script/deploy/' + encodeURI(filename),
-            type: 'PUT',
-            data: { javascript: code },
-            success: () => {
+          common.Put('/script/deploy/' + encodeURI(filename),
+            (success) => {
               _deploy = filename
               _success("Deployed as '" + filename + ".js'")
             },
-            error: () => {
-              alert('Failed to find Quando:Cloud')
-            }
-          })
+            (fail) => {
+              _error("Failed to deploy..." + fail.message)
+            },
+            { javascript: code }
+          )
         }
       }
     } else {
