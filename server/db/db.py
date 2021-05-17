@@ -30,3 +30,11 @@ def save(table, suffix, tuple):
     conn.commit()
     conn.close()
     return result
+
+def delete(table, suffix, tuple):
+    conn = _get_conn()
+    cursor = conn.cursor()
+    qry = "DELETE FROM " + table + " WHERE " + suffix
+    cursor.execute(qry, tuple)
+    conn.commit()
+    conn.close()

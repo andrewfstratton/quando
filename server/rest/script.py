@@ -26,3 +26,9 @@ def script_get_on_id(id):
     else:
         data = {"success":False, "message": "Script not found"}
     return jsonify(data)
+
+@app.route('/script/id/<id>', methods=["DELETE"])
+def script_delete_on_id(id):
+    script.delete_on_id(id)
+    data = {"success":True}
+    return jsonify(data)

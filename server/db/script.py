@@ -42,3 +42,6 @@ def get_on_id(id):
       script = row['script']
       result = (name, script)
     return result
+
+def delete_on_id(id):
+    db.delete(COLLECTION, "id = ?", (id,))

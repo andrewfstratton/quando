@@ -1061,21 +1061,11 @@ export function local_delete(key) {
 export function remote_delete(index) {
     if (confirm("Delete forever '" + _remote_list[index].name + "' saved " +
             _remote_list[index].date + ' ?')) {
-      $.ajax({
-        url: '/script/id/' + _remote_list[index].id,
-        type: 'DELETE',
-        success: (res) => {
-          if (!res.success) {
-            _error(res.message) // possible to fail if no longer logged in...
-          } else {
-            _success('Deleted...')
-          }
-          _remote_load_list()
-        },
-        error: () => {
-          alert('Failed to find Quando:Cloud')
-        }
-      })
+        common.Delete('/script/id/' + _remote_list[index].id,
+            (success) => {
+              _success('Deleted...')
+              _remote_load_list()
+            })
     }
   }
 
