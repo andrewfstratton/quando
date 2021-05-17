@@ -48,3 +48,6 @@ def delete_on_id(id):
 
 def tidy_on_id(name, id):
     db.delete(COLLECTION, "name = ? AND id != ?", (name, id))
+
+def delete_on_name(name):
+    db.delete(COLLECTION, "name = ?", (name,))

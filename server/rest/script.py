@@ -38,3 +38,9 @@ def script_tidy_on_id(name, id):
     script.tidy_on_id(name, id)
     data = {"success":True}
     return jsonify(data)
+
+@app.route('/script/name/<name>', methods=["DELETE"])
+def script_delete_on_name(name):
+    script.delete_on_name(name)
+    data = {"success":True}
+    return jsonify(data)
