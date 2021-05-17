@@ -1072,21 +1072,11 @@ export function remote_delete(index) {
 export function remote_tidy(index) {
     let id = _remote_list[index].id
     let name = _remote_list[index].name
-    $.ajax({
-      url: '/script/tidy/' + encodeURI(name) + '/id/' + id,
-      type: 'DELETE',
-      success: (res) => {
-        if (res.success) {
-          _success('Tidied...')
-        } else {
-          _error(res.message)
-        }
+    common.Delete('/script/tidy/' + encodeURI(name) + '/id/' + id,
+      (success) => {
+        _success('Tidied...')
         _remote_load_list()
-      },
-      error: () => {
-        alert('Failed to find Quando:Cloud')
-      }
-    })
+      })
   }
 
 export function remote_delete_all(index) {
