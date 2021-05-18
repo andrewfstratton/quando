@@ -2,37 +2,43 @@ from __main__ import app
 
 import os
 from os.path import join as os_join
-from flask import jsonify
+from flask import jsonify, request
 
 MEDIA_MAP = {
-#   /TODO - refactor to videos & images
     'video': ['ogg', 'ogv', 'mp4', 'webm'],
     'audio': ['mp3', 'wav'],
     'images': ['bmp', 'jpg', 'jpeg', 'png', 'gif'],
     'objects': ['gltf', 'glb']
-#    'objects': ['obj', 'mtl'],
+#    'objects': ['obj', 'mtl'] // Used to be available - complex for end users
 }
+#  UPLOAD to contain all the other files types
+MEDIA_MAP['UPLOAD'] = sum(MEDIA_MAP.values(), [])
 
-# from flask import jsonify, request, session
-# import server.common
-
-@app.route('/file/upload', methods=['POST'])
-def file_upload():
-    return
-    # data = server.common.decode_json_data(request)
-    # script.create(data['name'], data['userid'], data['script'])
-    # data = {"success":True}
-    # return jsonify(data)
-
-@app.route('/file/type/<path:path>')
-def file_type_images(path):
+def _split_on_first_slash(path):
     slash = path.find('/')
     if slash == -1:
         slash = len(path)
-        folder = ''
+        suffix = ''
     else:
-        folder = path[slash+1:]
-    media = path[:slash]
+        suffix = path[slash+1:]
+    prefix = path[:slash]
+    return (prefix, suffix)
+
+@app.route('/file/upload', methods=['POST'])
+def file_upload():
+    return file_upload_path("")
+
+@app.route('/file/upload/<path:path>', methods=['POST'])
+def file_upload_path(path):
+    _file = request.files['file']
+    print("#"+_file.filename)
+    _file.save(os_join(app.root_path, 'client', 'media', path, _file.filename))
+    data = {"success":True}
+    return jsonify(data)
+
+@app.route('/file/type/<path:path>')
+def file_type_images(path):
+    media, folder = _split_on_first_slash(path)
     suffixes = MEDIA_MAP[media]
     folderpath = os_join(app.root_path, 'client', 'media', folder)
     filtered = []

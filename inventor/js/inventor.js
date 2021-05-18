@@ -1294,42 +1294,22 @@ export function handle_upload_media() {
     }
   }
 
-  function _upload_next_file(files, remote_path) {
-    let file = files.shift()
-    let file_in = file.name
-    let filename = encodeURI(file_in.substring(1 + file_in.lastIndexOf('\\')))
-    let form_data = new FormData()
-    form_data.append('upload_data', file)
-    $.ajax({
-      url: '/file/upload' + remote_path + '/' + filename,
-      type: 'POST',
-      data: form_data,
-      processData: false,
-      contentType: false,
-      success: (res) => {
-        if (res.success) {
-          _success('Uploaded...' + decodeURI(`${remote_path}/${filename}`))
-          if (files.length > 0) {
-            _upload_next_file(files, remote_path)
-          } else {
+export function handle_upload() {
+    let file = document.getElementById("upload_media").files[0]
+    let form = document.getElementById("upload_media_form")
+    if (file) {
+      let remote_path = encodeURI($('#file_modal_path').html())
+      let form_data = new FormData(form)
+      console.log(file.name)
+      // form_data.append('file', file)
+      common.Post_file(`/file/upload${remote_path}`,
+        (success) => {
+            _success(`Uploaded to ${remote_path}`)
             $('#file_modal').modal('hide')
             $('#upload_media').val(null) // clear once finished - forces a change event next time
-          }
-        } else {
-          alert('Failed to save')
-        }
-      },
-      error: () => {
-        alert('Failed to find Quando:Cloud')
-      }
-    })
-  }
-
-export function handle_upload() {
-    let files = Array.from($('#upload_media')[0].files)
-    let remote_path = encodeURI($('#file_modal_path').html())
-    if (files.length > 0) {
-      _upload_next_file(files, remote_path)
+        }, (fail) => {
+            _error('Failed to save')
+        }, form_data, true)
     }
   }
 
