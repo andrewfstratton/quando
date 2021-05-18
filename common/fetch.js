@@ -1,13 +1,19 @@
-function _fetch(method, url, success, fail = false, send_data = false) {
-    let params = { method: method, 
-        headers: ({"Content-Type": "text/plain"})
+function _fetch(method, url, success, fail = false, send_data = false, file_upload = false) {
+    let params = { method: method }
+    if (!file_upload) {
+        // only set content type when not a file upload...
+        params['headers'] = {"Content-Type": "text/plain"}
     }
     if (!['DELETE', 'PUT'].includes(method)) {
         // Can't DELETE/PUT in no-cors mode
         params['mode'] = "no-cors"
     }
     if (send_data) {
-        params['body'] = JSON.stringify(send_data)
+        if (file_upload) {
+            params['body'] = send_data
+        } else {
+            params['body'] = JSON.stringify(send_data)
+        }
     }
     fetch(url, params).then((response) => response.json()
     ).then((res) => {
@@ -28,6 +34,10 @@ export function Get(url, success, fail, send_data = false) {
 
 export function Post(url, success, fail, send_data = false) {
     _fetch("POST", url, success, fail, send_data)
+}
+
+export function Post_file(url, success, fail, send_data) {
+    _fetch("POST", url, success, fail, send_data, true)
 }
 
 export function Delete(url, success, fail, send_data = false) {

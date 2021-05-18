@@ -59,8 +59,10 @@
                             <span class="glyphicon glyphicon-remove-sign"></span> Clear
                         </button>
                     </div>
-                    <input id="upload_media" class="hidden" type="file" multiple="multiple"
-                        onchange="index.handle_upload_media();"/>
+                    <form id="upload_media_form" class="hidden" name="form">
+                        <input id="upload_media" type="file" name="file"
+                            onchange="index.handle_upload_media();"/>
+                    </form>
                     <div class="btn-group" role="group">
                         <label for="upload_media" type="button" class="btn btn-primary">
                             <span class="glyphicon glyphicon-cloud-upload"></span> Upload Media
