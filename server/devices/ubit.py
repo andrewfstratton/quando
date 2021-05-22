@@ -106,3 +106,11 @@ def run(socket_io):
     global io
     io = socket_io
     Thread(target=check_message).start()
+
+# Control below:
+
+def send_message(message):
+    ubit = get_ubit()
+    if ubit:
+        ubit.write((message+"\n").encode('utf-8'))
+        ubit.flush()

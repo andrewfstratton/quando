@@ -2,7 +2,7 @@
 
 from flask import Flask, request
 from flask_socketio import SocketIO
-from server.devices.handle import ubit
+from server.devices import ubit
 import logging
 import server.controlpanel
 import multiprocessing
@@ -40,6 +40,7 @@ if __name__ == '__main__':
     import server.rest.script
     import server.rest.file
     import server.rest.message
+    import server.rest.ubit
     import server.devices.control.keyboard
     import server.devices.control.mouse
 

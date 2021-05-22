@@ -156,7 +156,7 @@ if (!quando) {
   }
 
   function _ubit_send(key, val) {
-    fetch('http://localhost:8080/ubit/' + key, { method: 'POST', 
+    fetch('/ubit/' + key, { method: 'POST', 
       mode: "no-cors",
       body: JSON.stringify({'val':val}), 
       headers: {"Content-Type": "application/json"}
