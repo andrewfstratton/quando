@@ -1218,7 +1218,7 @@ export function handleFile(event) {
   }
 
   function _handle_file(media, block_id, elem_name, path = '') {
-        // when media is 'UPLOAD', then we are uploading, note then that block_id and elem_name are null
+    // when media is 'UPLOAD', then we are uploading, note then that block_id and elem_name are null
     let file_modal = $('#file_modal')
     if (media == 'UPLOAD') {
       $('.file_modal_upload').show()
@@ -1230,10 +1230,8 @@ export function handleFile(event) {
     $('#file_modal_path').html('Loading...')
     file_modal.modal('show')
     $('#file_list').html('Loading...')
-    $.ajax({
-      url: '/file/type/' + media + path, // path starts with /
-      success: (res) => {
-        if (res.success) {
+    common.Get('/file/type/' + media + path, // path starts with /
+      (success) => {
           $('#file_modal_path').html(path)
           $('#file_list').html('')
           if (path != '') {
@@ -1245,27 +1243,21 @@ export function handleFile(event) {
             $('#file_list').append(_folder_list_add('..', media, parent_path,
                             block_id, elem_name))
           }
-          for (let i in res.folders) {
-            $('#file_list').append(_folder_list_add(res.folders[i], media, path + '/' + res.folders[i],
+          for (let i in success.folders) {
+            $('#file_list').append(_folder_list_add(success.folders[i], media, path + '/' + success.folders[i],
                             block_id, elem_name))
           }
           if (path != '') {
             path = path.substring(1) + '/' // strip off the initial slash and put in front of the file
           }
-          for (let i in res.files) {
-            $('#file_list').append(_file_list_add(res.files[i], path,
+          for (let i in success.files) {
+            $('#file_list').append(_file_list_add(success.files[i], path,
                             'handle_file_selected', block_id, elem_name))
           }
-        } else {
-          alert('Failed to find Quando:Cloud files')
-          $('#file_modal').modal('hide')
-        }
-      },
-      error: () => {
-        alert('Failed to access Quando:Cloud')
+      }, (fail) => {
+        alert('Failed to find files')
         $('#file_modal').modal('hide')
-      }
-    })
+      })
   }
 
 export function handle_folder_selected(media, block_id, elem_name, path) {
