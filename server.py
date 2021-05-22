@@ -39,8 +39,12 @@ if __name__ == '__main__':
     import server.rest.user
     import server.rest.script
     import server.rest.file
+    import server.rest.message
     import server.devices.control.keyboard
     import server.devices.control.mouse
+
+    # Setup
+    server.rest.message.set_io(socketio)
 
     # Multi threading
     ubit.run(socketio)

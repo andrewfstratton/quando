@@ -7,26 +7,20 @@
 
   self.http = (path, txt_val, host='', port=undefined, txt=true, callback) => {
     if (host =='') { host = '127.0.0.1' }
-    if (port != undefined) {
+    if (port) {
       host += ':' + port
     }
     txt_val = (txt?'txt':'val') + '=' + encodeURI(txt_val)
+    // Can't use common._Get since that is for inventor and module...
     fetch(`http://${host}/${path}?${txt_val}`, { method: 'GET'
-      // body: JSON.stringify({ 
-      //   'val':txt_val
-      // }),
-      // headers: {"Content-Type": "application/json"}
-    }).then((resp) => {
-        if (resp.status != 200) {
-          console.log("Response error status = "+resp.status)
-        } else {
+    }).then((resp) => resp.json()
+    ).then((resp) => {
           resp.json().then((data) => {
             let val = data.val
             if (txt) { val = data.txt }
             callback(val)
           })
         }
-      }
     )
   }
 
