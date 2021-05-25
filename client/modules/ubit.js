@@ -81,9 +81,9 @@ if (!quando) {
     _handleAngle('ubitPitch', callback, mid, range, inverted)
   }
 
-  self.handleHeading = function (mid, range, inverted, callback) {
-    _handleAngle('ubitHeading', callback, mid, range, inverted)
-  }
+  // self.handleHeading = function (mid, range, inverted, callback) {
+  //   _handleAngle('ubitHeading', callback, mid, range, inverted)
+  // }
 
   function handle_message(data) {
     // console.log(data)
@@ -140,11 +140,11 @@ if (!quando) {
       quando.idle_reset()
       quando.dispatch_event('ubitP2')
     }
-    if (data.heading) {
-      quando.idle_reset()
-      quando.dispatch_event('ubitHeading', {'detail': data.heading})
-      quando.idle_reset()
-    }
+    // if (data.heading) {
+    //   quando.idle_reset()
+    //   quando.dispatch_event('ubitHeading', {'detail': data.heading})
+    //   quando.idle_reset()
+    // }
     if (data.roll) {
       quando.idle_reset()
       quando.dispatch_event('ubitRoll', {'detail': data.roll})

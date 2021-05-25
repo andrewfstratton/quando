@@ -1,6 +1,6 @@
 # Access to micro:bit, currently for Windows
 import serial.tools.list_ports
-import serial, time, json
+import serial, time, json, math
 from threading import Thread
 
 VID = 0x0D28
@@ -71,6 +71,12 @@ def handle_message(json_in):
             orientation = data.get("Or", False)
             if orientation:
                 result['orientation'] = orientation
+            roll = data.get("Ro", False)
+            if roll:
+                result['roll'] = math.degrees(roll)
+            pitch = data.get("Pi", False)
+            if pitch:
+                result['pitch'] = math.degrees(pitch)
             pin0 = data.get("P0", False)
             pin1 = data.get("P1", False)
             pin2 = data.get("P2", False)
