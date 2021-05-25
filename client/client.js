@@ -17,8 +17,6 @@ if (port == ":80") {
 }
 let socket = io.connect('ws://' + window.location.hostname + port)
 
-let websockets = []
-  
   function _displayWidth() {
     return window.innerWidth
   }
@@ -44,72 +42,12 @@ let websockets = []
   }
 
   self.send_message = function(message, val, host='', type='broadcast') {
-    if (['broadcast', 'local'].includes(type)) {
-      fetch('/message/' + message, { method: 'POST',
-        body: JSON.stringify({ 
-          'val':val, 'host':host, 'local':type == 'local', 'socketId':socket.id 
-        }),
-        headers: {"Content-Type": "application/json"}
-      })
-    } else if (host) {
-      let socket = self.create_websocket(host, message)
-
-      if (socket) {
-        self.send_websocket_message(socket, val)
-        socket.onmessage = (evt) => {
-          self.send_message(message, evt.data, '', 'local')
-        }
-      }
-    } else {
-      console.error("Failed to create Node-RED socket on ", host)
-    }
-  }
-
-  self.create_websocket = (host, message) => {
-    let socket = self.get_websocket(message)
-   
-    if (!socket) {
-      let protocol = 'ws'
-      if (location.protocol == 'https:') {
-        protocol += 's'
-      }
-      if (!host.includes('://')) { // This is only to allow URL creation below..
-        host = 'http://' + host
-      }
-      protocol += '://'
-      try {
-        let url = new URL(host)
-        let port = ""
-        if (url.port) {
-          port = ":" + url.port
-        }
-        url = `${protocol}${url.hostname}${port}${url.pathname}${message}`
-
-        socket = new WebSocket(url)
-        socket.message = message
-
-        socket.onerror = err => console.error("Websocket connection error: ", err)
-  
-        websockets.push(socket)
-      } catch (e) { console.error(e) }
-    }
-    return socket
-  }
-
-  self.get_websocket = (message) => {
-    let socket = websockets.find((web_socket) => {return (web_socket.message == message)})
-    
-    if (socket && (socket.readyState == WebSocket.CLOSED)) {
-      websockets.splice(websockets.indexOf(socket), 1)
-      socket = null
-    }
-    return socket
-  }
-
-  self.send_websocket_message = function (socket, val) {
-    if (socket.readyState == WebSocket.OPEN) {
-      socket.send(val)
-    }  // else don't send - to avoid buffering everything
+    fetch('/message/' + message, { method: 'POST',
+      body: JSON.stringify({ 
+        'val':val, 'host':host, 'local':type == 'local', 'socketId':socket.id 
+      }),
+      headers: {"Content-Type": "application/json"}
+    })
   }
 
   self.idle_reset = function () {

@@ -8,7 +8,7 @@
             <select data-quando-name="type">
                 <option value="broadcast">broadcast</option>
                 <option value="local">local</option>
-                <option value="node">node🛑</option>
+                <!-- <option value="node">node🛑</option> -->
             </select>
             message
             <input data-quando-name="message" type="text" value="" data-quando-encode="normal" />
@@ -22,8 +22,10 @@
                     <option value='val'>⚡</option>
                     <option value='txt'>❓</option>
                 </select>
-                Host
-                <input data-quando-name="host" type="text" value="" data-quando-encode="normal" />
+                <div class ="hidden">
+                    Host
+                    <input data-quando-name="host" type="text" value="" data-quando-encode="normal" />
+                </div>
             </span>
         </div>
     </div>
