@@ -29,7 +29,6 @@ def get_files(blocks, folder):
     try:
         for file_ in os.listdir(os_join(app.root_path, 'blocks', folder)):
             block = {}
-            failed = False
             if file_.endswith(('.htm','.html')):
                 block['title'] = False
                 type = file_.split('_',1)[1]  # remove before _
