@@ -6,7 +6,7 @@ if (!quando) {
   let self = quando.ubit = {}
   let last_gesture = ''
   self.last_servo = []
-  const SOCKET_IO_URI = "ws://127.0.0.1:5000"
+  const SOCKET_IO_URI = "ws://127.0.0.1"
   self.last_orientation = ""
 
   function connect() {

@@ -3,7 +3,7 @@ from __main__ import app
 from os.path import join as os_join
 from flask import send_file, send_from_directory
 
-@app.route('/inventor')
+@app.route('/inventor/')
 def inventor():
     return send_file(os_join(app.root_path, 'inventor', 'index.html'))
 

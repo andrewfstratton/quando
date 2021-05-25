@@ -4,10 +4,9 @@ import server.common
 
 TAB = 2
 WINDOW = 1
-PORT = "5000"
 
 def _open(path):
-    url = "http://127.0.0.1:" + PORT + "/" + path
+    url = "http://127.0.0.1/" + path
     webbrowser.open(url, new=TAB, autoraise=True)
 
 def open_inventor():

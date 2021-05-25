@@ -3,24 +3,8 @@
     <title>Setup Device</title>
     <meta charset="UTF-8">
     <script type="text/javascript">
-            function ajax(url, callback) {
-                var x_h_o = null;
-                if (window.ActiveXObject) {
-                    x_h_o = new ActiveXObject("Microsoft.XMLHTTP");
-                 } else {
-                     x_h_o = new XMLHttpRequest();
-                 }
-                 x_h_o.open("GET", url, true);
-                 x_h_o.send(null);
-                 x_h_o.onreadystatechange = function() {
-                      if(x_h_o.readyState == 4) {
-                          callback(JSON.parse(x_h_o.responseText));
-                      }
-                 }
-            }
-            
             function onload() {
-                ajax("/client/js", function(response) {
+                fetch("/client/js").then((res) => res.json()).then((response) => {
                     if (response.success) {
                         var list = document.getElementById("list_js");
                         var ip = response.ip;

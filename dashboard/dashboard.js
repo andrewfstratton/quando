@@ -20,7 +20,7 @@ function add_user() {
         alert("User not created : " + res.message)
       }
     }).catch((err) => {
-      set('add_user_message', "Failed to find Quando:Cloud")
+      set('add_user_message', "Failed to find Quando")
     })
 }
 
@@ -53,15 +53,13 @@ function onload() {
         set('local', (res.local?'Local':'Remote') + ' Access')
         if (res.local) {
           document.getElementById('local_panel').style.visibility = 'visible'
-          let pouchdb_url = `http://127.0.0.1:5984/_utils`
-          set('pouchdb_utils', `<a href='${pouchdb_url}' target='_blank'>${pouchdb_url}</a>`)
         }
       } else {
         alert(res.message)
       }
     }).catch((err) => {
       console.log(err)
-      alert('Failed to find Quando:Cloud')
+      alert('Failed to find Quando')
     })
 }
  

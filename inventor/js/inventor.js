@@ -940,7 +940,7 @@ export function handle_login() {
 
 export function testCreator(code) {
   client_script = code  // allows opened window to get generated code
-  let deploy_window = window.open('/client/client.htm', 'quando_deployed_test', 'left=0,top=0,width=9999,height=9999');
+  let deploy_window = window.open('/client/client.html', 'quando_deployed_test', 'left=0,top=0,width=9999,height=9999');
   deploy_window.focus() // moveTo(0,0);
 }
 

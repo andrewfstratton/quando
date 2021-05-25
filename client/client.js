@@ -558,7 +558,7 @@ let socket = io.connect('ws://' + window.location.hostname + port)
 var val = false // force handlers to manage when not embedded
 var txt = false // assume default is ignore
 
-if (document.title == "[[TITLE]]") { // this was opened by Inventor >> Test
+if (document.title == "{{ title }}") { // this was opened by Inventor >> Test
   document.title = "TEST"
   let script = document.getElementById("quando_script")
   if (script) {

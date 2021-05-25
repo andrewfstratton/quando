@@ -50,4 +50,4 @@ if __name__ == '__main__':
     # Multi threading
     ubit.run(socketio)
     multiprocessing.Process(target=server.controlpanel.run).start()
-    socketio.run(app, host='0.0.0.0') # port=5000
+    socketio.run(app, host='0.0.0.0', port=80)

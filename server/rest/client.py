@@ -9,9 +9,9 @@ import socket
 def transparent():
     return send_file(os_join(app.root_path, 'client', 'transparent.png'))
 
-@app.route('/client/client.htm')
+@app.route('/client/client.html')
 def client_htm():
-    return send_file(os_join(app.root_path, 'client', 'client.htm'))
+    return send_file(os_join(app.root_path, 'templates', 'client.html'))
 
 @app.route('/client/client.css')
 def client_css():

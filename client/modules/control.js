@@ -9,7 +9,7 @@ if (!quando) {
   let mouse = {}
 
   function _send(command, arg) {
-    fetch('http://127.0.0.1:5000/control/' + command, { method: 'POST', 
+    fetch('http://127.0.0.1/control/' + command, { method: 'POST', 
       mode: "no-cors",
       body: JSON.stringify(arg), 
       headers: ({"Content-Type": "text/plain"})
