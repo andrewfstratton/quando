@@ -30,6 +30,7 @@ You need to:
     git clone https://github.com/andrewfstratton/quando.git
     ```
   _Note: This will leave Quando in the C:\quando directory_
+
 3. In the C:\Quando directory, you need (once only) run `install.bat`.
 
 **Updating Quando**
