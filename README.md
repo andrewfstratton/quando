@@ -1,6 +1,6 @@
 # Quando - Visual Programming for Digital Interactive Exhibits
 
-Quando can currently only be installed locally - please [see these instructions](./docs/install_local_cloud.md).
+Quando can currently only be installed locally - please [see these instructions](./docs/install_local.md).
 
 ## Using the Quando:Editor
 

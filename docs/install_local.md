@@ -29,7 +29,8 @@ You need to:
     cd \
     git clone https://github.com/andrewfstratton/quando.git
     ```
-_Note: This will leave Quando in the C:\quando directory_
+  _Note: This will leave Quando in the C:\quando directory_
+3. In the C:\Quando directory, you need (once only) run `install.bat`.
 
 **Updating Quando**
 
@@ -51,6 +52,7 @@ You need to, on an online PC (or with temporary internet access):
     ![](./docs/images/code_download_zip.png)
 
 2. Unzip the contents into the directory C:\Quando.
+3. In the C:\Quando directory, you need (once only) run `install.bat`.
 3. You can now
   - move the PC offline
   - or copy the contents of C:\Quando to a USB and then transfer to the Offline PC
@@ -60,4 +62,4 @@ You can update Quando by repeating the above steps.
 </details>
 
 # Running Quando
-To run locally, [follow these instructions](./running_local_cloud.md)
+To run Quando, [follow these instructions](./run_local.md)

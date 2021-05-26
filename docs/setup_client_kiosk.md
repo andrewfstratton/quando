@@ -16,6 +16,6 @@ The following setup can be done (by itself) on any client machine.
     * Choose Computer Configuration->Windows Settings->Scripts->Startup
     * Then 'Add' C:\quando\kiosk.bat to autostart Chrome
 
-N.B. Quando will also need to be [Setup to run on startup](running_local_cloud.md)
+N.B. Quando will also need to be [Setup to run on startup](run_local.md)
 
 If everything is fine - then try restarting to check everything boots correctly.
