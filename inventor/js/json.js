@@ -66,12 +66,9 @@ export function addObjectToElement (obj, elem, setElementHandlers=null) {
   let menu = document.getElementById("menu")
   if (obj) {
     for(let block of obj) {
-      if (block.block_type == 'devices-rotate-object3d') {
-        block.block_type = 'media-rotate-object3d'
-      }
-      if (block.block_type == 'devices-move-object3d') {
-        block.block_type = 'media-move-object3d'
-      }
+      // if (block.block_type == 'devices-rotate-object3d') {
+      //   block.block_type = 'media-rotate-object3d'
+      // }
       // find block_type
       let src_block = menu.querySelector("[data-quando-block-type='"+ block.block_type +"']")
       if (!src_block) {  // Block is no longer in the menu and is most likely out of date...
@@ -112,6 +109,8 @@ export function addObjectToElement (obj, elem, setElementHandlers=null) {
             console.log(block.values[key])
           }
         }
+        // Update the temporary values
+        setOptions(clone)
         for (let key in block.boxes) {
           let obj = block.boxes[key]
           let element = clone.querySelector(".quando-box[data-quando-name='"+ obj.id +"']")
@@ -128,9 +127,8 @@ export function addObjectToElement (obj, elem, setElementHandlers=null) {
   }
 }
 
-export function setOptions () {
-  let script = document.getElementById("script")
-  for(let elem of script.querySelectorAll("[data-quando-tmp-value]")) {
+function setOptions (new_elem) {
+  for(let elem of new_elem.querySelectorAll("[data-quando-tmp-value]")) {
     if (elem.dataset.quandoTmpValue) {
       let found = elem.querySelector("option[value='" + elem.dataset.quandoTmpValue + "']")
       if (found) {
