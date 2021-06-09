@@ -20,11 +20,14 @@
           <option value='txt'>❓</option>
         </select>
         Speed
-        <input data-quando-name="speed" type="text" value="100" data-quando-encode="normal" />
-        % Pitch
-        <input data-quando-name="pitch" type="text" value="100" data-quando-encode="normal" />
-        % Volume
-        <input data-quando-name="volume" type="text" value="100" data-quando-encode="normal" />
+        <input data-quando-name='speed' type='number' value='100' placeholder=''
+          style='width: 4em' min='10' max='1000' data-quando-encode='normal'/>
+        %&nbsp; Pitch
+        <input data-quando-name='pitch' type='number' value='100' placeholder=''
+          style='width: 4em' min='0' max='200' data-quando-encode='normal'/>
+        %&nbsp; Volume
+        <input data-quando-name='volume' type='number' value='100' placeholder=''
+          style='width: 4em' min='0' max='100' data-quando-encode='normal'/>
         %
       </span>
     </div>

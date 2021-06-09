@@ -23,8 +23,12 @@
       </select>
       <span data-quando-toggle='extras=show'>
         <br />
-        Min <input data-quando-name="min" type="text" value="50" data-quando-encode="normal" />%
-        to <input data-quando-name="max" type="text" value="200" data-quando-encode="normal" />%
+        Min
+        <input data-quando-name='min' type='number' value='50' placeholder=''
+          style='width: 4em' min='0' max='1000' data-quando-encode='normal'/>%
+        to
+        <input data-quando-name='max' type='number' value='200' placeholder=''
+          style='width: 4em' min='0' max='1000' data-quando-encode='normal'/>%
         times
         <select data-quando-name='inverted' class='quando-toggle'>
           <option value='false'>Normal</option>
