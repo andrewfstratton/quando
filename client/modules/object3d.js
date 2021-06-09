@@ -116,6 +116,7 @@
     }
 
     self.left_right = (val, mid, range, inverted, fixed=false) => {
+        inverted = !inverted
         let buffered = fixed?update_fixed:update_object
         mid *= 10; range *= 10 // convert to mm
         buffered.x = quando.convert_linear(val, mid, range, !inverted) // yes - inverted must be inverted...
