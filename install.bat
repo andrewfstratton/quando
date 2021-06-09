@@ -1,1 +1,1 @@
-pip install flask pynput pySerial flask-socketio
+pip install flask pynput pySerial flask-socketio pydirectinput keyboard
