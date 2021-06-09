@@ -77,15 +77,19 @@
     }
 
     self.left_right = (display, val, mid, range, inverted) => {
-        let x = quando.convert_linear(val, mid, range, inverted)
+        let x = quando.convert_linear(val, mid, range, inverted) - 50
         let elem = document.getElementById('quando_image' + (display?'_display':''))
-        elem.style.left = (x-50)+'%'
+        if (x<0) { x *= 2 }
+        elem.style.left = x+'%'
     }
 
     self.up_down = (display, val, mid, range, inverted) => {
-        let y = 100 - quando.convert_linear(val, mid, range, inverted)
+        inverted = !inverted // so up is bigger
+        let y = quando.convert_linear(val, mid, range, inverted)
         let elem = document.getElementById('quando_image' + (display?'_display':''))
-        elem.style.top = (y-50)+'%'
+        y *= 2
+        if (y<0) { y *= 2 }
+        elem.style.top = (y-100)+'%'
     }
 
     self.zoom = (display, val, min, max, inverted) => {
