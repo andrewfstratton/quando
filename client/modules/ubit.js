@@ -78,7 +78,7 @@ if (!quando) {
   }
 
   self.handlePitch = function (mid, range, inverted, callback) {
-    _handleAngle('ubitPitch', callback, mid, range, inverted)
+    _handleAngle('ubitPitch', callback, mid, range, !inverted)
   }
 
   // self.handleHeading = function (mid, range, inverted, callback) {
