@@ -4,6 +4,22 @@ from flask import request
 import server.common
 import pynput # Fallback for MacOS, Linux
 
+# maps keys from directinput name to pynput attribute
+KEY_MAP = {
+ "pageup": "page_up",
+ "pagedown": "page_down",
+ "printscreen": "print_screen",
+ "altright": "alt_r",
+ "shiftright": "shift_r",
+ "ctrlright": "ctrl_r",
+ "win": "cmd",
+ "winright": "cmd_r",
+ "capslock": "caps_lock",
+ "numlock": "num_lock",
+ "scrolllock": "scroll_lock",
+ "apps": "menu"
+}
+
 try:
     import pydirectinput # only works for windows
     pydirectinput.PAUSE = 0.05 # N.B. If set as 0, doesn't register within games
@@ -29,10 +45,33 @@ def write_char(ch):
     else:
         pynput.keyboard.Controller().type(ch)
 
+def key_press_release(name, press, shift, ctrl, alt, command):
+    if pydirectinput:
+        if pydirectinput.KEYBOARD_MAPPING.get(name, False):
+            if press:
+                pydirectinput.keyDown(name)
+            else:
+                pydirectinput.keyUp(name)
+    else:
+        name = KEY_MAP.get(name, name)
+        key = getattr(pynput.keyboard.Key, name, False)
+        if key:
+            if press:
+                pynput.keyboard.Controller().press(key)
+            else:
+                pynput.keyboard.Controller().release(key)
+        else:
+            print("NYI: ", name)
 
 @app.route('/control/type', methods=['POST'])
 def type():
     data = server.common.decode_json_data(request)
     for ch in data:
         write_char(ch)
+    return ""
+
+@app.route('/control/key', methods=['POST'])
+def key():
+    data = server.common.decode_json_data(request)
+    key_press_release(data['key'], data['press'], data['shift'], data['ctrl'], data['alt'], data['command'])
     return ""
