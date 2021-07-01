@@ -25,6 +25,7 @@ export function appendObject(obj) {
   let script = document.getElementById('script')
   json.addObjectToElement(obj, script, setElementHandlers)
   _populateLists()
+  json.setOptions(script) // N.B. must follow populateLists
 }
 
 export function getScriptAsObject() {

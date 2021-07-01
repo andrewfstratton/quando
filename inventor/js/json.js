@@ -109,8 +109,7 @@ export function addObjectToElement (obj, elem, setElementHandlers=null) {
             console.log(block.values[key])
           }
         }
-        // Update the temporary values
-        setOptions(clone)
+        // Note: the temporary values need to be updated after the lists are populated
         for (let key in block.boxes) {
           let obj = block.boxes[key]
           let element = clone.querySelector(".quando-box[data-quando-name='"+ obj.id +"']")
@@ -127,8 +126,8 @@ export function addObjectToElement (obj, elem, setElementHandlers=null) {
   }
 }
 
-function setOptions (new_elem) {
-  for(let elem of new_elem.querySelectorAll("[data-quando-tmp-value]")) {
+export function setOptions (script) {
+  for(let elem of script.querySelectorAll("[data-quando-tmp-value]")) {
     if (elem.dataset.quandoTmpValue) {
       let found = elem.querySelector("option[value='" + elem.dataset.quandoTmpValue + "']")
       if (found) {
