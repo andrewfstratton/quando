@@ -411,10 +411,10 @@ export function setElementHandlers (block) {
     if (select.classList.contains("quando-toggle")) {
       select.addEventListener('click', (ev)=>{handleToggle(ev);handleSelect(ev)}, true)
       select.addEventListener('mousedown', (ev)=>{ev.preventDefault();return false})
-      toggleRelativesOnElement(select)
     } else {
       select.addEventListener("change", handleSelect)
     }
+    toggleRelativesOnElement(select) // also handles menu as well as toggle
   }
   //add update handler for IP datalist on click
   for (let elem of block.querySelectorAll("#robot_ip")) {
