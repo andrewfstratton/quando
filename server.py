@@ -1,4 +1,4 @@
-# Installed: pip install flask pynput pySerial flask-socketio
+# See install.bat for installed
 
 from flask import Flask, request
 from flask_socketio import SocketIO

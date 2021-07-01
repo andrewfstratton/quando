@@ -1,0 +1,32 @@
+<div class="quando-block" data-quando-javascript="quando.gamepad.handleAxis(${left},'${axis}',${inverted},(val)=>{${box}})">
+    <div class="quando-left quando-devices"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-devices">🎮️️
+            When
+            <select data-quando-name='left' class='quando-toggle'>
+                <option value='true'>👈🕹️</option>
+                <option value='false'>🕹️👉</option>
+            </select>
+            move
+            <select data-quando-name="axis">
+                <option value='x'>⇔</option>
+                <option value='y'>⇕</option>
+                <option value='trigger'> trigger</option>
+            </select>
+            ⚡
+            <select data-quando-name="extras" class="quando-toggle">
+                <option value="hidden">+</option>
+                <option value="show">-</option>
+            </select>
+            <span data-quando-toggle="extras=show">
+                <br>
+                <select data-quando-name='inverted' class='quando-toggle'>
+                    <option value='false'>normal</option>
+                    <option value='true'>inverted</option>
+                </select>
+            </span>
+        </div>
+        <div data-quando-name="box" class="quando-box"></div>
+        <div class="quando-row quando-devices"></div>
+    </div>
+</div>

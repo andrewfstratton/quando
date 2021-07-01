@@ -1,0 +1,35 @@
+<div class="quando-block" data-quando-javascript="quando.gamepad.handleButton(${button_index},'${down_up}',(val)=>{${box}})">
+    <div class="quando-left quando-devices"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-devices">🎮️️
+            When
+            <select data-quando-name="button_index">
+                <option value='0'>Ⓐ</option>
+                <option value='1'>Ⓑ</option>
+                <option value='2'>Ⓧ</option>
+                <option value='3'>Ⓨ</option>
+                <option value='14'>🠈 </option>
+                <option value='15'>🠊 </option>
+                <option value='12'>🠉 </option>
+                <option value='13'>🠋</option>
+                <option value='4'>👈 Bumper</option>
+                <option value='5'>👉 Bumper</option>
+                <option value='10'>👈🕹️</option>
+                <option value='11'>🕹️👉</option>
+                <option value='8'>Back 👈</option>
+                <option value='9'>Start 👉</option>
+            </select>
+            <span class="iconify">
+                button
+            </span>
+            <select data-quando-name="down_up">
+                <option value='down'>down</option>
+                <option value='up'>up</option>
+                <option value='change'>change</option>
+            </select>
+            <span data-quando-toggle="down_up=change">⚡</span>
+        </div>
+        <div data-quando-name="box" class="quando-box"></div>
+        <div class="quando-row quando-devices"></div>
+    </div>
+</div>

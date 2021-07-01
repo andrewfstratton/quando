@@ -193,7 +193,7 @@ Notes on the listing:
 2. This adds a new call back to the list - this is the api call used to add contained actions.
 3. The connected event sets up the last button value array
 4. The disconnection removes the last button value array
-5. Goes through any gamepad (just one presently) and detects where the buttonhas become pressed and calls back the relevant handlers.
+5. Goes through any gamepad (just one presently) and detects where a button has become pressed and calls back the relevant handlers.
 6. Calls the gamepad checking 30 times a second.
 
 ## Finally
