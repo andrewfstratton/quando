@@ -9,7 +9,7 @@ if (!quando) {
   let mouse = {}
 
   function _send(command, arg) {
-    fetch('http://127.0.0.1/control/' + command, { method: 'POST', 
+    fetch('/control/' + command, { method: 'POST', 
       mode: "no-cors",
       body: JSON.stringify(arg), 
       headers: ({"Content-Type": "text/plain"})
@@ -88,4 +88,4 @@ if (!quando) {
     }
   }
 
-  setInterval(_updateMouse, 1/20 * 1000) // 20 times per second
+  setInterval(_updateMouse, 1/30 * 1000) // 30 times per second
