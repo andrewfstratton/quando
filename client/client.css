@@ -120,7 +120,7 @@ body {
 }
 
 #quando_image_parent {
-    background-image: url('transparent.png');
+    background-image: url('/client/transparent.png');
     background-size:contain;
     width:100%;
     height:100%;

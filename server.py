@@ -41,6 +41,8 @@ if __name__ == '__main__':
     import server.rest.file
     import server.rest.message
     import server.rest.ubit
+
+    # Devices
     import server.devices.control.keyboard
     import server.devices.control.mouse
 
