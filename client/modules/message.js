@@ -12,7 +12,7 @@
     }
     txt_val = (txt?'txt':'val') + '=' + encodeURI(txt_val)
     // Can't use common._Get since that is for inventor and module...
-    fetch(`http://${host}/${path}?${txt_val}`, { method: 'GET'
+    fetch(`${host}/${path}?${txt_val}`, { method: 'GET'
     }).then((resp) => resp.json()
     ).then((resp) => {
           resp.json().then((data) => {

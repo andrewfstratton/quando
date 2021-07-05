@@ -34,8 +34,8 @@ function onload() {
         if (port) {
           port = ":" + port
         }
-        let inventor_url = `http://${ip}${port}/inventor`
-        let client_url = `http://${ip}${port}/client`
+        let inventor_url = `${ip}${port}/inventor`
+        let client_url = `${ip}${port}/client`
         if (res.local == false) { // remote access 
           inventor_url = document.location + 'inventor'
           client_url = document.location + 'client'
