@@ -48,7 +48,7 @@ class Servo:
 
 def go():
     pins = [pin0, pin1, pin2]
-    icons = [Image.HAPPY, Image.SAD]
+    icons = [Image.HAPPY, Image.SAD, Image.YES, Image.NO, Image.HEART, Image.HEART_SMALL]
     val = ''
     while True:
         try:
