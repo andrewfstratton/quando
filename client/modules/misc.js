@@ -66,6 +66,6 @@ self.adjust = (block_id, val_in, count, units, times_per, per_units, wrap, inver
   })
 }
 
-self.scale = (val, max, callback) => {
-  callback(''+Math.round(val*max))
+self.scale = (val, min, max, callback) => {
+  callback(''+(min+Math.round(val*(max-min))))
 }
