@@ -6,7 +6,6 @@ BUTTON_B = '{"Bb":true}'
 
 def roll_pitch_heading():
     dot = Image("00000:00000:00400:00000:00000")
-    last_tilt = False
     last_roll = False
     last_pitch = False
     cycle = 0
