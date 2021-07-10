@@ -26,6 +26,10 @@ export function appendObject(obj) {
   json.addObjectToElement(obj, script, setElementHandlers)
   _populateLists()
   json.setOptions(script) // N.B. must follow populateLists
+  // For option relevant show/hide
+  for (let select of script.querySelectorAll("select")) {
+    toggleRelativesOnElement(select) // also handles menu as well as toggle
+  }
 }
 
 export function getScriptAsObject() {
