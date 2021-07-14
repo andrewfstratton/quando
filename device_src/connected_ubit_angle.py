@@ -5,7 +5,7 @@ BUTTON_A = '{"Ba":true}'
 BUTTON_B = '{"Bb":true}'
 
 def roll_pitch_heading():
-    dot = Image("00000:00000:00400:00000:00000")
+    dot = Image("00000:00000:00800:00000:00000")
     last_roll = False
     last_pitch = False
     cycle = 0
