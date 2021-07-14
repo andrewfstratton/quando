@@ -28,15 +28,17 @@ self.handleButton = (button_id, down_up, callback) => {
 
 window.addEventListener("gamepadconnected", (event) => {
     let gamepad_in_use = _getGamepad()
-    if (event.gamepad.index == gamepad_in_use.index) { // i.e. this is the gamepad to be used
-        console.log("Using Gamepad " + gamepad_in_use.id)
-        let buttons = gamepad_in_use.buttons
-        for (let i=0; i<buttons.length; i++) {
-            last_buttons[i] = 0 // set unpressed initially
-        }
-        let axes = gamepad_in_use.axes
-        for (let i=0; i<axes.length; i++) {
-            last_axes[i] = 0.5 // set in middle initially
+    if (gamepad_in_use) {
+        if (event.gamepad.index == gamepad_in_use.index) { // i.e. this is the gamepad to be used
+            console.log("Using Gamepad " + gamepad_in_use.id)
+            let buttons = gamepad_in_use.buttons
+            for (let i=0; i<buttons.length; i++) {
+                last_buttons[i] = 0 // set unpressed initially
+            }
+            let axes = gamepad_in_use.axes
+            for (let i=0; i<axes.length; i++) {
+                last_axes[i] = 0.5 // set in middle initially
+            }
         }
     }
 })
@@ -48,7 +50,14 @@ window.addEventListener("gamepaddisconnected", (event) => {
 })
 
 function _getGamepad() {
-    return navigator.getGamepads()[0] // assume only one/no gamepad...
+    let list = navigator.getGamepads()
+    // return first valid gamepad found
+    for (let gamepad of list) {
+        if (gamepad) {
+            return gamepad
+        }
+    }
+    return false
 }
 
 function _updateButtons() {
