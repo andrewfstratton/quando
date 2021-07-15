@@ -121,6 +121,18 @@ self.handleAxis = (left, axis, middle, plus_minus, ignore, inverted, callback) =
   _handle(axis_handlers, id, FLIP, ignore_handler) 
 }
 
+self.handleTrigger = (left, min, max, inverted, callback) => {
+  min /= 100
+  max /= 100
+  let id = AXIS_MAP[left]['trigger']
+  let min_max_scaler = quando.new_scaler(min, max, inverted)
+  let handler = (val) => {
+    let new_val = min_max_scaler(val)
+    return callback(new_val)
+  }
+  _handle(button_handlers, id, FLIP, handler) 
+}
+
 function _updateAxes() {
   let gamepad = _getGamepad()
   if (gamepad) {
