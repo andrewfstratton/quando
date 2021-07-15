@@ -5,7 +5,7 @@ import server.common
 
 from pynput.mouse import Button, Controller
 
-root = server.common.getTkRoot()
+root = server.common.get_tk_root()
 screen_width = root.winfo_screenwidth()
 screen_height = root.winfo_screenheight()
 _mouse = Controller()

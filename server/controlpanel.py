@@ -19,7 +19,7 @@ def open_dashboard():
     _open("")
 
 def run():
-    root = server.common.getTkRoot()
+    root = server.common.get_tk_root()
     master = root.get_master()
     master.title("Quando : Control Panel")
     top = tk.Frame(master)

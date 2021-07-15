@@ -3,7 +3,7 @@ import json
 
 _root = False
 
-def getTkRoot():
+def get_tk_root():
     global _root
     if not _root:
 
