@@ -44,8 +44,6 @@ window.addEventListener("gamepadconnected", (event) => {
 })
 
 window.addEventListener("gamepaddisconnected", (event) => {
-  last_button = []
-  last_axes = []
   console.log("...Gamepad disconnected")
 })
 
@@ -60,16 +58,22 @@ function _getGamepad() {
     return false
 }
 
-function _updateButtons() {
-  let gamepad = _getGamepad()
-  if (gamepad) {
-    let buttons = gamepad.buttons
-    for (let i=0; i<buttons.length; i++) {
-        // Check for change in value
+function _updateButtons(gamepad) {
+    let buttons
+    if (gamepad) {
+        buttons = gamepad.buttons
+    } else {
+        buttons = [...last_buttons] // copy
+        for (let i = 0; i < buttons.length; i++) {
+            buttons[i] = {'value' : 0} // i.e. reset since disconnected
+        }
+    }
+    for (let i = 0; i < buttons.length; i++) {
+        // Check for change
         let value = buttons[i].value
         if (value != last_buttons[i]) {
             last_buttons[i] = value // update value
-                if (button_handlers[i] !== undefined) {
+            if (button_handlers[i] !== undefined) {
                 for (let handler of button_handlers[i]) {
                     let callback = handler['callback']
                     let down_up = handler['down_up']
@@ -86,7 +90,10 @@ function _updateButtons() {
             }
         }
     }
-  }
+    // remove array in case different length for next gamepad
+    if (!gamepad && (last_buttons.length != 0)) {
+        last_buttons = []
+    }
 }
 
 // N.B. The triggers are added as axes, but actually held as button handlers
@@ -133,10 +140,16 @@ self.handleTrigger = (left, min, max, inverted, callback) => {
   _handle(button_handlers, id, FLIP, handler) 
 }
 
-function _updateAxes() {
-  let gamepad = _getGamepad()
-  if (gamepad) {
-    let axes = gamepad.axes
+function _updateAxes(gamepad) {
+    let axes
+    if (gamepad) {
+        axes = gamepad.axes
+    } else {
+        axes = [...last_axes] // copy
+        for (let i = 0; i < axes.length; i++) {
+            axes[i] = 0 // i.e. reset since disconnected
+        }
+    }
     for (let i=0; i<axes.length; i++) {
         // Check for change in value
         let value = axes[i]
@@ -156,12 +169,16 @@ function _updateAxes() {
             }
         }
     }
-  }
+    // remove array in case different length for next gamepad
+    if (!gamepad && (last_axes.length != 0)) {
+        last_axes = []
+    }
 }
 
 function _update() {
-    _updateButtons()
-    _updateAxes()
+  let gamepad = _getGamepad()
+  _updateButtons(gamepad)
+  _updateAxes(gamepad)
 }
 
 setInterval(_update, 1/30 * 1000) // 30 times a second
