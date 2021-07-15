@@ -92,17 +92,33 @@ function _updateButtons() {
 // N.B. The triggers are added as axes, but actually held as button handlers
 const AXIS_MAP = {true:{'x':0, 'y':1,'trigger':6}, false:{'x':2, 'y':3,'trigger':7}}
 
-self.handleAxis = (left, axis, inverted, callback) => {
-  let handler = callback
-  if (inverted) {
-      handler = (val) => { callback(1-val) }
-  }
-  let handlers = axis_handlers
-  if (axis == "trigger") {
-    handlers = button_handlers
-  }
+self.handleAxis = (left, axis, middle, plus_minus, ignore, inverted, callback) => {
+  middle /= 100
+  plus_minus /= 100
+  ignore /= 100
+  let half_ignore = ignore / 2
+  let min_max_scaler = quando.new_scaler(middle-plus_minus, middle+plus_minus, inverted)
   let id = AXIS_MAP[left][axis]
-  _handle(handlers, id, FLIP, handler) 
+  let ignore_handler = (val) => {
+    let new_val = min_max_scaler(val)
+    // Adjust for deadzone if not at limit
+    if ((new_val > 0) || (new_val < 1)) {
+      let fraction_from_middle = Math.abs(0.5 - new_val) *2 // i.e. /0.5
+      if (fraction_from_middle <= ignore) { // or could compare against half_ignore
+        new_val = 0.5
+      } else { // scale the remaining fraction
+        if (new_val < 0.5) { // i.e. below middle
+            new_val /= 1-ignore
+        } else { // above middle
+            let above = new_val - 0.5 - half_ignore
+            above /= 1-ignore // scale
+            new_val = above + 0.5
+        }
+      }
+    }
+    return callback(new_val)
+  }
+  _handle(axis_handlers, id, FLIP, ignore_handler) 
 }
 
 function _updateAxes() {

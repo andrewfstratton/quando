@@ -1,4 +1,4 @@
-<div class="quando-block" data-quando-javascript="quando.gamepad.handleAxis(${left},'${axis}',${inverted},(val)=>{${box}})">
+<div class="quando-block" data-quando-javascript="quando.gamepad.handleAxis(${left},'${axis}',${middle},${plus_minus},${ignore},${inverted},(val)=>{${box}})">
     <div class="quando-left quando-devices"></div>
     <div class="quando-right">
         <div class="quando-row quando-devices">🕹️️️
@@ -6,11 +6,10 @@
             <select data-quando-name='left' class='quando-toggle'>
                 <option value='true'>👈️</option>
                 <option value='false'>️👉</option>
-            </select>
-            <select data-quando-name="axis">
-                <option value='x'>⇔ 📍</option>
-                <option value='y'>⇕ 📍</option>
-                <option value='trigger'> trigger</option>
+            </select> 📍
+            <select data-quando-name="axis" class="quando-toggle">
+                <option value='x'>⇔</option>
+                <option value='y'>⇕</option>
             </select>
             move ⚡
             <select data-quando-name="extras" class="quando-toggle">
@@ -19,6 +18,16 @@
             </select>
             <span data-quando-toggle="extras=show">
                 <br>
+                middle
+                <input data-quando-name='middle' type='number' value='50' placeholder='' style='width: 4em' min='0' max='100'
+                data-quando-encode='normal' />
+                %
+                ±
+                <input data-quando-name='plus_minus' type='number' value='50' placeholder='' style='width: 4em' min='0' max='100'
+                data-quando-encode='normal' />
+                ignore
+                <input data-quando-name='ignore' type='number' value='5' placeholder='' style='width: 4em' min='0' max='100'
+                data-quando-encode='normal' /> %
                 <select data-quando-name='inverted' class='quando-toggle'>
                     <option value='false'>normal</option>
                     <option value='true'>inverted</option>
