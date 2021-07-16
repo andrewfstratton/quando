@@ -3,8 +3,8 @@ if (!quando) {
   alert('Fatal Error: gamepad.js must be included after quando_browser')
 }
 
-const FLIP = -1, UP = 0, DOWN = 1
-const DOWN_UP = {'down': DOWN, 'up': UP, 'flip': FLIP}
+const EITHER = -1, UP = 0, DOWN = 1
+const DOWN_UP = {'down': DOWN, 'up': UP, 'either': EITHER}
 
 let self = quando.gamepad = {}
 let button_handlers = {}
@@ -78,11 +78,11 @@ function _updateButtons(gamepad) {
                     let callback = handler['callback']
                     let down_up = handler['down_up']
                     if (value > 0) { // now pressed
-                        if ((down_up == DOWN) || (down_up == FLIP)) {
+                        if ((down_up == DOWN) || (down_up == EITHER)) {
                             callback(value)
                         }
                     } else { // now released
-                        if ((down_up == UP) || (down_up == FLIP)) {
+                        if ((down_up == UP) || (down_up == EITHER)) {
                             callback(value)
                         }
                     }
@@ -125,7 +125,7 @@ self.handleAxis = (left, axis, middle, plus_minus, ignore, inverted, callback) =
     }
     return callback(new_val)
   }
-  _handle(axis_handlers, id, FLIP, ignore_handler) 
+  _handle(axis_handlers, id, EITHER, ignore_handler) 
 }
 
 self.handleTrigger = (left, min, max, inverted, callback) => {
@@ -137,7 +137,7 @@ self.handleTrigger = (left, min, max, inverted, callback) => {
     let new_val = min_max_scaler(val)
     return callback(new_val)
   }
-  _handle(button_handlers, id, FLIP, handler) 
+  _handle(button_handlers, id, EITHER, handler) 
 }
 
 function _updateAxes(gamepad) {
