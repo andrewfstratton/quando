@@ -3,10 +3,10 @@ from server.db import db
 from urllib.parse import unquote
 COLLECTION = 'script'
 
-if __name__ == '__main__':
+def create_if_not_exists():
     conn = sqlite3.connect('quando.db')
     create_table = """
-      CREATE TABLE IF NOT EXISTS script (
+      CREATE TABLE script (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           userid TEXT NOT NULL,
           name TEXT NOT NULL,
@@ -15,9 +15,15 @@ if __name__ == '__main__':
       )
     """
     print("Attempt to create table: " + COLLECTION)
-    conn.execute(create_table)
-    conn.commit()
-    conn.close()
+    try:
+        conn.execute(create_table)
+        print("  ...created")
+        conn.commit()
+        conn.close()
+    except sqlite3.OperationalError:
+        print("  ...already exists")
+    except sqlite3.Error as err:
+        print(err.message)
 
 def get_on_userid(userid):
     rows = db.find(COLLECTION, 'userid=? ORDER BY date DESC', (userid,))
