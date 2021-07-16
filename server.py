@@ -10,6 +10,10 @@ from server.db import db
 
 app = Flask(__name__)
 db.set_path_for_db(app.root_path)
+# Create database tables if they don't exist
+server.db.script.create_if_not_exists()
+server.db.user.create_if_not_exists()
+
 app.config['SECRET_KEY'] = 'quando_secret'
 socketio = SocketIO(app, cors_allowed_origins="*", use_reloader=False)
 
