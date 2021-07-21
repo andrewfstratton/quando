@@ -2,7 +2,6 @@
 
 from flask import Flask, request
 from flask_socketio import SocketIO
-from server.devices import ubit
 import logging
 import server.controlpanel
 import multiprocessing
@@ -50,6 +49,10 @@ if __name__ == '__main__':
     server.rest.message.set_io(socketio)
 
     # Multi threading
-    ubit.run(socketio)
+    try:
+        from server.devices import ubit
+        ubit.run(socketio)
+    except ImportError:
+        print("Running without micro:bit")
     multiprocessing.Process(target=server.controlpanel.run).start()
     socketio.run(app, host='0.0.0.0', port=80)
