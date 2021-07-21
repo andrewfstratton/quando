@@ -61,4 +61,13 @@ if __name__ == '__main__':
     except ImportError:
         print("Running without micro:bit")
     multiprocessing.Process(target=server.controlpanel.run).start()
-    socketio.run(app, host='0.0.0.0', port=80)
+    try:
+        socketio.run(app, host='0.0.0.0', port=80)
+    except PermissionError:
+        import socket
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.bind(('127.0.0.1', 0))
+        port = sock.getsockname()[1]
+        sock.close()
+        print("Trying Quando server running on port:" + port)
+        socketio.run(app, host='0.0.0.0', port=port)

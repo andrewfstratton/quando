@@ -37,4 +37,4 @@ def run():
         tk.Button(top, text = "Dashboard", width=20, command=open_dashboard).pack(side=tk.LEFT)
         root.loop()
     except tk.TclError:
-        print("Failed to start Tk control panel")
+        print("Running without (Tk) control panel")
