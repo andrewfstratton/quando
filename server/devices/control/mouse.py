@@ -26,20 +26,21 @@ def move_to(x_val, y_val):
     _mouse.position = (x,y)
     (last_x, last_y) = (x,y)
 
-def press(button):
+def _press(button):
     # TODO Check mask for already pressed
     _mouse.press(button)
 
-def release(button):
+def _release(button):
     # TODO Check mask for already released
     _mouse.release(button)
 
 def _act_on_button(data, key, button):
-    inp = data.get(key, 0)
-    if inp > 0:
-        press(button)
-    elif inp < 0:
-        release(button)
+    press = data.get(key, None)
+    if press != None:
+        if press:
+            _press(button)
+        else:
+            _release(button)
 
 def handle(data):
     # Check movement

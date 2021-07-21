@@ -45,7 +45,7 @@ def write_char(ch):
     else:
         pynput.keyboard.Controller().type(ch)
 
-def key_press_release(name, press, shift, ctrl, alt, command):
+def key_press_release(name, press):
     if pydirectinput:
         if pydirectinput.KEYBOARD_MAPPING.get(name, False):
             if press:
@@ -73,5 +73,5 @@ def type():
 @app.route('/control/key', methods=['POST'])
 def key():
     data = server.common.decode_json_data(request)
-    key_press_release(data['key'], data['press'], data['shift'], data['ctrl'], data['alt'], data['command'])
+    key_press_release(data['key'], data['press'])
     return ""

@@ -70,20 +70,20 @@ function _updateButtons(gamepad) {
     }
     for (let i = 0; i < buttons.length; i++) {
         // Check for change
-        let value = buttons[i].value
-        if (value != last_buttons[i]) {
-            last_buttons[i] = value // update value
+        let on_off = buttons[i].value
+        if (on_off != last_buttons[i]) {
+            last_buttons[i] = on_off // update value
             if (button_handlers[i] !== undefined) {
                 for (let handler of button_handlers[i]) {
                     let callback = handler['callback']
                     let down_up = handler['down_up']
-                    if (value > 0) { // now pressed
+                    if (on_off > 0) { // now pressed
                         if ((down_up == DOWN) || (down_up == EITHER)) {
-                            callback(value)
+                            callback(on_off)
                         }
                     } else { // now released
                         if ((down_up == UP) || (down_up == EITHER)) {
-                            callback(value)
+                            callback(on_off)
                         }
                     }
                 }

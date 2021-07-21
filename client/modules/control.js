@@ -20,15 +20,13 @@ if (!quando) {
     _send('type', text.decode(str))
   }
 
-  self.key = (coded_char, press=false) => {
-    // coded_char is a string representing shift/ctrl/alt/command and a character, where a +/' ' indicate
-    // whether the modifier key needs to be included
-    let shift = coded_char[0] == '+'
-    let ctrl = coded_char[1] == '+'
-    let alt = coded_char[2] == '+'
-    let command = coded_char[3] == '+'
-    let ch = coded_char.slice(4)
-    let val = {'key':ch, 'press':press, 'shift':shift, 'ctrl':ctrl, 'alt':alt, 'command':command}
+  self.key = (ch, up_down, on_off) => {
+    // ch is a character, or character description string
+    let press = (up_down == 'down')
+    if (up_down == 'either') {
+      press = on_off
+    }
+    let val = {'key':ch, 'press':press}
     _send('key', val)
   }
 
@@ -42,17 +40,23 @@ if (!quando) {
     mouse.smooth = smooth
   }
 
-  self.mouseClick = (button, press=false) => {
-    let pressCode = press?1:-1 // 1 for press, -1 for release, 0 could be false...
+  self.mouseClick = (button, up_down, val) => {
+    let press = false // i.e. up/release
+    if (up_down == 'down') {
+      press = true
+    } else if (up_down == 'either') {
+       press = (val!=0)
+    }
     if (button == 'left') {
-      mouse.left = pressCode
+      mouse.left = press
     }
     if (button == 'middle') {
-      mouse.middle = pressCode
+      mouse.middle = press
     }
     if (button == 'right') {
-      mouse.right = pressCode
+      mouse.right = press
     }
+    _updateMouse() // do now to avoid race with key press
   }
 
   function _updateMouse() {

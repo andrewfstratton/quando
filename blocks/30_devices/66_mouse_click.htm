@@ -1,12 +1,14 @@
-<div class="quando-block" data-quando-javascript="quando.control.mouseClick('${button}', ${press})">
+<div class="quando-block" data-quando-javascript="quando.control.mouseClick('${button}', '${press}', val)">
   <div class="quando-left quando-devices"></div>
   <div class="quando-right">
     <div class="quando-row quando-devices">
+      <span data-quando-toggle='press=either'>⚡</span>
       🖱️
       Mouse
-      <select data-quando-name='press' class='quando-toggle'>
-        <option value='true'>press</option>
-        <option value='false'>release</option>
+      <select data-quando-name='press'>
+        <option value='down'>down</option>
+        <option value='up'>up</option>
+        <option value='either'>⇕</option>
       </select>
       <select data-quando-name="button">
         <option value='left'>⇦Left</option>

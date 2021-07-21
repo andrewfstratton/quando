@@ -1,76 +1,57 @@
-<div class="quando-block"
-data-quando-javascript="quando.control.key('${shift}${ctrl}${alt}${command}${name}'
-,${press}
-)">
-<div class="quando-left quando-devices"></div>
-<div class="quando-right">
-<div class="quando-row quando-devices">⌨️️
-Special Key
-<select data-quando-name='press' class='quando-toggle'><option value='true'>press</option>
-<option value='false'>release</option>
-</select>
-<select data-quando-name="name"><option value='tab'>Tab</option>
-  <option value='delete'>Delete</option>
-  <option value='backspace'>Backspace</option>
-  <option value='tab'>Tab</option>
-  <option value='enter'>Enter</option>
-  <option value='up'>🠅 Up</option>
-  <option value='down'>🠇 Down</option>
-  <option value='left'>🠄 Left</option>
-  <option value='right'>🠆 Right</option>
-  <option value='pageup'>Page Up</option>
-  <option value='pagedown'>Page Down</option>
-  <option value='esc'>Escape</option>
-  <option value='home'>Home</option>
-  <option value='insert'>Insert</option>
-  <option value='pause'>Pause</option>
-  <option value='end'>End</option>
-  <option value='printscreen'>Print Screen</option>
-  <option value='shift'>Shift</option>
-  <option value='shiftright'>Shift Right</option>
-  <option value='ctrl'>Ctrl</option>
-  <option value='ctrlright'>Ctrl Right</option>
-  <option value='win'>Win/Cmd</option>
-  <option value='winright'>Win/Cmd Right</option>
-  <option value='alt'>Alt</option>
-  <option value='altright'>Alt Right</option>
-  <option value='capslock'>Caps Lock</option>
-  <option value='numlock'>Num Lock</option>
-  <option value='scrolllock'>Scroll Lock</option>
-  <option value='apps'>Menu/Apps</option>
-  <option value='f1'>F1</option>
-  <option value='f2'>F2</option>
-  <option value='f3'>F3</option>
-  <option value='f4'>F4</option>
-  <option value='f5'>F5</option>
-  <option value='f6'>F6</option>
-  <option value='f7'>F7</option>
-  <option value='f8'>F8</option>
-  <option value='f9'>F9</option>
-  <option value='f10'>F10</option>
-  <option value='f11'>F11</option>
-  <option value='f12'>F12</option>
-</select>
-<select data-quando-name="extras"
-class="quando-toggle">
-  <option value="hidden">+</option>
-  <option value="show">-</option>
-</select>
-<span data-quando-toggle="extras=show">
-<br>
-<select data-quando-name='shift' class='quando-toggle'><option value=' '>no shift</option>
-<option value='+'>shift</option>
-</select>
-<select data-quando-name='ctrl' class='quando-toggle'><option value=' '>no ctrl</option>
-<option value='+'>ctrl</option>
-</select>
-<select data-quando-name='alt' class='quando-toggle'><option value=' '>no alt</option>
-<option value='+'>alt</option>
-</select>
-<select data-quando-name='command' class='quando-toggle'><option value=' '>no command</option>
-<option value='+'>command</option>
-</select>
-</span>
-</div>
-</div>
+<div class="quando-block" data-quando-javascript="quando.control.key('${name}', '${press}', val)">
+  <div class="quando-left quando-devices"></div>
+  <div class="quando-right">
+    <div class="quando-row quando-devices">
+      <span data-quando-toggle='press=either'>⚡</span>
+      ⌨️ ️Special Key
+      <select data-quando-name='press'>
+        <option value='down'>down</option>
+        <option value='up'>up</option>
+        <option value='either'>⇕</option>
+      </select>
+      <select data-quando-name="name">
+        <option value='shift'>Shift</option>
+        <option value='ctrl'>Ctrl</option>
+        <option value='alt'>Alt</option>
+        <option value='win'>Win/Cmd</option>
+        <option value='tab'>Tab</option>
+        <option value='delete'>Delete</option>
+        <option value='backspace'>Backspace</option>
+        <option value='tab'>Tab</option>
+        <option value='enter'>Enter</option>
+        <option value='up'>🠅 Up</option>
+        <option value='down'>🠇 Down</option>
+        <option value='left'>🠄 Left</option>
+        <option value='right'>🠆 Right</option>
+        <option value='pageup'>Page Up</option>
+        <option value='pagedown'>Page Down</option>
+        <option value='esc'>Escape</option>
+        <option value='home'>Home</option>
+        <option value='insert'>Insert</option>
+        <option value='pause'>Pause</option>
+        <option value='end'>End</option>
+        <option value='printscreen'>Print Screen</option>
+        <option value='shiftright'>Shift Right</option>
+        <option value='ctrlright'>Ctrl Right</option>
+        <option value='winright'>Win/Cmd Right</option>
+        <option value='altright'>Alt Right</option>
+        <option value='capslock'>Caps Lock</option>
+        <option value='numlock'>Num Lock</option>
+        <option value='scrolllock'>Scroll Lock</option>
+        <option value='apps'>Menu/Apps</option>
+        <option value='f1'>F1</option>
+        <option value='f2'>F2</option>
+        <option value='f3'>F3</option>
+        <option value='f4'>F4</option>
+        <option value='f5'>F5</option>
+        <option value='f6'>F6</option>
+        <option value='f7'>F7</option>
+        <option value='f8'>F8</option>
+        <option value='f9'>F9</option>
+        <option value='f10'>F10</option>
+        <option value='f11'>F11</option>
+        <option value='f12'>F12</option>
+      </select>
+    </div>
+  </div>
 </div>
