@@ -14,16 +14,15 @@ def create_if_not_exists():
           script TEXT NOT NULL
       )
     """
-    print("Attempt to create table: " + COLLECTION)
     try:
         conn.execute(create_table)
-        print("  ...created")
+        print("Created table (first time run): " + COLLECTION)
         conn.commit()
         conn.close()
     except sqlite3.OperationalError:
-        print("  ...already exists")
+        pass
     except sqlite3.Error as err:
-        print(err.message)
+        print("ERROR trying to create table " + COLLECTION + ": " + err.message)
 
 def get_on_userid(userid):
     rows = db.find(COLLECTION, 'userid=? ORDER BY date DESC', (userid,))

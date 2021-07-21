@@ -10,19 +10,18 @@ def create_if_not_exists():
             password TEXT NOT NULL
         )
     """
-    print("Attempt to create table: " + COLLECTION)
     try:
         conn.execute(create_table)
-        print("  ...created")
+        print("Created table (first time run): " + COLLECTION)
         create_user = "INSERT INTO user (userid, password) VALUES (?,?);"
-        print("Create user 'test' with password 'test'")
         conn.execute(create_user, ('test','test'))
         conn.commit()
         conn.close()
+        print("Created user 'test' with password 'test'")
     except sqlite3.OperationalError:
-        print("  ...already exists")
+        pass
     except sqlite3.Error as err:
-        print(err.message)
+        print("ERROR trying to create table " + COLLECTION + ": " + err.message)
 
 def get_on_id_password(id, password):
     result = db.find(COLLECTION, 'userid=? AND password=?', (id, password))

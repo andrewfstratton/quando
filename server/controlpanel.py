@@ -21,6 +21,10 @@ def open_dashboard():
     _open("")
 
 def run():
+    # Create database tables if they don't exist
+    server.db.script.create_if_not_exists()
+    server.db.user.create_if_not_exists()
+
     # Show GUI
     root = server.common.get_tk_root()
     master = root.get_master()
