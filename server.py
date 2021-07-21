@@ -1,16 +1,17 @@
 # See install.bat for installed
 
-from flask import Flask, request
-from flask_socketio import SocketIO
+from flask import Flask
+import flask_socketio
 import logging
 import server.controlpanel
 import multiprocessing
 from server.db import db 
+import socket
 
 app = Flask(__name__)
 db.set_path_for_db(app.root_path)
 app.config['SECRET_KEY'] = 'quando_secret'
-socketio = SocketIO(app, cors_allowed_origins="*", use_reloader=False)
+socketio = flask_socketio.SocketIO(app, cors_allowed_origins="*", use_reloader=False)
 
 @app.after_request
 def add_header(response):
@@ -44,11 +45,11 @@ if __name__ == '__main__':
     try:
         import server.devices.control.keyboard
     except ImportError:
-        print("Runnning without (local) keyboard control")
+        print("Running without (local) keyboard control")
     try:
         import server.devices.control.mouse
     except ImportError:
-        print("Runnning without (local) mouse control")
+        print("Running without (local) mouse control")
 
     # Setup
     server.rest.message.set_io(socketio)
@@ -61,13 +62,13 @@ if __name__ == '__main__':
     except ImportError:
         print("Running without micro:bit")
     multiprocessing.Process(target=server.controlpanel.run).start()
-    try:
-        socketio.run(app, host='0.0.0.0', port=80)
-    except PermissionError:
-        import socket
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.bind(('127.0.0.1', 0))
-        port = sock.getsockname()[1]
-        sock.close()
-        print("Trying Quando server running on port:" + port)
-        socketio.run(app, host='0.0.0.0', port=port)
+
+    # Check for ports and serve
+    ports = [80, 4567, 0]
+    for port in ports:
+        print("Trying Port:%d" % port)
+        try:
+            socketio.run(app, host='0.0.0.0', port=port)
+        except flask_socketio.ConnectionRefusedError:
+            print("Failed on port:%d" % port)
+    print("Trying Quando server running on port: %i" % port)
