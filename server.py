@@ -6,7 +6,7 @@ import logging
 import server.controlpanel
 import multiprocessing
 from server.db import db 
-import socket
+import socket, sys
 
 app = Flask(__name__)
 db.set_path_for_db(app.root_path)
@@ -22,6 +22,19 @@ def add_header(response):
     response.headers["Expires"] = "0"
     response.headers['Access-Control-Allow-Origin'] = '*'
     return response
+
+def check_port(port):
+    """ True -- it's possible to listen on this port for TCP/IPv4
+    False -- otherwise.
+    """
+    try:
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.bind(('127.0.0.1', port))
+        sock.listen(5)
+        sock.close()
+    except socket.error:
+        return False
+    return True
 
 log = logging.getLogger('werkzeug')
 log.setLevel(logging.ERROR)
@@ -66,9 +79,7 @@ if __name__ == '__main__':
     # Check for ports and serve
     ports = [80, 4567, 0]
     for port in ports:
-        print("Trying Port:%d" % port)
-        try:
+        if check_port(port):
+            print("Quando server running on port: %i" % port)
             socketio.run(app, host='0.0.0.0', port=port)
-        except flask_socketio.ConnectionRefusedError:
-            print("Failed on port:%d" % port)
-    print("Trying Quando server running on port: %i" % port)
+            sys.exit()
