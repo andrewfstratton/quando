@@ -26,12 +26,15 @@ def run():
     server.db.user.create_if_not_exists()
 
     # Show GUI
-    root = server.common.get_tk_root()
-    master = root.get_master()
-    master.title("Quando : Control Panel")
-    top = tk.Frame(master)
-    top.pack()
-    tk.Button(top, text = "Inventor", width=20, command=open_inventor).pack(side=tk.LEFT)
-    tk.Button(top, text = "Client", width=20, command=open_client).pack(side=tk.LEFT)
-    tk.Button(top, text = "Dashboard", width=20, command=open_dashboard).pack(side=tk.LEFT)
-    root.loop()
+    try:
+        root = server.common.get_tk_root()
+        master = root.get_master()
+        master.title("Quando : Control Panel")
+        top = tk.Frame(master)
+        top.pack()
+        tk.Button(top, text = "Inventor", width=20, command=open_inventor).pack(side=tk.LEFT)
+        tk.Button(top, text = "Client", width=20, command=open_client).pack(side=tk.LEFT)
+        tk.Button(top, text = "Dashboard", width=20, command=open_dashboard).pack(side=tk.LEFT)
+        root.loop()
+    except tk.TclError:
+        print("Failed to start Tk control panel")
