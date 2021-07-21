@@ -41,8 +41,14 @@ if __name__ == '__main__':
     import server.rest.message
 
     # Devices
-    import server.devices.control.keyboard
-    import server.devices.control.mouse
+    try:
+        import server.devices.control.keyboard
+    except ImportError:
+        print("Runnning without (local) keyboard control")
+    try:
+        import server.devices.control.mouse
+    except ImportError:
+        print("Runnning without (local) mouse control")
 
     # Setup
     server.rest.message.set_io(socketio)
