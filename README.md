@@ -1,8 +1,13 @@
 # Quando - Visual Programming for Digital Interactive Exhibits
 
-Quando can currently only be installed locally - please [see these instructions](./docs/install_local.md).
+Quando currently be installed:
+
+- locally - please [see these instructions](./docs/install_local.md).
+- or in Codio - see [instructions](./docs/install_codio.md)
 
 ## Using the Quando:Editor
+
+**N.B. The details below assume the server will be running locally on http://127.0.0.1, please replace with https://word2-word2-4567.codio.io for a Codio installation.**
 
 You can open the editor called 'Inventor' from the (small) popup window or by opening [127.0.0.1/inventor](127.0.0.1/inventor) in Chrome browser.
 
@@ -20,3 +25,7 @@ Note: Web Apps must be enabled for using the leap Motion - in Windows, you may n
 ### Client browser Kiosk setup - allows PC to boot straight into client browser interaction
 
 Follow [these instructions](./docs/setup_client_kiosk.md)
+
+## Developing new Blocks
+
+You should install Quando locally to develop new blocks.
