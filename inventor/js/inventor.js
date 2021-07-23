@@ -407,7 +407,7 @@ export function setElementHandlers (block) {
     }
   }
   // Modal for robot say
-  for (let elem of block.querySelectorAll("input[data-quando-robot='say']")) {
+  for (let elem of block.querySelectorAll("input[class='quando-robot-say']")) {
     elem.addEventListener('click', handleRobotModal, false)
   }
   // Drop down and toggle
@@ -1367,7 +1367,7 @@ export function handle_robot_say(event) {
     let block = document.querySelector('[data-quando-id="'+block_id+'"]')
 
     if (block) {
-      let input = block.querySelector('[data-quando-robot="say"]')
+      let input = block.querySelector('input[class="quando-robot-say"]')
 
       if (input.value != text.val()) { // i.e has changed
         input.value = text.val()
