@@ -19,7 +19,7 @@ def client_css():
 
 @app.route('/client/client.js')
 def client_js():
-    return send_file(os_join(app.root_path, 'client', 'client.js'))
+    return send_file(os_join(app.root_path, 'client', 'client.js'), mimetype="application/javascript")
 
 @app.route('/client/setup')
 def setup():
@@ -33,17 +33,23 @@ def setup_css():
 def media(path):
     return send_from_directory(os_join(app.root_path, 'client', 'media'), path)
 
+# Only javascript files
 @app.route('/client/modules/<path:path>')
 def modules(path):
-    return send_from_directory(os_join(app.root_path, 'client', 'modules'), path)
+    return send_from_directory(os_join(app.root_path, 'client', 'modules'), path, mimetype="application/javascript")
 
+@app.route('/client/lib/data/<path:path>')
+def lib_data(path):
+    return send_from_directory(os_join(app.root_path, 'client', 'lib', 'data'), path)
+
+# Only javascript files in lib directory
 @app.route('/client/lib/<path:path>')
 def lib(path):
-    return send_from_directory(os_join(app.root_path, 'client', 'lib'), path)
+    return send_from_directory(os_join(app.root_path, 'client', 'lib'), path, mimetype="application/javascript")
 
 @app.route('/client/deployed_js/<path:path>')
 def deployed_js(path):
-    return send_from_directory(os_join(app.root_path, 'client', 'deployed_js'), path)
+    return send_from_directory(os_join(app.root_path, 'client', 'deployed_js'), path, mimetype="application/javascript")
 
 @app.route('/client/')
 def client_index_html():

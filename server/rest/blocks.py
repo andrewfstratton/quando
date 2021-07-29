@@ -2,7 +2,7 @@ from __main__ import app
 
 import os
 from os.path import join as os_join
-from flask import send_file, send_from_directory, jsonify
+from flask import jsonify
 
 @app.route('/blocks')
 def blocks():

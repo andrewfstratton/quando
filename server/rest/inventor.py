@@ -9,11 +9,11 @@ def inventor():
 
 @app.route('/inventor/index.js')
 def index_js():
-    return send_file(os_join(app.root_path, 'inventor', 'index.js'))
+    return send_file(os_join(app.root_path, 'inventor', 'index.js'), mimetype="application/javascript")
 
 @app.route('/inventor/js/<path:path>')
 def js(path):
-    return send_from_directory(os_join(app.root_path, 'inventor', 'js'), path)
+    return send_from_directory(os_join(app.root_path, 'inventor', 'js'), path, mimetype="application/javascript")
 
 @app.route('/inventor/img/<path:path>')
 def img(path):
