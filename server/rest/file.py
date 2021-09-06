@@ -31,7 +31,6 @@ def file_upload():
 @app.route('/file/upload/<path:path>', methods=['POST'])
 def file_upload_path(path):
     _file = request.files['file']
-    print("#"+_file.filename)
     _file.save(os_join(app.root_path, 'client', 'media', path, _file.filename))
     data = {"success":True}
     return jsonify(data)
