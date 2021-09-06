@@ -30,3 +30,7 @@ def help_(path):
 @app.route('/inventor/fonts/<path:path>')
 def fonts(path):
     return send_from_directory(os_join(app.root_path, 'inventor', 'fonts'), path)
+
+@app.route('/editor/<path:path>')
+def test(path):
+    return send_from_directory(os_join(app.root_path, 'editor'), path)
