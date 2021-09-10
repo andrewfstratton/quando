@@ -26,7 +26,7 @@ try:
     import keyboard as kbd # needed to detect if shift pressed...
 except ImportError:
     pydirectinput = False
-    print("pydirectinput not found:")
+    print("pydirectinput or keyboard not found - using pynput instead")
 
 def write_char(ch):
     upper = ch.isupper()
