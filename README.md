@@ -18,9 +18,17 @@ _You may also replace 127.0.0.1 with another PC's IP address or a hostname_
 After you have deployed scripts, you can open them directly from the (small) popup window or through [127.0.0.1/client](127.0.0.1/client) in Chrome browser, which will load the last script that was opened.  You can right click the screen to choose a different script to load.
 
 ### Optional - Leap Motion
-To use the Leap Motion, the standard Leap Motion (Orion) software needs to be installed on the Client PC, i.e. where the Leap motion is plugged in and where the browser will be run. The SDK is not needed.
+To use the Leap Motion, the (now archived) Leap Motion 3.2.1 (Orion Beta) software needs to be installed on a Windows Client PC, i.e. where the Leap motion is plugged in and where the browser will be run. The SDK is not needed.  The software may be downloaded from [here](https://leapmotion-developer.squarespace.com/releases/leap-motion-orion-321).
 
-Note: Web Apps must be enabled for using the leap Motion - in Windows, you may need to see [How to keep Leap Motion web apps enabled](https://forums.leapmotion.com/t/allow-web-apps-setting-resets-on-pc-on-computer-restart/8057).
+After installing the Leap Motion Control Panel, the recommended settings are:
+- Enable in General - disable everything else
+  - Allow Web Apps
+  - Allow Background ...
+  - Robust Mode
+  - Auto Orient ...
+- Enable in Troubleshooting - disable everything else
+  - Low Resource Mode
+  - Avoid Poor Performance
 
 ### Client browser Kiosk setup - allows PC to boot straight into client browser interaction
 
