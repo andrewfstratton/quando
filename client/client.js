@@ -331,31 +331,6 @@ let socket = io.connect(io_protocol + '://' + window.location.hostname + port)
     }
   }
 
-  self.hands = function (count, do_fn) {
-    let hands = 'None'
-    let handler = function () {
-      let frame = self.leap.frame()
-      if (frame.hands) {
-        self.idle_reset() // any hand data means there is a visitor present...
-        if (frame.hands.length !== hands) {
-          hands = frame.hands.length
-          if (hands === count) {
-            do_fn()
-          }
-        }
-      }
-    }
-    if (self.leap) {
-      self.time.every({count: 1/20}, handler)
-    } else {
-      self.leap = new Leap.Controller()
-      self.leap.connect()
-      self.leap.on('connect', function () {
-        self.time.every({count: 1/20}, handler)
-      })
-    }
-  }
-
   self.handed = function (left, right, do_fn) {
     let handler = function () {
 // FIX very inefficient...
@@ -384,7 +359,7 @@ let socket = io.connect(io_protocol + '://' + window.location.hostname + port)
     if (self.leap) {
       self.time.every({count: 1/20}, handler)
     } else {
-      self.leap = new Leap.Controller()
+      self.leap = new Leap.Controller({background:true})
       self.leap.connect()
       self.leap.on('connect', function () {
         self.time.every({count: 1/20}, handler)

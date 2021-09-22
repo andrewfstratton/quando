@@ -4,7 +4,7 @@
     alert('Fatal Error: Leap Motion must be included after quando_browser')
   }
   var self = quando.leap = {}
-  self.controller = new Leap.Controller()
+  self.controller = new Leap.Controller({background:true})
   self.controller.on('connect', function () {
     self.controller.on('frame', self.handler)
   })
