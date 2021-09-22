@@ -1,0 +1,30 @@
+<div class="quando-block"
+    data-quando-javascript="quando.ubit.handleDirection('${direction}','${change}',($(eq$,${down_up}$,change$,val)$)=>{${box}})">
+    <div class="quando-left quando-devices"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-devices">📟
+            When
+            <span class="iconify">
+                µbit
+            </span>
+            changes
+            <select data-quando-name="change">
+                <option value='down'>to</option>
+                <option value='up'>from</option>
+                <option value='change'>to/from</option>
+            </select>
+            <select data-quando-name="direction">
+                <option value='up'>⇧Up</option>
+                <option value='down'>⇩Down</option>
+                <option value='left'>⇦Left</option>
+                <option value='right'>⇨Right</option>
+                <option value='forward'>⬀Forward</option>
+                <option value='backward'>⬃Backward</option>
+            </select>
+            <span data-quando-toggle='change=change'>⚡
+            </span>
+        </div>
+        <div data-quando-name="box" class="quando-box"></div>
+        <div class="quando-row quando-devices"></div>
+    </div>
+</div>

@@ -1,0 +1,27 @@
+<div class="quando-block" data-quando-javascript="quando.ubit.handleButtonPin('${button_pin}','${down_up}',($(eq$,${down_up}$,change$,val)$)=>{${box}})">
+    <div class="quando-left quando-devices"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-devices">📟
+            When
+            <span class="iconify">
+                µbit
+            </span>
+            <select data-quando-name="button_pin">
+                <option value='a'>🅰</option>
+                <option value='b'>🅱</option>
+                <option value='pin0'>Pin 0</option>
+                <option value='pin1'>Pin 1</option>
+                <option value='pin2'>Pin 2</option>
+            </select>
+            <select data-quando-name="down_up">
+                <option value='down'>press</option>
+                <option value='up'>release</option>
+                <option value='change'>change</option>
+            </select>
+            <span data-quando-toggle='down_up=change'>⚡
+            </span>
+        </div>
+        <div data-quando-name="box" class="quando-box"></div>
+        <div class="quando-row quando-devices"></div>
+    </div>
+</div>

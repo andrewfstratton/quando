@@ -10,6 +10,16 @@ SNOOZE = 0.02
 _serial = False
 io = False
 
+class COMMS: # character
+    BUTTON_A = 'a'
+    BUTTON_B = 'b'
+    FACE_UP = '^'
+    FACE_DOWN = 'v'
+    LEFT = '<'
+    RIGHT = '>'
+    UP = 'B'
+    DOWN = 'F'
+
 def _close():
     global _serial
     if _serial:
@@ -33,7 +43,7 @@ def get_ubit():
                     break
                 except serial.SerialException as ex:
                     print("ubit connection failed...")
-                    # print(ex)
+                    # print(ex))
                     _close()
     return _serial
 
@@ -44,53 +54,57 @@ def get_ubit_line():
             result = get_ubit().readline()
     except serial.SerialException as ex:
         print("ubit read exception")
-        print(ex)
+        # print(ex)
         _close()
     return result
 
 
-def handle_message(json_in):
+last_msg = ""
+def handle_message(msg):
+    global last_msg
     # returns true dictionary result if anything to send
     result = False
+    data = False
     try:
-        # print(json_in)
-        # in case corruption results in a valid other type?!
-        data = json.loads(json_in)
-        if not type(data) is dict:
-            print("~")
-        else:
-            btn_a = data.get("Ba", False)
-            btn_b = data.get("Bb", False)
-            result = {}
-            if btn_a and btn_b:
-                result['button_ab'] = True
-            elif btn_a:
-                result['button_a'] = True
-            elif btn_b:
-                result['button_b'] = True
-            orientation = data.get("Or", False)
-            if orientation:
-                result['orientation'] = orientation
-            roll = data.get("Ro", False)
-            if roll:
-                result['roll'] = math.degrees(roll)
-            pitch = data.get("Pi", False)
-            if pitch:
-                result['pitch'] = math.degrees(pitch)
-            pin0 = data.get("P0", False)
-            pin1 = data.get("P1", False)
-            pin2 = data.get("P2", False)
-            if pin0:
-                result['pin_0'] = True
-            if pin1:
-                result['pin_1'] = True
-            if pin2:
-                result['pin_2'] = True
-            # In case there is corrupt data
+        data = json.loads(msg)
     except json.JSONDecodeError:
-        print("ubit ignoring" + json_in)
-        # Ignore random micro:bit corrupted data
-        result = False
+        data = False
+    if type(data) is dict:
+        # print("json : " + msg)
+        result = {}
+        roll = data.get("Ro", False)
+        if roll:
+            result['roll'] = math.degrees(roll)
+        pitch = data.get("Pi", False)
+        if pitch:
+            result['pitch'] = math.degrees(pitch)
+    elif msg != '' and last_msg != msg: # check for encoded string
+        last_msg = msg
+        result = {}
+        if COMMS.BUTTON_A in msg:
+            result['button_a'] = True
+        if COMMS.BUTTON_B in msg:
+            result['button_b'] = True
+        if '0' in msg :
+            result['pin_0'] = True
+        if '1' in msg :
+            result['pin_1'] = True
+        if '2' in msg :
+            result['pin_2'] = True
+        orientation =''
+        if COMMS.FACE_UP in msg :
+            orientation = 'up'
+        elif COMMS.FACE_DOWN in msg :
+            orientation = 'down'
+        elif COMMS.LEFT in msg :
+            orientation = 'left'
+        elif COMMS.RIGHT in msg :
+            orientation = 'right'
+        elif COMMS.UP in msg :
+            orientation = 'backward'
+        elif COMMS.DOWN in msg :
+            orientation = 'forward'
+        result['orientation'] = orientation
     return result
 
 def check_message():
