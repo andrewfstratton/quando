@@ -15,8 +15,8 @@ class Servo:
         max_us (int): The maximum signal length supported by the servo.
         angle (int): The angle between minimum and maximum positions.
     Usage:
-        SG90 @ 3.3v servo connected to pin0
-        = Servo(pin0).write_angle(90)
+        SG90 @ 3.3v servo connected to pin1
+        = Servo(pin1).write_angle(90)
     """
 
     def __init__(self, pin, freq=50, min_us=600, max_us=2300, angle=180):
@@ -47,7 +47,6 @@ class Servo:
 
 
 def go():
-    pins = [pin0, pin1, pin2]
     icons = [Image.HAPPY, Image.SAD, Image.YES, Image.NO, Image.HEART, Image.HEART_SMALL]
     val = ''
     while True:
@@ -71,11 +70,17 @@ def go():
                             display.show(icons[val-1])
                     elif key == "T":
                         comma = val.find(",")
-                        angle = int(val[:comma])
-                        servo = int(val[comma + 1 :])
+                        servo = int(val[:comma])
+                        angle = int(val[comma + 1 :])
                         # angle has had 360 added, so 0 is an error
-                        if angle > 0 and servo > 0:
-                            Servo(pins[servo - 1]).write_angle(angle-360)
+                        if angle > 0:
+                            angle -= 360
+                            servo -= 1 # servo had 1 added to distinguish 0 from error
+#                            print('{"message":"angle,servo:' + str(angle) + ',' + str(servo) + '"}')
+                            if servo == 1:
+                                Servo(pin1).write_angle(angle)
+                            elif servo == 2:
+                                Servo(pin2).write_angle(angle)
                     val =''
         except Exception as ex:
             print('{"message":"Exception:' + str(ex) + '"}')
