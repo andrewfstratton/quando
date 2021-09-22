@@ -69,3 +69,8 @@ self.adjust = (block_id, val_in, count, units, times_per, per_units, wrap, inver
 self.scale = (val, min, max, callback) => {
   callback(''+(min+Math.round(val*(max-min))))
 }
+
+self.open = (url) => {
+  let new_window = window.open(url, 'Quando opened window', 'left=0,top=0,width=9999,height=9999');
+  new_window.focus() // moveTo(0,0);
+}
