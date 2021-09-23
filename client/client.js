@@ -289,30 +289,6 @@ let socket = io.connect(io_protocol + '://' + window.location.hostname + port)
     video.parentNode.replaceChild(video.cloneNode(true), video)
   }
 
-  self.audio = function (audio_in, loop = false) {
-    if (audio_in) {
-      audio_in = '/client/media/' + encodeURI(audio_in)
-    }
-    var audio = document.getElementById('quando_audio')
-    audio.loop = loop
-    if (audio.src != encodeURI(window.location.origin + audio_in)) { // src include http://127.0.0.1/
-      if (audio.src) {
-        audio.pause()
-      }
-      audio.src = audio_in
-      audio.autoplay = true
-      audio.addEventListener('ended', self.clear_audio)
-      audio.load()
-    }
-  }
-
-  self.clear_audio = function () {
-    var audio = document.getElementById('quando_audio')
-    audio.src = ''
-    // Remove all event listeners...
-    audio.parentNode.replaceChild(audio.cloneNode(true), audio)
-  }
-
   self.replay_video_audio = function () {
     let video = document.getElementById('quando_video')
     let audio = document.getElementById('quando_audio')
@@ -515,16 +491,6 @@ let socket = io.connect(io_protocol + '://' + window.location.hostname + port)
     let min = mid - range
     let max = mid + range
     return min + (val * (max-min))
-  }
-
-  self.clear = (display, title, text, image, video, audio, object3d, speech) => {
-    if (title) { self.title(display) }
-    if (text) { self.text(display) }
-    if (image) { self.image.set(display) }
-    if (video) { self.video('',false) }
-    if (audio) { self.audio('',false) }
-    if (object3d) { self.object3d.clear() }
-    if (speech) { self.speech.clear() }
   }
 
   self.prompt = (txt, callback) => {
