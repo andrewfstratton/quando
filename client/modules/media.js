@@ -17,7 +17,7 @@ self.play_audio = (audio_in, loop = false) => {
     }
     let audio = document.getElementById('quando_audio')
     audio.loop = loop
-    if (audio.src != encodeURI(window.location.origin + audio_in)) { // src include http://127.0.0.1/
+    if (audio.src != (window.location.origin + audio_in)) { // src include http://127.0.0.1/
         if (audio.src) {
             audio.pause()
         }
@@ -42,7 +42,7 @@ self.play_video = (vid, loop = false) => {
     }
     let video = document.getElementById('quando_video')
     video.loop = loop
-    if (video.src != encodeURI(window.location.origin + vid)) { // i.e. ignore when already playing
+    if (video.src != (window.location.origin + vid)) { // i.e. ignore when already playing
         if (video.src) {
             video.pause()
         }
