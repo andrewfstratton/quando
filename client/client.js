@@ -246,42 +246,6 @@ let socket = io.connect(io_protocol + '://' + window.location.hostname + port)
     _set_or_append_tag_text(text, 'quando_text', append)
   }
 
-  self.handed = function (left, right, do_fn) {
-    let handler = function () {
-// FIX very inefficient...
-      let frame = self.leap.frame()
-      let now_left = false
-      let now_right = false
-      if (frame.hands) {
-        self.idle_reset() // any hand data means there is a visitor present...
-        if (frame.hands.length !== 0) {
-          let hands = frame.hands
-          for (var i = 0; i < hands.length; i++) {
-            let handed = hands[i].type
-            if (handed === 'left') {
-              now_left = true
-            }
-            if (handed === 'right') {
-              now_right = true
-            }
-          }
-        }
-      }
-      if ((now_right === right) && (now_left === left)) {
-        do_fn()
-      }
-    }
-    if (self.leap) {
-      self.time.every({count: 1/20}, handler)
-    } else {
-      self.leap = new Leap.Controller({background:true})
-      self.leap.connect()
-      self.leap.on('connect', function () {
-        self.time.every({count: 1/20}, handler)
-      })
-    }
-  }
-
   self.display = function (key, fn) { // Yes this is all of it...
     _displays.set(key, fn)
   }
