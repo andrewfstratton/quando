@@ -27,3 +27,29 @@ self.play_audio = (audio_in, loop = false) => {
         audio.load()
     }
 }
+
+self.clear_video = () => {
+    let video = document.getElementById('quando_video')
+    video.src = ''
+    video.style.visibility = 'hidden'
+    // Remove all event listeners...
+    video.parentNode.replaceChild(video.cloneNode(true), video)
+}
+
+self.play_video = (vid, loop = false) => {
+    if (vid) {
+        vid = '/client/media/' + encodeURI(vid)
+    }
+    let video = document.getElementById('quando_video')
+    video.loop = loop
+    if (video.src != encodeURI(window.location.origin + vid)) { // i.e. ignore when already playing
+        if (video.src) {
+            video.pause()
+        }
+        video.src = vid
+        video.autoplay = true
+        video.addEventListener('ended', self.clear_video)
+        video.style.visibility = 'visible'
+        video.load()
+    }
+}

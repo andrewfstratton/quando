@@ -39,7 +39,8 @@
         } else {
             img_address = '/client/transparent.png'
         }
-        quando.image_update_video(img_address)
+        // Stop any video as well so the image is visible straightaway
+        quando.media.clear_video()
         let elem = _get_image(display)
         elem.src = img_address
     }

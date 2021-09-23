@@ -254,41 +254,6 @@ let socket = io.connect(io_protocol + '://' + window.location.hostname + port)
     document.getElementById('html').style.transform = 'scale(' + scale + ',1)'
   }
 
-  self.image_update_video = function (img) {
-    var image = document.getElementById('quando_image')
-    if (image.src != encodeURI(window.location.origin + img)) {
-            // i.e. only stop the video when the image is different - still need to set the image style...
-            // TODO this needs checking for behavioural side effects
-      self.clear_video()
-    }
-  }
-
-  self.video = function (vid, loop = false) {
-    if (vid) {
-      vid = '/client/media/' + encodeURI(vid)
-    }
-    var video = document.getElementById('quando_video')
-    video.loop = loop
-    if (video.src != encodeURI(window.location.origin + vid)) { // i.e. ignore when already playing
-      if (video.src) {
-        video.pause()
-      }
-      video.src = vid
-      video.autoplay = true
-      video.addEventListener('ended', self.clear_video)
-      video.style.visibility = 'visible'
-      video.load()
-    }
-  }
-
-  self.clear_video = function () {
-    var video = document.getElementById('quando_video')
-    video.src = ''
-    video.style.visibility = 'hidden'
-    // Remove all event listeners...
-    video.parentNode.replaceChild(video.cloneNode(true), video)
-  }
-
   self.handed = function (left, right, do_fn) {
     let handler = function () {
 // FIX very inefficient...
