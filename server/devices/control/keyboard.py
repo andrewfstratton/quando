@@ -47,11 +47,15 @@ def write_char(ch):
 
 def key_press_release(name, press):
     if pydirectinput:
+        if name.isupper():
+            name = name.lower()
         if pydirectinput.KEYBOARD_MAPPING.get(name, False):
             if press:
                 pydirectinput.keyDown(name)
             else:
                 pydirectinput.keyUp(name)
+        else:
+            print("NYI: ", name)
     else:
         name = KEY_MAP.get(name, name)
         key = getattr(pynput.keyboard.Key, name, False)
