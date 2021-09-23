@@ -246,14 +246,6 @@ let socket = io.connect(io_protocol + '://' + window.location.hostname + port)
     _set_or_append_tag_text(text, 'quando_text', append)
   }
 
-  self.projection = (front = true) => {
-    let scale = 1
-    if (!front) {
-      scale = -1
-    }
-    document.getElementById('html').style.transform = 'scale(' + scale + ',1)'
-  }
-
   self.handed = function (left, right, do_fn) {
     let handler = function () {
 // FIX very inefficient...

@@ -53,3 +53,11 @@ self.play_video = (vid, loop = false) => {
         video.load()
     }
 }
+
+self.projection = (front = true) => {
+    let scale = 1
+    if (!front) {
+        scale = -1
+    }
+    document.getElementById('html').style.transform = 'scale(' + scale + ',1)'
+}
