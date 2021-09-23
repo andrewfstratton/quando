@@ -289,24 +289,6 @@ let socket = io.connect(io_protocol + '://' + window.location.hostname + port)
     video.parentNode.replaceChild(video.cloneNode(true), video)
   }
 
-  self.replay_video_audio = function () {
-    let video = document.getElementById('quando_video')
-    let audio = document.getElementById('quando_audio')
-    let video_audio = null
-
-    if (!video.paused) {
-      video_audio = video
-    } else if (!audio.paused) {
-      video_audio = audio
-    }
-
-    if (video_audio) {
-      video_audio.pause()
-      video_audio.currentTime = 0
-      video_audio.play()
-    }
-  }
-
   self.handed = function (left, right, do_fn) {
     let handler = function () {
 // FIX very inefficient...
