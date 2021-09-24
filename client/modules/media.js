@@ -4,9 +4,11 @@ if (!quando) {
 }
 let self = quando.media = {}
 // setup audio wave
-let audio_context = new AudioContext()
+let audio_context = false
+let amp = false
 let oscillator = false
 let last_frequency = 300 // Hz
+let last_volume = 0.5 // volume 0 to 1
 
 function _clear_audio() {
     let audio = document.getElementById('quando_audio')
@@ -68,13 +70,23 @@ self.projection = (front = true) => {
 
 function _play_shape(equal, shape) {
     if (equal) {
+        if (!audio_context) {
+            audio_context = new AudioContext()
+        }
+        if (!amp) {
+            amp = audio_context.createGain()
+            amp.connect(audio_context.destination)
+            amp.gain.value = last_volume
+        }
         if (!oscillator) {
             oscillator = audio_context.createOscillator()
-            oscillator.connect(audio_context.destination)
+            oscillator.connect(amp)
+            oscillator.start()
+            oscillator.frequency.value = last_frequency
         }
-        oscillator.type = shape
-        oscillator.frequency.value = last_frequency
-        oscillator.start()
+        if (oscillator.type != shape) {
+            oscillator.type = shape
+        }
     }
 }
 
@@ -90,10 +102,18 @@ self.play_wave = (shape = 'stop') => {
     }
 }
 
-self.vary_wave_frequency = (min_hz, max_hz, val) => {
-    let mid_hz = ((max_hz - min_hz)*val) + min_hz
+self.wave_frequency = (min_hz, max_hz, val) => {
+    let _hz = ((max_hz - min_hz)*val) + min_hz
     if (oscillator) {
-        oscillator.frequency.value = mid_hz
+        oscillator.frequency.value = _hz
     }
-    last_frequency = mid_hz // for initialisation
+    last_frequency = _hz // for initialisation
+}
+
+self.wave_volume = (min_percent, max_percent, val) => {
+    let _volume = (((max_percent - min_percent)* val) + min_percent)/100
+    if (amp) {
+        amp.gain.value = _volume
+    }
+    last_volume = _volume
 }
