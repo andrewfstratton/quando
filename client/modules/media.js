@@ -3,6 +3,9 @@ if (!quando) {
     alert('Fatal Error: media must be included after quando_browser')
 }
 let self = quando.media = {}
+// setup audio wave
+let audio_context = new AudioContext()
+let oscillator = false
 
 function _clear_audio() {
     let audio = document.getElementById('quando_audio')
@@ -60,4 +63,27 @@ self.projection = (front = true) => {
         scale = -1
     }
     document.getElementById('html').style.transform = 'scale(' + scale + ',1)'
+}
+
+function _play_shape(equal, shape) {
+    if (equal) {
+        if (!oscillator) {
+            oscillator = audio_context.createOscillator()
+            oscillator.connect(audio_context.destination)
+        }
+        oscillator.type = shape
+        oscillator.start()
+    }
+}
+
+self.play_wave = (shape = 'stop') => {
+    if (shape == 'stop') {
+        oscillator.stop()
+        oscillator = false
+    } else {
+        _play_shape(shape == 'sine', 'sine')
+        _play_shape(shape == 'triangle', 'triangle')
+        _play_shape(shape == 'square', 'square')
+        _play_shape(shape == 'sawtooth', 'sawtooth')
+    }
 }
