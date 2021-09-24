@@ -6,6 +6,7 @@ let self = quando.media = {}
 // setup audio wave
 let audio_context = new AudioContext()
 let oscillator = false
+let last_frequency = 300 // Hz
 
 function _clear_audio() {
     let audio = document.getElementById('quando_audio')
@@ -72,6 +73,7 @@ function _play_shape(equal, shape) {
             oscillator.connect(audio_context.destination)
         }
         oscillator.type = shape
+        oscillator.frequency.value = last_frequency
         oscillator.start()
     }
 }
@@ -86,4 +88,12 @@ self.play_wave = (shape = 'stop') => {
         _play_shape(shape == 'square', 'square')
         _play_shape(shape == 'sawtooth', 'sawtooth')
     }
+}
+
+self.vary_wave_frequency = (min_hz, max_hz, val) => {
+    let mid_hz = ((max_hz - min_hz)*val) + min_hz
+    if (oscillator) {
+        oscillator.frequency.value = mid_hz
+    }
+    last_frequency = mid_hz // for initialisation
 }
