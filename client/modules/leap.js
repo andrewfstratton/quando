@@ -47,7 +47,7 @@
   }
 
   self.handleY = function (hand, range, inverted, callback) {
-    let min = 100
+    let min = 200 // 20cm
     let max = min + 20*range
     _handleXYZ('leapY' + hand, min, max, inverted, callback)
   }

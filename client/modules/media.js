@@ -68,25 +68,23 @@ self.projection = (front = true) => {
     document.getElementById('html').style.transform = 'scale(' + scale + ',1)'
 }
 
-function _play_shape(equal, shape) {
-    if (equal) {
-        if (!audio_context) {
-            audio_context = new AudioContext()
-        }
-        if (!amp) {
-            amp = audio_context.createGain()
-            amp.connect(audio_context.destination)
-            amp.gain.value = last_volume
-        }
-        if (!oscillator) {
-            oscillator = audio_context.createOscillator()
-            oscillator.connect(amp)
-            oscillator.start()
-            oscillator.frequency.value = last_frequency
-        }
-        if (oscillator.type != shape) {
-            oscillator.type = shape
-        }
+function _play_shape(shape) {
+    if (!audio_context) {
+        audio_context = new AudioContext()
+    }
+    if (!amp) {
+        amp = audio_context.createGain()
+        amp.connect(audio_context.destination)
+        amp.gain.value = last_volume
+    }
+    if (!oscillator) {
+        oscillator = audio_context.createOscillator()
+        oscillator.connect(amp)
+        oscillator.start()
+        oscillator.frequency.value = last_frequency
+    }
+    if (oscillator.type != shape) {
+        oscillator.type = shape
     }
 }
 
@@ -95,10 +93,7 @@ self.play_wave = (shape = 'stop') => {
         oscillator.stop()
         oscillator = false
     } else {
-        _play_shape(shape == 'sine', 'sine')
-        _play_shape(shape == 'triangle', 'triangle')
-        _play_shape(shape == 'square', 'square')
-        _play_shape(shape == 'sawtooth', 'sawtooth')
+        _play_shape(shape) // shape assumed to be sine/triangle/square/sawtooth
     }
 }
 
