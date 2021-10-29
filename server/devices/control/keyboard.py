@@ -20,6 +20,8 @@ KEY_MAP = {
  "apps": "menu"
 }
 
+key_controller = False
+
 try:
     import pydirectinput # only works for windows
     pydirectinput.PAUSE = 0.05 # N.B. If set as 0, doesn't register within games
@@ -27,6 +29,7 @@ try:
 except ImportError:
     pydirectinput = False
     print("pydirectinput or keyboard not found - using pynput instead")
+    key_controller = pynput.keyboard.Controller() # Won't be used if pydirectinput is available
 
 def write_char(ch):
     upper = ch.isupper()
@@ -42,8 +45,8 @@ def write_char(ch):
                 pydirectinput.keyUp('shift')
         else:
             kbd.write(ch, restore_state_after=True)
-    else:
-        pynput.keyboard.Controller().type(ch)
+    elif key_controller: # Use pynput
+        key_controller.type(ch)
 
 def key_press_release(name, press):
     if pydirectinput:
@@ -56,14 +59,14 @@ def key_press_release(name, press):
                 pydirectinput.keyUp(name)
         else:
             print("NYI: ", name)
-    else:
+    elif key_controller: # i.e. can use pynput
         name = KEY_MAP.get(name, name)
         key = getattr(pynput.keyboard.Key, name, False)
         if key:
             if press:
-                pynput.keyboard.Controller().press(key)
+                key_controller.press(key)
             else:
-                pynput.keyboard.Controller().release(key)
+                key_controller.release(key)
         else:
             print("NYI: ", name)
 
