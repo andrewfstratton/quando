@@ -17,19 +17,21 @@ function _pick(val, arr, block_id, type) {
   if (i == arr.length) {
     i--
   }
-  if (type == "Different") {
-    if (i != _last_pick[block_id]) {
+  if (i >= 0) { // skip when empty
+    if ((type == "Different") && (arr.length > 1)) {
+      if (i != _last_pick[block_id]) {
+        arr[i]()
+        _last_pick[block_id] = i
+      } else {
+        self.random(block_id, type)
+      }
+    } else {
       arr[i]()
       _last_pick[block_id] = i
-    } else {
-      self.random(block_id, type)
     }
-  } else {
-    arr[i]()
-    _last_pick[block_id] = i
-  }
-  if (type == "Reorder") {
-    arr.splice(i, 1)
+    if (type == "Reorder") {
+      arr.splice(i, 1)
+    }
   }
 }
 
