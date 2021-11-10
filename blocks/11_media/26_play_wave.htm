@@ -1,4 +1,4 @@
-<div class="quando-block" data-quando-javascript="quando.media.play_wave('${shape}')">
+<div class="quando-block" data-quando-javascript="quando.media.play_wave('${shape}',${channel})">
     <div class="quando-left quando-media"></div>
     <div class="quando-right">
         <div class="quando-row quando-media">
@@ -8,8 +8,30 @@
                 <option value='square'>⨅ square</option>
                 <option value='triangle'>Λ triangle</option>
                 <option value='sawtooth'>⩘ sawtooth</option>
-                <option value='stop'>_ silence</option>
             </select>
+            <span data-quando-toggle='channel=1'>
+                <b>on 1</b>
+            </span>
+            <span data-quando-toggle='channel=2'>
+                <b>on 2</b>
+            </span>
+            <span data-quando-toggle='channel=3'>
+                <b>on 3</b>
+            </span>
+            <select data-quando-name="extras" class="quando-toggle">
+                <option value="hidden">+</option>
+                <option value="show">-</option>
+            </select>
+            <span data-quando-toggle="extras=show">
+                <br>
+                Channel
+                <select data-quando-name="channel">
+                    <option value='0'>main</option>
+                    <option value='1'>1</option>
+                    <option value='2'>2</option>
+                    <option value='3'>3</option>
+                </select>
+            </span>
         </div>
     </div>
 </div>

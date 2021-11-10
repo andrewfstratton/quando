@@ -1,14 +1,38 @@
-<div class="quando-block" data-quando-id="true" data-quando-javascript="quando.media.play_audio('${file_name}', ${loop})">
+<div class="quando-block" data-quando-id="true"
+    data-quando-javascript="quando.media.play_audio('${file_name}', ${loop}, ${channel})">
     <div class="quando-left quando-media"></div>
     <div class="quando-right">
         <div class="quando-row quando-media">
-            🔊 Play
+            🎵 Play
             <select data-quando-name='loop' class='quando-toggle'>
                 <option value='false'>Once</option>
                 <option value='true'>Forever</option>
             </select>
             Audio
-            <input data-quando-media="audio" data-quando-name="file_name" type="text" readonly="true" value="" data-quando-encode="normal"/>
+            <input data-quando-media="audio" data-quando-name="file_name" type="text" readonly="true" value=""
+                data-quando-encode="normal" />
+            <span data-quando-toggle='channel=1'>
+                <b>on 1</b>
+            </span>
+            <span data-quando-toggle='channel=2'>
+                <b>on 2</b>
+            </span>
+            <span data-quando-toggle='channel=3'>
+                <b>on 3</b>
+            </span>
+            <select data-quando-name="extras" class="quando-toggle">
+                <option value="hidden">+</option>
+                <option value="show">-</option>
+            </select>
+            <span data-quando-toggle="extras=show"><br/>
+                on Channel
+                <select data-quando-name="channel">
+                    <option value='0'>main</option>
+                    <option value='1'>1</option>
+                    <option value='2'>2</option>
+                    <option value='3'>3</option>
+                </select>
+            </span>
         </div>
     </div>
 </div>

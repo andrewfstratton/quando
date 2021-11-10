@@ -4,33 +4,59 @@ if (!quando) {
 }
 let self = quando.media = {}
 // setup audio wave
-let audio_context = false
-let amp = false
-let oscillator = false
+let audio_context = new AudioContext()
 let last_frequency = 300 // Hz
 let last_volume = 0.5 // volume 0 to 1
 
-function _clear_audio() {
-    let audio = document.getElementById('quando_audio')
-    audio.src = ''
-    // Remove all event listeners...
-    audio.parentNode.replaceChild(audio.cloneNode(true), audio)
+function _channel() {
+    let amp = audio_context.createGain()
+    amp.connect(audio_context.destination)
+    amp.gain.value = 0.5 // middle value at start
+    return {
+        "amp" : amp,
+    }
+}
+let channels = [_channel(), _channel(), _channel(), _channel()]
+
+function _clear_audio(chan) {
+    if (chan.audio_src) {
+        chan.audio_src = false
+    }
+    if (chan.audio) {
+        chan.audio.pause()
+        chan.audio = false
+    }
+    if (chan.source) {
+        chan.source.disconnect(chan.amp)
+        chan.source = false
+    }
+    if (chan.oscillator) {
+        chan.oscillator.disconnect(chan.amp)
+        chan.oscillator = false
+    }
 }
 
-self.play_audio = (audio_in, loop = false) => {
+self.play_audio = (audio_in, loop = false, channel = 0) => {
+    const chan = channels[channel]
     if (audio_in) {
-        audio_in = '/client/media/' + encodeURI(audio_in)
-    }
-    let audio = document.getElementById('quando_audio')
-    audio.loop = loop
-    if (audio.src != (window.location.origin + audio_in)) { // src include http://127.0.0.1/
-        if (audio.src) {
-            audio.pause()
+        let audio_src = '/client/media/' + encodeURI(audio_in)
+        // Don't interrupt when already playing
+        if (audio_src != chan.audio_src) {
+            _clear_audio(chan)
+            let audio = new Audio(audio_src)
+            let source = audio_context.createMediaElementSource(audio)
+            chan.audio = audio
+            chan.source = source
+            chan.audio_src = audio_src
+            source.connect(chan.amp)
+            audio.loop = loop
+            audio.addEventListener('ended', () => {
+                _clear_audio(chan)
+            })
+            audio.play()
         }
-        audio.src = audio_in
-        audio.autoplay = true
-        audio.addEventListener('ended', _clear_audio)
-        audio.load()
+    } else { // stop playing and clear if present
+        _clear_audio(chan)
     }
 }
 
@@ -68,47 +94,34 @@ self.projection = (front = true) => {
     document.getElementById('html').style.transform = 'scale(' + scale + ',1)'
 }
 
-function _play_shape(shape) {
-    if (!audio_context) {
-        audio_context = new AudioContext()
+self.play_wave = (shape, channel = 0) => {
+    let chan = channels[channel]
+    _clear_audio(chan)
+    let amp = chan.amp
+    amp.gain.value = last_volume
+    if (!chan.oscillator) {
+        let osc = audio_context.createOscillator()
+        osc.connect(amp)
+        osc.start()
+        osc.frequency.value = last_frequency
+        chan.oscillator = osc
     }
-    if (!amp) {
-        amp = audio_context.createGain()
-        amp.connect(audio_context.destination)
-        amp.gain.value = last_volume
-    }
-    if (!oscillator) {
-        oscillator = audio_context.createOscillator()
-        oscillator.connect(amp)
-        oscillator.start()
-        oscillator.frequency.value = last_frequency
-    }
-    if (oscillator.type != shape) {
-        oscillator.type = shape
+    if (chan.oscillator.type != shape) {
+        chan.oscillator.type = shape
     }
 }
 
-self.play_wave = (shape = 'stop') => {
-    if (shape == 'stop') {
-        oscillator.stop()
-        oscillator = false
-    } else {
-        _play_shape(shape) // shape assumed to be sine/triangle/square/sawtooth
-    }
-}
-
-self.wave_frequency = (min_hz, max_hz, val) => {
+self.wave_frequency = (min_hz, max_hz, channel, val) => {
     let _hz = ((max_hz - min_hz)*val) + min_hz
-    if (oscillator) {
-        oscillator.frequency.value = _hz
+    let osc = channels[channel].oscillator
+    if (osc) {
+        osc.frequency.value = _hz
     }
     last_frequency = _hz // for initialisation
 }
 
-self.wave_volume = (min_percent, max_percent, val) => {
+self.wave_volume = (min_percent, max_percent, channel, val) => {
     let _volume = (((max_percent - min_percent)* val) + min_percent)/100
-    if (amp) {
-        amp.gain.value = _volume
-    }
+    channels[channel].amp.gain.value = _volume
     last_volume = _volume
 }

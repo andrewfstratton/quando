@@ -1,4 +1,4 @@
-<div class="quando-block" data-quando-javascript="quando.media.wave_frequency(${min},${max},val)">
+<div class="quando-block" data-quando-javascript="quando.media.wave_frequency(${min},${max},${channel},val)">
     <div class="quando-left quando-media"></div>
     <div class="quando-right">
         <div class="quando-row quando-media">
@@ -9,6 +9,29 @@
             <input data-quando-name='max' type='number' value='500' placeholder='' style='width: 5em' min='16'
                 max='32000' data-quando-encode='normal' />
             Hz
+            <select data-quando-name="extras" class="quando-toggle">
+                <option value="hidden">+</option>
+                <option value="show">-</option>
+            </select>
+            <span data-quando-toggle='channel=1'>
+                <b>on 1</b>
+            </span>
+            <span data-quando-toggle='channel=2'>
+                <b>on 2</b>
+            </span>
+            <span data-quando-toggle='channel=3'>
+                <b>on 3</b>
+            </span>
+            <span data-quando-toggle="extras=show">
+                <br>
+                Channel
+                <select data-quando-name="channel">
+                    <option value='0'>main</option>
+                    <option value='1'>1</option>
+                    <option value='2'>2</option>
+                    <option value='3'>3</option>
+                </select>
+            </span>
         </div>
     </div>
 </div>
