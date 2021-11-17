@@ -1,4 +1,4 @@
-<div class="quando-block" data-quando-javascript="quando.media.wave_volume(${min},${max},${channel},val)">
+<div class="quando-block" data-quando-javascript="quando.media.wave_volume(${min},${max},${channel},${inverted},val)">
     <div class="quando-left quando-media"></div>
     <div class="quando-right">
         <div class="quando-row quando-media">
@@ -30,6 +30,10 @@
                     <option value='1'>1</option>
                     <option value='2'>2</option>
                     <option value='3'>3</option>
+                </select>
+                <select data-quando-name='inverted' class='quando-toggle'>
+                    <option value='false'>Normal</option>
+                    <option value='true'>Inverted</option>
                 </select>
             </span>
         </div>

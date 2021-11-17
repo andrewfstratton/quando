@@ -120,7 +120,10 @@ self.wave_frequency = (min_hz, max_hz, channel, val) => {
     last_frequency = _hz // for initialisation
 }
 
-self.wave_volume = (min_percent, max_percent, channel, val) => {
+self.wave_volume = (min_percent, max_percent, channel, inverted, val) => {
+    if (inverted) {
+        val = 1 - val
+    }
     let _volume = (((max_percent - min_percent)* val) + min_percent)/100
     channels[channel].amp.gain.value = _volume
     last_volume = _volume
