@@ -62,7 +62,7 @@ export function getCodeInBlock(block) {
                 let pre = ""
                 let post = ""
                 if (row_box.dataset.quandoFnArray) {
-                    pre = "() => {\n"
+                    pre = "(val,txt) => {\n"
                     separator = ",\n"
                     post = "}"
                 }

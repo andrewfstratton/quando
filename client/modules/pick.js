@@ -9,46 +9,40 @@ let _list = {}
 let _list_temp = {}
 let _last_pick = []
 
-function _pick(val, arr, block_id, type) {
-  if (val === false) {
-    val = 0.5
-  }
-  let i = Math.floor(val * arr.length)
-  if (i == arr.length) {
-    i--
-  }
-  if (i >= 0) { // skip when empty
-    if ((type == "Different") && (arr.length > 1)) {
-      if (i != _last_pick[block_id]) {
-        arr[i]()
-        _last_pick[block_id] = i
-      } else {
-        self.random(block_id, type)
-      }
-    } else {
-      arr[i]()
-      _last_pick[block_id] = i
-    }
-    if (type == "Reorder") {
-      arr.splice(i, 1)
-    }
-  }
-}
-
-
-self.random = (block_id, type) => {
+self.random = (block_id, type, val, txt) => {
   //if all things in temp list have been executed, reset list
   if (_list_temp[block_id].length == 0) {
     _list_temp[block_id] = [..._list[block_id]]
   }
   //pick random from list
   let r = Math.random()
-  _pick(r, _list_temp[block_id], block_id, type)
+  let i = Math.floor(r * _list_temp.length)
+  if (i == _list_temp.length) {
+    i--
+  }
+  if (i >= 0) { // skip when empty
+    if ((type == "Different") && (_list_temp.length > 1)) {
+      if (i != _last_pick[block_id]) {
+        _list_temp[i](val, txt)
+        _last_pick[block_id] = i
+      } else {
+        self.random(block_id, type) // TODO remove recursion
+      }
+    } else { // only one block to pick from
+      _list_temp[i](val, txt)
+      _last_pick[block_id] = i
+    }
+    if (type == "Reorder") {
+      _list_temp.splice(i, 1) // remove the chosen block
+    }
+  }
 }
 
 self.set = (block_id, arr) => {
   _list[block_id] = arr
   _list_temp[block_id] = [..._list[block_id]] //set _list_temp as copy of _list
+  let last_block = Math.floor(arr.len * 0.5) // i.e. default value
+  _last_pick[block_id] = last_block
 }
 
 self.reset = (block_id) => {
@@ -56,7 +50,7 @@ self.reset = (block_id) => {
   delete arr.index
 }
 
-self.one = (block_id, message, next) => {
+self.one = (block_id, message, next, val, txt) => {
   let arr = _list[block_id]
   if (arr.length > 0) {
     if (!arr.hasOwnProperty('index')) {
@@ -76,7 +70,7 @@ self.one = (block_id, message, next) => {
         arr.index = arr.length-1
       }
     }
-    if (typeof fn === 'function') { fn() }
+    if (typeof fn === 'function') { fn(val, txt) }
   }
 
   if (message.length) {
@@ -84,19 +78,35 @@ self.one = (block_id, message, next) => {
   }
 }
 
-self.val = (block_id, val) => {
+self.val = (block_id, val, txt) => {
   let arr = _list[block_id]
-  if (val === false) {
-    val = 0.5
+  const len = arr.length
+  if (len > 0) { // must have at least one block to execute
+    let block = Math.floor(val * len)
+    if (block == len) {
+      block--
+    }
+    let last_block = _last_pick[block_id]
+    if (last_block != block) { // i.e. we have moved block
+      let previous_block = block + 1 // assume we have moved down
+      let boundary_val = 0
+      if (last_block < block) { // i.e. we have moved 'up'
+        previous_block = block - 1
+        boundary_val = 1
+      }
+      let boundary_fn = arr[previous_block]
+      if (typeof boundary_fn === 'function') {
+        arr[previous_block](boundary_val, txt)
+      }
+    }
+    _last_pick[block_id] = block
+    let new_val = (val * len) % 1
+    if (val == 1) { new_val++ } // so 1 does not become 0
+    arr[block](new_val, txt)
   }
-  let i = Math.floor(val * arr.length)
-  if (i == arr.length) {
-    i--
-  }
-  arr[i]()
 }
 
-self.every = (block_id, time, duration) => {
+self.every = (block_id, time, duration, val, txt) => {
   let arr = _list[block_id]
   if (arr.length > 0) {
     arr.index = 0 // start at 0
@@ -111,7 +121,7 @@ self.every = (block_id, time, duration) => {
       if (++arr.index >= arr.length) {
         arr.index = 0
       }
-      if (typeof fn === 'function') { fn() }
+      if (typeof fn === 'function') { fn(val, txt) }
     }
     every_fn() // Call now
     let interval_id = setInterval(every_fn, ms)
