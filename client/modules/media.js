@@ -98,7 +98,6 @@ self.play_wave = (shape, channel = 0) => {
     let chan = channels[channel]
     _clear_audio(chan)
     let amp = chan.amp
-    amp.gain.value = last_volume
     if (!chan.oscillator) {
         let osc = audio_context.createOscillator()
         osc.connect(amp)
@@ -120,11 +119,11 @@ self.wave_frequency = (min_hz, max_hz, channel, val) => {
     last_frequency = _hz // for initialisation
 }
 
-self.wave_volume = (min_percent, max_percent, channel, inverted, val) => {
-    if (inverted) {
-        val = 1 - val
+self.mix_volume = (from, to, val) => {
+    if (from >= 0) {
+        channels[from].amp.gain.value = 1-val
     }
-    let _volume = (((max_percent - min_percent)* val) + min_percent)/100
-    channels[channel].amp.gain.value = _volume
-    last_volume = _volume
+    if (to >= 0) {
+        channels[to].amp.gain.value = val
+    }
 }
