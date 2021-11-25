@@ -36,8 +36,9 @@ function _clear_audio(chan) {
     }
 }
 
-self.play_audio = (audio_in, loop = false, channel = 0) => {
+self.play_audio = (audio_in, loop = false, channel = 0, volume=100) => {
     const chan = channels[channel]
+    chan.amp.gain.value = volume/100
     if (audio_in) {
         let audio_src = '/client/media/' + encodeURI(audio_in)
         // Don't interrupt when already playing
@@ -94,8 +95,9 @@ self.projection = (front = true) => {
     document.getElementById('html').style.transform = 'scale(' + scale + ',1)'
 }
 
-self.play_wave = (shape, channel = 0) => {
+self.play_wave = (shape, channel = 0, volume=100) => {
     let chan = channels[channel]
+    chan.amp.gain.value = volume/100
     _clear_audio(chan)
     let amp = chan.amp
     if (!chan.oscillator) {
