@@ -11,29 +11,30 @@ let _last_pick = []
 
 self.random = (block_id, type, val, txt) => {
   //if all things in temp list have been executed, reset list
-  if (_list_temp[block_id].length == 0) {
-    _list_temp[block_id] = [..._list[block_id]]
+  let block_list = _list_temp[block_id]
+  if (block_list.length == 0) {
+    _list_temp[block_id] = block_list = [..._list[block_id]]
   }
   //pick random from list
   let r = Math.random()
-  let i = Math.floor(r * _list_temp.length)
-  if (i == _list_temp.length) {
+  let i = Math.floor(r * block_list.length)
+  if (i == block_list.length) {
     i--
   }
   if (i >= 0) { // skip when empty
-    if ((type == "Different") && (_list_temp.length > 1)) {
+    if ((type == "Different") && (block_list.length > 1)) {
       if (i != _last_pick[block_id]) {
-        _list_temp[i](val, txt)
+        block_list[i](val, txt)
         _last_pick[block_id] = i
       } else {
         self.random(block_id, type) // TODO remove recursion
       }
     } else { // only one block to pick from
-      _list_temp[i](val, txt)
+      block_list[i](val, txt)
       _last_pick[block_id] = i
     }
     if (type == "Reorder") {
-      _list_temp.splice(i, 1) // remove the chosen block
+      block_list.splice(i, 1) // remove the chosen block
     }
   }
 }
