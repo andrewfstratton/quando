@@ -8,8 +8,10 @@ let self = window.quando = {}
 let idle_reset_ms = 0
 let idle_callback_id = 0
 let _displays = new Map()
+let _current_display_id = false
 let io_protocol = "ws"
 let port = window.location.port
+
 if (['wss:','https:'].includes(window.location.protocol)) {
   io_protocol += "s"
   if (port == 443) {
@@ -299,19 +301,22 @@ let socket = io.connect(io_protocol + '://' + window.location.hostname + port)
   }
 
   self.showDisplay = function (id) {
-    // perform any destructors - which will cancel pending events, etc.
-    // assumes that display is unique...
-    destructor.destroy()
-    // Clear current labels, title and text
-    document.getElementById('quando_labels').innerHTML = ''
-    self.title()
-    self.text()
-    //clear AR 
-//    quando.ar.clear()
-//        self.video() removed to make sure video can continue playing between displays
-    self.style.reset()
-    // Find display and execute...
-    _displays.get(id)()
+    if (_current_display_id != id) {
+      // perform any destructors - which will cancel pending events, etc.
+      // assumes that display is unique...
+      destructor.destroy()
+      // Clear current labels, title and text
+      document.getElementById('quando_labels').innerHTML = ''
+      self.title()
+      self.text()
+      //clear AR 
+  //    quando.ar.clear()
+  //        self.video() removed to make sure video can continue playing between displays
+      self.style.reset()
+      _current_display_id = id
+      // Find display and execute...
+      _displays.get(id)()
+    }
   }
 
   self.addLabel = function (id, padding_size, padding_location, title) {
