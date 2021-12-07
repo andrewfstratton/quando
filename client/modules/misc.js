@@ -6,6 +6,7 @@ if (!quando) {
 }
 let self = quando.misc = {}
 let _adjusters = {}
+let _range_duration = {}
 
 function tidy_adjuster(adjuster) { // collect any values since the last 'per' cycle
   let total = adjuster.latest // this value is used if no new ones are found
@@ -73,4 +74,21 @@ self.scale = (val, min, max, callback) => {
 self.open = (url) => {
   let new_window = window.open(url, 'Quando opened window', 'left=0,top=0,width=9999,height=9999');
   new_window.focus() // moveTo(0,0);
+}
+
+self.whenRange = (block_id, val, middle, range, duration, callback, duration_callback) => {
+  const min = Math.max(middle-range,0)/100
+  const max = Math.min(middle+range,100)/100
+  if ((val >= min) && (val <= max)) { // Matches range
+    if (!_range_duration.hasOwnProperty(block_id)) { // duration_callback not yet set
+      // callback later when value has stayed in range long enough
+      _range_duration[block_id] = setTimeout(duration_callback, duration*1000)
+      callback()
+    }
+  } else { // outside of range so cancel and remove callback - if it exists
+    if (_range_duration.hasOwnProperty(block_id)) {
+      clearTimeout(_range_duration[block_id])
+      delete _range_duration[block_id]
+    }
+  }
 }
