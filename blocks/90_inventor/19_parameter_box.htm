@@ -1,13 +1,18 @@
 <div class="quando-block"
-  data-quando-javascript="$(eq$,${comma}$,true$,,)$(val)=>{${box}}">
+  data-quando-javascript="$(eq$,${comma}$,true$,,)$($(eq$,${val}$,true$,val)$)=>{${box}}">
   <div class="quando-left quando-inventor-input"></div>
   <div class="quando-right">
     <div class="quando-row quando-inventor-input">📄
       Parameter 
       <select data-quando-name='comma' class='quando-toggle'>
-        <option value='true'>, {box}</option>
-        <option value='false'>{box}</option>
+        <option value='true'>,</option>
+        <option value='false'></option>
       </select>
+      <select data-quando-name='val' class='quando-toggle'>
+        <option value='true'>(val)</option>
+        <option value='false'>()</option>
+      </select>
+      => {${box}}
     </div>
   </div>
 </div>
