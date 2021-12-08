@@ -12,7 +12,7 @@ def _open(path):
     webbrowser.open(url, new=TAB, autoraise=True)
 
 def open_editor():
-    _open("inventor")
+    _open("editor")
 
 def open_client():
     _open("client")

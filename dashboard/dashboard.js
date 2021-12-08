@@ -34,17 +34,17 @@ function onload() {
         if (port) {
           port = ":" + port
         }
-        let inventor_url = `${ip}${port}/inventor`
+        let editor_url = `${ip}${port}/editor`
         let client_url = `${ip}${port}/client`
         if (res.local == false) { // remote access 
-          inventor_url = document.location + 'inventor'
+          editor_url = document.location + 'editor'
           client_url = document.location + 'client'
         }
-        inventor_qrcode = document.getElementById('inventor_qrcode')
-        new QRCode(inventor_qrcode, {
-          text: inventor_url, width:160, height:160, correctLevel : QRCode.CorrectLevel.L, colorDark : "#000088", colorLight : "#ffffff",
+        let editor_qrcode = document.getElementById('editor_qrcode')
+        new QRCode(editor_qrcode, {
+          text: editor_url, width:160, height:160, correctLevel : QRCode.CorrectLevel.L, colorDark : "#000088", colorLight : "#ffffff",
         })
-        inventor_qrcode.onclick = () => { window.open(inventor_url) }
+        editor_qrcode.onclick = () => { window.open(editor_url) }
         client_qrcode = document.getElementById('client_qrcode')
         new QRCode(client_qrcode, {
           text: client_url, width:160, height:160, correctLevel : QRCode.CorrectLevel.L, colorDark : "#008800", colorLight : "#ffffff",

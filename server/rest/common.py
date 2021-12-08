@@ -10,4 +10,4 @@ def common_index(path):
 
 @app.route('/favicon.ico')
 def favicon():
-    return send_file(os_join(app.root_path, 'inventor', 'favicon.ico'))
+    return send_file(os_join(app.root_path, 'editor', 'favicon.ico'))

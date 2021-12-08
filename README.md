@@ -9,7 +9,7 @@ Quando currently be installed:
 
 **N.B. The details below assume the server will be running locally on http://127.0.0.1, please replace with https://word2-word2-4567.codio.io for a Codio installation.**
 
-You can open the Editor from the (small) popup window or by opening [127.0.0.1/inventor](127.0.0.1/inventor) in Chrome browser.
+You can open the Editor from the (small) popup window or by opening [127.0.0.1/editor](127.0.0.1/editor) in Chrome browser.
 
 _You may also replace 127.0.0.1 with another PC's IP address or a hostname_
 

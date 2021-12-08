@@ -1415,7 +1415,7 @@ export function add_robot_voice_tuning(event) {
   }
 
 export function handle_help(type = false) {
-    let url = "/inventor/help/help.html"
+    let url = "/editor/help/help.html"
     if (type) { url += "#" + type }
     window.open(url, "quando_help").focus()
   }

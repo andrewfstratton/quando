@@ -3,30 +3,30 @@ from __main__ import app
 from os.path import join as os_join
 from flask import send_file, send_from_directory
 
-@app.route('/inventor/')
-def inventor():
-    return send_file(os_join(app.root_path, 'inventor', 'index.html'))
+@app.route('/editor/')
+def editor():
+    return send_file(os_join(app.root_path, 'editor', 'index.html'))
 
-@app.route('/inventor/index.js')
+@app.route('/editor/index.js')
 def index_js():
-    return send_file(os_join(app.root_path, 'inventor', 'index.js'), mimetype="application/javascript")
+    return send_file(os_join(app.root_path, 'editor', 'index.js'), mimetype="application/javascript")
 
-@app.route('/inventor/js/<path:path>')
+@app.route('/editor/js/<path:path>')
 def js(path):
-    return send_from_directory(os_join(app.root_path, 'inventor', 'js'), path, mimetype="application/javascript")
+    return send_from_directory(os_join(app.root_path, 'editor', 'js'), path, mimetype="application/javascript")
 
-@app.route('/inventor/img/<path:path>')
+@app.route('/editor/img/<path:path>')
 def img(path):
-    return send_from_directory(os_join(app.root_path, 'inventor', 'img'), path)
+    return send_from_directory(os_join(app.root_path, 'editor', 'img'), path)
 
-@app.route('/inventor/css/<path:path>')
+@app.route('/editor/css/<path:path>')
 def css(path):
-    return send_from_directory(os_join(app.root_path, 'inventor', 'css'), path)
+    return send_from_directory(os_join(app.root_path, 'editor', 'css'), path)
 
-@app.route('/inventor/help/<path:path>')
+@app.route('/editor/help/<path:path>')
 def help_(path):
-    return send_from_directory(os_join(app.root_path, 'inventor', 'help'), path)
+    return send_from_directory(os_join(app.root_path, 'editor', 'help'), path)
 
-@app.route('/inventor/fonts/<path:path>')
+@app.route('/editor/fonts/<path:path>')
 def fonts(path):
-    return send_from_directory(os_join(app.root_path, 'inventor', 'fonts'), path)
+    return send_from_directory(os_join(app.root_path, 'editor', 'fonts'), path)
