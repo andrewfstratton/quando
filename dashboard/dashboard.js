@@ -44,12 +44,12 @@ function onload() {
         new QRCode(editor_qrcode, {
           text: editor_url, width:160, height:160, correctLevel : QRCode.CorrectLevel.L, colorDark : "#000088", colorLight : "#ffffff",
         })
-        editor_qrcode.onclick = () => { window.open(editor_url) }
+        editor_qrcode.onclick = () => { window.open('//' + editor_url) }
         client_qrcode = document.getElementById('client_qrcode')
         new QRCode(client_qrcode, {
           text: client_url, width:160, height:160, correctLevel : QRCode.CorrectLevel.L, colorDark : "#008800", colorLight : "#ffffff",
         })
-        client_qrcode.onclick = () => { window.open(client_url) }
+        client_qrcode.onclick = () => { window.open('//' + client_url) }
         set('local', (res.local?'Local':'Remote') + ' Access')
         if (res.local) {
           document.getElementById('local_panel').style.visibility = 'visible'
