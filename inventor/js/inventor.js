@@ -1,4 +1,4 @@
-// support the inventor (editor) page
+// support the editor page
 import * as generator from "./generator.js"
 import * as json from "./json.js"
 import * as undo from "./undo.js"

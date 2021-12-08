@@ -37,7 +37,7 @@ The instructions below assume that you are using Visual Studio Code, though spec
 
 Run the editor, then:
 1. Run Quando, in a terminal, with `python server.py`
-2. In the popup window, choose `Dashboard` or `Inventor` for editing or `Client`
+2. In the popup window, choose `Dashboard` or `Editor` for editing or `Client`
 3. If Chrome does not open, then open a Chrome browser to http://127.0.0.1
 
 Note: The client screen can be right clicked to allow you to select already deployed/created scripts - whichever one you open will be reopened next time you open 127.0.0.1/client.  This can also be done from the kiosk boot, so that a different interaction is loaded next time the PC reboots.

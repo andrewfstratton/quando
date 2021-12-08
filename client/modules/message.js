@@ -11,7 +11,7 @@
       host += ':' + port
     }
     txt_val = (txt?'txt':'val') + '=' + encodeURI(txt_val)
-    // Can't use common._Get since that is for inventor and module...
+    // Can't use common._Get since that is for editor and module...
     fetch(`${host}/${path}?${txt_val}`, { method: 'GET'
     }).then((resp) => resp.json()
     ).then((resp) => {

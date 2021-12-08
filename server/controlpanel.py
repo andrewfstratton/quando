@@ -11,7 +11,7 @@ def _open(path):
     url = "http://127.0.0.1/" + path
     webbrowser.open(url, new=TAB, autoraise=True)
 
-def open_inventor():
+def open_editor():
     _open("inventor")
 
 def open_client():
@@ -32,7 +32,7 @@ def run():
         master.title("Quando : Control Panel")
         top = tk.Frame(master)
         top.pack()
-        tk.Button(top, text = "Inventor", width=20, command=open_inventor).pack(side=tk.LEFT)
+        tk.Button(top, text = "Editor", width=20, command=open_editor).pack(side=tk.LEFT)
         tk.Button(top, text = "Client", width=20, command=open_client).pack(side=tk.LEFT)
         tk.Button(top, text = "Dashboard", width=20, command=open_dashboard).pack(side=tk.LEFT)
         root.loop()
