@@ -1,5 +1,5 @@
 <div class="quando-block" data-quando-id="true"
-    data-quando-javascript="quando.misc.whenRange(${data-quando-id},val,${middle},${range},${duration},()=>{${box}},()=>{${direction_box}})">
+    data-quando-javascript="quando.misc.whenRange(${data-quando-id},val,${middle},${range},${duration},()=>{${box}},()=>{${duration_box}})">
     <div class="quando-left quando-advanced"></div>
     <div class="quando-right">
         <div class="quando-row quando-advanced">⚡
@@ -17,23 +17,16 @@
                 <input data-quando-name='range' type='number' value='5' placeholder='' style='width: 4em' min='0'
                     max='100' data-quando-encode='normal' />
                 %
-                <select data-quando-name='show_duration' class='quando-toggle'>
-                    <option value='false'>Hidden</option>
-                    <option value='true'>Visible</option>
-                </select>
-                duration
             </span>
         </div>
         <div data-quando-name="box" class="quando-box"></div>
-        <span data-quando-toggle='show_duration=true'>
-            <div class="quando-row quando-advanced">
-                ... then When match for
-                <input data-quando-name='duration' type='number' value='0.5' placeholder='' style='width: 4em' min='0'
-                    max='100' data-quando-encode='normal' />
-                seconds
-            </div>
-            <div data-quando-name="direction_box" class="quando-box"></div>
-        </span>
+        <div class="quando-row quando-advanced">
+            ... then When match for
+            <input data-quando-name='duration' type='number' value='0.5' placeholder='' style='width: 4em' min='0'
+                max='100' data-quando-encode='normal' />
+            seconds
+        </div>
+        <div data-quando-name="duration_box" class="quando-box"></div>
         <div class="quando-row quando-advanced"></div>
     </div>
 </div>
