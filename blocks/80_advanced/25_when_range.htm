@@ -1,5 +1,5 @@
 <div class="quando-block" data-quando-id="true"
-    data-quando-javascript="quando.misc.whenRange(${data-quando-id},val,${middle},${range},${duration},()=>{${box}},()=>{${duration_box}})">
+    data-quando-javascript="quando.misc.whenRange(${data-quando-id},val,${middle},${range},${duration},()=>{${box}},()=>{${duration_box}}, ${showProgRing})">
     <div class="quando-left quando-advanced"></div>
     <div class="quando-right">
         <div class="quando-row quando-advanced">⚡
@@ -25,6 +25,14 @@
             <input data-quando-name='duration' type='number' value='0.5' placeholder='' style='width: 4em' min='0'
                 max='100' data-quando-encode='normal' />
             seconds
+            <span data-quando-toggle="extras=show">
+                <br>
+                <select data-quando-name="showProgRing" class='quando-toggle'>
+                    <option value="false">Don't</option>
+                    <option value="true">Do</option>
+                </select>
+                show loader
+            </span>
         </div>
         <div data-quando-name="duration_box" class="quando-box"></div>
         <div class="quando-row quando-advanced"></div>

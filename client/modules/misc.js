@@ -7,6 +7,9 @@ if (!quando) {
 let self = quando.misc = {}
 let _adjusters = {}
 let _range_duration = {}
+let _progress_ring_interval = {}
+let _progress_ring_duration;
+let _progress_ring_time = 0;
 
 function tidy_adjuster(adjuster) { // collect any values since the last 'per' cycle
   let total = adjuster.latest // this value is used if no new ones are found
@@ -76,19 +79,58 @@ self.open = (url) => {
   new_window.focus() // moveTo(0,0);
 }
 
-self.whenRange = (block_id, val, middle, range, duration, callback, duration_callback) => {
+self.setProgressRingProgress = (percentage) => {
+  let circle = document.getElementById("progress-ring-circle")
+  if (circle) {
+    const circumference = 56 * 2 * Math.PI
+    const offset = circumference - percentage / 100 * circumference
+    if (offset <= 0) {
+      circle.style.strokeDashoffset = 0
+    } else {
+      circle.style.strokeDashoffset = offset
+    }
+  } else {
+    console.log("circle element for progress ring not present.")
+  }
+  if (percentage > 99) {
+    clearInterval(_progress_ring_interval);
+  }
+}
+let _initialiseProgressRing = (duration, block_id) => {
+  _progress_ring_duration = duration*1000;
+  _progress_ring_time = 0;
+  let time = 100;
+  _progress_ring_interval[block_id] = setInterval(() => {
+    let percentage = (_progress_ring_time/_progress_ring_duration) * 100
+    console.log("pr time ", _progress_ring_time)
+    quando.misc.setProgressRingProgress(percentage + 4)
+    _progress_ring_time += time;
+  }, time)
+}
+let _resetProgressRing = (block_id) => {
+  clearInterval(_progress_ring_interval[block_id])
+    console.log("clearing ", _progress_ring_interval[block_id], "?")
+  _progress_ring_time = 0
+  quando.misc.setProgressRingProgress(0)
+}
+
+self.whenRange = (block_id, val, middle, range, duration, callback, duration_callback, showProgressRing) => {
   const min = Math.max(middle-range,0)/100
   const max = Math.min(middle+range,100)/100
   if ((val >= min) && (val <= max)) { // Matches range
     if (!_range_duration.hasOwnProperty(block_id)) { // duration_callback not yet set
       // callback later when value has stayed in range long enough
-      _range_duration[block_id] = setTimeout(duration_callback, duration*1000)
+      _range_duration[block_id] = setTimeout(duration_callback, duration * 1000)
       callback()
+      showProgressRing ? _initialiseProgressRing(duration, block_id) : null
     }
   } else { // outside of range so cancel and remove callback - if it exists
     if (_range_duration.hasOwnProperty(block_id)) {
       clearTimeout(_range_duration[block_id])
       delete _range_duration[block_id]
+      showProgressRing ? _resetProgressRing(block_id) : null
+    }
+    if (_progress_ring_interval.hasOwnProperty(block_id)) {
     }
   }
 }
