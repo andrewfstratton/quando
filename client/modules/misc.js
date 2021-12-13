@@ -96,20 +96,22 @@ self.setProgressRingProgress = (percentage) => {
     clearInterval(_progress_ring_interval);
   }
 }
+
 let _initialiseProgressRing = (duration, block_id) => {
   _progress_ring_duration = duration*1000;
   _progress_ring_time = 0;
+
+  // set interval for updating ring value over time
   let time = 100;
   _progress_ring_interval[block_id] = setInterval(() => {
     let percentage = (_progress_ring_time/_progress_ring_duration) * 100
-    console.log("pr time ", _progress_ring_time)
+    // set ring status with offset of 4 to ensure ring completion
     quando.misc.setProgressRingProgress(percentage + 4)
     _progress_ring_time += time;
   }, time)
 }
 let _resetProgressRing = (block_id) => {
   clearInterval(_progress_ring_interval[block_id])
-    console.log("clearing ", _progress_ring_interval[block_id], "?")
   _progress_ring_time = 0
   quando.misc.setProgressRingProgress(0)
 }
