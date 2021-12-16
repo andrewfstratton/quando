@@ -1,1 +1,1 @@
-pip install flask flask-socketio
+pip install flask flask-socketio eventlet
