@@ -8,7 +8,7 @@ let self = window.quando = {}
 let idle_reset_ms = 0
 let idle_callback_id = 0
 let _displays = new Map()
-let _current_display_id = false
+let _current_display_id = -1 // to avoid being equal by accident to 0
 let io_protocol = "ws"
 let port = window.location.port
 
