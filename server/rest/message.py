@@ -3,9 +3,16 @@ from __main__ import app
 from flask import jsonify, request
 from flask_socketio import emit
 import server.common
-import urllib
+# import urllib
 
-io = False
+_io = False
+
+@app.route('/device/<id>', methods=['POST'])
+def device_post(id): # used to push state changes to local devices
+    data = server.common.decode_json_data(request)
+    id = "!"+id # prefix with ! for special (internal) messages
+    _io.emit(id, data)
+    return jsonify({})
 
 @app.route('/message/<id>', methods=['POST'])
 def message_post(id):
@@ -24,12 +31,13 @@ def message_post(id):
 # # emit('my response', json, namespace='/chat')
 #     else:
     data = {"val": val, "local": local}
+    id = "$"+id # prefix with $ for val/txt messages
     if local and socket_id:
-        io.emit(id, data, to=socket_id)
+        _io.emit(id, data, to=socket_id)
     else:
-        io.emit(id, data)
+        _io.emit(id, data)
     return jsonify({})
 
-def set_io(_io):
-    global io
-    io = _io
+def set_io(io):
+    global _io
+    _io = io

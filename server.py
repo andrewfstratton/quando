@@ -1,7 +1,7 @@
 # See install.bat for installed
 
 from flask import Flask
-import flask_socketio
+from flask_socketio import SocketIO
 import logging
 import server.controlpanel
 import multiprocessing
@@ -11,7 +11,7 @@ import socket, sys
 app = Flask(__name__)
 db.set_path_for_db(app.root_path)
 app.config['SECRET_KEY'] = 'quando_secret'
-socketio = flask_socketio.SocketIO(app, cors_allowed_origins="*", use_reloader=False)
+socketio = SocketIO(app, cors_allowed_origins="*", use_reloader=False)
 
 @app.after_request
 def add_header(response):
@@ -71,7 +71,7 @@ if __name__ == '__main__':
     try:
         from server.devices import ubit
         import server.rest.ubit
-        ubit.run(socketio)
+        ubit.run()
     except ImportError:
         print("Running without micro:bit")
     multiprocessing.Process(target=server.controlpanel.run).start()

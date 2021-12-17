@@ -6,12 +6,6 @@ if (!quando) {
   let self = quando.ubit = {}
   let last_data = {}
   self.last_servo = []
-  const SOCKET_IO_URI = "127.0.0.1"
-
-  function connect() {
-    self.socket = io(SOCKET_IO_URI)
-    self.socket.on("ubit", handle_message)
-  }
 
   function _add_handle_change(down_up, event_name, callback) {
     switch (down_up) {
@@ -144,7 +138,7 @@ if (!quando) {
     }
   }
 
-  function handle_message(data) {
+  self.handle_message = (data) => {
     console.log(data)
     if (data.orientation) {
       if (data.orientation != last_data.orientation) {
@@ -210,5 +204,3 @@ if (!quando) {
       _ubit_send('turn', {'servo':servo+1, 'angle':angle}) // also add 1 to servo for no number as well
     }
   }
-
-connect() // try to connect

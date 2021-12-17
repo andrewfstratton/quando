@@ -1,6 +1,6 @@
 # Access to micro:bit, currently for Windows
 import serial.tools.list_ports
-import serial, time, json, math
+import serial, time, json, math, requests
 from threading import Thread
 
 VID = 0x0D28
@@ -8,7 +8,6 @@ PID = 0x0204
 SNOOZE = 0.02
 
 _serial = False
-io = False
 
 class COMMS: # character
     BUTTON_A = 'a'
@@ -108,7 +107,6 @@ def handle_message(msg):
     return result
 
 def check_message():
-    global io
     while True:
         line = get_ubit_line()
         # print(line)
@@ -118,13 +116,12 @@ def check_message():
                 _out = handle_message(msg)
                 if _out:
                     # print(line.rstrip(), ">>", _out)
-                    io.emit("ubit", _out)
+                    resp = requests.post('http://127.0.0.1/device/ubit', json = _out)
+                    # print(resp.status_code)
         else:
             time.sleep(SNOOZE)
 
-def run(socket_io):
-    global io
-    io = socket_io
+def run():
     Thread(target=check_message).start()
 
 # Control below:

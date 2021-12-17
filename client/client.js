@@ -39,8 +39,10 @@ let socket = io.connect(io_protocol + '://' + window.location.hostname + port)
       window.location.reload(true) // nocache reload - probably not necessary
     }
   })
+  socket.on("!ubit", (data) => { self.ubit.handle_message(data)})
 
   self.add_message_handler = (message, callback) => {
+    message = "$" + message
     socket.on(message, (data) => {
       callback(data.val)
     })
