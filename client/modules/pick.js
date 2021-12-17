@@ -42,8 +42,7 @@ self.random = (block_id, type, val, txt) => {
 self.set = (block_id, arr) => {
   _list[block_id] = arr
   _list_temp[block_id] = [..._list[block_id]] //set _list_temp as copy of _list
-  let last_block = Math.floor(arr.len * 0.5) // i.e. default value
-  _last_pick[block_id] = last_block
+  _last_pick[block_id] = -1
 }
 
 self.reset = (block_id) => {
@@ -79,7 +78,7 @@ self.one = (block_id, message, next, val, txt) => {
   }
 }
 
-self.val = (block_id, val, txt) => {
+self.val = (block_id, val) => {
   let arr = _list[block_id]
   const len = arr.length
   if (len > 0) { // must have at least one block to execute
@@ -88,22 +87,13 @@ self.val = (block_id, val, txt) => {
       block--
     }
     let last_block = _last_pick[block_id]
-    if (last_block != block) { // i.e. we have moved block
-      let previous_block = block + 1 // assume we have moved down
-      let boundary_val = 0
-      if (last_block < block) { // i.e. we have moved 'up'
-        previous_block = block - 1
-        boundary_val = 1
-      }
-      let boundary_fn = arr[previous_block]
+    if (last_block != block) { // i.e. we have changed block
+      let boundary_fn = arr[block]
       if (typeof boundary_fn === 'function') {
-        arr[previous_block](boundary_val, txt)
+        boundary_fn()
       }
+      _last_pick[block_id] = block
     }
-    _last_pick[block_id] = block
-    let new_val = (val * len) % 1
-    if (val == 1) { new_val++ } // so 1 does not become 0
-    arr[block](new_val, txt)
   }
 }
 
