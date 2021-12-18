@@ -102,5 +102,31 @@
         let scale = quando.convert_linear(val, mid, range, inverted)
         let elem = document.getElementById('quando_image' + (display?'_display':''))
         elem.style.transform = `scale(${scale})`
+        elem.dataset.quandoZoom = scale // save the zoom for later - simpler than calculating
     }
+
+    self.scroll = (display, val, x_not_y, inverted) => {
+        let elem = document.getElementById('quando_image' + (display?'_display':''))
+        let zoom = 1
+        if (elem.dataset && elem.dataset.quandoZoom) {
+            zoom = elem.dataset.quandoZoom
+        }
+        let rect = elem.getBoundingClientRect()
+        if (x_not_y) { // scroll <>, i.e. left..right
+            let mid = (rect.right - rect.left)/2
+            let range = mid
+            let x = quando.convert_linear(val, mid, range, 1-inverted) - mid
+            if (x < 0) { x *= 2 }
+            elem.style.left = x+'px'
+        } else { // scroll v^, i.e. down..up
+            let height = rect.bottom - rect.top
+            let mid = height/2
+            let range = mid
+            let y = quando.convert_linear(val, mid, range, 1-inverted) - mid
+            y *= 2
+            // if (y > 0) { y *= 2 }
+            elem.style.top = y+'px'
+        }
+    }
+
 })()
