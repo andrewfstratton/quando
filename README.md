@@ -1,11 +1,66 @@
 # Quando - Visual Programming for Digital Interactive Exhibits
 
-Quando currently be installed:
+## What is Quando?
+
+Quando looks similar to the Scratch 'block' editor often used for learning to program, or for end user development.
+
+However, Quando does not use standard programming concepts and **does not expect users to learn to program** and is aimed at End User Development.
+
+## Who is Quando for?
+ Quando is aimed at end users and domain experts wishing to create and edit digital interactions without having to become programmers.
+
+## What can Quando do?
+
+The main benefits of Quando are:
+
+- **Very quick** creation of simple (i.e. not deep, but typically shallow) interactions
+- **Exploring** different interaction options and choosing between different options quickly
+- **Discovering** different ways to interact and **learning** about different inputs and outputs and how they work for (other) users
+
+## What types of inputs are available?
+
+Quando allows many different inputs (and more are being added), including:
+
+- Leap Motion hand movement in 3 dimensions and rotation in 3 'angles' (six degrees of freedom)
+- Mouse movement
+- Keyboard input
+- micro:bit key and orientation
+- Gamepad input
+- (experimental) EEG headset
+- (experimental) speech recognition
+
+## What types of output are available?
+
+Some of these outputs also include inputs:
+
+- digital media - images, video, audio, (experimental) sound waves
+- (in progess) 3d object/scene
+- (experimental) Augmented Reality
+- Speech
+- Control of (local PC) mouse and keyboard
+- (experimental) Nao Robot control including full movement, speech, etc.
+- (experimental) microbit servo contol and esp32 (display)
+
+## What can Quando be used for?
+
+Quando has been used for:
+
+- interactive exhibits for museums, tpycially using the touchless Leap motion controller to interact with information displays
+- touchless interactive control of robots to aid understaning of robot abilites
+- 
+
+## Why is it called Quando?
+
+The name Quando comes from Latin for 'when' since Quando use a When based approach to describing behaviour rather than an if based approach. 
+
+# Installing Quando 
+
+Quando can currently be installed:
 
 - locally - please [see these instructions](./docs/install_local.md).
 - or in Codio - see [instructions](./docs/install_codio.md)
 
-## Using the Quando:Editor
+# Using the Quando:Editor
 
 **N.B. The details below assume the server will be running locally on http://127.0.0.1, please replace with https://word2-word2-4567.codio.io for a Codio installation.**
 
@@ -18,6 +73,7 @@ _You may also replace 127.0.0.1 with another PC's IP address or a hostname_
 After you have deployed scripts, you can open them directly from the (small) popup window or through [127.0.0.1/client](127.0.0.1/client) in Chrome browser, which will load the last script that was opened.  You can right click the screen to choose a different script to load.
 
 ### Optional - Leap Motion
+
 To use the Leap Motion, the latest Windows software v4.1.0+52211 must be installed on the Windows PC that will be the 'Client', i.e.  where the leap motion will be plugged in and the client interaction will be opened (in a web browser).  The software may be downloaded from [here](https://www2.leapmotion.com/v4.1-lmc-windows-sdk).
 
 After installing the Leap Motion Control Panel, the recommended settings are:
