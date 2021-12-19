@@ -30,7 +30,7 @@ window.addEventListener("gamepadconnected", (event) => {
     let gamepad_in_use = _getGamepad()
     if (gamepad_in_use) {
         if (event.gamepad.index == gamepad_in_use.index) { // i.e. this is the gamepad to be used
-            console.log("Using Gamepad " + gamepad_in_use.id)
+            // console.log("Using Gamepad " + gamepad_in_use.id)
             let buttons = gamepad_in_use.buttons
             for (let i=0; i<buttons.length; i++) {
                 last_buttons[i] = 0 // set unpressed initially
@@ -44,7 +44,7 @@ window.addEventListener("gamepadconnected", (event) => {
 })
 
 window.addEventListener("gamepaddisconnected", (event) => {
-  console.log("...Gamepad disconnected")
+//   console.log("...Gamepad disconnected")
 })
 
 function _getGamepad() {

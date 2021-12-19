@@ -362,7 +362,7 @@ let socket = io.connect(io_protocol + '://' + window.location.hostname + port)
 
   self.promptInput = function() {
     let input = document.getElementById('imp')
-    console.log("inp=" + input)
+    // console.log("inp=" + input)
     if (input == null) {
       let elem = document.getElementById('quando_labels')
       let div = document.createElement('div')

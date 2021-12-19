@@ -1922,7 +1922,7 @@ THREE.GLTFLoader = ( function () {
                                     && geometry.attributes.uv2 === undefined
                                     && geometry.attributes.uv !== undefined ) {
     
-                                console.log( 'THREE.GLTFLoader: Duplicating UVs to support aoMap.' );
+                                // console.log( 'THREE.GLTFLoader: Duplicating UVs to support aoMap.' );
                                 geometry.addAttribute( 'uv2', new THREE.BufferAttribute( geometry.attributes.uv.array, 2 ) );
     
                             }

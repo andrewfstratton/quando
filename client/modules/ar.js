@@ -61,7 +61,7 @@ const document = window['document']
     let elem = marker.children[0]
     setTimeout(() => {
       let rot = elem.object3D.rotation
-      console.log(" "+rot)
+      // console.log(" "+rot)
       rot.set(rot.x, rot.y, rot.z)
     }, 0);
   }

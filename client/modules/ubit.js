@@ -139,7 +139,7 @@ if (!quando) {
   }
 
   self.handle_message = (data) => {
-    console.log(data)
+    // console.log(data)
     if (data.orientation) {
       if (data.orientation != last_data.orientation) {
         let last_event_name = _data_to_event_name(last_data.orientation)
@@ -147,11 +147,11 @@ if (!quando) {
         if (last_event_name != new_event_name) {
           if (last_event_name != '') {
             quando.dispatch_event(last_event_name, {'detail': 'up'})
-            console.log(last_event_name + ':up')
+            // console.log(last_event_name + ':up')
           }
           if (new_event_name != '') {
             quando.dispatch_event(new_event_name, {'detail': 'down'})
-            console.log(last_event_name + ':down')
+            // console.log(last_event_name + ':down')
           }
         }
       }
