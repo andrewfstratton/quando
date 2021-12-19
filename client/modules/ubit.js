@@ -129,7 +129,7 @@ if (!quando) {
   }
 
   function _dispatch_up_down(new_data, old_data, event_name) {
-    if ((new_data !== undefined) && (new_data != old_data)) { // must have a new value
+    if (new_data != old_data) { // must have a new value
       let up_down = 'up'
       if (new_data) {
         up_down = 'down'
