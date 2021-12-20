@@ -9,6 +9,10 @@ def get_tk_root():
 
         _root = TkRoot()
     return _root
+
+def get_tk_width_height():
+    root = get_tk_root()
+    return root.winfo_screenwidth(), root.winfo_screenheight()
     
 class TkRoot(tk.Frame):
     def __init__(self):

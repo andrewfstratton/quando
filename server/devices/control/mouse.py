@@ -5,26 +5,24 @@ import server.common
 
 from pynput.mouse import Button, Controller
 
-root = server.common.get_tk_root()
-screen_width = root.winfo_screenwidth()
-screen_height = root.winfo_screenheight()
 _mouse = Controller()
-last_x, last_y = _mouse.position
+_last_x, _last_y = _mouse.position
+_screen_width, _screen_height = server.common.get_tk_width_height()
 
 def move_to(x_val, y_val):
-    global last_x, last_y
+    global _last_x, _last_y
     if x_val >= 0:
-        x = int(screen_width * x_val)
+        x = int(_screen_width * x_val)
     else:
-        x = last_x
+        x = _last_x
     if y_val >= 0:
         # invert since screen coordinates start at top left
         y_val = 1 - y_val
-        y = int(screen_height * y_val)
+        y = int(_screen_height * y_val)
     else:
-        y = last_y
+        y = _last_y
     _mouse.position = (x,y)
-    (last_x, last_y) = (x,y)
+    (_last_x, _last_y) = (x,y)
 
 def _press(button):
     # TODO Check mask for already pressed
