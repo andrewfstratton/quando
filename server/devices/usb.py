@@ -49,5 +49,5 @@ class Usb:
     def send_message(self, message):
         serial = self.get_serial()
         if serial:
-            serial.write((message+"\n").encode('utf-8'))
+            serial.write((message+"\r").encode('utf-8'))
             serial.flush()

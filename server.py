@@ -74,6 +74,12 @@ if __name__ == '__main__':
         ubit.run()
     except ImportError:
         print("Running without micro:bit")
+    try:
+        from server.devices import maker_pi_rp2040
+        import server.rest.maker_pi_rp2040
+        maker_pi_rp2040.run()
+    except ImportError:
+        print("Running without Maker Pi RP2040")
     multiprocessing.Process(target=server.controlpanel.run).start()
 
     # Check for ports and serve
