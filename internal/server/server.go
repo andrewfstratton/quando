@@ -3,6 +3,7 @@ package server
 import (
 	"fmt"
 	"net/http"
+	"quando/internal/config"
 )
 
 func editor(resp http.ResponseWriter, req *http.Request) {
@@ -38,5 +39,10 @@ func ServeHTTP() {
 	mux.Handle("/client/", http.StripPrefix("/client/", http.FileServer(http.Dir("./client"))))
 	mux.Handle("/common/", http.StripPrefix("/common/", http.FileServer(http.Dir("./common"))))
 	mux.HandleFunc("/favicon.ico", favicon)
-	http.ListenAndServe("127.0.0.1:8080", mux)
+	host := ":8080"
+	if !config.RemoteClient() && !config.RemoteEditor() {
+		// If all hosting is localhost, then firewall doesn't need permission
+		host = "127.0.0.1" + host
+	}
+	http.ListenAndServe(host, mux)
 }
