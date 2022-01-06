@@ -25,10 +25,7 @@ func indexOrFail(resp http.ResponseWriter, req *http.Request) {
 }
 
 func favicon(resp http.ResponseWriter, req *http.Request) {
-	fmt.Print(req.URL.Path)
-	req.URL.Path = "/editor/favicon.ico"
-	fmt.Println(" >> ", req.URL.Path)
-	editor(resp, req)
+	http.ServeFile(resp, req, "./editor/favicon.ico")
 }
 
 func ServeHTTP() {
