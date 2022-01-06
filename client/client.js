@@ -275,7 +275,7 @@ let socket = io.connect(io_protocol + '://' + window.location.hostname + port)
       document.querySelector('body').addEventListener('contextmenu', // right click title to go to setup
               function (ev) {
                 ev.preventDefault()
-                window.location.href = '../../client/setup'
+                window.location.href = '../../client/setup.html'
                 return false
               }, false)
       exec() // this is the function added by the generator
