@@ -3,14 +3,16 @@ package main
 import (
 	"fmt"
 	"quando/internal/config"
+	"quando/internal/server"
 )
 
 func main() {
 	fmt.Println("Quando Go Server started")
-	if config.Remote_client() {
+	if config.RemoteClient() {
 		fmt.Println("  Client available remotely at ...") // TODO show IP address
 	}
-	if config.Remote_editor() {
+	if config.RemoteEditor() {
 		fmt.Println("**SECURITY WARNING** Editor available remotely at ...") // TODO show IP address
 	}
+	server.ServeHTTP()
 }

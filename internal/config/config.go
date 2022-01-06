@@ -7,11 +7,11 @@ import (
 var _remote_client bool
 var _remote_editor bool
 
-func Remote_client() bool {
+func RemoteClient() bool {
 	return _remote_client
 }
 
-func Remote_editor() bool {
+func RemoteEditor() bool {
 	return _remote_editor
 }
 
