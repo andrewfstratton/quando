@@ -1,0 +1,220 @@
+<div data-quando-block-type="experimental-eeg-eeg-when-angle" class="quando-block"
+    data-quando-javascript="quando.eeg.onRotation('${angle}', ${mid_degrees}, ${plus_minus}, ${inverted}, (val) => {${box}})">
+    <div class="quando-left quando-eeg"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-eeg">
+            <span class="quando-info" title="Emotiv headset required">🧠</span>
+            When angle
+            <select data-quando-name="angle">
+                <option value='Roll'>⤹⤸ Roll</option>
+                <option value='Yaw'>⇔ Yaw</option>
+                <option value='Pitch'>⇕ Pitch</option>
+            </select>
+            &nbsp; ⚡
+            <select data-quando-name='extras' class='quando-toggle'>
+                <option value='hidden'>+</option>
+                <option value='show'>-</option>
+            </select>
+            <span data-quando-toggle='extras=show'>
+                <br />
+                <input data-quando-name="mid_degrees" type="text" value="0" data-quando-encode="normal" />
+                degrees ±
+                <input data-quando-name="plus_minus" type="text" value="180" data-quando-encode="normal" />
+                degrees
+                <select data-quando-name='inverted' class='quando-toggle'>
+                    <option value='false'>Normal</option>
+                    <option value='true'>Inverted</option>
+                </select>
+            </span>
+        </div>
+        <div data-quando-name="box" class="quando-box"></div>
+        <div class="quando-row quando-eeg"></div>
+    </div>
+</div>
+
+
+<div data-quando-block-type="experimental-eeg-eeg-when-eye" class="quando-block" data-quando-javascript="quando.eeg.onEye('${event}', () => {${box}})">
+    <div class="quando-left quando-eeg"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-eeg">
+            <span class="quando-info" title="Emotiv headset and EmotivBCI training required">🧠</span>
+            When eyes movement
+            <select data-quando-name="event">
+                <option value='Blink'>Blink</option>
+                <option value='WinkL'>Wink Left</option>
+                <option value='WinkR'>Wink Right</option>
+            </select>
+        </div>
+        <div data-quando-name="box" class="quando-box"></div>
+        <div class="quando-row quando-eeg"></div>
+    </div>
+</div>
+
+
+<div data-quando-block-type="experimental-eeg-eeg-when-emotion" class="quando-block" data-quando-javascript="quando.eeg.onEmotion('${state}', ${min}, ${max}, () => {${box}})">
+    <div class="quando-left quando-eeg"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-eeg">
+            <span class="quando-info" title="Emotiv headset required">🧠</span>
+            When emotional state
+            <select data-quando-name="state">
+                <option value='Int'>Interested</option>
+                <option value='Str'>Stressed</option>
+                <option value='Rel'>Relaxed</option>
+                <option value='Exc'>Excited</option>
+                <option value='Eng'>Engaged</option>
+                <!-- <option value='Lex<'>Long Tern Excited</option> -->
+                <option value='Foc'>Focused</option>
+            </select>
+            <select data-quando-name='extras' class='quando-toggle'>
+                <option value='hidden'>+</option>
+                <option value='show'>-</option>
+            </select>
+            <span data-quando-toggle='extras=show'>
+                <br />
+                with intensity between
+                <input data-quando-name="min" type="text" value="0.5" data-quando-encode="normal" />
+                and
+                <input data-quando-name="max" type="text" value="1" data-quando-encode="normal" />
+            </span>
+        </div>
+        <div data-quando-name="box" class="quando-box"></div>
+        <div class="quando-row quando-eeg"></div>
+    </div>
+</div>
+
+
+<div data-quando-block-type="experimental-eeg-eeg-when-face" class="quando-block"
+    data-quando-javascript="quando.eeg.onFaceExpression('${state}', ${min}, ${max}, () => {${box}})">
+    <div class="quando-left quando-eeg"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-eeg">
+            <span class="quando-info" title="Emotiv headset and EmotivBCI training required">🧠</span>
+            When face expression
+            <select data-quando-name="state">
+                <option value='Smile'>Smile</option>
+                <option value='Laugh'>Laugh</option>
+                <option value='Surprise'>Surprised</option>
+                <option value='Frown'>Furrow</option>
+                <option value='Grimace'>Clench teeth</option>
+            </select>
+            <select data-quando-name='extras' class='quando-toggle'>
+                <option value='hidden'>+</option>
+                <option value='show'>-</option>
+            </select>
+            <span data-quando-toggle='extras=show'>
+                <br />
+                with intensity between
+                <input data-quando-name="min" type="text" value="0.5" data-quando-encode="normal" />
+                and
+                <input data-quando-name="max" type="text" value="1" data-quando-encode="normal" />
+            </span>
+        </div>
+        <div data-quando-name="box" class="quando-box"></div>
+        <div class="quando-row quando-eeg"></div>
+    </div>
+</div>
+
+
+<div data-quando-block-type="experimental-eeg-eeg-when-command" class="quando-block" data-quando-javascript="quando.eeg.onCommand('${command}', ${confidence}, () => {${box}})">
+    <div class="quando-left quando-eeg"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-eeg">
+            <span class="quando-info" title="Emotiv headset and EmotivBCI training required">🧠</span>
+            When mental command
+            <select data-quando-name="command">
+                <option value='Push'>Push</option>
+                <option value='Pull'>Pull</option>
+                <option value='Lift'>Lift</option>
+                <option value='Drop'>Drop</option>
+                <option value='Left'>Left</option>
+                <option value='Right'>Right</option>
+                <!-- <option value='RotateCounterClockwise'>Rotate Anti-Clockwise</option>
+                <option value='RotateClockwise'>Rotate Clockwise</option> -->
+                <option value='RotateForwards'>Rotate Forwards</option>
+                <option value='RotateBackwards'>Rotate Backwards</option>
+                <option value='RotateLeft'>Rotate Left</option>
+                <option value='RotateRight'>Rotate Right</option>
+                <option value='Disappear'>Disappear</option>
+            </select>
+            <select data-quando-name='extras' class='quando-toggle'>
+                <option value='hidden'>+</option>
+                <option value='show'>-</option>
+            </select>
+            <span data-quando-toggle='extras=show'>
+                <br />
+                with Confidence ≥
+                <input data-quando-name='confidence' type='number' value='50' placeholder='' style='width: 4em' min='0'
+                    max='100' data-quando-encode='normal' /> %
+            </span>
+        </div>
+        <div data-quando-name="box" class="quando-box"></div>
+        <div class="quando-row quando-eeg"></div>
+    </div>
+</div>
+
+
+<div data-quando-block-type="experimental-eeg-eeg-fetch-data" class="quando-block" data-quando-javascript="quando.eeg.fetchDataForLabel('${label}', ${seconds}, '${model}')">
+    <div class="quando-left quando-eeg"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-eeg">
+            <span class="quando-info" title="Emotiv headset required">🧠</span>
+            Train to recognize thought <input data-quando-name="label" type="text" value="" />
+            <select data-quando-name='extras' class='quando-toggle'>
+                <option value='hidden'>+</option>
+                <option value='show'>-</option>
+            </select>
+            <span data-quando-toggle='extras=show'>
+                <br>
+                for
+                <input data-quando-name="seconds" type="text" value="20" />
+                seconds, for model
+                <input data-quando-name="model" type="text" value="default" />
+            </span>
+        </div>
+    </div>
+</div>
+
+
+<div data-quando-block-type="experimental-eeg-eeg-when-label" class="quando-block"
+    data-quando-javascript="quando.eeg.onLabel('${label}', '${model}', ${isNewModel}, () => {${box}})">
+    <div class="quando-left quando-eeg"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-eeg">
+            <span class="quando-info" title="Emotiv headset required">🧠</span>
+            When thinking about <input data-quando-name="label" type="text" value="" />
+            <select data-quando-name='extras' class='quando-toggle'>
+                <option value='hidden'>+</option>
+                <option value='show'>-</option>
+            </select>
+            <span data-quando-toggle='extras=show'>
+                <br />
+                from
+                <select data-quando-name="isNewModel" type="text" class="quando-toggle">
+                    <option value='true'>New</option>
+                    <option value=''>Saved</option>
+                </select>
+                model <input data-quando-name="model" type="text" value="default" />
+            </span>
+        </div>
+        <div data-quando-name="box" class="quando-box"></div>
+        <div class="quando-row quando-eeg"></div>
+    </div>
+</div>
+
+
+<div data-quando-block-type="experimental-eeg-eeg-when-nodding" class="quando-block" data-quando-javascript="quando.eeg.onNodding('${type}', () => {${box}})">
+    <div class="quando-left quando-eeg"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-eeg">
+            <span class="quando-info" title="Emotiv headset required">🧠</span>
+            When nodding
+            <select data-quando-name="type" type="text" class="quando-toggle">
+                <option value='Yes'>Yes</option>
+                <option value='No'>No</option>
+            </select>
+        </div>
+        <div data-quando-name="box" class="quando-box"></div>
+        <div class="quando-row quando-eeg"></div>
+    </div>
+</div>

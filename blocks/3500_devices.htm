@@ -1,0 +1,742 @@
+<div data-quando-block-type="devices-leap-when" class="quando-block" data-quando-drop-valid="display-when-display,advanced-comment,inventor-flip,inventor-function-block,advanced-group"
+    data-quando-javascript="quando.leap.${hand_fn}('${hand}', ()=>{${box}})">
+    <div class="quando-left quando-devices"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-devices">
+            <span class="quando-info" title="This block can only be dragged into When Display.">⚠</span>
+            <span class="quando-info" title="Leap motion required"> 👋</span>
+            When
+            <select data-quando-name='hand'>
+                <option value='Either'>🖐</option>
+                <option value='Left'>👈</option>
+                <option value='Right'>👉</option>
+            </select>
+            <select data-quando-name='hand_fn' class='quando-toggle'>
+                <option value='handClosed'>Fist</option>
+                <option value='handOpen'>Flat</option>
+            </select>
+        </div>
+        <div data-quando-name="box" class="quando-box"></div>
+        <div class="quando-row quando-devices"></div>
+    </div>
+</div>
+
+
+<div data-quando-block-type="devices-leap-when-move" class="quando-block"
+    data-quando-drop-valid="display-when-display,advanced-comment,inventor-flip,inventor-function-block"
+    data-quando-javascript="quando.leap.handle${direction}('${hand}', ${range}, ${inverted}, (val) => {${box}})">
+    <div class="quando-left quando-devices"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-devices">
+            <span class="quando-info" title="This block can only be dragged into When Display.">⚠</span>
+            <span class="quando-info" title="Leap motion required"> 👋</span>
+            When
+            <select data-quando-name='hand'>
+                <option value='Either'>🖐</option>
+                <option value='Left'>👈</option>
+                <option value='Right'>👉</option>
+            </select>
+            move
+            <select data-quando-name="direction">
+                <option value='X'>⇔</option>
+                <option value='Y'>⇕</option>
+                <option value='Z'>⤢</option>
+            </select>
+            &nbsp; ⚡
+            <select data-quando-name='extras' class='quando-toggle'>
+                <option value='hidden'>+</option>
+                <option value='show'>-</option>
+            </select>
+            <span data-quando-toggle='extras=show'>
+                <br />
+                ±
+                <input data-quando-name='range' type='number' value='15' placeholder='' style='width: 4em' min='0'
+                    max='100' data-quando-encode='normal' />
+                cm
+                <select data-quando-name='inverted' class='quando-toggle'>
+                    <option value='false'>Normal</option>
+                    <option value='true'>Inverted</option>
+                </select>
+            </span>
+        </div>
+        <div data-quando-name="box" class="quando-box"></div>
+        <div class="quando-row quando-devices"></div>
+    </div>
+</div>
+
+
+<div data-quando-block-type="devices-leap-when-angle" class="quando-block" data-quando-drop-valid="display-when-display,advanced-comment,inventor-flip,inventor-function-block,advanced-group"
+    data-quando-javascript="quando.leap.handle${angle}('${hand}', ${mid_degrees}, ${plus_minus}, ${inverted}, (val) => {${box}})">
+    <div class="quando-left quando-devices"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-devices">
+            <span class="quando-info" title="This block can only be dragged into When Display.">⚠</span>
+            <span class="quando-info" title="Leap motion required"> 👋</span>
+            When 
+            <select data-quando-name='hand'>
+                <option value='Either'>🖐</option>
+                <option value='Left'>👈</option>
+                <option value='Right'>👉</option>
+            </select>
+            angle
+            <select data-quando-name="angle">
+                <option value='Roll'>⤹⤸ Roll</option>
+                <option value='Yaw'>⇔ Yaw</option>
+                <option value='Pitch'>⇕ Pitch</option>
+            </select>
+            &nbsp; ⚡
+            <select data-quando-name='extras' class='quando-toggle'>
+                <option value='hidden'>+</option>
+                <option value='show'>-</option>
+            </select>
+            <span data-quando-toggle='extras=show'>
+                <br />
+                <input data-quando-name='mid_degrees' type='number' value='0' placeholder=''
+                    style='width: 4em' min='-180' max='180' data-quando-encode='normal'/>
+                degrees&nbsp; ±
+                <input data-quando-name='plus_minus' type='number' value='180' placeholder=''
+                    style='width: 4em' min='0' max='180' data-quando-encode='normal'/>
+                degrees
+                <select data-quando-name='inverted' class='quando-toggle'>
+                    <option value='false'>Normal</option>
+                    <option value='true'>Inverted</option>
+                </select>
+            </span>
+        </div>
+        <div data-quando-name="box" class="quando-box"></div>
+        <div class="quando-row quando-devices"></div>
+    </div>
+</div>
+
+
+<div data-quando-block-type="devices-leap-when-grip" class="quando-block" data-quando-drop-valid="display-when-display,advanced-comment,inventor-flip,inventor-function-block,advanced-group"
+  data-quando-javascript="quando.leap.handleGrip('${hand}', ${min}, ${max}, ${inverted}, (val)=>{${box}})">
+  <div class="quando-left quando-devices"></div>
+  <div class="quando-right">
+    <div class="quando-row quando-devices">
+      👋 When
+      <select data-quando-name="hand">
+        <option value='Either'>🖐</option>
+        <option value='Left'>👈</option>
+        <option value='Right'>👉</option>
+      </select>
+      Grip
+      ⚡
+      <select data-quando-name="extras" class="quando-toggle">
+        <option value="hidden">+</option>
+        <option value="show">-</option>
+      </select>
+      <span data-quando-toggle="extras=show">
+        <br>
+        <input data-quando-name='min' type='number' value='0' placeholder='min' style='width: 4em' min='0' max='100'
+          data-quando-encode='normal' />
+        % to
+        <input data-quando-name='max' type='number' value='100' placeholder='max' style='width: 4em' min='0' max='100'
+          data-quando-encode='normal' />
+        %
+        <select data-quando-name='inverted' class='quando-toggle'>
+          <option value='false'>normal</option>
+          <option value='true'>inverted</option>
+        </select>
+      </span>
+    </div>
+    <div data-quando-name="box" class="quando-box"></div>
+    <div class="quando-row quando-devices"></div>
+  </div>
+</div>
+
+
+<div data-quando-block-type="devices-cursor-move" class="quando-block" data-quando-javascript="quando.cursor_${direction}(${mid}, ${plus_minus}, ${inverted}, val)">
+    <div class="quando-left quando-devices"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-devices">
+            ⚡ Move Cursor
+            <select data-quando-name='direction' class='quando-toggle'>
+                <option value='left_right'>⇔</option>
+                <option value='up_down'>⇕</option>
+            </select>
+            &nbsp;
+            <select data-quando-name='extras' class='quando-toggle'>
+                <option value='hidden'>+</option>
+                <option value='show'>-</option>
+            </select>
+            <span data-quando-toggle='extras=show'>
+                <br />
+                <input data-quando-name='mid' type='number' value='50' placeholder=''
+                    style='width: 4em' min='0' max='100' data-quando-encode='normal'/>
+                % ±
+                <input data-quando-name='plus_minus' type='number' value='50' placeholder=''
+                    style='width: 4em' min='0' max='100' data-quando-encode='normal'/>
+                %
+                <select data-quando-name='inverted' class='quando-toggle'>
+                    <option value='false'>Normal</option>
+                    <option value='true'>Inverted</option>
+                </select>
+            </span>
+        </div>
+    </div>
+</div>
+
+
+<div data-quando-block-type="devices-when-key" class="quando-block" data-quando-id="true"
+  data-quando-javascript="quando.key.handleKey(${data-quando-id},'${key}',${control},${alt},()=>{${box}})">
+  <div class="quando-left quando-devices"></div>
+  <div class="quando-right">
+    <div class="quando-row quando-devices">⌨️️
+      When
+      <input data-quando-name='key' type='text' maxLength="1" value='' placeholder='' data-quando-encode='normal' />
+      <span class="iconify">
+        key
+      </span>
+      pressed
+      <select data-quando-name="extras" class="quando-toggle">
+        <option value="hidden">+</option>
+        <option value="show">-</option>
+      </select>
+      <span data-quando-toggle="extras=show">
+        <br>
+        <select data-quando-name='control' class='quando-toggle'>
+          <option value='false'>no control</option>
+          <option value='true'>control</option>
+        </select>
+        <select data-quando-name='alt' class='quando-toggle'>
+          <option value='false'>no alt</option>
+          <option value='true'>alt</option>
+        </select>
+      </span>
+    </div>
+    <div data-quando-name="box" class="quando-box"></div>
+    <div class="quando-row quando-devices"></div>
+  </div>
+</div>
+
+
+<div data-quando-block-type="devices-when-mouse-move" class="quando-block" data-quando-id="true"
+  data-quando-javascript="quando.mouse.handle${direction}(${data-quando-id},${pressed},${middle},${range},${inverted},(val)=>{${box}})">
+  <div class="quando-left quando-devices"></div>
+  <div class="quando-right">
+    <div class="quando-row quando-devices">🖱️
+      When move
+      <select data-quando-name='direction' class='quando-toggle'>
+        <option value='X'>⇔</option>
+        <option value='Y'>⇕</option>
+      </select>
+      ⚡
+      <select data-quando-name="extras" class="quando-toggle">
+        <option value="hidden">+</option>
+        <option value="show">-</option>
+      </select>
+      <span data-quando-toggle="extras=show">
+        <br>
+        <select data-quando-name='pressed' class='quando-toggle'>
+          <option value='false'>no button</option>
+          <option value='true'>pressed</option>
+        </select>
+        <input data-quando-name='middle' type='number' value='50' placeholder='' style='width: 4em' min='0' max='100'
+          data-quando-encode='normal' />
+        %
+        ±
+        <input data-quando-name='range' type='number' value='50' placeholder='' style='width: 4em' min='0' max='100'
+          data-quando-encode='normal' />
+        <select data-quando-name='inverted' class='quando-toggle'>
+          <option value='false'>normal</option>
+          <option value='true'>inverted</option>
+        </select>
+      </span>
+    </div>
+    <div data-quando-name="box" class="quando-box"></div>
+    <div class="quando-row quando-devices"></div>
+  </div>
+</div>
+
+
+<div data-quando-block-type="devices-when-gamepad-button" class="quando-block" data-quando-javascript="quando.gamepad.handleButton(${button_index},'${down_up}',($(eq$,${down_up}$,either$,val)$)=>{${box}})">
+    <div class="quando-left quando-devices"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-devices">🕹️️️
+            When
+            <select data-quando-name="button_index">
+                <option value='0'>Ⓐ/✕</option>
+                <option value='1'>Ⓑ/◯</option>
+                <option value='2'>Ⓧ/☐</option>
+                <option value='3'>Ⓨ/🛆</option>
+                <option value='14'>🠈</option>
+                <option value='15'>🠊</option>
+                <option value='12'>🠉</option>
+                <option value='13'>🠋</option>
+                <option value='4'>👈 Bumper</option>
+                <option value='5'>👉 Bumper</option>
+                <option value='10'>📍👈</option>
+                <option value='11'>👉📍</option>
+                <option value='8'>Back 👈</option>
+                <option value='9'>👉 Start</option>
+            </select>
+            <span class="iconify">
+                button
+            </span>
+            <select data-quando-name="down_up">
+                <option value='down'>down</option>
+                <option value='up'>up</option>
+                <option value='either'>⇕</option>
+            </select>
+            <span data-quando-toggle="down_up=either">⚡</span>
+        </div>
+        <div data-quando-name="box" class="quando-box"></div>
+        <div class="quando-row quando-devices"></div>
+    </div>
+</div>
+
+
+<div data-quando-block-type="devices-when-gamepad-axis" class="quando-block" data-quando-javascript="quando.gamepad.handleAxis(${left},'${axis}',${middle},${plus_minus},${ignore},${inverted},(val)=>{${box}})">
+    <div class="quando-left quando-devices"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-devices">🕹️️️
+            When
+            <select data-quando-name='left' class='quando-toggle'>
+                <option value='true'>📍👈️</option>
+                <option value='false'>️👉📍</option>
+            </select> move
+            <select data-quando-name="axis" class="quando-toggle">
+                <option value='x'>⇔</option>
+                <option value='y'>⇕</option>
+            </select>
+            ⚡
+            <select data-quando-name="extras" class="quando-toggle">
+                <option value="hidden">+</option>
+                <option value="show">-</option>
+            </select>
+            <span data-quando-toggle="extras=show">
+                <br>
+                <input data-quando-name='middle' type='number' value='50' placeholder='' style='width: 4em' min='0' max='100'
+                data-quando-encode='normal' />
+                % ±
+                <input data-quando-name='plus_minus' type='number' value='50' placeholder='' style='width: 4em' min='0' max='100'
+                data-quando-encode='normal' />
+                % ignore
+                <input data-quando-name='ignore' type='number' value='5' placeholder='' style='width: 4em' min='0' max='100'
+                data-quando-encode='normal' /> %
+                <select data-quando-name='inverted' class='quando-toggle'>
+                    <option value='false'>normal</option>
+                    <option value='true'>inverted</option>
+                </select>
+            </span>
+        </div>
+        <div data-quando-name="box" class="quando-box"></div>
+        <div class="quando-row quando-devices"></div>
+    </div>
+</div>
+
+
+<div data-quando-block-type="devices-when-gamepad-trigger" class="quando-block" data-quando-javascript="quando.gamepad.handleTrigger(${left},${min},${max},${inverted},(val)=>{${box}}
+)">
+    <div class="quando-left quando-devices"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-devices">🕹️️️️️
+            When
+            <select data-quando-name='left' class='quando-toggle'>
+                <option value='true'>👈</option>
+                <option value='false'>👉</option>
+            </select>
+            trigger ⇕ ⚡
+            <select data-quando-name="extras" class="quando-toggle">
+                <option value="hidden">+</option>
+                <option value="show">-</option>
+            </select>
+            <span data-quando-toggle="extras=show">
+                <br>
+                <input data-quando-name='min' type='number' value='5' placeholder='' style='width: 4em' min='0'
+                    max='100' data-quando-encode='normal' />
+                % to
+                <input data-quando-name='max' type='number' value='100' placeholder='' style='width: 4em' min='0'
+                    max='100' data-quando-encode='normal' />
+                %
+                <select data-quando-name='inverted' class='quando-toggle'>
+                    <option value='false'>Normal</option>
+                    <option value='true'>Inverted</option>
+                </select>
+            </span>
+        </div>
+        <div data-quando-name="box" class="quando-box"></div>
+        <div class="quando-row quando-devices"></div>
+    </div>
+</div>
+
+
+<div data-quando-block-type="devices-ubit-button" class="quando-block" data-quando-javascript="quando.ubit.handleButtonPin('${button_pin}','${down_up}',($(eq$,${down_up}$,change$,val)$)=>{${box}})">
+    <div class="quando-left quando-devices"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-devices">📟
+            When
+            <span class="iconify">
+                µbit
+            </span>
+            <select data-quando-name="button_pin">
+                <option value='a'>🅰</option>
+                <option value='b'>🅱</option>
+                <option value='pin0'>Pin 0</option>
+                <option value='pin1'>Pin 1</option>
+                <option value='pin2'>Pin 2</option>
+            </select>
+            <select data-quando-name="down_up">
+                <option value='down'>press</option>
+                <option value='up'>release</option>
+                <option value='change'>change</option>
+            </select>
+            <span data-quando-toggle='down_up=change'>⚡
+            </span>
+        </div>
+        <div data-quando-name="box" class="quando-box"></div>
+        <div class="quando-row quando-devices"></div>
+    </div>
+</div>
+
+
+<div data-quando-block-type="devices-ubit-direction" class="quando-block"
+    data-quando-javascript="quando.ubit.handleDirection('${direction}','${change}',($(eq$,${change}$,change$,val)$)=>{${box}})">
+    <div class="quando-left quando-devices"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-devices">📟
+            When
+            <span class="iconify">
+                µbit
+            </span>
+            changes
+            <select data-quando-name="change">
+                <option value='down'>to</option>
+                <option value='up'>from</option>
+                <option value='change'>to/from</option>
+            </select>
+            <select data-quando-name="direction">
+                <option value='up'>⇧Up</option>
+                <option value='down'>⇩Down</option>
+                <option value='left'>⇦Left</option>
+                <option value='right'>⇨Right</option>
+                <option value='forward'>⬀Forward</option>
+                <option value='backward'>⬃Backward</option>
+            </select>
+            <span data-quando-toggle='change=change'>⚡
+            </span>
+        </div>
+        <div data-quando-name="box" class="quando-box"></div>
+        <div class="quando-row quando-devices"></div>
+    </div>
+</div>
+
+
+<div data-quando-block-type="devices-ubit-angle" class="quando-block" data-quando-drop-valid="display-when-display,advanced-comment,inventor-flip,inventor-function-block,advanced-group"
+    data-quando-javascript="quando.ubit.handle${angle}(${mid_degrees}, ${range}, ${inverted}, (val) => {${box}})">
+    <div class="quando-left quando-devices"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-devices">
+            <span class="quando-info" title="This block can only be dragged into When Display.">⚠</span>
+            📟 When <span class='iconify'>µbit</span> angle
+            <select data-quando-name="angle">
+                <!-- <option value='Heading'>⇔Heading</option> -->
+                <option value='Roll'>⤹⤸Roll</option>
+                <option value='Pitch'>⇕Pitch</option>
+            </select>
+            &nbsp; ⚡
+            <select data-quando-name='extras' class='quando-toggle'>
+                <option value='hidden'>+</option>
+                <option value='show'>-</option>
+            </select>
+            <span data-quando-toggle='extras=show'>
+                <br />
+                <input data-quando-name='mid_degrees' type='number' value='0' placeholder=''
+                    style='width: 4em' min='-180' max='180' data-quando-encode='normal'/>
+                degrees&nbsp; ±
+                <input data-quando-name='range' type='number' value='180' placeholder=''
+                    style='width: 4em' min='0' max='180' data-quando-encode='normal'/>
+                degrees
+                <select data-quando-name='inverted' class='quando-toggle'>
+                    <option value='false'>Normal</option>
+                    <option value='true'>Inverted</option>
+                </select>
+            </span>
+        </div>
+        <div data-quando-name="box" class="quando-box"></div>
+        <div class="quando-row quando-devices"></div>
+    </div>
+</div>
+
+
+<div data-quando-block-type="devices-ubit-send" class="quando-block" data-quando-javascript="quando.ubit.display($(eq$,${txt}$,input$,'${text}'$,${txt})$)">
+  <div class="quando-left quando-devices"></div>
+  <div class="quando-right">
+    <div class="quando-row quando-devices">📟
+      <span data-quando-toggle='txt=txt'>❓</span>
+      <span class='iconify'>µbit</span>
+      Display
+      <span data-quando-toggle='txt=input'>
+        <input data-quando-name="text" type="text" value="" data-quando-encode="normal" />
+      </span>
+      <select data-quando-name="extras" class="quando-toggle">
+        <option value="hidden">+</option>
+        <option value="show">-</option>
+      </select>
+      <span data-quando-toggle="extras=show">
+        <br>
+        <select data-quando-name='txt' class='quando-toggle'>
+          <option value='input'>""</option>
+          <option value='txt'>❓</option>
+        </select>
+      </span>
+    </div>
+  </div>
+</div>
+
+
+<div data-quando-block-type="devices-ubit-icon" class="quando-block" data-quando-javascript="quando.ubit.icon('${icon}'
+)">
+  <div class="quando-left quando-devices"></div>
+  <div class="quando-right">
+    <div class="quando-row quando-devices"><span class="iconify">
+        µbit
+      </span>
+      📟
+      Icon
+      <select data-quando-name="icon">
+        <option value='0'> </option>
+        <option value='1'>😃</option>
+        <option value='2'>☹</option>
+        <option value='3'>✔</option>
+        <option value='4'>X</option>
+        <option value='5'>❤</option>
+        <option value='6'>♡</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+
+<div data-quando-block-type="devices-ubit-turn" class="quando-block"
+  data-quando-javascript="quando.ubit.turn(val, ${servo}, ${middle}, ${range}, ${inverted})">
+  <div class="quando-left quando-devices"></div>
+  <div class="quando-right">
+    <div class="quando-row quando-devices">⚡
+      📟 Turn
+      <span class='iconify'>μbit</span>
+      <select data-quando-name="servo">
+        <option value='1'>🅰</option>
+        <option value='2'>🅱</option>
+      </select>
+      <select data-quando-name='extras' class='quando-toggle'>
+        <option value='hide'>+</option>
+        <option value='show'>-</option>
+      </select>
+      <span data-quando-toggle='extras=show'>
+        <br />
+        <input data-quando-name='middle' type='number' value='90' placeholder=''
+            style='width: 4em' min='-180' max='180' data-quando-encode='normal'/>
+        degrees&nbsp; ±
+        <input data-quando-name='range' type='number' value='90' placeholder=''
+            style='width: 4em' min='0' max='180' data-quando-encode='normal'/>
+        degrees
+        <select data-quando-name='inverted' class='quando-toggle'>
+          <option value='false'>Normal</option>
+          <option value='true'>Inverted</option>
+        </select>
+      </span>
+    </div>
+  </div>
+</div>
+
+
+<div data-quando-block-type="devices-rpico-turn" class="quando-block" data-quando-javascript="quando.rpico.turn(val,${servo},${min},${range},${inverted})">
+    <div class="quando-left quando-devices"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-devices">⚡
+            📟 Turn
+            <span class="iconify">
+                Pico
+            </span>
+            <select data-quando-name="servo">
+                <option value='1'>1 x---</option>
+                <option value='2'>2 -x--</option>
+                <option value='3'>3 --x-</option>
+                <option value='4'>4 ---x</option>
+            </select>
+            <select data-quando-name="extras" class="quando-toggle">
+                <option value="hidden">+</option>
+                <option value="show">-</option>
+            </select>
+            <span data-quando-toggle="extras=show">
+                <br>
+                <input data-quando-name='min' type='number' value='0' placeholder='' style='width: 4em' min='0'
+                    max='100' data-quando-encode='normal' />
+                degrees ±
+                <input data-quando-name='range' type='number' value='90' placeholder='' style='width: 4em' min='0'
+                    max='100' data-quando-encode='normal' />
+                degrees
+                <select data-quando-name='inverted' class='quando-toggle'>
+                    <option value='false'>Normal</option>
+                    <option value='true'>Inverted</option>
+                </select>
+            </span>
+        </div>
+    </div>
+</div>
+
+
+<div data-quando-block-type="devices-control-type" class="quando-block" data-quando-javascript="quando.control.type($(eq$,${txt}$,input$,'${text}'$,${txt})$)">
+  <div class="quando-left quando-devices"></div>
+  <div class="quando-right">
+    <div class="quando-row quando-devices">
+      <span data-quando-toggle='txt=txt'>❓</span>
+      ⌨️ Type
+      <span data-quando-toggle='txt=input'>
+          &quot;<input data-quando-name="text" type="text" value="" data-quando-encode='normal' />&quot;
+      </span>
+      <select data-quando-name="extras" class="quando-toggle">
+          <option value="hidden">+</option>
+          <option value="show">-</option>
+      </select>
+      <span data-quando-toggle="extras=show">
+          <br>
+          <select data-quando-name='txt' class='quando-toggle'>
+              <option value='input'>""</option>
+              <option value='txt'>❓</option>
+          </select>
+      </span>
+    </div>
+  </div>
+</div>
+
+
+<div data-quando-block-type="devices-key-click" class="quando-block" data-quando-javascript="quando.control.key($(eq$,${txt}$,input$,'${text}'$,txt)$, '${press}', val)">
+  <div class="quando-left quando-devices"></div>
+  <div class="quando-right">
+    <div class="quando-row quando-devices">
+      <span data-quando-toggle='txt=txt'>❓</span>
+      <span data-quando-toggle='press=either'>⚡</span>
+      ⌨️ Key
+      <select data-quando-name='press'>
+        <option value='down'>down</option>
+        <option value='up'>up</option>
+        <option value='either'>⇕</option>
+      </select>
+      <span data-quando-toggle='txt=input'>
+          &quot;<input data-quando-name="text" type="text" value="" maxLength="1" data-quando-encode='normal' />&quot;
+      </span>
+      <select data-quando-name="extras" class="quando-toggle">
+        <option value="hidden">+</option>
+        <option value="show">-</option>
+      </select>
+      <span data-quando-toggle="extras=show">
+        <br>
+        <select data-quando-name='txt' class='quando-toggle'>
+            <option value='input'>""</option>
+            <option value='txt'>❓</option>
+        </select>
+        </span>
+      </span>
+    </div>
+  </div>
+</div>
+
+
+<div data-quando-block-type="devices-special-key-click" class="quando-block" data-quando-javascript="quando.control.key('${name}', '${press}', val)">
+  <div class="quando-left quando-devices"></div>
+  <div class="quando-right">
+    <div class="quando-row quando-devices">
+      <span data-quando-toggle='press=either'>⚡</span>
+      ⌨️ ️Special Key
+      <select data-quando-name='press'>
+        <option value='down'>down</option>
+        <option value='up'>up</option>
+        <option value='either'>⇕</option>
+      </select>
+      <select data-quando-name="name">
+        <option value='shift'>Shift</option>
+        <option value='ctrl'>Ctrl</option>
+        <option value='alt'>Alt</option>
+        <option value='win'>Win/Cmd</option>
+        <option value='tab'>Tab</option>
+        <option value='delete'>Delete</option>
+        <option value='backspace'>Backspace</option>
+        <option value='tab'>Tab</option>
+        <option value='enter'>Enter</option>
+        <option value='up'>🠅 Up</option>
+        <option value='down'>🠇 Down</option>
+        <option value='left'>🠄 Left</option>
+        <option value='right'>🠆 Right</option>
+        <option value='pageup'>Page Up</option>
+        <option value='pagedown'>Page Down</option>
+        <option value='esc'>Escape</option>
+        <option value='home'>Home</option>
+        <option value='insert'>Insert</option>
+        <option value='pause'>Pause</option>
+        <option value='end'>End</option>
+        <option value='printscreen'>Print Screen</option>
+        <option value='shiftright'>Shift Right</option>
+        <option value='ctrlright'>Ctrl Right</option>
+        <option value='winright'>Win/Cmd Right</option>
+        <option value='altright'>Alt Right</option>
+        <option value='capslock'>Caps Lock</option>
+        <option value='numlock'>Num Lock</option>
+        <option value='scrolllock'>Scroll Lock</option>
+        <option value='apps'>Menu/Apps</option>
+        <option value='f1'>F1</option>
+        <option value='f2'>F2</option>
+        <option value='f3'>F3</option>
+        <option value='f4'>F4</option>
+        <option value='f5'>F5</option>
+        <option value='f6'>F6</option>
+        <option value='f7'>F7</option>
+        <option value='f8'>F8</option>
+        <option value='f9'>F9</option>
+        <option value='f10'>F10</option>
+        <option value='f11'>F11</option>
+        <option value='f12'>F12</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+
+<div data-quando-block-type="devices-control-mouse-xy" class="quando-block" data-quando-javascript="quando.control.mouse${XY}(val)"> <!--</div>, ${smooth})">-->
+  <div class="quando-left quando-devices"></div>
+  <div class="quando-right">
+    <div class="quando-row quando-devices">⚡
+      🖱️
+      Mouse
+      <select data-quando-name='XY' class='quando-toggle'>
+        <option value='X'>⇔</option>
+        <option value='Y'>⇕</option>
+      </select>
+      <!-- <select data-quando-name="extras" class="quando-toggle">
+        <option value="hidden">+</option>
+        <option value="show">-</option>
+      </select>
+      <span data-quando-toggle="extras=show">
+        <br>
+        <select data-quando-name='smooth' class='quando-toggle'>
+          <option value='false'>fast</option>
+          <option value='true'>smooth</option>
+        </select>
+      </span> -->
+    </div>
+  </div>
+</div>
+
+
+<div data-quando-block-type="devices-mouse-click" class="quando-block" data-quando-javascript="quando.control.mouseClick('${button}', '${press}', val)">
+  <div class="quando-left quando-devices"></div>
+  <div class="quando-right">
+    <div class="quando-row quando-devices">
+      <span data-quando-toggle='press=either'>⚡</span>
+      🖱️
+      Mouse
+      <select data-quando-name='press'>
+        <option value='down'>down</option>
+        <option value='up'>up</option>
+        <option value='either'>⇕</option>
+      </select>
+      <select data-quando-name="button">
+        <option value='left'>⇦Left</option>
+        <option value='middle'>Middle</option>
+        <option value='right'>Right⇨</option>
+      </select>
+    </div>
+  </div>
+</div>

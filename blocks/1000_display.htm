@@ -1,0 +1,120 @@
+<div data-quando-block-type="display-when-display" class="quando-block" data-quando-id="true"
+    data-quando-drop-valid="advanced-comment,inventor-flip,inventor-function-block,advanced-group"
+    data-quando-javascript="quando.display(${data-quando-id},()=>{$(nl)$quando.title('${name}')$(nl)$${box}})">
+    <div class="quando-left quando-separator quando-display"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-separator quando-display">
+            <span class="quando-info" title="This block can not be dragged into any other block.">⚠</span>
+            📺 When Display <input data-quando-name="name" type="text" value="" data-quando-list="display" />
+        </div>
+        <div data-quando-name="box" class="quando-box"></div>
+        <div class="quando-row quando-display">
+        </div>
+    </div>
+</div>
+
+<div data-quando-block-type="display-label-to" class="quando-block"
+    data-quando-javascript="quando.addLabel(${display_id}, '${padding}', '${location}', '$(displayTitle$,display_id)$')">
+    <div class="quando-left quando-display"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-display">
+            Label to
+            <select data-quando-name='display_id' data-quando-list="display">
+                <option value='-1'>----</option>
+            </select>
+            <select data-quando-name="extras" class="quando-toggle">
+                <option value="hidden">+</option>
+                <option value="show">-</option>
+            </select>
+            <span data-quando-toggle="extras=show">
+                <br>
+                <select data-quando-name="padding">
+                    <option value='none'>no</option>
+                    <option value='small'>small</option>
+                    <option value='medium'>medium</option>
+                    <option value='large'>large</option>
+                </select>
+                padding
+                <select data-quando-name="location">
+                    <option value='before'>before</option>
+                    <option value='after'>after</option>
+                    <option value='both'>both</option>
+                </select>
+            </span>
+        </div>
+    </div>
+</div>
+
+<div data-quando-block-type="display-show-display" class="quando-block" data-quando-javascript="quando.showDisplay(${display_id})">
+    <div class="quando-left quando-display"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-display">
+            📺 Show Display
+            <select data-quando-name='display_id' data-quando-list="display">
+                <option value='-1'>----</option>
+            </select>
+        </div>
+    </div>
+</div>
+
+<div data-quando-block-type="display-when-label" class="quando-block"
+    data-quando-drop-valid="display-when-display,advanced-comment,inventor-flip,inventor-function-block,advanced-group"
+    data-quando-javascript="quando.addLabelStatement('${text}', '${padding}', '${location}', ()=>{${box}})">
+    <div class="quando-left quando-display"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-display">
+            <span class='quando-info' title='Can only be dragged into When Display'>⚠</span>
+            When label
+            <input data-quando-name='text' type='text' value='' placeholder='' data-quando-encode='normal' />
+            <select data-quando-name="extras" class="quando-toggle">
+                <option value="hidden">+</option>
+                <option value="show">-</option>
+            </select>
+            <span data-quando-toggle="extras=show">
+                <br>
+                <select data-quando-name="padding">
+                    <option value='none'>no</option>
+                    <option value='small'>small</option>
+                    <option value='medium'>medium</option>
+                    <option value='large'>large</option>
+                </select>
+                padding
+                <select data-quando-name="location">
+                    <option value='before'>before</option>
+                    <option value='after'>after</option>
+                    <option value='both'>both</option>
+                </select>
+            </span>
+        </div>
+        <div data-quando-name="box" class="quando-box"></div>
+        <div class="quando-row quando-display"></div>
+    </div>
+</div>
+
+<div data-quando-block-type="display-prompt" class="quando-block" data-quando-javascript="quando.prompt('${prompt}', (txt)=>{${box}})">
+    <div class="quando-left quando-display"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-display">
+            Ask &quot;<input data-quando-name='prompt' type='text' value='' placeholder=''
+                data-quando-encode='normal' />&quot;
+            ❓
+        </div>
+        <div data-quando-name="box" class="quando-box"></div>
+        <div class="quando-row quando-display"></div>
+    </div>
+</div>
+
+
+<div data-quando-block-type="display-projection" class="quando-block" data-quando-javascript="quando.media.projection(${front})">
+    <div class="quando-left quando-display"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-display">
+            📺
+            <select data-quando-name="front" class='quando-toggle'>
+                <option value='true'>Normal</option>
+                <option value='false'>Rear</option>
+            </select>
+            Projection
+        </div>
+    </div>
+</div>

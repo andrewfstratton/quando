@@ -1,0 +1,470 @@
+<div data-quando-block-type="media-title" class="quando-block"
+    data-quando-javascript="quando.title($(eq$,${txtval}$,input$,'${text}'$,${txtval})$,${append})">
+    <div class="quando-left quando-media"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-media">
+            <span data-quando-toggle='txtval=txt'>❓</span>
+            <span data-quando-toggle='txtval=val'>⚡</span>
+            <span class="iconify">abc</span>
+            <select data-quando-name="append" class='quando-toggle'>
+                <option value="false">Show</option>
+                <option value="true">Add</option>
+            </select>
+            Title
+            <span data-quando-toggle='txtval=input'>
+                &quot;<input data-quando-name="text" type="text" value="" data-quando-encode='normal' />&quot;
+            </span>
+            <select data-quando-name="extras" class="quando-toggle">
+                <option value="hidden">+</option>
+                <option value="show">-</option>
+            </select>
+            <span data-quando-toggle="extras=show">
+                <br>
+                <select data-quando-name='txtval' class='quando-toggle'>
+                    <option value='input'>""</option>
+                    <option value='val'>⚡</option>
+                    <option value='txt'>❓</option>
+                </select>
+            </span>
+        </div>
+    </div>
+</div>
+
+
+<div data-quando-block-type="media-text" class="quando-block" data-quando-javascript="quando.text($(eq$,${txtval}$,input$,'${text}'$,${txtval})$,${append})">
+    <div class="quando-left quando-media"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-media">
+            <span data-quando-toggle='txtval=txt'>❓</span>
+            <span data-quando-toggle='txtval=val'>⚡</span>
+            <span class="iconify">abc</span>
+            <select data-quando-name="append" class='quando-toggle'>
+                <option value="false">Show</option>
+                <option value="true">Add</option>
+            </select>
+            Text
+            <span data-quando-toggle='txtval=input'>
+                &quot;<input data-quando-name="text" type="text" value=""
+                    data-quando-encode='normal' />&quot;
+            </span>
+            <select data-quando-name="extras" class="quando-toggle">
+                <option value="hidden">+</option>
+                <option value="show">-</option>
+            </select>
+            <span data-quando-toggle="extras=show">
+                <br>
+                <select data-quando-name='txtval' class='quando-toggle'>
+                    <option value='input'>""</option>
+                    <option value='val'>⚡</option>
+                    <option value='txt'>❓</option>
+                </select>
+        </div>
+    </div>
+</div>
+
+
+<div data-quando-block-type="media-show-image" class="quando-block" data-quando-id="true" data-quando-javascript="quando.image.set($(inDisplay)$,'${file_name}')">
+    <div class="quando-left quando-media"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-media">
+            📷 Show Image
+            <input data-quando-media="images" data-quando-name="file_name" type="text" readonly="true" value="" data-quando-encode="normal"/>
+        </div>
+    </div>
+</div>
+
+
+<div data-quando-block-type="media-play-video" class="quando-block" data-quando-id="true" data-quando-javascript="quando.media.play_video('${file_name}', ${loop})">
+    <div class="quando-left quando-media"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-media">
+            📺 Play
+            <select data-quando-name='loop' class='quando-toggle'>
+                <option value='false'>Once</option>
+                <option value='true'>Forever</option>
+            </select>
+            Video
+            <input data-quando-media="video" data-quando-name="file_name" type="text" readonly="true" value="" data-quando-encode="normal"/>
+        </div>
+    </div>
+</div>
+
+
+<div data-quando-block-type="media-quando-play-audio" class="quando-block" data-quando-id="true"
+    data-quando-javascript="quando.media.play_audio('${file_name}', ${loop}, ${channel},${volume})">
+    <div class="quando-left quando-media"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-media">
+            🎵 Play
+            <select data-quando-name='loop' class='quando-toggle'>
+                <option value='false'>Once</option>
+                <option value='true'>Forever</option>
+            </select>
+            Audio
+            <input data-quando-media="audio" data-quando-name="file_name" type="text" readonly="true" value=""
+                data-quando-encode="normal" />
+            on
+            <select data-quando-name="channel">
+                <option value='0'>main</option>
+                <option value='1'>1</option>
+                <option value='2'>2</option>
+                <option value='3'>3</option>
+            </select>
+            <select data-quando-name="extras" class="quando-toggle">
+                <option value="hidden">+</option>
+                <option value="show">-</option>
+            </select>
+            <span data-quando-toggle="extras=show">
+                <br>
+                Volume
+                <input data-quando-name='volume' type='number' value='100' placeholder='' style='width: 4em' min='0'
+                    max='100' data-quando-encode='normal' />
+                %
+            </span>
+        </div>
+    </div>
+</div>
+
+
+<div data-quando-block-type="media-show-object3d" class="quando-block" data-quando-id="true"
+    data-quando-javascript="quando.object3d.loadGLTF('${file_name}', ${fixed})">
+    <div class="quando-left quando-media"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-media">
+            🎁 Show 3D
+            <select data-quando-name='fixed' class='quando-toggle'>
+                <option value='false'>Object</option>
+                <option value='true'>Scene</option>
+            </select>
+            <input data-quando-media="objects" data-quando-name="file_name" type="text" readonly="true" value=""
+                data-quando-encode="normal" />
+        </div>
+    </div>
+</div>
+
+
+<div data-quando-block-type="media-speech" class="quando-block"
+  data-quando-javascript="quando.speech.say($(eq$,${txtval}$,input$,'${text}'$,${txtval})$, ${speed}, ${pitch}, ${volume})">
+  <div class="quando-left quando-media"></div>
+  <div class="quando-right">
+    <div class="quando-row quando-media">
+      <span data-quando-toggle='txtval=txt'>❓</span>
+      <span data-quando-toggle='txtval=val'>⚡</span>
+      💬 Say
+      <span data-quando-toggle='txtval=input'>
+        &quot;<input data-quando-name="text" type="text" value="" data-quando-encode='normal' />&quot;
+      </span>
+      <select data-quando-name='extras' class='quando-toggle'>
+        <option value='hidden'>+</option>
+        <option value='show'>-</option>
+      </select>
+      <span data-quando-toggle='extras=show'><br />
+        <select data-quando-name='txtval' class='quando-toggle'>
+          <option value='input'>""</option>
+          <option value='val'>⚡</option>
+          <option value='txt'>❓</option>
+        </select>
+        Speed
+        <input data-quando-name='speed' type='number' value='100' placeholder=''
+          style='width: 4em' min='10' max='1000' data-quando-encode='normal'/>
+        %&nbsp; Pitch
+        <input data-quando-name='pitch' type='number' value='100' placeholder=''
+          style='width: 4em' min='0' max='200' data-quando-encode='normal'/>
+        %&nbsp; Volume
+        <input data-quando-name='volume' type='number' value='100' placeholder=''
+          style='width: 4em' min='0' max='100' data-quando-encode='normal'/>
+        %
+      </span>
+    </div>
+  </div>
+</div>
+
+
+<div data-quando-block-type="media-play-wave" class="quando-block" data-quando-javascript="quando.media.play_wave('${shape}',${channel},${volume})">
+    <div class="quando-left quando-media"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-media">
+            🎵 Play
+            <select data-quando-name="shape">
+                <option value='sine'>∿ sine</option>
+                <option value='square'>⨅ square</option>
+                <option value='triangle'>Λ triangle</option>
+                <option value='sawtooth'>⩘ sawtooth</option>
+            </select>
+            on
+            <select data-quando-name="channel">
+                <option value='0'>main</option>
+                <option value='1'>1</option>
+                <option value='2'>2</option>
+                <option value='3'>3</option>
+            </select>
+            <select data-quando-name="extras" class="quando-toggle">
+                <option value="hidden">+</option>
+                <option value="show">-</option>
+            </select>
+            <span data-quando-toggle="extras=show">
+                <br>
+                Volume
+                <input data-quando-name='volume' type='number' value='100' placeholder='' style='width: 4em' min='0'
+                    max='100' data-quando-encode='normal' />
+                %
+            </span>
+        </div>
+    </div>
+</div>
+
+
+<div data-quando-block-type="media-image-rotate" class="quando-block"
+  data-quando-javascript="quando.image.${angle}($(inDisplay)$, val, ${mid_degrees}, ${plus_minus}, ${inverted})">
+  <div class="quando-left quando-media"></div>
+  <div class="quando-right">
+    <div class="quando-row quando-media">
+      ⚡ 📷 Image Rotate
+      <select data-quando-name="angle">
+        <option value='roll'>⤹⤸ Roll</option>
+        <option value='yaw'>⇔ Yaw</option>
+        <option value='pitch'>⇕ Pitch</option>
+      </select>
+      &nbsp;
+      <select data-quando-name='extras' class='quando-toggle'>
+        <option value='hidden'>+</option>
+        <option value='show'>-</option>
+      </select>
+      <span data-quando-toggle='extras=show'>
+        <br />
+        <input data-quando-name='mid_degrees' type='number' value='0' placeholder=''
+          style='width: 4em' min='-180' max='180' data-quando-encode='normal'/>
+        degrees&nbsp; ±
+          <input data-quando-name='plus_minus' type='number' value='180' placeholder=''
+            style='width: 4em' min='0' max='180' data-quando-encode='normal'/>
+        degrees
+        <select data-quando-name='inverted' class='quando-toggle'>
+          <option value='false'>Normal</option>
+          <option value='true'>Inverted</option>
+        </select>
+      </span>
+    </div>
+  </div>
+</div>
+
+
+<div data-quando-block-type="media-image-move" class="quando-block" data-quando-javascript="quando.image.${direction}($(inDisplay)$,val,${mid},${range},${inverted})">
+    <div class="quando-left quando-media"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-media">
+            ⚡ 📷 Move Image
+            <select data-quando-name="direction" class='quando-toggle'>
+                <option value='left_right'>⇔</option>
+                <option value='up_down'>⇕</option>
+            </select>
+            &nbsp;
+            <select data-quando-name='extras' class='quando-toggle'>
+                <option value='hidden'>+</option>
+                <option value='show'>-</option>
+            </select>
+            <span data-quando-toggle='extras=show'>
+                <br />
+                <input data-quando-name="mid" type="number" value="50"
+                    style='width: 4em' min='0' max='100' data-quando-encode='normal'/>
+                % ±
+                <input data-quando-name="range" type="number" value="50"
+                    style='width: 4em' min='1' max='100' data-quando-encode='normal'/>
+                %
+                <select data-quando-name='inverted' class='quando-toggle'>
+                    <option value='false'>Normal</option>
+                    <option value='true'>Inverted</option>
+                </select>
+            </span>
+        </div>
+    </div>
+</div>
+
+
+<div data-quando-block-type="media-image-scroll" class="quando-block" data-quando-javascript="quando.image.scroll($(inDisplay)$,val,${up_down},${inverted})">
+    <div class="quando-left quando-media"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-media">
+            ⚡ 📷 Scroll Image
+            <select data-quando-name='up_down' class='quando-toggle'>
+                <option value='true'>⇔</option>
+                <option value='false'>⇕</option>
+            </select>
+            <select data-quando-name="extras" class="quando-toggle">
+                <option value="hidden">+</option>
+                <option value="show">-</option>
+            </select>
+            <span data-quando-toggle="extras=show">
+                <br>
+                <select data-quando-name='inverted' class='quando-toggle'>
+                    <option value='false'>Normal</option>
+                    <option value='true'>Inverted</option>
+                </select>
+            </span>
+        </div>
+    </div>
+</div>
+
+
+<div data-quando-block-type="media-image-zoom-to" class="quando-block" data-quando-javascript="quando.image.zoom($(inDisplay)$,val,${min},${max},${inverted})">
+  <div class="quando-left quando-media"></div>
+  <div class="quando-right">
+    <div class="quando-row quando-media">
+      ⚡ 📷 Zoom Image &nbsp;
+      <select data-quando-name='extras' class='quando-toggle'>
+        <option value='hidden'>+</option>
+        <option value='show'>-</option>
+      </select>
+      <span data-quando-toggle='extras=show'>
+        <br />
+        <input data-quando-name='min' type='number' value='1' placeholder=''
+          style='width: 4em' min='0' max='10' data-quando-encode='normal'/>
+        to
+        <input data-quando-name='max' type='number' value='5' placeholder=''
+          style='width: 4em' min='0' max='100' data-quando-encode='normal'/>
+        times
+        <select data-quando-name='inverted' class='quando-toggle'>
+          <option value='false'>Normal</option>
+          <option value='true'>Inverted</option>
+        </select>
+      </span>
+    </div>
+  </div>
+</div>
+
+
+<div data-quando-block-type="media-rotate-object3d" class="quando-block" data-quando-javascript="quando.object3d.${angle}(val, ${mid_degrees}, ${plus_minus}, ${inverted}, ${fixed})">
+    <div class="quando-left quando-media"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-media">
+            ⚡🎁 Rotate 3D 
+            <select data-quando-name='fixed' class='quando-toggle'>
+                <option value='false'>Object</option>
+                <option value='true'>Scene</option>
+            </select>
+            <select data-quando-name="angle">
+                <option value='roll'>⤹⤸ Roll</option>
+                <option value='yaw'>⇔ Yaw</option>
+                <option value='pitch'>⇕ Pitch</option>
+            </select>
+            &nbsp;
+            <select data-quando-name='extras' class='quando-toggle'>
+                <option value='hidden'>+</option>
+                <option value='show'>-</option>
+            </select>
+            <span data-quando-toggle='extras=show'>
+                <br />
+                <input data-quando-name='mid_degrees' type='number' value='0' placeholder=''
+                    style='width: 4em' min='-180' max='180' data-quando-encode='normal'/>
+                degrees&nbsp; ±
+                <input data-quando-name='plus_minus' type='number' value='180' placeholder=''
+                    style='width: 4em' min='0' max='180' data-quando-encode='normal'/>
+                degrees
+                <select data-quando-name='inverted' class='quando-toggle'>
+                    <option value='false'>Normal</option>
+                    <option value='true'>Inverted</option>
+                </select>
+            </span>
+        </div>
+    </div>
+</div>
+
+
+<div data-quando-block-type="media-move-object3d" class="quando-block" data-quando-javascript="quando.object3d.${direction}(val, ${mid}, ${range}, ${inverted}, ${fixed})">
+    <div class="quando-left quando-media"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-media">
+            ⚡🎁 Move 3D 
+            <select data-quando-name='fixed' class='quando-toggle'>
+                <option value='false'>Object</option>
+                <option value='true'>Scene</option>
+            </select>
+            <select data-quando-name="direction">
+                <option value='left_right'>⇔</option>
+                <option value='up_down'>⇕</option>
+                <option value='in_out'>🔍</option>
+            </select>
+            &nbsp;
+            <select data-quando-name='extras' class='quando-toggle'>
+                <option value='hidden'>+</option>
+                <option value='show'>-</option>
+            </select>
+            <span data-quando-toggle='extras=show'>
+                <br />
+                <input data-quando-name="mid" type="number" value="0"
+                    style='width: 4em' min='0' max='100' data-quando-encode='normal'/>
+                cm ±
+                <input data-quando-name="range" type="number" value="5"
+                    style='width: 4em' min='1' max='100' data-quando-encode='normal'/>
+                cm
+                <select data-quando-name='inverted' class='quando-toggle'>
+                    <option value='false'>Normal</option>
+                    <option value='true'>Inverted</option>
+                </select>
+            </span>
+        </div>
+    </div>
+</div>
+
+
+<div data-quando-block-type="media-wave-frequency" class="quando-block" data-quando-javascript="quando.media.wave_frequency(${min},${max},${channel},val)">
+    <div class="quando-left quando-media"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-media">
+            ⚡🎵 frequency
+            <input data-quando-name='min' type='number' value='100' placeholder='' style='width: 5em' min='16'
+                max='32000' data-quando-encode='normal' />
+            Hz to
+            <input data-quando-name='max' type='number' value='500' placeholder='' style='width: 5em' min='16'
+                max='32000' data-quando-encode='normal' />
+            Hz
+            <select data-quando-name="extras" class="quando-toggle">
+                <option value="hidden">+</option>
+                <option value="show">-</option>
+            </select>
+            <span data-quando-toggle='channel=1'>
+                <b>on 1</b>
+            </span>
+            <span data-quando-toggle='channel=2'>
+                <b>on 2</b>
+            </span>
+            <span data-quando-toggle='channel=3'>
+                <b>on 3</b>
+            </span>
+            <span data-quando-toggle="extras=show">
+                <br>
+                Channel
+                <select data-quando-name="channel">
+                    <option value='0'>main</option>
+                    <option value='1'>1</option>
+                    <option value='2'>2</option>
+                    <option value='3'>3</option>
+                </select>
+            </span>
+        </div>
+    </div>
+</div>
+
+
+<div data-quando-block-type="media-wave-volume" class="quando-block" data-quando-javascript="quando.media.mix_volume(${from},${to},val)">
+    <div class="quando-left quando-media"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-media">
+            ⚡🎵 Mix
+            <select data-quando-name="from">
+                <option value='-1'></option>
+                <option value='0'>main</option>
+                <option value='1'>1</option>
+                <option value='2'>2</option>
+                <option value='3'>3</option>
+            </select>
+            to
+            <select data-quando-name="to">
+                <option value='0'>main</option>
+                <option value='1'>1</option>
+                <option value='2'>2</option>
+                <option value='3'>3</option>
+                <option value='-1'></option>
+            </select>
+        </div>
+    </div>
+</div>

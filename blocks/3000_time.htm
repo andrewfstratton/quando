@@ -1,0 +1,189 @@
+<div data-quando-block-type="time-after" class="quando-block"
+    data-quando-javascript="quando.time.after(${count}, '${units}', ()=>{$(nl)$${box}$(nl)$})">
+    <div class="quando-left quando-time"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-time">
+            ⏰ After
+            <input data-quando-name="count" type="number" min="0" max="99" maxLength="2" value="1" style="width: 4em" />
+            <select data-quando-name="units">
+                <option value="seconds">Seconds</option>
+                <option value="minutes">Minutes</option>
+                <option value="hours">Hours</option>
+            </select>
+        </div>
+        <div data-quando-name="box" class="quando-box"></div>
+        <div class="quando-row quando-time"></div>
+    </div>
+</div>
+
+
+<div data-quando-block-type="time-every" class="quando-block" data-quando-drop-valid="display-when-display,advanced-comment,inventor-flip,inventor-function-block,advanced-group"
+    data-quando-javascript="quando.time.every(${count}, '${units}', ()=>{$(nl)$${box}$(nl)$})">
+    <div class="quando-left quando-time"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-time">
+            <span class="quando-info" title="This block can only be dragged into When Display.">⚠</span>
+            ⏰ Every
+            <input data-quando-name="count" type="number" min="0" max="99" maxLength="2" value="1" style="width: 4em" />
+            <select data-quando-name="units">
+                <option value="seconds">Seconds</option>
+                <option value="minutes">Minutes</option>
+                <option value="hours">Hours</option>
+            </select>
+        </div>
+        <div data-quando-name="box" class="quando-box"></div>
+        <div class="quando-row quando-time"></div>
+    </div>
+</div>
+
+
+
+<div data-quando-block-type="time-per" class="quando-block" data-quando-drop-valid="display-when-display,advanced-comment,inventor-flip,inventor-function-block,advanced-group"
+    data-quando-javascript="quando.time.per(${count}, '${units}', ()=>{$(nl)$${box}$(nl)$})">
+    <div class="quando-left quando-time"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-time">
+            <span class="quando-info" title="This block can only be dragged into When Display.">⚠</span>
+            ⏰
+            <input data-quando-name="count" type="number" min="0" max="99" maxLength="2" value="1" style="width: 4em" />
+            times per
+            <select data-quando-name="units">
+                <option value="second">Second</option>
+                <option value="minute">Minute</option>
+                <option value="hour">Hour</option>
+                <option value="day">Day</option>
+            </select>
+        </div>
+        <div data-quando-name="box" class="quando-box"></div>
+        <div class="quando-row quando-time"></div>
+    </div>
+</div>
+
+
+<div data-quando-block-type="time-vary" class="quando-block"
+  data-quando-javascript="quando.time.vary(${time},'${duration}','${loop}',${per},'${per_duration}',${inverted},(val)=>{${box}})">
+  <div class="quando-left quando-time"></div>
+  <div class="quando-right">
+    <div class="quando-row quando-time">⏰
+      Vary over
+      <input data-quando-name='time' type='number' value='1' placeholder='' style='width: 3em' min='0' max='100'
+        data-quando-encode='normal' />
+      <select data-quando-name="duration">
+        <option value='seconds'>seconds</option>
+        <option value='minutes'>minutes</option>
+        <option value='hours'>hours</option>
+      </select>
+      <select data-quando-name="loop">
+        <option value='once'>once</option>
+        <option value='restart'>repeat</option>
+        <option value='seesaw'>seesaw</option>
+      </select>
+      ⚡
+      <select data-quando-name="extras" class="quando-toggle">
+        <option value="hidden">+</option>
+        <option value="show">-</option>
+      </select>
+      <span data-quando-toggle="extras=show">
+        <br>
+        <input data-quando-name='per' type='number' value='20' placeholder='' style='width: 3em' min='0' max='100'
+          data-quando-encode='normal' />
+        times per
+        <select data-quando-name="per_duration">
+          <option value='seconds'>second</option>
+          <option value='minutes'>minute</option>
+          <option value='hours'>hour</option>
+        </select>
+        <select data-quando-name='inverted' class='quando-toggle'>
+          <option value='false'>normal</option>
+          <option value='true'>inverted</option>
+        </select>
+      </span>
+    </div>
+    <div data-quando-name="box" class="quando-box"></div>
+    <div class="quando-row quando-time"></div>
+  </div>
+</div>
+
+
+<div data-quando-block-type="time-pick-every" class="quando-block" data-quando-id="true" 
+  data-quando-javascript="$(pre$, quando.pick.set(${data-quando-id}, [${box}]))$$(nl)$quando.pick.every(${data-quando-id},${time},'${duration}', val, txt)">
+  <div class="quando-left quando-time"></div>
+  <div class="quando-right">
+    <div class="quando-row quando-time">⏰
+      Pick
+      <span class="iconify">
+        one
+      </span>
+      every
+      <input data-quando-name='time' type='number' value='1' placeholder='' style='width: 3em' min='0' max='100'
+        data-quando-encode='normal' />
+      <select data-quando-name="duration">
+        <option value='seconds'>seconds</option>
+        <option value='minutes'>minutes</option>
+        <option value='hours'>hours</option>
+      </select>
+    </div>
+    <div data-quando-name="box" class="quando-box" data-quando-fn-array="true"></div>
+    <div class="quando-row quando-time"></div>
+  </div>
+</div>
+
+
+<div data-quando-block-type="time-filter" class="quando-block" data-quando-id="true"
+  data-quando-javascript="quando.time.filter('${filter}',${timesper},'${units}',${near},${data-quando-id},val,(val)=>{${box}})">
+  <div class="quando-left quando-time"></div>
+  <div class="quando-right">
+    <div class="quando-row quando-time">⚡ ⚙️ Filter
+      <select data-quando-name="filter">
+        <option value='average'>Average</option>
+      </select>
+      ⚡
+      <select data-quando-name="extras" class="quando-toggle">
+        <option value="hidden">+</option>
+        <option value="show">-</option>
+      </select>
+      <span data-quando-toggle="extras=show">
+        <br>
+        <input data-quando-name='timesper' type='number' value='20' placeholder='' style='width: 3em' min='0' max='100'
+          data-quando-encode='normal' />
+        times per
+        <select data-quando-name="units">
+          <option value='second'>Second</option>
+          <option value='minute'>Minute</option>
+          <option value='hour'>Hour</option>
+          <option value='day'>Day</option>
+        </select>
+        check ±
+        <input data-quando-name='near' type='number' value='2' placeholder='' style='width: 3em' min='0' max='99'
+          data-quando-encode='normal' />
+        nearest
+      </span>
+    </div>
+    <div data-quando-name="box" class="quando-box"></div>
+    <div class="quando-row quando-time"></div>
+  </div>
+</div>
+
+
+<div data-quando-block-type="time-idle" class="quando-block"
+    data-quando-javascript="quando.idle(${count}, '${units}', ()=>{$(nl)$${idle}$(nl)$}, ()=>{$(nl)$${active}$(nl)$})">
+    <div class="quando-left quando-time"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-time">
+            ⏰ When Idle for
+            <input data-quando-name="count" type="number" min="0" max="99" maxLength="2" value="1" style="width: 4em" />
+            <select data-quando-name="units">
+                <option value="seconds">Seconds</option>
+                <option value="minutes">Minutes</option>
+                <option value="hours">Hours</option>
+            </select>
+        </div>
+        <div data-quando-name="idle" class="quando-box"></div>
+        <div class="quando-row quando-time">
+            ... then When Active
+        </div>
+        <div data-quando-name="active" class="quando-box"></div>
+        <div class="quando-row quando-time"></div>
+    </div>
+</div>
+

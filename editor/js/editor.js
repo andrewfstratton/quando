@@ -720,7 +720,7 @@ export function setup() {
             let tmp = document.createElement('div')
             tmp.innerHTML = block.html
             elem = tmp.querySelector(".quando-block")
-            if (elem) {
+            if (elem && block.type) {
               elem.dataset.quandoBlockType = title + '-' + block.type
             }
           }

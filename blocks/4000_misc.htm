@@ -1,0 +1,36 @@
+<div data-quando-block-type="misc-open-script" class="quando-block" data-quando-javascript="window.location.href='${filename}.js'">
+    <div class="quando-left quando-misc"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-misc">Open 📂 Client
+            <input data-quando-name="filename" type="text" value="" data-quando-encode="normal" />
+            <span class='iconify'>.js</span>
+        </div>
+    </div>
+</div>
+
+
+<div data-quando-block-type="misc-open-url" class="quando-block" data-quando-javascript="quando.misc.open('${url}')">
+    <div class="quando-left quando-misc"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-misc">Open 🌍
+            <span class='iconify'>URL</span>
+            <input data-quando-name="url" type="text" value="" data-quando-encode="normal" />
+        </div>
+    </div>
+</div>
+
+
+<div data-quando-block-type="misc-macro-leap-cursor-move" class="quando-block" data-quando-javascript="quando.leap.handleX('Either', 15, false, (val) => {quando.cursor_left_right(50, 50, false, val)
+})
+quando.leap.handleY('Either', 15, false, (val) => {quando.cursor_up_down(50, 50, false, val)
+})
+">
+    <div class="quando-left quando-misc"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-misc">🖐
+            <i>
+                Leap Cursor ⇕⇔
+            </i>
+        </div>
+    </div>
+</div>

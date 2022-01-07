@@ -1,0 +1,456 @@
+<div data-quando-block-type="advanced-alert" class="quando-block"
+    data-quando-javascript="quando.alert($(eq$,${txtval}$,input$,text.decode('${text}') $,${txtval})$)">
+    <div class="quando-left quando-advanced"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-advanced">
+            <span data-quando-toggle='txtval=txt'>❓</span>
+            <span data-quando-toggle='txtval=val'>⚡</span>
+            Alert
+            <span data-quando-toggle='txtval=input'>
+                &quot;<input data-quando-name="text" type="text" value="" data-quando-encode='normal' />&quot;
+            </span>
+            <select data-quando-name="extras" class="quando-toggle">
+                <option value="hidden">+</option>
+                <option value="show">-</option>
+            </select>
+            <span data-quando-toggle="extras=show">
+                <br>
+                <select data-quando-name='txtval' class='quando-toggle'>
+                    <option value='input'>""</option>
+                    <option value='val'>⚡</option>
+                    <option value='txt'>❓</option>
+                </select>
+            </span>
+        </div>
+    </div>
+</div>
+
+
+<div data-quando-block-type="advanced-log" class="quando-block" data-quando-javascript="console.log($(eq$,${txtval}$,input$,'${text}'$,${txtval})$)">
+    <div class="quando-left quando-advanced"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-advanced">
+            <span data-quando-toggle='txtval=txt'>❓</span>
+            <span data-quando-toggle='txtval=val'>⚡</span>
+            Log
+            <span data-quando-toggle='txtval=input'>
+                &quot;<input data-quando-name='text' type='text' value='' placeholder=''
+                    data-quando-encode='normal' />&quot;
+            </span>
+            <select data-quando-name="extras" class="quando-toggle">
+                <option value="hidden">+</option>
+                <option value="show">-</option>
+            </select>
+            <span data-quando-toggle="extras=show">
+                <br>
+                <select data-quando-name='txtval' class='quando-toggle'>
+                    <option value='input'>""</option>
+                    <option value='val'>⚡</option>
+                    <option value='txt'>❓</option>
+                </select>
+            </span>
+        </div>
+    </div>
+</div>
+
+
+<div data-quando-block-type="advanced-comment" class="quando-block" data-quando-disable="enabled=false" data-quando-javascript="// ${description} 
+$(eq$,${enabled}$,true$,${box})$">
+    <div class="quando-left quando-advanced"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-advanced">
+            <input data-quando-name="description" type="text" value="" data-quando-encode="" />
+            <select data-quando-name="extras" class="quando-toggle">
+                <option value="hidden">+</option>
+                <option value="show">-</option>
+            </select>
+            <div class="hover" data-quando-toggle='collapsed=true'>
+                <span class="hovertext">The contents of this block are &apos;Hidden&apos; </span>
+                <span class="iconfiy">...️️</span>
+            </div>
+            <span data-quando-toggle="extras=show">
+                <br>
+                <select data-quando-name='enabled' class='quando-toggle'>
+                    <option value='true'>enabled</option>
+                    <option value='false'>disabled</option>
+                </select>
+                <select data-quando-name='collapsed' class='quando-toggle'>
+                    <option value='false'>Visible</option>
+                    <option value='true'>Hidden</option>
+                </select>
+            </span>
+        </div>
+        <div data-quando-name="box" data-quando-toggle='collapsed=false' class="quando-box"></div>
+        <div data-quando-toggle='collapsed=false' class="quando-row quando-advanced"></div>
+    </div>
+</div>
+
+
+<div data-quando-block-type="advanced-when-range" class="quando-block" data-quando-id="true"
+    data-quando-javascript="quando.misc.whenRange(${data-quando-id},val,${middle},${range},${duration},()=>{${box}},()=>{${duration_box}})">
+    <div class="quando-left quando-advanced"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-advanced">⚡
+            When
+            <input data-quando-name='middle' type='number' value='50' placeholder='' style='width: 4em' min='0'
+                max='100' data-quando-encode='normal' />
+            %
+            <select data-quando-name="extras" class="quando-toggle">
+                <option value="hidden">+</option>
+                <option value="show">-</option>
+            </select>
+            <span data-quando-toggle="extras=show">
+                <br>
+                ±
+                <input data-quando-name='range' type='number' value='2' placeholder='' style='width: 4em' min='0'
+                    max='100' data-quando-encode='normal' />
+                %
+            </span>
+        </div>
+        <div data-quando-name="box" class="quando-box"></div>
+        <div class="quando-row quando-advanced">
+            ... then When match for
+            <input data-quando-name='duration' type='number' value='0.5' placeholder='' style='width: 4em' min='0'
+                max='100' data-quando-encode='normal' />
+            seconds
+        </div>
+        <div data-quando-name="duration_box" class="quando-box"></div>
+        <div class="quando-row quando-advanced"></div>
+    </div>
+</div>
+
+
+<div data-quando-blobk-type="advanced-send-message" class="quando-block" data-quando-javascript="quando.send_message('${message}', ${txtval}, '${host}', '${type}')">
+    <div class="quando-left quando-advanced"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-advanced">
+            <span data-quando-toggle='txtval=txt'>❓</span>
+            <span data-quando-toggle='txtval=val'>⚡</span>
+            📡 Send
+            <select data-quando-name="type">
+                <option value="broadcast">broadcast</option>
+                <option value="local">local</option>
+                <!-- <option value="node">node🛑</option> -->
+            </select>
+            message
+            <input data-quando-name="message" type="text" value="" data-quando-encode="normal" />
+            <select data-quando-name="extras" class="quando-toggle">
+                <option value="hidden">+</option>
+                <option value="show">-</option>
+            </select>
+            <span data-quando-toggle="extras=show">
+                <br>
+                <select data-quando-name='txtval' class='quando-toggle'>
+                    <option value='val'>⚡</option>
+                    <option value='txt'>❓</option>
+                </select>
+                <div class ="hidden">
+                    Host
+                    <input data-quando-name="host" type="text" value="" data-quando-encode="normal" />
+                </div>
+            </span>
+        </div>
+    </div>
+</div>
+
+
+<div data-quando-block-type="advanced-when-message" class="quando-block"
+    data-quando-drop-valid="display-when-display,advanced-comment,inventor-flip,inventor-function-block,advanced-group"
+    data-quando-javascript="quando.add_message_handler('${message}', ($(eq$,${txt}$,true$,txt$,val)$) => {
+${box}
+})">
+    <div class="quando-left quando-advanced"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-advanced">
+            <span class="quando-info" title="This block can only be dragged into When Display.">⚠</span>
+            📡 When message
+            <input data-quando-name="message" type="text" value="" data-quando-encode="normal" />
+            <select data-quando-name='txt' class='quando-toggle'>
+                <option value='false'>⚡</option>
+                <option value='true'>❓</option>
+            </select>
+        </div>
+        <div data-quando-name="box" class="quando-box"></div>
+        <div class="quando-row quando-advanced"></div>
+    </div>
+</div>
+
+
+<div data-quando-block-type="advanced-http" class="quando-block" data-quando-javascript="quando.message.http('${message}', ${txtval_in}, '${host}',
+$(hasValue$,${port}$,${port}$,undefined)$,${txt},(${txt_val_out})=>{${box}})">
+    <div class="quando-left quando-advanced"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-advanced">
+            <span data-quando-toggle='txtval_in=txt'>❓</span>
+            <span data-quando-toggle='txtval_in=val'>⚡</span>
+            📡
+            <span class="iconify">
+                http
+            </span>
+            GET
+            <input data-quando-name='message' type='text' value='' placeholder='path' data-quando-encode='normal' />
+            <span data-quando-toggle='txtval_out=txt'>❓</span>
+            <span data-quando-toggle='txtval_out=val'>⚡</span>
+            <select data-quando-name="extras" class="quando-toggle">
+                <option value="hidden">+</option>
+                <option value="show">-</option>
+            </select>
+            <span data-quando-toggle="extras=show">
+                <br>
+                <select data-quando-name='txtval_in' class='quando-toggle'>
+                    <option value='val'>⚡</option>
+                    <option value='txt'>❓</option>
+                </select>
+                host
+                <input data-quando-name='host' type='text' value='' placeholder='127.0.0.1'
+                    data-quando-encode='normal' />
+                port
+                <input data-quando-name='port' type='number' value='' placeholder='' style='width: 5em' min='0'
+                    max='65535' data-quando-encode='normal' />
+                <select data-quando-name='txtval_out' class='quando-toggle'>
+                    <option value='val'>⚡</option>
+                    <option value='txt'>❓</option>
+                </select>
+            </span>
+        </div>
+        <div data-quando-name="box" class="quando-box"></div>
+        <div class="quando-row quando-advanced"></div>
+    </div>
+</div>
+
+
+<div data-quando-block-type="advanced-pick-random" class="quando-block" data-quando-id="true"
+    data-quando-javascript="$(pre$, quando.pick.set(${data-quando-id}, [${box}]))$$(nl)$quando.pick.random(${data-quando-id}, '${type}', val, txt)">
+    <div class="quando-left quando-advanced"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-advanced">
+            🎲 Pick Random
+            <select data-quando-name='extras' class='quando-toggle'>
+                <option value='hidden'>+</option>
+                <option value='show'>-</option>
+            </select>
+            <span data-quando-toggle='extras=show'>
+                <br />
+                <select data-quando-name='type'>
+                    <option value='Normal'>Normal</option>
+                    <option value='Reorder'>Unique Order</option>
+                    <option value="Different">Don't Repeat</option>
+                </select>
+            </span>
+        </div>
+        <div data-quando-name="box" class="quando-box" data-quando-fn-array="true"></div>
+        <div class="quando-row quando-advanced">
+        </div>
+    </div>
+</div>
+
+
+<div data-quando-block-type="advanced-pick-one" class="quando-block" data-quando-id="true"
+    data-quando-javascript="$(pre$, quando.pick.set(${data-quando-id}, [${box}]))$$(nl)$quando.pick.one(${data-quando-id}, '${message}', ${next}, val, txt)">
+    <div class="quando-left quando-advanced"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-advanced">Pick
+            <select data-quando-name="next" class="quando-toggle">
+                <option value='true'>Next</option>
+                <option value='false'>Previous</option>
+            </select>
+            &nbsp;
+            <select data-quando-name='extras' class='quando-toggle'>
+                <option value='hidden'>+</option>
+                <option value='show'>-</option>
+            </select>
+            <span data-quando-toggle='extras=show'>
+                <br />
+                Reset on 📡 message <input data-quando-name="message" type="text" value=""
+                    data-quando-encode="normal" />
+            </span>
+        </div>
+        <div data-quando-name="box" class="quando-box" data-quando-fn-array="true"></div>
+        <div class="quando-row quando-advanced"></div>
+    </div>
+</div>
+
+
+<div data-quando-block-type="advanced-pick-value" class="quando-block" data-quando-id="true"
+    data-quando-javascript="$(pre$, quando.pick.set(${data-quando-id}, [${box}]))$$(nl)$quando.pick.val(${data-quando-id}, val)">
+    <div class="quando-left quando-advanced"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-advanced">⚡ Pick
+        </div>
+        <div data-quando-name="box" class="quando-box" data-quando-fn-array="true"></div>
+        <div class="quando-row quando-advanced"></div>
+    </div>
+</div>
+
+
+<div data-quando-block-type="advanced-value-percent" class="quando-block" data-quando-javascript="{ let val=${_value}/100
+${box}
+}">
+    <div class="quando-left quando-advanced"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-advanced">Value
+            <input data-quando-name='_value' type='number' value='50' placeholder='' style='width: 4em' min='0'
+                max='100' data-quando-encode='normal' />
+            % ⚡
+        </div>
+        <div data-quando-name="box" class="quando-box"></div>
+        <div class="quando-row quando-advanced"></div>
+    </div>
+</div>
+
+
+<div data-quando-block-type="advanced-apply-text" class="quando-block" data-quando-javascript="{ let txt='${text}'
+${box}
+}">
+    <div class="quando-left quando-advanced"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-advanced">
+            Text
+            &quot;<input data-quando-name='text' type='text' value='' placeholder=''
+                data-quando-encode='normal' />&quot;
+            ❓
+        </div>
+        <div data-quando-name="box" class="quando-box"></div>
+        <div class="quando-row quando-advanced"></div>
+    </div>
+</div>
+
+
+<div data-quando-block-type="advanced-join" class="quando-block" data-quando-javascript="((txt)=>{
+${box}
+})('${before}' + ${txt_val} + '${after}');
+">
+    <!-- N.B. semi colon is ESSENTIAL - DO NOT REMOVE-->
+    <div class="quando-left quando-advanced"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-advanced">
+            <span data-quando-toggle='txt_val=txt'>❓</span>
+            <span data-quando-toggle='txt_val=val'>⚡</span>
+            📄 Join &nbsp;
+            <input data-quando-name='before' type='text' value='' placeholder='' data-quando-encode='normal' />
+            </span>
+            <span data-quando-toggle='txt_val=txt'>❓</span>
+            <span data-quando-toggle='txt_val=val'>⚡</span>
+            <input data-quando-name='after' type='text' value='' placeholder='' data-quando-encode='normal' />
+            </span>
+            → ❓
+            <select data-quando-name="extras" class="quando-toggle">
+                <option value="hidden">+</option>
+                <option value="show">-</option>
+            </select>
+            <span data-quando-toggle="extras=show">
+                <br>
+                <select data-quando-name='txt_val' class='quando-toggle'>
+                    <option value='val'>⚡</option>
+                    <option value='txt'>❓</option>
+                </select>
+            </span>
+        </div>
+        <div data-quando-name="box" class="quando-box"></div>
+        <div class="quando-row quando-advanced"></div>
+    </div>
+</div>
+
+
+<div data-quando-block-type="advanced-scale" class="quando-block" data-quando-javascript="quando.misc.scale(val,${min},${max},(txt)=>{
+  ${box}
+})">
+    <div class="quando-left quando-advanced"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-advanced">⚡ Scale
+            <input data-quando-name='min' type='number' value='0' placeholder='' style='width: 5em' min='-1000000'
+                max='1000000' data-quando-encode='normal' />
+            to
+            <input data-quando-name='max' type='number' value='100' placeholder='' style='width: 5em' min='-1000000'
+                max='1000000' data-quando-encode='normal' />
+            ❓
+        </div>
+        <div data-quando-name="box" class="quando-box"></div>
+        <div class="quando-row quando-advanced"></div>
+    </div>
+</div>
+
+
+<div data-quando-block-type="advanced-adjust" class="quando-block" data-quando-id="true"
+    data-quando-javascript="quando.misc.adjust(${data-quando-id},val,${time},'${duration}',${per},'${per_duration}',${wrap},${inverted},(val)=>{${box}})">
+    <div class="quando-left quando-advanced"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-advanced">⚡ ️⚙️ Adjust in <span class="iconify">≥</span>
+            <input data-quando-name='time' type='number' value='1' placeholder='' style='width: 3em' min='0' max='100'
+                data-quando-encode='normal' />
+            <select data-quando-name="duration">
+                <option value='seconds'>seconds</option>
+                <option value='minutes'>minutes</option>
+                <option value='hours'>hours</option>
+            </select>
+            ⚡
+            <select data-quando-name="extras" class="quando-toggle">
+                <option value="hidden">+</option>
+                <option value="show">-</option>
+            </select>
+            <span data-quando-toggle="extras=show">
+                <br>
+                <select data-quando-name='wrap' class='quando-toggle'>
+                    <option value='false'>stick at limit</option>
+                    <option value='true'>wrap around</option>
+                </select> &nbsp;
+                <input data-quando-name='per' type='number' value='20' placeholder='' style='width: 3em' min='0'
+                    max='100' data-quando-encode='normal' />
+                times per
+                <select data-quando-name="per_duration">
+                    <option value='second'>second</option>
+                    <option value='minute'>minute</option>
+                    <option value='hour'>hour</option>
+                </select>
+                <select data-quando-name='inverted' class='quando-toggle'>
+                    <option value='false'>normal</option>
+                    <option value='true'>inverted</option>
+                </select>
+            </span>
+        </div>
+        <div data-quando-name="box" class="quando-box"></div>
+        <div class="quando-row quando-advanced"></div>
+    </div>
+</div>
+
+
+<div data-quando-block-type="advanced-flip" class="quando-block" data-quando-javascript="$(eq$,${first}$,true$,${box}$,${box2})$">
+    <div class="quando-left quando-advanced"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-advanced">
+            <span class="iconify">Flip </span>
+            <select data-quando-name='first' class='quando-toggle'>
+                <option value='true'>⇧</option>
+                <option value='false'>⇩</option>
+            </select>
+            <input data-quando-name='flip_comment' data-quando-toggle='first=true' type='text' value=''
+                placeholder='top' data-quando-encode='normal' />
+            <input data-quando-name='flop_comment' data-quando-toggle='first=false' type='text' value=''
+                placeholder='bottom' data-quando-encode='normal' />
+        </div>
+        <div data-quando-name="box" data-quando-toggle="first=true" class="quando-box"></div>
+        <div data-quando-name="box2" data-quando-toggle="first=false" class="quando-box"></div>
+        <div class="quando-row quando-advanced"></div>
+    </div>
+</div>
+
+
+<div data-quando-block-type="advanced-javascript" class="quando-block" data-quando-javascript="${javascript}">
+    <div class="quando-left quando-advanced"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-advanced">
+            Javascript <input data-quando-name="javascript" type="text" value="" data-quando-encode="raw" />
+        </div>
+    </div>
+</div>
+
+
+<div data-quando-block-type="advanced-error" class="quando-block">
+    <div class="quando-left quando-advanced"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-advanced"><span class="iconify">❕</span>
+            <i> ignored </i>
+            <input data-quando-name='text' type='text' value='' placeholder='Error' data-quando-encode='normal' />
+        </div>
+    </div>
+</div>

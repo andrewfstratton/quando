@@ -1,0 +1,162 @@
+<div data-quando-block-type="style-background-colour" class="quando-block" data-quando-javascript="quando.style.colour($(inDisplay)$,'${colour}')">
+    <div class="quando-left quando-style"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-style">
+            🌈 Background Colour
+            <input data-quando-name="colour" type="color" value="#000000"/>
+        </div>
+    </div>
+</div>
+
+
+<div data-quando-block-type="style-text-style" class="quando-block" data-quando-javascript="quando.style.${type}($(inDisplay)$,'${style}','$(rgb$,${colour})$')">
+    <div class="quando-left quando-style"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-style">
+            🌈 
+            <select data-quando-name="type">
+                <option value='title'>Title</option>
+                <option value='text'>Text</option>
+                <option value='label'>Label</option>
+            </select>
+            <select data-quando-name="style">
+                <option value='color'>Font</option>
+                <option value='background-color'>Background</option>
+            </select>
+            <input data-quando-name="colour" type="color" value="#ffffff"/>
+        </div>
+    </div>
+</div>
+
+
+<div data-quando-block-type="style-font-size" class="quando-block" data-quando-javascript="quando.style.font_size($(inDisplay)$,'${style}','${chars}')">
+  <div class="quando-left quando-style"></div>
+  <div class="quando-right">
+    <div class="quando-row quando-style">
+      <span class="iconify">🗚</span> Font Size
+      <select data-quando-name="style">
+        <option value='#quando_title'>Title</option>
+        <option value='#quando_text'>Text</option>
+        <option value='.quando_label'>Label</option>
+      </select>
+      <input data-quando-name='chars' type='number' value='40' placeholder=''
+        style='width: 4em' min='0' max='1000' data-quando-encode='normal'/>
+      + characters across screen
+    </div>
+  </div>
+</div>
+
+
+<div data-quando-block-type="style-font-type" class="quando-block" data-quando-javascript="quando.style.font_type($(inDisplay)$,'${style}','${font}')">
+  <div class="quando-left quando-style"></div>
+  <div class="quando-right">
+    <div class="quando-row quando-style">
+      <span class="iconify">🗚</span> Font
+      <select data-quando-name="style">
+        <option value='#quando_title'>Title</option>
+        <option value='#quando_text'>Text</option>
+        <option value='.quando_label'>Label</option>
+      </select>
+      <select data-quando-name='font'>
+        <option value='sans-serif'>sans-serif</option>
+        <option value='Arial'>Arial</option>
+        <option value='Helvetica'>Helvetica</option>
+        <option value='Arial Black'>Arial Black</option>
+        <option value='Gadget'>Gadget</option>
+        <option value='Comic Sans MS'>Comic Sans MS</option>
+        <option value='cursive'>cursive</option>
+        <option value='Impact'>Impact</option>
+        <option value='Charcoal'>Charcoal</option>
+        <option value='Lucida Sans Unicode'>Lucida Sans Unicode</option>
+        <option value='Lucida Grande'>Lucida Grande</option>
+        <option value='Tahoma'>Tahoma</option>
+        <option value='Geneva'>Geneva</option>
+        <option value='Trebuchet MS'>Trebuchet MS</option>
+        <option value='Verdana'>Verdana</option>
+        <option value='serif'>serif</option>
+        <option value='Georgia'>Georgia</option>
+        <option value='Palatino Linotype'>Palatino Linotype</option>
+        <option value='Book Antiqua'>Book Antiqua</option>
+        <option value='Palatino'>Palatino</option>
+        <option value='Times New Roman'>Times New Roman</option>
+        <option value='Times'>Times</option>
+        <option value='monospace'>monospace</option>
+        <option value='Courier New'>Courier New</option>
+        <option value='Courier'>Courier</option>
+        <option value='Lucida Console'>Lucida Console</option>
+        <option value='Monaco'>Monaco</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+
+<div data-quando-block-type="style-cursor-colour" class="quando-block" data-quando-javascript="quando.style.cursor_colour($(inDisplay)$,'$(rgb$,${colour})$',${opacity})">
+  <div class="quando-left quando-style"></div>
+  <div class="quando-right">
+    <div class="quando-row quando-style">Cursor
+      <input data-quando-name="colour" type="color" value="#ffff66" />
+      opacity
+      <input data-quando-name="opacity" type="text" value="70" data-quando-encode="normal"/>
+      %
+    </div>
+  </div>
+</div>
+
+
+<div data-quando-block-type="style-cursor-size" class="quando-block" data-quando-javascript="quando.style.cursor_size($(inDisplay)$,${percent})">
+  <div class="quando-left quando-style"></div>
+  <div class="quando-right">
+    <div class="quando-row quando-style">Cursor Size
+      <input data-quando-name='percent' type='number' value='4.4' placeholder=''
+        style='width: 4em' min='0' max='100' data-quando-encode='normal'/>%
+      of screen width
+    </div>
+  </div>
+</div>
+
+
+<div data-quando-block-type="style-position" class="quando-block" data-quando-javascript="quando.style.position($(inDisplay)$,'${type}', '${direction}', ${percent})">
+  <div class="quando-left quando-style"></div>
+  <div class="quando-right">
+    <div class="quando-row quando-style">
+      <span class="iconify">⧉</span> Position
+      <select data-quando-name="type">
+        <option value='title'>Title</option>
+        <option value='text'>Text</option>
+        <option value='labels'>Labels</option>
+      </select>
+      <input data-quando-name='percent' type='number' value='0' placeholder=''
+        style='width: 4em' min='0' max='100' data-quando-encode='normal'/>%
+      &nbsp; from
+      <select data-quando-name="direction">
+        <option value='top'>⇧ top</option>
+        <option value='bottom'>⇩ bottom</option>
+        <option value='left'>⇦ left</option>
+        <option value='right'>⇨ right</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+
+<div data-quando-block-type="style-size" class="quando-block" data-quando-javascript="quando.style.size($(inDisplay)$,'${type}', '${direction}', ${percent})">
+  <div class="quando-left quando-style"></div>
+  <div class="quando-right">
+    <div class="quando-row quando-style">
+      <span class="iconify">◱</span> Size
+      <select data-quando-name="type">
+        <option value='title'>Title</option>
+        <option value='text'>Text</option>
+        <option value='labels'>Labels</option>
+      </select>
+      <input data-quando-name='percent' type='number' value='50' placeholder=''
+        style='width: 4em' min='0' max='100' data-quando-encode='normal'/>%
+      of
+      <select data-quando-name="direction">
+        <option value='height'>⇕ height</option>
+        <option value='width'>⇔ width</option>
+      </select>
+    </div>
+  </div>
+</div>

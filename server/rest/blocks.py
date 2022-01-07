@@ -9,19 +9,22 @@ def blocks():
     directory = os_join(app.root_path, 'blocks')
     blocks = []
     for folder in os.listdir(directory):
-        menu = {'title':True}
-        parts = folder.split("_")
-        del parts[0] # remove the numeric prefix
-        name = ''
-        class_ = ''
-        for part in parts:
-            class_ += part + '-'
-            name += part.capitalize() + ' '
-        menu['class'] = class_[:-1] # removes extra '-'
-        menu['name'] = name[:-1] # removes extra ' '
-        menu['folder'] = folder
-        blocks.append(menu)
-        get_files(blocks, folder)
+        if folder.endswith(".htm") or folder == "README.md":
+            pass
+        else:
+            menu = {'title':True}
+            parts = folder.split("_")
+            del parts[0] # remove the numeric prefix
+            name = ''
+            class_ = ''
+            for part in parts:
+                class_ += part + '-'
+                name += part.capitalize() + ' '
+            menu['class'] = class_[:-1] # removes extra '-'
+            menu['name'] = name[:-1] # removes extra ' '
+            menu['folder'] = folder
+            blocks.append(menu)
+            get_files(blocks, folder)
     data = {"blocks":blocks, "success":True}
     return jsonify(data)
 

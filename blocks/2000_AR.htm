@@ -1,0 +1,247 @@
+<div data-quando-block-type="AR-when" class="quando-block" data-quando-javascript="quando.ar.whenMarker('${marker_id}', ()=>{
+  ${box}
+}, ()=>{
+  ${box_lost}
+})">
+    <div class="quando-left quando-AR"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-AR"><span class='iconify'>AR</span>
+          When
+          <select data-quando-name="marker_id">
+              <option value='hiro'>Hiro</option>
+              <option value='A'>A</option>
+              <option value='B'>B</option>
+              <option value='C'>C</option>
+              <option value='D'>D</option>
+              <option value='E'>E</option>
+              <option value='F'>F</option>
+              <option value='G'>G</option>
+          </select>
+          Marker
+          <select data-quando-name='row_box_lost' class='quando-toggle'>
+              <option value='row'>+</option>
+              <option value='box'>-</option>
+          </select>
+        </div>
+        <div data-quando-name="box" class="quando-box"></div>
+        <div data-quando-toggle="row_box_lost=box" class="quando-row quando-AR">... then When Lost</div>
+        <div data-quando-toggle="row_box_lost=box" data-quando-name="box_lost" class="quando-box"></div>
+        <div class="quando-row quando-AR"></div>
+    </div>
+</div>
+
+
+<div data-quando-block-type="AR-show-text" class="quando-block" data-quando-id="true"
+data-quando-javascript="quando.ar.showText('${marker_id}', $(eq$,${txtval}$,input$,'${text}'$,${txtval})$, ${append})">
+    <div class="quando-left quando-AR"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-AR">
+            <span data-quando-toggle='txtval=txt'>❓</span>
+            <span data-quando-toggle='txtval=val'>⚡</span>
+            <span class='iconify'>AR</span>
+            <select data-quando-name="append" class='quando-toggle'>
+                <option value="false">Show</option>
+                <option value="true">Add</option>
+            </select>
+            <span data-quando-toggle='txtval=input'>
+                &quot;<input data-quando-name="text" type="text" value=""
+                    data-quando-encode='normal' />&quot;
+            </span>
+            <span data-quando-toggle='append=true'>to</span>
+            <span data-quando-toggle='append=false'>on</span>
+            <select data-quando-name="marker_id">
+                <option value='hiro'>Hiro</option>
+                <option value='A'>A</option>
+                <option value='B'>B</option>
+                <option value='C'>C</option>
+                <option value='D'>D</option>
+                <option value='E'>E</option>
+                <option value='F'>F</option>
+                <option value='G'>G</option>
+            </select>
+            <select data-quando-name="extras" class="quando-toggle">
+                <option value="hidden">+</option>
+                <option value="show">-</option>
+            </select>
+            <span data-quando-toggle="extras=show">
+                <br>
+                <select data-quando-name='txtval' class='quando-toggle'>
+                    <option value='input'>""</option>
+                    <option value='val'>⚡</option>
+                    <option value='txt'>❓</option>
+                </select>
+            </span>
+        </div>
+    </div>
+</div>
+
+
+<div data-quando-block-type="AR-show-image" class="quando-block" data-quando-id="true"
+  data-quando-javascript="quando.ar.showImage('${marker_id}', '${file_name}')">
+  <div class="quando-left quando-AR"></div>
+  <div class="quando-right">
+    <div class="quando-row quando-AR">
+      <span class='iconify'>AR</span>
+      Show 📷 Image
+      <input data-quando-media="images" data-quando-name="file_name" type="text" readonly="true" value=""
+        data-quando-encode="normal" />
+      on
+      <select data-quando-name="marker_id">
+        <option value='hiro'>Hiro</option>
+        <option value='A'>A</option>
+        <option value='B'>B</option>
+        <option value='C'>C</option>
+        <option value='D'>D</option>
+        <option value='E'>E</option>
+        <option value='F'>F</option>
+        <option value='G'>G</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+
+<div data-quando-block-type="AR-show-gltf" class="quando-block" data-quando-id="true"
+    data-quando-javascript="quando.ar.showGLTF('${marker_id}', '${file_name}')">
+    <div class="quando-left quando-AR"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-AR">
+            <span class='iconify'>AR</span>
+            Show 🎁 3D Object
+            <input data-quando-media="objects" data-quando-name="file_name" type="text" readonly="true" value="" data-quando-encode="normal"/>
+            on
+            <select data-quando-name="marker_id">
+                <option value='hiro'>Hiro</option>
+                <option value='A'>A</option>
+                <option value='B'>B</option>
+                <option value='C'>C</option>
+                <option value='D'>D</option>
+                <option value='E'>E</option>
+                <option value='F'>F</option>
+                <option value='G'>G</option>
+            </select>
+        </div>
+    </div>
+</div>
+
+
+<div data-quando-block-type="AR-rotate" class="quando-block" data-quando-javascript="quando.ar.${angle}('${marker_id}',val,${mid_degrees},${plus_minus},${inverted})">
+  <div class="quando-left quando-AR"></div>
+  <div class="quando-right">
+    <div class="quando-row quando-AR">⚡
+      <span class="iconify">
+        AR
+      </span>
+      Rotate
+      <select data-quando-name="angle">
+        <option value='roll'>⤹⤸ Roll</option>
+        <option value='yaw'>⇔ Yaw</option>
+        <option value='pitch'>⇕ Pitch</option>
+      </select>
+      marker
+      <select data-quando-name="marker_id">
+        <option value='hiro'>Hiro</option>
+        <option value='A'>A</option>
+        <option value='B'>B</option>
+        <option value='C'>C</option>
+        <option value='D'>D</option>
+        <option value='E'>E</option>
+        <option value='F'>F</option>
+        <option value='G'>G</option>
+      </select>
+      <select data-quando-name="extras" class="quando-toggle">
+        <option value="hidden">+</option>
+        <option value="show">-</option>
+      </select>
+      <span data-quando-toggle="extras=show">
+        <br>
+        <input data-quando-name='mid_degrees' type='number' value='0' placeholder=''
+            style='width: 4em' min='-180' max='180' data-quando-encode='normal'/>
+        degrees&nbsp; ±
+        <input data-quando-name='plus_minus' type='number' value='180' placeholder=''
+            style='width: 4em' min='0' max='180' data-quando-encode='normal'/>
+        degrees
+        <select data-quando-name='inverted' class='quando-toggle'>
+          <option value='false'>Normal</option>
+          <option value='true'>Inverted</option>
+        </select>
+      </span>
+    </div>
+  </div>
+</div>
+
+
+<div data-quando-block-type="AR-zoom" class="quando-block" data-quando-javascript="quando.ar.zoom('${marker_id}',val,${min},${max},${inverted})">
+  <div class="quando-left quando-AR"></div>
+  <div class="quando-right">
+    <div class="quando-row quando-AR">
+      ⚡
+      <span class="iconify">
+        AR
+      </span>
+      Zoom marker
+      <select data-quando-name="marker_id">
+        <option value='hiro'>Hiro</option>
+        <option value='A'>A</option>
+        <option value='B'>B</option>
+        <option value='C'>C</option>
+        <option value='D'>D</option>
+        <option value='E'>E</option>
+        <option value='F'>F</option>
+        <option value='G'>G</option>
+      </select>
+      <select data-quando-name='extras' class='quando-toggle'>
+        <option value='hidden'>+</option>
+        <option value='show'>-</option>
+      </select>
+      <span data-quando-toggle='extras=show'>
+        <br />
+        <input data-quando-name='min' type='number' value='50' placeholder=''
+          style='width: 4em' min='0' max='1000' data-quando-encode='normal'/>%
+        to
+        <input data-quando-name='max' type='number' value='200' placeholder=''
+          style='width: 4em' min='0' max='1000' data-quando-encode='normal'/>%
+        times
+        <select data-quando-name='inverted' class='quando-toggle'>
+          <option value='false'>Normal</option>
+          <option value='true'>Inverted</option>
+        </select>
+      </span>
+    </div>
+  </div>
+</div>
+
+
+<div data-quando-block-type="AR-clear" class="quando-block" data-quando-id="true" data-quando-javascript="quando.ar.clear()">
+    <div class="quando-left quando-AR"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-AR">
+          Clear <span class='iconify'>AR</span>
+        </div>
+    </div>
+</div>
+
+
+<div data-quando-block-type="AR-show-video" class="quando-block" data-quando-id="true"
+    data-quando-javascript="quando.ar.showVideo('${marker_id}', '${file_name}')">
+    <div class="quando-left quando-AR"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-AR">
+            ❗❗
+            <span class='iconify'>AR</span>
+            Play 📺 Video
+            <input data-quando-media="video" data-quando-name="file_name" type="text" readonly="true" value="" data-quando-encode="normal"/>
+            on
+            <select data-quando-name="marker_id">
+                <option value='hiro'>Hiro</option>
+                <option value='A'>A</option>
+                <option value='B'>B</option>
+                <option value='C'>C</option>
+                <option value='D'>D</option>
+                <option value='E'>E</option>
+                <option value='F'>F</option>
+                <option value='G'>G</option>
+            </select>
+        </div>
+    </div>
+</div>

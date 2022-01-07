@@ -1,0 +1,485 @@
+<div data-quando-block-type="experimental-Robot-robot-connect" class="quando-block" data-quando-javascript="quando.robot.connect('${ip}')">
+  <div class="quando-left quando-robot"></div>
+  <div class="quando-right">
+    <div class="quando-row quando-robot">🤖 Connect to IP
+      <input data-quando-name='ip' type='text' value='' placeholder='e.g. 192.168.1.250' data-quando-encode='normal' />
+    </div>
+  </div>
+</div>
+
+
+<div data-quando-block-type="experimental-Robot-robot-life" class="quando-block" data-quando-javascript="quando.robot.changeAutonomousLife('${lifestate}')">
+  <div class="quando-left quando-robot"></div>
+  <div class="quando-right">
+    <div class="quando-row quando-robot">🤖 Robot
+      <select data-quando-name='lifestate' class='quando-toggle'>
+        <option value='solitary'>Breathing</option>
+        <option value='safeguard'>Still</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+
+<div data-quando-block-type="experimental-Robot-robot-facing" class="quando-block" data-quando-javascript="quando.robot.mirror(${mirror})">
+  <div class="quando-left quando-robot"></div>
+  <div class="quando-right">
+    <div class="quando-row quando-robot">
+      🤖
+      <select data-quando-name='mirror' class='quando-toggle'>
+        <option value='false'>Normal</option>
+        <option value='true'>Mirrored</option>
+      </select>
+      movement
+    </div>
+  </div>
+</div>
+
+
+<div data-quando-block-type="experimental-Robot-robot-say" class="quando-block" data-quando-id="true"
+  data-quando-javascript="quando.robot.speechHandler('${animation}', '${say}', ${pitch}, ${speed}, ${doubleVoicePitch}, ${doubleVoiceLevel}, ${doubleVoiceTimeShift}, '${interrupt}', val)">
+  <div class="quando-left quando-robot"></div>
+  <div class="quando-right">
+    <div class="quando-row quando-robot ">🤖💬 Say
+      "<input data-quando-name="say" class="quando-robot-say" type="text" value="" data-quando-encode="normal" />"
+      <select data-quando-name="extras" class="quando-toggle">
+        <option value="hidden">+</option>
+        <option value="show">-</option>
+      </select>
+      <span data-quando-toggle="extras=show">
+        <br>
+        with
+        <select data-quando-name='animation'>
+          <option value='None'>no</option>
+          <option value='Contextual'>related</option>
+          <option value='Random'>random</option>
+        </select> gestures, if speaking
+        <select data-quando-name='interrupt'>
+          <option value='full'>Replace</option>
+          <option value='normal'>Wait</option>
+          <option value='continue'>Insert</option>
+        </select>
+        <br>
+        <span class="bold">Voice - </span>
+        Pitch:
+        <!-- (1.0-4.0) -->
+        <div class="hover">
+          <input data-quando-name="pitch" type="text" value="1.0" data-quando-encode="normal" />
+          <span class="hovertext">Range: (1.0 - 4.0)</span>
+        </div>
+        Speed:
+        <!-- (%, 50-) -->
+        <div class="hover">
+          <input data-quando-name="speed" type="text" value="100" data-quando-encode="normal" />%
+          <span class="hovertext">Range: (50% - ?)</span>
+        </div>
+        <br>
+        <span class="bold">Double Voice - </span>
+        Pitch:
+        <!-- (1.0-4.0) -->
+        <div class="hover">
+          <input data-quando-name="doubleVoicePitch" type="text" value="1.0" data-quando-encode="normal" />
+          <span class="hovertext">Range: (1.0 - 4.0)</span>
+        </div>
+        Level:
+        <!-- (0-4.0) -->
+        <div class="hover">
+          <input data-quando-name="doubleVoiceLevel" type="text" value="0" data-quando-encode="normal" />
+          <span class="hovertext">Range: (0.0 - 4.0)</span>
+        </div>
+        Delay:
+        <!-- (s, 0-0.5) -->
+        <div class="hover">
+          <input data-quando-name="doubleVoiceTimeShift" type="text" value="0" data-quando-encode="normal" />s
+          <span class="hovertext">Range: (0.0 - 0.5)</span>
+        </div>
+      </span>
+    </div>
+  </div>
+</div>
+
+
+<div data-quando-block-type="experimental-Robot-robot-anim-tag" class="quando-block" data-quando-javascript="quando.robot.playAnimationTag('${animTag}')">
+  <div class="quando-left quando-robot"></div>
+  <div class="quando-right">
+    <div class="quando-row quando-robot">
+      🤖 do
+      <select data-quando-name="animTag">
+        <option value='affirmative'>affirmative</option>
+        <option value='beg'>beg</option>
+        <option value='body language'>body language</option>
+        <option value='bow'>bow</option>
+        <option value='call'>call</option>
+        <option value='clear'>clear</option>
+        <option value='enthusiastic'>enthusiastic</option>
+        <option value='explain'>explain</option>
+        <option value='hello'>hi</option>
+        <option value='you'>you</option>
+        <option value='unfamiliar'>idk</option>
+        <option value='please'>please</option>
+        <option value='no'>no</option>
+        <option value='present'>presenting</option>
+        <option value='ok'>ok</option>
+        <option value='I'>I</option>
+      </select>
+      animation
+    </div>
+  </div>
+</div>
+
+
+
+<div data-quando-block-type="experimental-Robot-robot-hum" class="quando-block" data-quando-javascript="quando.robot.playSine(${frequency}, ${gain}, ${duration})">
+  <div class="quando-left quando-robot"></div>
+  <div class="quando-right">
+    <div class="quando-row quando-robot">
+      🤖🔊 Hum
+      <input data-quando-name='frequency' type='number' value='250' placeholder='' style='width: 5em' min='1'
+        max='10000' data-quando-encode='normal' />
+      Hz, for
+      <input data-quando-name='duration' type='number' value='1' placeholder='' style='width: 5em' min='0' max='100'
+        data-quando-encode='normal' />
+      seconds
+      <select data-quando-name="extras" class="quando-toggle">
+        <option value="hidden">+</option>
+        <option value="show">-</option>
+      </select>
+      <span data-quando-toggle="extras=show">
+        <br>
+        volume
+        <input data-quando-name='gain' type='number' value='100' placeholder='' style='width: 4em' min='0' max='100'
+          data-quando-encode='normal' />
+        %
+      </span>
+    </div>
+  </div>
+</div>
+
+
+<div data-quando-block-type="experimental-Robot-robot-play-audio" class="quando-block" data-quando-id="true" data-quando-javascript="quando.robot.audio('${file_name}', '${scope}')">
+  <div class="quando-left quando-robot"></div>
+  <div class="quando-right">
+    <div class="quando-row quando-robot">
+      🤖🔊 Play Audio
+      <input data-quando-name="file_name" type="text" value="" data-quando-encode="normal" />
+      <select data-quando-name="extras" class="quando-toggle">
+        <option value="hidden">+</option>
+        <option value="show">-</option>
+      </select>
+      <span data-quando-toggle="extras=show">
+        <select data-quando-name='scope' class='quando-toggle'>
+          <option value='interrupt'>Interrupt</option>
+          <option value='buffer'>Buffer</option>
+          <option value='background'>Background</option>
+        </select>
+      </span>
+    </div>
+  </div>
+</div>
+
+
+<div data-quando-block-type="experimental-Robot-robot-volume" class="quando-block" data-quando-id="true" data-quando-javascript="quando.robot.masterVolume(${volume})">
+  <div class="quando-left quando-robot"></div>
+  <div class="quando-right">
+    <div class="quando-row quando-robot">
+      🤖🔊 Set Volume
+      <input data-quando-name="volume" type="text" value="50" data-quando-encode="normal" />
+      %
+    </div>
+  </div>
+</div>
+
+
+<div data-quando-block-type="experimental-Robot-robot-pose" class="quando-block" data-quando-javascript="quando.robot.changePosture('${pose}', ${speed})">
+  <div class="quando-left quando-robot"></div>
+  <div class="quando-right">
+    <div class="quando-row quando-robot">🤖 Robot Pose
+      <select data-quando-name="pose">
+        <option value='Stand'>Stand - straight</option>
+        <option value='StandInit'>Stand - relaxed</option>
+        <option value='StandZero'>Stand - arms infront</option>
+        <option value='Crouch'>Crouch</option>
+        <option value='Sit'>Sit - hands on knees</option>
+        <option value='SitRelax'>Sit - legs out</option>
+        <option value='LyingBelly'>Lie - on belly</option>
+        <option value='LyingBack'>Lie - on back</option>
+      </select>
+      <select data-quando-name="extras" class="quando-toggle">
+        <option value="hidden">+</option>
+        <option value="show">-</option>
+      </select>
+      <span data-quando-toggle="extras=show">
+        <br>
+        Speed
+        <input data-quando-name="speed" type="text" value="100" data-quando-encode="normal" />
+        %
+      </span>
+    </div>
+  </div>
+</div>
+
+
+<div data-quando-block-type="experimental-Robot-robot-hand-open" class="quando-block" data-quando-javascript="quando.robot.changeHand(${left}, ${open})">
+  <div class="quando-left quando-robot"></div>
+  <div class="quando-right">
+    <div class="quando-row quando-robot">🤖
+      <select data-quando-name='open' class='quando-toggle'>
+        <option value='true'>Open</option>
+        <option value='false'>Close</option>
+      </select>
+      <select data-quando-name='left' class='quando-toggle'>
+        <option value='true'>👈</option>
+        <option value='false'>👉</option>
+      </select>
+      Hand
+    </div>
+  </div>
+</div>
+
+
+<div data-quando-block-type="experimental-Robot-robot-turn-head" class="quando-block" data-quando-javascript="quando.robot.turnHead(${yaw},${min},${max},${speed},${inverted},val)">
+  <div class="quando-left quando-robot"></div>
+  <div class="quando-right">
+    <div class="quando-row quando-robot">⚡
+      🤖 Turn Head
+      <select data-quando-name='yaw' class='quando-toggle'>
+        <option value='true'>⇔</option>
+        <option value='false'>⇕</option>
+      </select>
+      <select data-quando-name="extras" class="quando-toggle">
+        <option value="hidden">+</option>
+        <option value="show">-</option>
+      </select>
+      <span data-quando-toggle="extras=show">
+        <br>
+        <input data-quando-name='min' type='number' value='0' placeholder='' style='width: 4em' min='0' max='100'
+          data-quando-encode='normal' />
+        % to
+        <input data-quando-name='max' type='number' value='100' placeholder='' style='width: 4em' min='0' max='100'
+          data-quando-encode='normal' />
+        %
+        &nbsp;
+        Speed
+        <input data-quando-name='speed' type='number' value='20' placeholder='' style='width: 4em' min='0' max='100'
+          data-quando-encode='normal' />
+        %
+        <select data-quando-name='inverted' class='quando-toggle'>
+          <option value='false'>normal</option>
+          <option value='true'>inverted</option>
+        </select>
+      </span>
+    </div>
+  </div>
+</div>
+
+
+<div data-quando-block-type="experimental-Robot-robot-move-arm-shoulder-up" class="quando-block"
+  data-quando-javascript="quando.robot.moveArmJoint(${left}, '${joint}', ${min}, ${max}, ${speed}, ${inverted}, val)">
+  <div class="quando-left quando-robot"></div>
+  <div class="quando-right">
+    <div class="quando-row quando-robot">⚡
+      🤖 Move
+      <select data-quando-name='left' class='quando-toggle'>
+        <option value='true'>👈</option>
+        <option value='false'>👉</option>
+      </select>
+      <select data-quando-name="joint">
+        <option value='roll_shoulder'>Shoulder ⇔</option>
+        <option value='pitch_shoulder'>Shoulder ⇕</option>
+        <option value='roll_elbow'>Elbow bend</option>
+        <option value='yaw_elbow'>Elbow ⤹⤸</option>
+        <option value='yaw_wrist'>Wrist ⤹⤸ </option>
+      </select>
+      <select data-quando-name="extras" class="quando-toggle">
+        <option value="hidden">+</option>
+        <option value="show">-</option>
+      </select>
+      <span data-quando-toggle="extras=show">
+        <br>
+        min
+        <input data-quando-name='min' type='number' value='0' placeholder='' style='width: 4em' min='0' max='100'
+          data-quando-encode='normal' />
+        %
+        <input data-quando-name='max' type='number' value='100' placeholder='' style='width: 4em' min='0' max='100'
+          data-quando-encode='normal' />
+        %
+        &nbsp;
+        Speed
+        <input data-quando-name='speed' type='number' value='15' placeholder='' style='width: 4em' min='0' max='100'
+          data-quando-encode='normal' />
+        %
+        <select data-quando-name='inverted' class='quando-toggle'>
+          <option value='false'>normal</option>
+          <option value='true'>inverted</option>
+        </select>
+      </span>
+    </div>
+  </div>
+</div>
+
+
+<div data-quando-block-type="experimental-Robot-robot-walk" class="quando-block" data-quando-javascript="quando.robot.walk('${direction}',${steps},${interrupt})">
+  <div class="quando-left quando-robot"></div>
+  <div class="quando-right">
+    <div class="quando-row quando-robot">
+      🤖👣️️ Walk
+      <select data-quando-name="direction">
+        <option value='forward'>⇧ Forward</option>
+        <option value='back'>⇩ Back</option>
+        <option value='left'>⇦ Left</option>
+        <option value='right'>⇨ Right</option>
+      </select>
+      <input data-quando-name='steps' type='number' value='1' placeholder='' style='width: 3em' min='0' max='99'
+        data-quando-encode='normal' />
+      steps
+      <select data-quando-name="extras" class="quando-toggle">
+        <option value="hidden">+</option>
+        <option value="show">-</option>
+      </select>
+      <span data-quando-toggle="extras=show">
+        <br>
+        <select data-quando-name='interrupt' class='quando-toggle'>
+          <option value='true'>interrupt</option>
+          <option value='false'>buffer</option>
+        </select>
+      </span>
+    </div>
+  </div>
+</div>
+
+
+<div data-quando-block-type="experimental-Robot-robot-turn" class="quando-block" data-quando-javascript="quando.robot.rotateBody(${angle}, ${direction}, ${interrupt})">
+  <div class="quando-left quando-robot"></div>
+  <div class="quando-right">
+    <div class="quando-row quando-robot">
+      🤖👣 Turn
+      <select data-quando-name='direction' class='quando-toggle'>
+        <option value='true'>⇦ Left</option>
+        <option value='false'>⇨ Right</option>
+      </select>
+      <input data-quando-name='angle' type='number' value='90' placeholder='' style='width: 4em' min='-360' max='360'
+        data-quando-encode='normal' />
+      degrees
+      <select data-quando-name="extras" class="quando-toggle">
+        <option value="hidden">+</option>
+        <option value="show">-</option>
+      </select>
+      <span data-quando-toggle="extras=show">
+        <br>
+        <select data-quando-name="interrupt" class="quando-toggle">
+          <option value="true">interrupt</option>
+          <option value="false">buffer</option>
+        </select>
+      </span>
+    </div>
+  </div>
+</div>
+
+
+<div data-quando-block-type="experimental-Robot-when-robot-head-touched" class="quando-block"
+  data-quando-drop-valid="display-when-display,advanced-comment,inventor-flip,inventor-function-block,advanced-group"
+  data-quando-javascript="quando.robot.touchHead('${location}', (()=>{${box}}))">
+  <div class="quando-left quando-robot"></div>
+  <div class="quando-right">
+    <div class="quando-row quando-robot">
+      <span class="quando-info" title="This block can only be dragged into When Display.">⚠</span>
+      🤖 When Head touched
+      <select data-quando-name="location">
+        <option value='Front'>Front</option>
+        <option value='Middle'>Top</option>
+        <option value='Rear'>Back</option>
+      </select>
+    </div>
+    <div data-quando-name="box" class="quando-box"></div>
+    <div class="quando-row quando-robot"></div>
+  </div>
+</div>
+
+
+<div data-quando-block-type="experimental-Robot-when-robot-hand-touched" class="quando-block"
+  data-quando-drop-valid="display-when-display,advanced-comment,inventor-flip,inventor-function-block,advanced-group"
+  data-quando-javascript="quando.robot.touchHand(${left}, '${location}', (()=>{${box}}))">
+  <div class="quando-left quando-robot"></div>
+  <div class="quando-right">
+    <div class="quando-row quando-robot">
+      <span class="quando-info" title="This block can only be dragged into When Display.">⚠</span>
+      🤖 When
+      <select data-quando-name='left' class='quando-toggle'>
+        <option value='true'>👈</option>
+        <option value='false'>👉</option>
+      </select>
+      Hand touched on
+      <select data-quando-name="location">
+        <option value='front'>Front</option>
+        <option value='back'>Back</option>
+        <option value='plate'>Plate</option>
+      </select>
+    </div>
+    <div data-quando-name="box" class="quando-box"></div>
+    <div class="quando-row quando-robot"></div>
+  </div>
+</div>
+
+
+<div data-quando-block-type="experimental-Robot-when-robot-foot-touched" class="quando-block"
+  data-quando-drop-valid="display-when-display,advanced-comment,inventor-flip,inventor-function-block,advanced-group"
+  data-quando-javascript="quando.robot.touchFoot('${location}', (()=>{${box}}))">
+  <div class="quando-left quando-robot"></div>
+  <div class="quando-right">
+    <div class="quando-row quando-robot">
+      <span class="quando-info" title="This block can only be dragged into When Display.">⚠</span>
+      🤖 When
+      <select data-quando-name='location'>
+        <option value='Left'>Left</option>
+        <option value='Right'>Right</option>
+        <option value='Either'>Either</option>
+      </select>
+      foot touched
+    </div>
+    <div data-quando-name="box" class="quando-box"></div>
+    <div class="quando-row quando-robot"></div>
+  </div>
+</div>
+
+
+<div data-quando-block-type="experimental-Robot-when-seeing-someone" class="quando-block"
+  data-quando-drop-valid="display-when-display,advanced-comment,inventor-flip,inventor-function-block,advanced-group"
+  data-quando-javascript="quando.robot.personPerception((()=>{${box}}))">
+  <div class="quando-left quando-robot"></div>
+  <div class="quando-right">
+    <div class="quando-row quando-robot">
+      <span class="quando-info" title="This block can only be dragged into When Display.">⚠</span>
+      🤖 When seeing someone
+    </div>
+    <div data-quando-name="box" class="quando-box"></div>
+    <div class="quando-row quando-robot"></div>
+  </div>
+</div>
+
+
+<div data-quando-block-type="experimental-Robot-when-robots-hears" class="quando-block"
+  data-quando-drop-valid="display-when-display,advanced-comment,inventor-flip,inventor-function-block,advanced-group"
+  data-quando-id="true"
+  data-quando-javascript="quando.robot.listenForWords('${list_name}', '${words}', ${confidence},  ${data-quando-id}, ((val)=>{${box}}))">
+  <div class="quando-left quando-robot"></div>
+  <div class="quando-right">
+    <div class="quando-row quando-robot">
+      <span class="quando-info" title="This block can only be dragged into When Display.">⚠</span>
+      🤖 When hearing
+      <input data-quando-name="words" type="text" value="" data-quando-encode="normal" />
+      from
+      <input data-quando-name="list_name" type="text" value="" data-quando-encode="normal" />
+      <select data-quando-name="extras" class="quando-toggle">
+        <option value="hidden">+</option>
+        <option value="show">-</option>
+      </select>
+      <span data-quando-toggle="extras=show">
+        <br />
+        Confidence
+        <input data-quando-name="confidence" type="text" value="0" data-quando-encode="normal" />
+      </span>
+    </div>
+    <div data-quando-name="box" class="quando-box"></div>
+    <div class="quando-row quando-robot"></div>
+  </div>
+</div>

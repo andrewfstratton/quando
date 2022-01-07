@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"quando/internal/config"
+	"quando/internal/server/blocks"
 )
 
 func editor(resp http.ResponseWriter, req *http.Request) {
@@ -32,10 +33,11 @@ func ServeHTTP() {
 	fmt.Println("..serving HTTP")
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", indexOrFail)
+	mux.HandleFunc("/favicon.ico", favicon)
 	mux.Handle("/editor/", http.StripPrefix("/editor/", http.FileServer(http.Dir("./editor"))))
 	mux.Handle("/client/", http.StripPrefix("/client/", http.FileServer(http.Dir("./client"))))
 	mux.Handle("/common/", http.StripPrefix("/common/", http.FileServer(http.Dir("./common"))))
-	mux.HandleFunc("/favicon.ico", favicon)
+	mux.HandleFunc("/blocks", blocks.Handle)
 	host := ":8080"
 	if !config.RemoteClient() && !config.RemoteEditor() {
 		// If all hosting is localhost, then firewall doesn't need permission

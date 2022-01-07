@@ -1,0 +1,443 @@
+<div data-quando-block-type="inventor-function-block" class="quando-block" data-quando-javascript='<div class="quando-block"
+data-quando-javascript="$(hasValue$,${library}$,quando.${library}.)$$(hasValue$,${function}$,${function}()$${_quando_inventor_generator_}$(hasValue$,${function}$,))$">
+<div class="quando-left ${class}"></div>
+<div class="quando-right">
+<div class="quando-row ${class}">${_quando_inventor_row1_}</div>
+$(visible$,_quando_inventor_row2_$,<div data-quando-name="${_quando_box_name1_}" class="quando-box"></div>
+<div class="quando-row ${class}">${_quando_inventor_row2_}</div>)$
+$(visible$,_quando_inventor_row3_$,<div data-quando-name="${_quando_box_name2_}" class="quando-box"></div>
+<div class="quando-row ${class}">${_quando_inventor_row3_}</div>)$
+</div>
+</div>'/>
+<div class="quando-left quando-inventor-control"></div>
+<div class="quando-right">
+    <div class="quando-row quando-inventor-control">
+        💼
+        <span class="iconify">
+            UI
+        </span>
+        &nbsp;Class
+        <select data-quando-name="class">
+            <option value="quando-display">Display</option>
+            <option value="quando-media">Media</option>
+            <option value="quando-style">Style</option>
+            <option value="quando-time">Time</option>
+            <option value="quando-advanced">Advanced</option>
+            <option value="quando-devices">Devices</option>
+            <option value="quando-robot">Nao Robot</option>
+            <option value="quando-misc">Misc</option>
+            <option value="quando-AR">AR</option>
+            <option value="quando-game">Puzzle</option>
+            <option value="quando-watson">Watson</option>
+            <option value="quando-inventor-control">Inventor : Control</option>
+            <option value="quando-inventor-display">Inventor : Display</option>
+            <option value="quando-inventor-picker">Inventor : Picker</option>
+            <option value="quando-inventor-collection">Inventor : Collection</option>
+            <option value="quando-inventor-input">Inventor : Input</option>
+        </select>
+           Box
+        <span data-quando-toggle="box_row2=no"></span>
+        <select data-quando-toggle="box_row2=no" data-quando-name="box_row1" class="quando-toggle">
+            <option value="no">+</option>
+            <option value="yes">-</option>
+        </select>
+    </div>
+    <div data-quando-name="_quando_inventor_row1_" class="quando-box" title="First row"></div>
+    <div data-quando-toggle="box_row1=yes" class="quando-row quando-inventor-control">
+        Box name <input data-quando-name="_quando_box_name1_" type="text" value="box" title="Name" /> Box
+        <select data-quando-name="box_row2" class="quando-toggle">
+            <option value="no">+</option>
+            <option value="yes">-</option>
+        </select>
+    </div>
+    <div data-quando-toggle="box_row1=yes" data-quando-name="_quando_inventor_row2_" class="quando-box" title="Second row"></div>
+    <div data-quando-toggle="box_row2=yes" class="quando-row quando-inventor-control">
+        Box name <input data-quando-name="_quando_box_name2_" type="text" value="" title="Name" />
+    </div>
+    <div data-quando-toggle="box_row2=yes" data-quando-name="_quando_inventor_row3_" class="quando-box" title="Last row - often empty"></div>
+    <div class="quando-row quando-inventor-control">
+        <select data-quando-name="generator" class="quando-toggle">
+            <option value="raw">block</option>
+            <option value="api">API</option>
+        </select>
+        <span class="iconify">
+            Generator
+        </span>
+        <span data-quando-toggle="generator=api">
+            <input data-quando-name="library" type="text" value="" placeholder="[library]" data-quando-encode="raw">
+            .
+            <input data-quando-name="function" type="text" value="" placeholder="function" data-quando-encode="raw"> 
+        </span>
+    </div>
+    <div data-quando-name="_quando_inventor_generator_" class="quando-box" title="Parameters"></div>
+    <div class="quando-row quando-inventor-control"></div>
+</div>
+</div>
+
+
+<div data-quando-block-type="inventor-fixed-space" class="quando-block" data-quando-javascript="&amp;nbsp;">
+    <div class="quando-left quando-inventor-display"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-inventor-display">
+            📄 Fixed Space
+        </div>
+    </div>
+</div>
+
+
+<div data-quando-block-type="inventor-text" class="quando-block" data-quando-javascript='$(eq$,${iconify}$,true$,<span class="iconify">)$
+$(eq$,${bold}$,true$,<b>)$
+$(eq$,${italic}$,true$,<i>)$
+${text}
+$(eq$,${italic}$,true$,</i>)$
+$(eq$,${bold}$,true$,</b>)$
+$(eq$,${iconify}$,true$,</span>)$'>
+    <div class="quando-left quando-inventor-display"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-inventor-display">
+            📄 Text 
+            <input data-quando-name="text" type="text" value=""/>
+            <select data-quando-name="extras" class="quando-toggle">
+                <option value="hidden">+</option>
+                <option value="show">-</option>
+            </select>
+            <span data-quando-toggle="extras=show">
+                <br>
+                <select data-quando-name='iconify' class='quando-toggle'>
+                    <option value='false'>☐ iconify</option>
+                    <option value='true'>☑ Iconify</option>
+                </select>
+                <select data-quando-name='bold' class='quando-toggle'>
+                    <option value='false'>☐ bold</option>
+                    <option value='true'>☑ Bold</option>
+                </select>
+                <select data-quando-name='italic' class='quando-toggle'>
+                    <option value='false'>☐ italic</option>
+                    <option value='true'>☑ Italic</option>
+                </select>
+            </span>
+        </div>
+    </div>
+</div>
+
+
+<div data-quando-block-type="inventor-input" class="quando-block"
+  data-quando-javascript="<input data-quando-name='${input}'
+type='${type}' value='${default}' placeholder='${placeholder}'
+$(eq$,${type}$,number$,style='width: ${number_width}em' min='${number_min}' max='${number_max}')$ data-quando-encode='${encode}'/>">
+<div class="quando-left quando-inventor-input"></div>
+<div class="quando-right">
+<div class="quando-row quando-inventor-input">Input
+      <input data-quando-name="input" type="text" value="" placeholder="name" data-quando-encode="normal" />
+Default
+      <input data-quando-name="default" type="text" value="" data-quando-encode="normal" />
+Empty
+      <input data-quando-name="placeholder" type="text" value="" data-quando-encode="normal" />
+      <select data-quando-name="extras" class="quando-toggle">
+  <option value="hidden">+</option>
+  <option value="show">-</option>
+</select>
+<span data-quando-toggle="extras=show">
+<br>
+        <select data-quando-name='type' class='quando-toggle'>
+          <option value='text'>String</option>
+          <option value='number'>Number</option>
+        </select>
+        <span data-quando-toggle="type=number">
+          min <input data-quando-name='number_min' type='number' value='0' data-quando-encode='normal' style='width: 4em'/>
+          max <input data-quando-name='number_max' type='number' value='100' data-quando-encode='normal' style='width: 4em'/>
+          width <input data-quando-name='number_width' type='number' value='4' data-quando-encode='normal' style='width: 3em'/>
+        </span>
+        <span data-quando-toggle="type=text">
+          <select data-quando-name='encode' class='quando-toggle'>
+            <option value='normal'>Encode</option>
+            <option value='raw'>Raw</option>
+          </select>
+        </span>
+      </span>
+</div>
+</div>
+</div>
+
+
+<div data-quando-block-type="inventor-menu" class="quando-block" data-quando-javascript='<select data-quando-name="${name}">${box}</select>'>
+    <div class="quando-left quando-inventor-collection"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-inventor-collection">
+            Menu
+            <input data-quando-name="name" type="text" value="" placeholder="name" data-quando-encode="normal"/>
+        </div>
+        <div data-quando-name="box" class="quando-box"></div>
+        <div class="quando-row quando-inventor-collection"></div>
+    </div>
+</div>
+
+
+<div data-quando-block-type="inventor-toggle" class="quando-block"
+data-quando-javascript="<select data-quando-name='${name}' class='quando-toggle'>${box}</select>">
+    <div class="quando-left quando-inventor-collection"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-inventor-collection">
+            Toggle <input data-quando-name="name" type="text" value="" placeholder="name" data-quando-encode=""/>
+        </div>
+        <div data-quando-name="box" class="quando-box"></div>
+        <div class="quando-row quando-inventor-collection"></div>
+    </div>
+</div>
+
+
+<div data-quando-block-type="inventor-show-on-toggle" class="quando-block" data-quando-javascript="<span data-quando-toggle='${name}=${value}'>${box}</span>">
+    <div class="quando-left quando-inventor-control"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-inventor-control">
+            Show on Toggle <input data-quando-name='name' type='text' value='' placeholder="name" data-quando-encode=''/>
+            = <input data-quando-name='value' type='text' value='' placeholder="value" data-quando-encode=''/>
+        </div>
+        <div data-quando-name="box" class="quando-box"></div>
+        <div class="quando-row quando-inventor-control"></div>
+    </div>
+</div>
+
+
+<div data-quando-block-type="inventor-choice" class="quando-block" data-quando-drop-valid="inventor-toggle,inventor-menu"
+    data-quando-javascript="<option value='${value}'>$(eq$,${txtval}$,input$,${choice}$,${txtval})$</option>">
+    <div class="quando-left quando-inventor-picker"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-inventor-picker">
+            Choice
+            <select data-quando-name='txtval' class='quando-toggle'>
+                <option value='input'>❔</option>
+                <option value='❓'>❓</option>
+                <option value='⚡'>⚡</option>
+            </select>
+            <span data-quando-toggle='txtval=input'>
+                <input data-quando-name="choice" type="text" value="" data-quando-encode="normal" />
+            </span>
+            value <input data-quando-name="value" type="text" value="" data-quando-encode="normal" />
+        </div>
+    </div>
+</div>
+
+
+<div data-quando-block-type="inventor-parameter" class="quando-block" data-quando-javascript="$(eq$,${comma}$,true$,,)$$(eq$,${quote}$,true$,')$$(parameter$,${param})$$(eq$,${quote}$,true$,')$">
+  <div class="quando-left quando-inventor-input"></div>
+  <div class="quando-right">
+    <div class="quando-row quando-inventor-input">📄
+      Parameter
+      <select data-quando-name='comma' class='quando-toggle'>
+        <option value='true'>&nbsp;,&nbsp;</option>
+        <option value='false'> </option>
+      </select>
+      <input data-quando-name='param' type='text' value='' placeholder='' data-quando-encode='normal' />
+      <select data-quando-name="extras" class="quando-toggle">
+        <option value="hidden">+</option>
+        <option value="show">-</option>
+      </select>
+      <span data-quando-toggle="extras=show">
+        <br>
+        <select data-quando-name='quote' class='quando-toggle'>
+          <option value='false'>normal</option>
+          <option value='true'>quote</option>
+        </select>
+      </span>
+    </div>
+  </div>
+</div>
+
+
+<div data-quando-block-type="inventor-parameter-box" class="quando-block"
+  data-quando-javascript="$(eq$,${comma}$,true$,,)$($(eq$,${val}$,true$,val)$)=>{${box}}">
+  <div class="quando-left quando-inventor-input"></div>
+  <div class="quando-right">
+    <div class="quando-row quando-inventor-input">📄
+      Parameter 
+      <select data-quando-name='comma' class='quando-toggle'>
+        <option value='true'>,</option>
+        <option value='false'></option>
+      </select>
+      <select data-quando-name='val' class='quando-toggle'>
+        <option value='true'>(val)</option>
+        <option value='false'>()</option>
+      </select>
+      => {${box}}
+    </div>
+  </div>
+</div>
+
+
+<div data-quando-block-type="inventor-val" class="quando-block"
+  data-quando-javascript="$(eq$,${comma}$,true$,,)$val">
+  <div class="quando-left quando-inventor-input"></div>
+  <div class="quando-right">
+    <div class="quando-row quando-inventor-input">📄
+      Parameter
+      <select data-quando-name='comma' class='quando-toggle'>
+        <option value='true'>, val</option>
+        <option value='false'>val</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+
+<div data-quando-block-type="inventor-icon" class="quando-block" data-quando-javascript="${icon}">
+  <div class="quando-left quando-inventor-display"></div>
+  <div class="quando-right">
+    <div class="quando-row quando-inventor-display">
+      📄 Icon
+      <select data-quando-name="icon">
+        <option value='⚡'>⚡ Value</option>
+        <option value='❓'>❓ Text</option>
+        <option value='❗❗'>❗❗ on/off</option>
+        <option value='❔'>❔ no Text</option>
+        <option value='±'>±</option>
+        <option value='📄'>📄 Inventor Text</option>
+        <option value='📷'>📷 Image</option>
+        <option value='📺'>📺 Video</option>
+        <option value='👋'>👋 Leap Motion</option>
+        <option value='🖐'>🖐</option>
+        <option value='👈'>👈</option>
+        <option value='👉'>👉</option>
+        <option value='🤖'>🤖 Nao Robot</option>
+        <option value='🌈'>🌈 Colour</option>
+        <option value='🎁'>🎁 3d Object</option>
+        <option value='📟'>📟 µbit</option>
+        <option value='🅰'>🅰</option>
+        <option value='🅱'>🅱</option>
+        <option value='📡'>📡 Message</option>
+        <option value='⏰'>⏰ Time</option>
+        <option value='🔊'>🔊 Audio</option>
+        <option value='🧠'>🧠 EEG</option>
+        <option value='🔍'>🔍 Zoom</option>
+        <option value='🖱️'>🖱️ Mouse</option>
+        <option value='⌨️️'>️⌨️ Keyboard</option>
+        <option value='🕹️️️️️'>🕹️️️ Joystick</option>
+        <option value='📍️️'>📍</option>
+        <option value='🎮️️'>🎮️️ Gamepad</option>
+        <option value='️⚙️'>⚙️️</option>
+        <option value='️🗿️'>️️🗿</option>
+        <option value='👣️️'>👣</option>️️
+        <option value='💾'>💾 Application</option>
+        <option value='🎹'>🎹</option>
+        <option value='🎵'>🎵 Note</option>
+        <option value='🥁'>🥁 Drum</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+
+<div data-quando-block-type="inventor-direction-icon" class="quando-block" data-quando-javascript="${icon}">
+  <div class="quando-left quando-inventor-display"></div>
+  <div class="quando-right">
+    <div class="quando-row quando-inventor-display">
+      📄 Direction Icons
+      <select data-quando-name="icon">
+        <option value='⇔'>⇔</option>
+        <option value='⇕'>⇕</option>
+        <option value='⤢'>⤢</option>
+        <option value='⤹⤸'>⤹⤸</option>
+        <option value='⇧'>⇧</option>
+        <option value='⇩'>⇩</option>
+        <option value='⇦'>⇦</option>
+        <option value='⇨'>⇨</option>
+        <option value='⬀'>⬀</option>
+        <option value='⬃'>⬃</option>
+        <option value='↰'>↰</option>
+        <option value='↱'>↱</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+
+<div data-quando-block-type="inventor-raw" class="quando-block" data-quando-javascript="${raw}">
+    <div class="quando-left quando-inventor-input"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-inventor-input">
+            Raw <input data-quando-name="raw" type="text" value="" data-quando-encode="raw"/>
+        </div>
+    </div>
+</div>
+
+
+<div data-quando-block-type="inventor-note" class="quando-block" data-quando-javascript="<span class='quando-info' title='${hover}'>${show}</span>">
+    <div class="quando-left quando-inventor-picker"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-inventor-picker">
+            Show
+            <select data-quando-name="show">
+                <option value='⚠'>!</option>
+                <option value='⍰'>?</option>
+            </select>
+            with hover
+            <input data-quando-name="hover" type="text" value="" data-quando-encode="normal" />
+        </div>
+    </div>
+</div>
+
+
+<div data-quando-block-type="inventor-extras" class="quando-block" data-quando-javascript='<select data-quando-name="${extras_name}"
+class="quando-toggle">
+  <option value="hidden">+</option>
+  <option value="show">-</option>
+</select>
+<span data-quando-toggle="${extras_name}=show">
+<br>
+${box}</span>
+'>
+  <div class="quando-left quando-inventor-collection"></div>
+  <div class="quando-right">
+    <div class="quando-row quando-inventor-collection">Extras
+      <input data-quando-name="extras_name" type="text" value="extras" data-quando-encode="normal" />
+    </div>
+    <div data-quando-name="box" class="quando-box"></div>
+    <div class="quando-row quando-inventor-collection"></div>
+  </div>
+</div>
+
+
+<div data-quando-block-type="inventor-inverted" class="quando-block" data-quando-javascript="<select data-quando-name='inverted' class='quando-toggle'>
+  <option value='false'>Normal</option>
+  <option value='true'>Inverted</option>
+</select>
+">
+  <div class="quando-left quando-inventor-collection"></div>
+  <div class="quando-right">
+    <div class="quando-row quando-inventor-collection"><select class='quando-toggle'>
+        <option value=''>inverted</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+
+<div data-quando-block-type="inventor-hover" class="quando-block" data-quando-javascript='<div class="hover">
+  <span class="hovertext">${hovertext}</span>
+  ${box} </div>'>
+    <div class="quando-left quando-inventor-collection"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-inventor-collection">
+            Hover Text: 
+            "<input data-quando-name="hovertext" type="text" value="" placeholder="name" data-quando-encode="normal"/>"
+        </div>
+        <div data-quando-name="box" class="quando-box"></div>
+        <div class="quando-row quando-inventor-collection"></div>
+    </div>
+</div>
+
+
+<div data-quando-block-type="inventor-fn-eq" class="quando-block" data-quando-javascript="$($)$(eq$($)$,${param}$,${value}$($)$,()=>{${box}})$($)$">
+  <div class="quando-left quando-inventor-control"></div>
+  <div class="quando-right">
+    <div class="quando-row quando-inventor-control">💾
+      <span class="iconify">
+        fn =
+      </span>
+      <input data-quando-name='param' type='text' value='' placeholder='param' data-quando-encode='raw' />
+      <input data-quando-name='value' type='text' value='' placeholder='value' data-quando-encode='raw' />
+    </div>
+    <div data-quando-name="box" class="quando-box"></div>
+    <div class="quando-row quando-inventor-control"></div>
+  </div>
+</div>
