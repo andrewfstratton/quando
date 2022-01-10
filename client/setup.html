@@ -4,19 +4,19 @@
     <meta charset="UTF-8">
     <script type="text/javascript">
             function onload() {
-                fetch("/client/js").then((res) => res.json()).then((response) => {
-                    if (response.success) {
-                        var list = document.getElementById("list_js");
-                        var ip = response.ip;
-                        document.getElementById("ip").innerHTML = ip;
-                        list.innerHTML = '';
-                        var result = '';
-                        for(var i=0; i<response.files.length; i++) {
-                            result += '<button onclick="setJs(\'' + response.files[i] + '\');">' + response.files[i] + '</button><br/>';
+                fetch("/client/js").then((res) => res.json()).then(
+                    (response) => {
+                        if (response.success) {
+                            var list = document.getElementById("list_js");
+                            list.innerHTML = '';
+                            var result = '';
+                            for(var i=0; i<response.files.length; i++) {
+                                result += '<button onclick="setJs(\'' + response.files[i] + '\');">' + response.files[i] + '</button><br/>';
+                            }
+                            list.innerHTML = result;
                         }
-                        list.innerHTML = result;
                     }
-                });
+                );
             }
             function setJs(name) {
                 localStorage.setItem('client_js', name);

@@ -68,7 +68,7 @@ func parseBlock(content string) (string, *MenuJSON) {
 func Handle(resp http.ResponseWriter, req *http.Request) {
 	entries, err := ioutil.ReadDir("./blocks")
 	if err != nil {
-		log.Panicf("Missing 'client/blocks' directory: %s", err)
+		log.Panicf("Missing '/blocks' directory: %s", err)
 	}
 	var blocks []MenuJSON
 	for _, file := range entries {
