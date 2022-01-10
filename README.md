@@ -58,7 +58,6 @@ The name Quando comes from Latin for 'when' since Quando use a When based approa
 Quando can currently be installed:
 
 - locally - please [see these instructions](./docs/install_local.md).
-- or in Codio - see [instructions](./docs/install_codio.md)
 
 # Using the Quando:Editor
 

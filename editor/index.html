@@ -23,7 +23,6 @@
                     <span><img src="/favicon.ico" style="height:1.5em;"/></span>
                     Quando Editor :
                     <span id='file_name' class="navbar-textlabel">[no file]</span>
-                    <span id='top_status' class="label label-success">Guest</span>
                 </h3>
             </div>
         </div>
@@ -43,11 +42,6 @@
         <div class="container-fluid">
             <div class="navbar-footer">
                 <div>
-                    <div class="btn-group" role="group">
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#login_modal">
-                            Login
-                        </button>
-                    </div>
                     <div class="btn-group" role="group">
                         <button type="button" class="btn btn-primary" onclick="index.handle_load();">
                             <span class="glyphicon glyphicon-open"></span> Load
@@ -90,58 +84,11 @@
                     <button type="button" class="btn btn-primary" onclick="index.handle_help();">
                         <span class="glyphicon glyphicon-question-sign"></span> Help
                     </button>
-                    <button type="button" class="btn btn-warning" onclick="index.handle_logout();">
-                        Logout
-                    </button>
                     <span id='status_message' class="label label-default"></span>
                 </div>
             </div>
         </div>
     </nav>
-    <div class="modal fade" id="login_modal" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Login</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="userid">User Id</label>
-                        <input type="text" class="form-control" id="userid">
-                    </div>
-                    <div class="form-group">
-                        <label for="pwd">Password</label>
-                        <input type="password" class="form-control" id="password">
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <label id="login_modal_footer_message"></label>
-                    <button type="button" class="btn btn-primary" onclick="index.handle_login()">Login</button>
-                    <button type="button" class="btn" data-dismiss="modal">Cancel</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="modal fade" id="loading_modal" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Loading...</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label id="loading_modal_message">Please wait...</label>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" onclick="processForm()">Retry</button>
-                    <button type="button" class="btn"
-                            data-dismiss="modal" onclick="$('#logged_in_status').html('Guest');">Cancel</button>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <div class="modal fade" id="remote_load_modal" role="dialog">
         <div class="modal-dialog">

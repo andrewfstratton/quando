@@ -13,7 +13,7 @@ You will likely see a Firewall warning.  You should select at least 'Private Net
 
 To check Quando is running, in Chrome, open [the dashboard](from the popup or http://127.0.0.1) on the **same PC** you installed Quando on.
 
-You should see two QR Codes and links to the Editor and Client, and at the bottom of the page, 'New User'.  Enter a login/user id and password and select 'Add'.  **N.B. These are not secure.**  You should see a message at the bottom saying 'Added 'your user id'.
+You should see two QR Codes and links to the Editor and Client.
 
 _If you don't see the option, check the command line from before._
 </details>

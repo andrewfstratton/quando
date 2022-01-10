@@ -1,4 +1,3 @@
-// support the editor page
 import * as generator from "./generator.js"
 import * as json from "./json.js"
 import * as undo from "./undo.js"
@@ -7,8 +6,7 @@ let _undo = undo.undo
 let _redo = undo.redo
 export { _undo as undo, _redo as redo } // this allows html/bootstrap button binding to index.undo/redo
 
-let _userid = null
-let _deploy = ''
+let _deploy = 'test'
 let _remote_list = []
 const AUTOSAVE = 'quandoAutosave' // used for key to save/load to/from browser
 const PREFIX = 'quando_' // used for key to save/load to/from browser
@@ -685,22 +683,6 @@ export function setup() {
     hideMethod: 'fadeOut'
   }
 
-  $('#login_modal').keypress((e) => {
-    if (e.which === 13) {
-      handle_login()
-    }
-  })
-  $('#loading_modal_message').html('Checking for user session...')
-  $('#loading_modal').modal('show')
-  common.Get('/login',
-    (success) => {
-      _success('Logged in')
-      _userid = success.userid
-      _show_user_status()
-    }, (fail) => {
-      _warning(fail.message)
-    })
-  $('#loading_modal').modal('hide')
   _setupDragula()
   common.Get('/blocks',
     (success) => {
@@ -757,14 +739,6 @@ export function setup() {
     });
   } // setup
 
-function _show_user_status () {
-    if (_userid) {
-      $('#top_status').html(' ' + _userid)
-    } else {
-      $('#top_status').html(' Guest')
-    }
-}
-
 function _success (message) {
     toastr.options.timeOut = 1500,
     toastr.success(message)
@@ -786,7 +760,7 @@ function _warning (message) {
 }
 
   function _remote_load_list () {
-    common.Get('/script/names/' + _userid,
+    common.Get('/script/names',
       (success) => {
         let list = success.list
         _remote_list = list
@@ -926,22 +900,6 @@ export function generateCode(elem) {
   return result
 }
 
-export function handle_login() {
-    let userid = $('#userid').val()
-    let password = $('#password').val()
-    let message_elem = $('#login_modal_footer_message')
-    message_elem.html('Checking... ')
-    common.Post('/login', (success) => {
-        message_elem.html('')
-        _success('Logged in')
-        $('#login_modal').modal('hide')
-        _userid = userid
-        _show_user_status()
-    }, (fail) => {
-        message_elem.html('Failed: ' + fail.message)
-    }, {'userid': userid, 'password': password})
-}
-
 export function testCreator(code) {
   client_script = code  // allows opened window to get generated code
   let deploy_window = window.open('/client/client.html', 'quando_deployed_test', 'left=0,top=0,width=9999,height=9999');
@@ -967,11 +925,7 @@ export function handle_test() {
   }
 
 export function handle_save() {
-    if (_userid) {
-      $('#remote_save_modal').modal('show')
-    } else {
-      $('#local_save_modal').modal('show')
-    }
+    $('#remote_save_modal').modal('show')
   }
 
 export function handle_remote_to_local_save() {
@@ -1010,19 +964,14 @@ export function handle_remote_save() {
           _saved(decodeURI(name))
       }, (fail) => {
           alert('Failed to save')
-      }, { userid: _userid, name: name, script: obj })
+      }, { name: name, script: obj })
       $('#loading_modal').modal('hide')
     }
   }
 
 export function handle_load() {
-    if (_userid) {
-      $('#remote_load_modal').modal('show')
-      _remote_load_list()
-    } else {
-      _local_load_list()
-      $('#local_load_modal').modal('show')
-    }
+    $('#remote_load_modal').modal('show')
+    _remote_load_list()
   }
 
 export function handle_remote_to_local_load() {
@@ -1309,22 +1258,11 @@ export function handle_upload() {
     }
   }
 
-export function handle_logout() {
-  common.Delete('/login', (success) => {
-      _info('Logged out')
-      _userid = null
-      _show_user_status()
-    })
-  }
-
 export function handle_deploy() {
     let code = generateCode(document.getElementById('script'))
     if (code) {
       code = "let exec = () => {\n" + code + "}"
-      let filename = 'guest'
-      if (_userid) {
-        filename = prompt('Please enter the deployment filename \n(without a suffix)', _deploy)
-      }
+      let filename = prompt('Please enter the deployment filename \n(without a suffix)', _deploy)
       if (filename !== null) {
         if (filename == '') {
           alert('Filename cannot be blank')
