@@ -169,7 +169,7 @@ Within this, we need to put a handleButton function (in the correct form) that t
 
 ![](./images/new_block_eg_gamepad_api_1.png)
 
-This modules needs to be linked (once only) in templates/client.html:
+This modules needs to be linked (once only) in client/client.html:
 
 ![](./images/new_block_eg_gamepad_client_include.png)
 

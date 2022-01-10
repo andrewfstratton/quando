@@ -45,7 +45,6 @@ if __name__ == '__main__':
     import server.rest.dashboard
     import server.rest.common
     import server.rest.ip
-    import server.rest.client
     import server.rest.editor
     import server.rest.user
     import server.rest.script
