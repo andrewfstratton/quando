@@ -1,10 +1,10 @@
 <html>
 <head>
-    <title>Setup Device</title>
+    <title>Setup Client</title>
     <meta charset="UTF-8">
     <script type="text/javascript">
             function onload() {
-                fetch("/client/js").then((res) => res.json()).then(
+                fetch("/scripts").then((res) => res.json()).then(
                     (response) => {
                         if (response.success) {
                             var list = document.getElementById("list_js");
@@ -29,7 +29,7 @@
 </head>
 
 <body onload="onload();">
-    <div>Setup Device [<span id="ip"></span>]</div>
+    <div>Choose script to execute by default:</div>
     <div id='list_js'>Loading...</div>
 </body>
 

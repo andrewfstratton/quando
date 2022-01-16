@@ -760,9 +760,9 @@ function _warning (message) {
 }
 
   function _remote_load_list () {
-    common.Get('/script/names',
+    common.Get('/scripts',
       (success) => {
-        let list = success.list
+        let list = success.files
         _remote_list = list
         if (list.length === 0) {
           $('#remote_load_list').html('No saves available')
@@ -778,12 +778,11 @@ function _warning (message) {
   function _local_load_list () {
     $('#local_load_list').html('')
     let op = {fn:'local_delete'}
-    let data = {name:''}
     for (let key in localStorage) {
       if (key.startsWith(PREFIX)) {
         let name = key.slice(PREFIX.length)
         let main = {name:name, fn:'local_load'}
-        $('#local_load_list').append(_load_list_add(key, main, data, op))
+        $('#local_load_list').append(_load_list_add(key, main, op))
       }
     }
     if ($('#local_load_list').html() === '') {
@@ -815,26 +814,9 @@ export function loaded(obj, modal_id) {
 
   function _update_remote_list() {
     $('#remote_load_list').html('')
-    let ignore = $('#remote_load_show_versions').val() == 'false'
-    let ignore_names = []
-    let op = {fn:['remote_delete']}
-    if (ignore) {
-      op = {fn:['remote_delete', 'remote_tidy', 'remote_delete_all']}
-    }
     for (let i = 0; i < _remote_list.length; i++) {
-      let name = _remote_list[i].name
-      let add = true
-      if (ignore && ignore_names.includes(name)) {
-        add = false
-      }
-      if (add) {
-        let main = {name:name, fn:'remote_load'}
-        let data = {name:_remote_list[i].date}
-        $('#remote_load_list').append(_remote_load_list_add(i, main, data, op))
-        if (ignore) { // add the just found name to the ignore list...
-          ignore_names.push(name)
-        }
-      }
+      let main = {name:_remote_list[i], fn:'remote_load'}
+      $('#remote_load_list').append(_remote_load_list_add(i, main, 'remote_delete'))
     }
   }
 
@@ -846,42 +828,23 @@ export function loaded(obj, modal_id) {
     return result
   }
 
-  function _load_list_add (id, main, data, op) {
+  function _load_list_add (id, main, op) {
     let result = '<div class="row">' +
         '<a class="list-group-item col-md-5"' + _load_list_add_fn(id, main)
         + '>' + main.name + '</a>' +
-        '<div class="col-sm-4 dropdown">' + data.name + '</div>' +
         '<div class="list-group-item col-sm-1 glyphicon glyphicon-remove"' +
         _load_list_add_fn(id, op) + '></div>' +
-        '<div class="col-sm-2"></div>' +
       '</div>\n'
     return result
   }
   
-  function _remote_load_list_add_fn(index, id, obj, icon, infix) {
-    let result = ''
-    if (obj.fn.length > index) {
-        result += ' glyphicon ' + icon
-    }
-    result += '"'
-    if (obj.fn.length > index) {
-        result += 'onclick="index.' + obj.fn[index] + '(' + id + ')"'
-    }
-    result += '>'
-    if (obj.fn.length > index) {
-        result += `<sub>\n${infix}</sub>`
-    }
-    return result
-  }
-
-  function _remote_load_list_add (id, main, data, obj) {
+  function _remote_load_list_add (id, main, fn) {
     let result = '<div class="row">' +
-      '<a class="list-group-item col-md-5"' + _load_list_add_fn(id, main)
-      + '>' + main.name + '</a>' +
-        '<div class="col-sm-4 dropdown">' + data.name + '</div>' +
-        '<div class="col-sm-1' + _remote_load_list_add_fn(0, id, obj, 'glyphicon-remove', 'latest') + '</div>' + 
-        '<div class="col-sm-1' + _remote_load_list_add_fn(1, id, obj, 'glyphicon-erase', 'oldest') + '</div>' + 
-        '<div class="col-sm-1' + _remote_load_list_add_fn(2, id, obj, 'glyphicon-remove-sign', 'ALL') + '</div>' + 
+        '<a class="list-group-item col-md-11"' + _load_list_add_fn(id, main)
+        + '>' + main.name + '</a>'
+        + '<div class="col-sm-1 glyphicon glyphicon-remove"'
+          + 'onclick="index.' + fn + '(' + id + ')"' + '>'
+        + '</div>' + 
       '</div>\n'
     return result
   }
@@ -953,21 +916,21 @@ export function handle_local_save() {
   }
   
 export function handle_remote_save() {
-    let name = encodeURI($('#remote_save_key').val())
-    if (name == "") {
-      _warning("No name given, so not saved")
-    } else {
-      let obj = JSON.stringify({ deploy: _deploy, script: getScriptAsObject()})
-      common.Post('/script',
+  let name = $('#remote_save_key').val()
+  if (name == "") {
+    _warning("No name given, so not saved")
+  } else {
+    let code = generateCode(document.getElementById('script'))
+    common.Put('/scripts/' + encodeURI(name),
       (success) => {
-          $('#remote_save_modal').modal('hide')
-          _saved(decodeURI(name))
+        $('#remote_save_modal').modal('hide')
+        _saved(name)
       }, (fail) => {
-          alert('Failed to save')
-      }, { name: name, script: obj })
-      $('#loading_modal').modal('hide')
-    }
+        alert('Failed to save')
+      }, { 'script': JSON.stringify(getScriptAsObject()), 'javascript': code })
+    $('#loading_modal').modal('hide')
   }
+}
 
 export function handle_load() {
     $('#remote_load_modal').modal('show')
@@ -994,10 +957,12 @@ export function local_load(key) {
   }
   
 export function remote_load(index) {
-  common.Get('/script/id/' + _remote_list[index].id,
+  common.Get('/scripts/' + _remote_list[index],
     (success) => {
-      let script = JSON.parse(success.script)
-      script.filename = success.name
+      let script = {
+        script : JSON.parse(success.javascript),
+        filename : _remote_list[index]
+      }
       loaded(script, '#remote_load_modal')
     }, (fail) => {
         alert('Failed to find script')
@@ -1012,39 +977,13 @@ export function local_delete(key) {
   }
 
 export function remote_delete(index) {
-    if (confirm("Delete forever '" + _remote_list[index].name + "' saved " +
-            _remote_list[index].date + ' ?')) {
-        common.Delete('/script/id/' + _remote_list[index].id,
+    if (confirm("Delete forever '" + _remote_list[index] + "' ?")) {
+        common.Delete('/scripts/' + _remote_list[index],
             (success) => {
               _success('Deleted...')
               _remote_load_list()
             })
     }
-  }
-
-export function remote_tidy(index) {
-    let id = _remote_list[index].id
-    let name = _remote_list[index].name
-    common.Delete('/script/tidy/' + encodeURI(name) + '/id/' + id,
-      (success) => {
-        _success('Tidied...')
-        _remote_load_list()
-      })
-  }
-
-export function remote_delete_all(index) {
-    let name = _remote_list[index].name
-    if (confirm("Delete ALL '" + name + "' ?")) {
-      common.Delete('/script/name/' + name,
-        (success) => {
-          _success('Deleted all...')
-          _remote_load_list()
-        })
-    }
-  }
-
-export function handle_show_version() {
-    _update_remote_list()
   }
 
 export function handle_show_code() {
@@ -1267,7 +1206,7 @@ export function handle_deploy() {
         if (filename == '') {
           alert('Filename cannot be blank')
         } else {
-          common.Put('/script/deploy/' + encodeURI(filename),
+          common.Put('/scripts/' + encodeURI(filename),
             (success) => {
               _deploy = filename
               _success("Deployed as '" + filename + ".js'")

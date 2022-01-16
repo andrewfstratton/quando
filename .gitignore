@@ -26,26 +26,6 @@ coverage
 # Compiled binary addons (http://nodejs.org/api/addons.html)
 build/Release
 
-# Dependency directories
-node_modules
-jspm_packages
-blockly
-closure-library
-ubit/*.hex
-ubit/tutorial
-
-# Optional npm cache directory
-.npm
-
-# Optional REPL history
-.node_repl_history
-user
-pouchdb/*/*
-client/deployed_js/-.js
-pouchdb/log.txt
-pouchdb-config.json
-package-lock.json
-
 #speech-to-text files
 *.webm
 client/media/visrec.png
@@ -53,5 +33,4 @@ client/media/stt/*
 cloud/rest/client/media/visrec.png
 
 #Python build
-__pycache__
-quando.db
+scripts/

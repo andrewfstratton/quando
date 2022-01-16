@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"quando/internal/config"
 	"quando/internal/server/blocks"
-	"quando/internal/server/deployed"
+	"quando/internal/server/scripts"
 )
 
 func indexOrFail(resp http.ResponseWriter, req *http.Request) {
@@ -18,7 +18,6 @@ func indexOrFail(resp http.ResponseWriter, req *http.Request) {
 				fmt.Fprintf(resp, "%v: %v\n", name, h)
 			}
 		}
-		fmt.Println("======")
 	}
 }
 
@@ -30,10 +29,10 @@ func ServeHTTP() {
 	fmt.Println("..serving HTTP")
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", indexOrFail)
+	mux.HandleFunc("/scripts", scripts.HandleDirectory)
+	mux.HandleFunc("/scripts/", scripts.HandleFile)
 	mux.HandleFunc("/blocks", blocks.Handle)
 	mux.HandleFunc("/favicon.ico", favicon)
-	mux.HandleFunc("/client/js", deployed.HandleDirectory)
-	mux.HandleFunc("/client/js/", deployed.HandleFile)
 	mux.Handle("/client/", http.StripPrefix("/client/", http.FileServer(http.Dir("./client"))))
 	mux.Handle("/common/", http.StripPrefix("/common/", http.FileServer(http.Dir("./common"))))
 	mux.Handle("/editor/", http.StripPrefix("/editor/", http.FileServer(http.Dir("./editor"))))
