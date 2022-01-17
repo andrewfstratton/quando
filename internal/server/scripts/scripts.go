@@ -2,7 +2,6 @@ package scripts
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -41,16 +40,17 @@ func getFile(filepath string) (result fileJSON, err error) {
 	return
 }
 
-func getUpdatedHtml(pathIn string) (reply string, err error) {
+func getUpdatedHtml(resp http.ResponseWriter, req *http.Request) {
 	contents, err := os.ReadFile("./client/client.html")
 	if err != nil {
-		err = errors.New("Deployment error finding client/client.html in getUpdatedHtml()")
+		fmt.Println("Deployment error finding client/client.html in getUpdatedHtml()")
+		http.NotFound(resp, req)
 		return
 	}
-	reply = string(contents)
-	filename := path.Base(pathIn)
+	filename := path.Base(req.URL.Path)
 	title := strings.TrimSuffix(filename, ".html")
-	reply = strings.Replace(reply, "{{ title }}", title, 2)
+	reply := strings.Replace(string(contents), "{{ title }}", title, 2)
+	fmt.Fprint(resp, reply)
 	return
 }
 
@@ -59,35 +59,30 @@ func HandleFile(resp http.ResponseWriter, req *http.Request) {
 	switch req.Method {
 	case "GET":
 		if extension == ".html" {
-			reply, err := getUpdatedHtml(req.URL.Path)
-			if err != nil {
-				fmt.Println(err)
-				http.NotFound(resp, req)
-				return
-			}
-			fmt.Fprint(resp, reply)
-			return
-		} else { // Should be no suffix or with .js
-			fileloc := "." + strings.TrimSuffix(req.URL.Path, ".js")
-			body, err := getFile(fileloc)
-			if err != nil {
-				fmt.Println("Error parsing script ", err)
-				return
-			}
-			if extension == ".js" {
-				str := "let exec = () => {\n" + body.Javascript + "\n}"
-				fmt.Fprint(resp, str)
-				return
-			}
-			reply := replyJSON{Javascript: body.Script, Success: true}
-			str, err := json.Marshal(reply)
-			if err != nil {
-				fmt.Println("Error Marshalling JSON - ", err)
-				return
-			}
-			resp.Write(str)
+			getUpdatedHtml(resp, req)
 			return
 		}
+		// Should be no suffix or with .js
+		fileloc := "." + strings.TrimSuffix(req.URL.Path, ".js")
+		body, err := getFile(fileloc)
+		if err != nil {
+			fmt.Println("Error parsing script ", err)
+			return
+		}
+		if extension == ".js" {
+			// return the generated javascript executable file
+			str := "let exec = () => {\n" + body.Javascript + "\n}"
+			fmt.Fprint(resp, str)
+			return
+		}
+		reply := replyJSON{Script: body.Script, Success: true}
+		str, err := json.Marshal(reply)
+		if err != nil {
+			fmt.Println("Error Marshalling JSON - ", err)
+			return
+		}
+		resp.Write(str)
+		return
 	case "PUT":
 		fileloc := "." + strings.TrimSuffix(req.URL.Path, ".js")
 		if extension != "" {

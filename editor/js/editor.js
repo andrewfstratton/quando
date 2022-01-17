@@ -960,7 +960,7 @@ export function remote_load(index) {
   common.Get('/scripts/' + _remote_list[index],
     (success) => {
       let script = {
-        script : JSON.parse(success.javascript),
+        script : JSON.parse(success.script),
         filename : _remote_list[index]
       }
       loaded(script, '#remote_load_modal')
