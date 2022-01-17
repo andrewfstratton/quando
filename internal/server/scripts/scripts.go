@@ -2,6 +2,7 @@ package scripts
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -40,30 +41,40 @@ func getFile(filepath string) (result fileJSON, err error) {
 	return
 }
 
+func getUpdatedHtml(pathIn string) (reply string, err error) {
+	contents, err := os.ReadFile("./client/client.html")
+	if err != nil {
+		err = errors.New("Deployment error finding client/client.html in getUpdatedHtml()")
+		return
+	}
+	reply = string(contents)
+	filename := path.Base(pathIn)
+	title := strings.TrimSuffix(filename, ".html")
+	reply = strings.Replace(reply, "{{ title }}", title, 2)
+	return
+}
+
 func HandleFile(resp http.ResponseWriter, req *http.Request) {
+	extension := path.Ext(req.URL.Path)
 	switch req.Method {
 	case "GET":
-		if strings.HasSuffix(req.URL.Path, ".html") {
-			contents, err := os.ReadFile("./client/client.html")
+		if extension == ".html" {
+			reply, err := getUpdatedHtml(req.URL.Path)
 			if err != nil {
-				fmt.Println("error finding client/client.html - ", err)
+				fmt.Println(err)
 				http.NotFound(resp, req)
 				return
 			}
-			str := string(contents)
-			filename := path.Base(req.URL.Path)
-			title := strings.TrimSuffix(filename, ".html")
-			str = strings.Replace(str, "{{ title }}", title, 2)
-			fmt.Fprint(resp, str)
+			fmt.Fprint(resp, reply)
 			return
-		} else {
+		} else { // Should be no suffix or with .js
 			fileloc := "." + strings.TrimSuffix(req.URL.Path, ".js")
 			body, err := getFile(fileloc)
 			if err != nil {
 				fmt.Println("Error parsing script ", err)
 				return
 			}
-			if strings.HasSuffix(req.URL.Path, ".js") {
+			if extension == ".js" {
 				str := "let exec = () => {\n" + body.Javascript + "\n}"
 				fmt.Fprint(resp, str)
 				return
@@ -79,6 +90,11 @@ func HandleFile(resp http.ResponseWriter, req *http.Request) {
 		}
 	case "PUT":
 		fileloc := "." + strings.TrimSuffix(req.URL.Path, ".js")
+		if extension != "" {
+			fmt.Println("Attempt to store with a suffix '" + fileloc + "'")
+			http.NotFound(resp, req)
+			return
+		}
 		var body fileJSON
 		err := json.NewDecoder(req.Body).Decode(&body)
 		if err != nil {
@@ -104,6 +120,7 @@ func HandleFile(resp http.ResponseWriter, req *http.Request) {
 			return
 		}
 		resp.Write(str)
+		return
 	case "DELETE":
 		fileloc := "." + req.URL.Path
 		err := os.Remove(fileloc)
@@ -114,6 +131,7 @@ func HandleFile(resp http.ResponseWriter, req *http.Request) {
 		}
 		str, _ := json.Marshal(replyJSON{Success: true})
 		resp.Write(str)
+		return
 	default:
 		http.NotFound(resp, req)
 		return
