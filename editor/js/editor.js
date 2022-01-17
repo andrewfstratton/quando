@@ -1197,32 +1197,6 @@ export function handle_upload() {
     }
   }
 
-export function handle_deploy() {
-    let code = generateCode(document.getElementById('script'))
-    if (code) {
-      code = "let exec = () => {\n" + code + "}"
-      let filename = prompt('Please enter the deployment filename \n(without a suffix)', _deploy)
-      if (filename !== null) {
-        if (filename == '') {
-          alert('Filename cannot be blank')
-        } else {
-          common.Put('/scripts/' + encodeURI(filename),
-            (success) => {
-              _deploy = filename
-              _success("Deployed as '" + filename + ".js'")
-            },
-            (fail) => {
-              _error("Failed to deploy..." + fail.message)
-            },
-            { javascript: code }
-          )
-        }
-      }
-    } else {
-      alert('Behaviour incomplete.')
-    }
-  }
-
 export function handleRobotModal(event) {
     event.preventDefault()
 
