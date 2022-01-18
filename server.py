@@ -46,7 +46,6 @@ if __name__ == '__main__':
     import server.rest.common
     import server.rest.ip
     import server.rest.editor
-    import server.rest.user
     import server.rest.file
     import server.rest.message
 
