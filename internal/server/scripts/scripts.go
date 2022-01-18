@@ -67,6 +67,7 @@ func HandleFile(resp http.ResponseWriter, req *http.Request) {
 		body, err := getFile(fileloc)
 		if err != nil {
 			fmt.Println("Error parsing script ", err)
+			http.NotFound(resp, req)
 			return
 		}
 		if extension == ".js" {
@@ -79,6 +80,7 @@ func HandleFile(resp http.ResponseWriter, req *http.Request) {
 		str, err := json.Marshal(reply)
 		if err != nil {
 			fmt.Println("Error Marshalling JSON - ", err)
+			http.NotFound(resp, req)
 			return
 		}
 		resp.Write(str)
