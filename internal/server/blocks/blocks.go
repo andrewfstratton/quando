@@ -13,11 +13,10 @@ import (
 )
 
 type MenuJSON struct {
+	Title bool `json:"title"`
 	// For Menu titles based on file name
 	Class string `json:"class,omitempty"`
 	Name  string `json:"name,omitempty"`
-	//  For both Blocks and titles
-	Title bool `json:"title"`
 	// For blocks
 	Html string `json:"html,omitempty"`
 }

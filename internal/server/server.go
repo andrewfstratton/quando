@@ -25,8 +25,11 @@ func favicon(resp http.ResponseWriter, req *http.Request) {
 	http.ServeFile(resp, req, "./editor/favicon.ico")
 }
 
+func showStartup(host string) {
+	fmt.Println("..serving HTTP on : ", host)
+}
+
 func ServeHTTP() {
-	fmt.Println("..serving HTTP")
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", indexOrFail)
 	mux.HandleFunc("/scripts", scripts.HandleDirectory)
@@ -41,5 +44,6 @@ func ServeHTTP() {
 		// If all hosting is localhost, then firewall doesn't need permission
 		host = "127.0.0.1" + host
 	}
+	showStartup(host)
 	http.ListenAndServe(host, mux)
 }
