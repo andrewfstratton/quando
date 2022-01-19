@@ -29,7 +29,7 @@ type replyJSON struct {
 	Message    string `json:"message,omitempty"`
 }
 
-func handlePutFile(resp http.ResponseWriter, req *http.Request) {
+func handlePutFile(w http.ResponseWriter, req *http.Request) {
 }
 
 func getFile(filepath string) (result fileJSON, err error) {
@@ -40,26 +40,26 @@ func getFile(filepath string) (result fileJSON, err error) {
 	return
 }
 
-func getUpdatedHtml(resp http.ResponseWriter, req *http.Request) {
+func getUpdatedHtml(w http.ResponseWriter, req *http.Request) {
 	contents, err := os.ReadFile("./client/client.html")
 	if err != nil {
 		fmt.Println("Deployment error finding client/client.html in getUpdatedHtml()")
-		http.NotFound(resp, req)
+		http.NotFound(w, req)
 		return
 	}
 	filename := path.Base(req.URL.Path)
 	title := strings.TrimSuffix(filename, ".html")
 	reply := strings.Replace(string(contents), "{{ title }}", title, 2)
-	fmt.Fprint(resp, reply)
+	fmt.Fprint(w, reply)
 	return
 }
 
-func HandleFile(resp http.ResponseWriter, req *http.Request) {
+func HandleFile(w http.ResponseWriter, req *http.Request) {
 	extension := path.Ext(req.URL.Path)
 	switch req.Method {
 	case "GET":
 		if extension == ".html" {
-			getUpdatedHtml(resp, req)
+			getUpdatedHtml(w, req)
 			return
 		}
 		// Should be no suffix or with .js
@@ -69,30 +69,30 @@ func HandleFile(resp http.ResponseWriter, req *http.Request) {
 			// ignore when template not substituted, i.e. when testing script
 			if fileloc != "./scripts/{{ title }}" {
 				fmt.Println("Error parsing script ", err)
-				http.NotFound(resp, req)
+				http.NotFound(w, req)
 			}
 			return
 		}
 		if extension == ".js" {
 			// return the generated javascript executable file
 			str := "let exec = () => {\n" + body.Javascript + "\n}"
-			fmt.Fprint(resp, str)
+			fmt.Fprint(w, str)
 			return
 		}
 		reply := replyJSON{Script: body.Script, Success: true}
 		str, err := json.Marshal(reply)
 		if err != nil {
 			fmt.Println("Error Marshalling JSON - ", err)
-			http.NotFound(resp, req)
+			http.NotFound(w, req)
 			return
 		}
-		resp.Write(str)
+		w.Write(str)
 		return
 	case "PUT":
 		fileloc := "." + strings.TrimSuffix(req.URL.Path, ".js")
 		if extension != "" {
 			fmt.Println("Attempt to store with a suffix '" + fileloc + "'")
-			http.NotFound(resp, req)
+			http.NotFound(w, req)
 			return
 		}
 		var body fileJSON
@@ -104,41 +104,41 @@ func HandleFile(resp http.ResponseWriter, req *http.Request) {
 		contents, err := json.MarshalIndent(&body, "", "  ")
 		if err != nil {
 			fmt.Println("Error with JSON storing to file '"+fileloc+"' -", err)
-			http.NotFound(resp, req)
+			http.NotFound(w, req)
 			return
 		}
 		err = os.WriteFile(fileloc, contents, 0644)
 		if err != nil {
 			fmt.Println("Error writing to file ", err)
-			http.NotFound(resp, req)
+			http.NotFound(w, req)
 			return
 		}
 		str, err := json.Marshal(replyJSON{Success: true})
 		if err != nil {
 			fmt.Println("Coding Error creating reply ", err)
-			http.NotFound(resp, req)
+			http.NotFound(w, req)
 			return
 		}
-		resp.Write(str)
+		w.Write(str)
 		return
 	case "DELETE":
 		fileloc := "." + req.URL.Path
 		err := os.Remove(fileloc)
 		if err != nil {
 			fmt.Println("Unable to delete file: "+fileloc, err)
-			http.NotFound(resp, req)
+			http.NotFound(w, req)
 			return
 		}
 		str, _ := json.Marshal(replyJSON{Success: true})
-		resp.Write(str)
+		w.Write(str)
 		return
 	default:
-		http.NotFound(resp, req)
+		http.NotFound(w, req)
 		return
 	}
 }
 
-func HandleDirectory(resp http.ResponseWriter, req *http.Request) {
+func HandleDirectory(w http.ResponseWriter, req *http.Request) {
 	if req.Method == "GET" {
 		entries, err := ioutil.ReadDir("." + req.URL.Path)
 		if err != nil {
@@ -150,9 +150,9 @@ func HandleDirectory(resp http.ResponseWriter, req *http.Request) {
 		}
 		fileList := fileListJSON{Files: files, Success: true}
 		str, _ := json.Marshal(fileList)
-		resp.Write(str)
+		w.Write(str)
 		return
 	}
-	http.NotFound(resp, req)
+	http.NotFound(w, req)
 	return
 }

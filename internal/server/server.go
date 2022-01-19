@@ -9,21 +9,21 @@ import (
 	"quando/internal/server/scripts"
 )
 
-func indexOrFail(resp http.ResponseWriter, req *http.Request) {
+func indexOrFail(w http.ResponseWriter, req *http.Request) {
 	if req.URL.Path != "/" {
-		http.NotFound(resp, req)
+		http.NotFound(w, req)
 	} else {
 		// TODO redirect to /editor or wherever
 		for name, headers := range req.Header {
 			for _, h := range headers {
-				fmt.Fprintf(resp, "%v: %v\n", name, h)
+				fmt.Fprintf(w, "%v: %v\n", name, h)
 			}
 		}
 	}
 }
 
-func favicon(resp http.ResponseWriter, req *http.Request) {
-	http.ServeFile(resp, req, "./editor/favicon.ico")
+func favicon(w http.ResponseWriter, req *http.Request) {
+	http.ServeFile(w, req, "./editor/favicon.ico")
 }
 
 func showStartup(host string) {

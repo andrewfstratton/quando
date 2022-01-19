@@ -64,7 +64,7 @@ func parseBlock(content string) (string, *MenuJSON) {
 	return remaining, &menuJSON
 }
 
-func Handle(resp http.ResponseWriter, req *http.Request) {
+func Handle(w http.ResponseWriter, req *http.Request) {
 	entries, err := ioutil.ReadDir("./blocks")
 	if err != nil {
 		log.Panicf("Missing '/blocks' directory: %s", err)
@@ -92,5 +92,5 @@ func Handle(resp http.ResponseWriter, req *http.Request) {
 	}
 	blocksJSON := BlocksJSON{Blocks: blocks, Success: true}
 	str, _ := json.Marshal(blocksJSON)
-	resp.Write(str)
+	w.Write(str)
 }
