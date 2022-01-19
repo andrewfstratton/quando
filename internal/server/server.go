@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"quando/internal/config"
 	"quando/internal/server/blocks"
+	"quando/internal/server/media"
 	"quando/internal/server/scripts"
 )
 
@@ -35,6 +36,14 @@ func ServeHTTP() {
 	mux.HandleFunc("/scripts", scripts.HandleDirectory)
 	mux.HandleFunc("/scripts/", scripts.HandleFile)
 	mux.HandleFunc("/blocks", blocks.Handle)
+
+	mux.HandleFunc("/media/", media.Handle)
+	// N.B. the slash after the media type is added to simplify url matching
+	mux.HandleFunc("/images/", media.HandleDirectory)
+	mux.HandleFunc("/audio/", media.HandleDirectory)
+	mux.HandleFunc("/video/", media.HandleDirectory)
+	mux.HandleFunc("/objects/", media.HandleDirectory)
+
 	mux.HandleFunc("/favicon.ico", favicon)
 	mux.Handle("/client/", http.StripPrefix("/client/", http.FileServer(http.Dir("./client"))))
 	mux.Handle("/common/", http.StripPrefix("/common/", http.FileServer(http.Dir("./common"))))

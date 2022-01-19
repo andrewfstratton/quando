@@ -35,7 +35,7 @@
 
     self.set = (display, img_address) => {
         if (img_address) {
-            img_address = '/client/media/' + encodeURI(img_address)
+            img_address = '/media/' + encodeURI(img_address)
         } else {
             img_address = '/client/transparent.png'
         }

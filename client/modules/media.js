@@ -40,7 +40,7 @@ self.play_audio = (audio_in, loop = false, channel = 0, volume=100) => {
     const chan = channels[channel]
     chan.amp.gain.value = volume/100
     if (audio_in) {
-        let audio_src = '/client/media/' + encodeURI(audio_in)
+        let audio_src = '/media/' + encodeURI(audio_in)
         // Don't interrupt when already playing
         if (audio_src != chan.audio_src) {
             _clear_audio(chan)
@@ -71,7 +71,7 @@ self.clear_video = () => {
 
 self.play_video = (vid, loop = false) => {
     if (vid) {
-        vid = '/client/media/' + encodeURI(vid)
+        vid = '/media/' + encodeURI(vid)
     }
     let video = document.getElementById('quando_video')
     video.loop = loop

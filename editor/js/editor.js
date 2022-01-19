@@ -1122,7 +1122,11 @@ export function handleFile(event) {
     $('#file_modal_path').html('Loading...')
     file_modal.modal('show')
     $('#file_list').html('Loading...')
-    common.Get('/file/type/' + media + path, // path starts with /
+    // Strip a leading '/'
+    if (path.startsWith("/")) {
+      path = path.substring(1)
+    }
+    common.Get('/' + media + "/" + path, // path starts with /
       (success) => {
           $('#file_modal_path').html(path)
           $('#file_list').html('')

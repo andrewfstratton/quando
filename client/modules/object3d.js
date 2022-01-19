@@ -170,7 +170,7 @@
 
     self.loadGLTF = function(filename, fixed=false) {
         if (filename) {
-            filename = '/client/media/' + encodeURI(filename)
+            filename = '/media/' + encodeURI(filename)
             let loader = new THREE.GLTFLoader()
             loader.load(filename,
                 function ( gltf ) {
