@@ -66,8 +66,11 @@ func HandleFile(resp http.ResponseWriter, req *http.Request) {
 		fileloc := "." + strings.TrimSuffix(req.URL.Path, ".js")
 		body, err := getFile(fileloc)
 		if err != nil {
-			fmt.Println("Error parsing script ", err)
-			http.NotFound(resp, req)
+			// ignore when template not substituted, i.e. when testing script
+			if fileloc != "./scripts/{{ title }}" {
+				fmt.Println("Error parsing script ", err)
+				http.NotFound(resp, req)
+			}
 			return
 		}
 		if extension == ".js" {
