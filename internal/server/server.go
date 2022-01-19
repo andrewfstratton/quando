@@ -37,12 +37,12 @@ func ServeHTTP() {
 	mux.HandleFunc("/scripts/", scripts.HandleFile)
 	mux.HandleFunc("/blocks", blocks.Handle)
 
-	mux.HandleFunc("/media/", media.Handle)
+	mux.HandleFunc("/media/", media.HandleMedia)
 	// N.B. the slash after the media type is added to simplify url matching
-	mux.HandleFunc("/images/", media.HandleDirectory)
-	mux.HandleFunc("/audio/", media.HandleDirectory)
-	mux.HandleFunc("/video/", media.HandleDirectory)
-	mux.HandleFunc("/objects/", media.HandleDirectory)
+	mux.HandleFunc("/images/", media.HandleGetMediaDirectory)
+	mux.HandleFunc("/audio/", media.HandleGetMediaDirectory)
+	mux.HandleFunc("/video/", media.HandleGetMediaDirectory)
+	mux.HandleFunc("/objects/", media.HandleGetMediaDirectory)
 
 	mux.HandleFunc("/favicon.ico", favicon)
 	mux.Handle("/client/", http.StripPrefix("/client/", http.FileServer(http.Dir("./client"))))

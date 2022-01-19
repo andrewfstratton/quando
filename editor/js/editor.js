@@ -1110,9 +1110,9 @@ export function handleFile(event) {
   }
 
   function _handle_file(media, block_id, elem_name, path = '') {
-    // when media is 'UPLOAD', then we are uploading, note then that block_id and elem_name are null
+    // when media is 'media', then we are uploading, note then that block_id and elem_name are null
     let file_modal = $('#file_modal')
-    if (media == 'UPLOAD') {
+    if (media == 'media') {
       $('.file_modal_upload').show()
       $('.file_modal_select_file').hide()
     } else {
@@ -1126,7 +1126,7 @@ export function handleFile(event) {
     if (path.startsWith("/")) {
       path = path.substring(1)
     }
-    common.Get('/' + media + "/" + path, // path starts with /
+    common.Get('/' + media + "/" + path,
       (success) => {
           $('#file_modal_path').html(path)
           $('#file_list').html('')
@@ -1181,7 +1181,7 @@ export function handle_file_selected(new_filename, block_id, elem_name) {
 
 export function handle_upload_media() {
     if ($('#upload_media').val()) {
-      _handle_file('UPLOAD', null, null, '')
+      _handle_file('media', null, null, '')
     }
   }
 
@@ -1189,11 +1189,10 @@ export function handle_upload() {
     let file = document.getElementById("upload_media").files[0]
     let form = document.getElementById("upload_media_form")
     if (file) {
-      let remote_path = encodeURI($('#file_modal_path').html())
+      let remote_path = '/media/' + encodeURI($('#file_modal_path').html())
       let form_data = new FormData(form)
-      console.log(file.name)
       // form_data.append('file', file)
-      common.Post_file(`/file/upload${remote_path}`,
+      common.Post_file(remote_path,
         (success) => {
             _success(`Uploaded to ${remote_path}`)
             $('#file_modal').modal('hide')

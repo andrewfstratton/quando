@@ -3,8 +3,10 @@ package media
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"net/http"
+	"os"
 	"strings"
 )
 
@@ -32,57 +34,102 @@ func getFilesFolders(directory string, suffixes []string) (files []string, folde
 			folders = append(folders, filename)
 			continue
 		}
-		for _, suffix := range suffixes {
-			if strings.HasSuffix(filename, suffix) {
-				files = append(files, filename)
-				break
+		if suffixes == nil {
+			files = append(files, filename)
+		} else {
+			for _, suffix := range suffixes {
+				if strings.HasSuffix(filename, suffix) {
+					files = append(files, filename)
+					break
+				}
 			}
 		}
 	}
 	return
 }
 
-func HandleDirectory(resp http.ResponseWriter, req *http.Request) {
+func getMediaDirectory(w http.ResponseWriter, req *http.Request) {
 	if req.Method != "GET" {
-		http.NotFound(resp, req)
+		http.NotFound(w, req)
 		return
 	}
-	// remove first character, i.e. '/'
-	parts := strings.SplitN(req.URL.Path[1:], "/", 2)
+	// remove first character if '/'
+	parts := strings.SplitN(strings.TrimPrefix(req.URL.Path, "/"), "/", 2)
 	mediaType := parts[0]
 	location := ""
 	if len(parts) == 2 {
 		location = parts[1]
 	}
-	suffixes := MediaMap[mediaType]
+	suffixes, exists := MediaMap[mediaType]
+	if !exists { // No suffix means this is finding folder for upload
+		suffixes = nil // don't filter by suffix
+	}
 	files, folders, err := getFilesFolders(location, suffixes)
 	if err != nil {
 		fmt.Println("Deployment or coding directory error - ", err)
-		http.NotFound(resp, req)
+		http.NotFound(w, req)
 		return
 	}
 	reply := replyJSON{Files: files, Folders: folders, Success: true}
 	str, err := json.Marshal(reply)
 	if err != nil {
 		fmt.Println("Error Marshalling JSON - ", err)
-		http.NotFound(resp, req)
+		http.NotFound(w, req)
 		return
 	}
-	resp.Write(str)
+	w.Write(str)
 	return
 }
 
-func Handle(resp http.ResponseWriter, req *http.Request) {
+func HandleGetMediaDirectory(w http.ResponseWriter, req *http.Request) {
+	getMediaDirectory(w, req)
+}
+
+func copyFile(w http.ResponseWriter, req *http.Request) (success bool) {
+	location := strings.TrimPrefix(req.URL.Path, "/")
+	req.ParseMultipartForm(req.ContentLength)
+	uploadedFile, handler, err := req.FormFile("file")
+	if err != nil {
+		fmt.Println("Error Retrieving the File - ", err)
+		return
+	}
+	defer uploadedFile.Close()
+	destination, err := os.Create("./" + location + "/" + handler.Filename)
+	defer destination.Close()
+	if err != nil {
+		fmt.Println("Error creating file - ", err)
+		return
+	}
+	_, err = io.Copy(destination, uploadedFile)
+	if err != nil {
+		fmt.Println("Error copying file - ", err)
+		return
+	}
+	return true
+}
+
+func HandleMedia(w http.ResponseWriter, req *http.Request) {
 	switch req.Method {
 	case "GET":
-		location := "." + req.URL.Path
-		http.ServeFile(resp, req, location)
+		if strings.HasSuffix(req.URL.Path, "/") { // directory
+			getMediaDirectory(w, req)
+			return
+		}
+		http.ServeFile(w, req, "."+req.URL.Path)
 		return
 	case "POST":
-		fmt.Println("NYI POST:", req.URL.Path)
+		success := copyFile(w, req)
+		reply := replyJSON{Success: success}
+		str, err := json.Marshal(reply)
+		if err != nil {
+			fmt.Println("Error Marshalling JSON - ", err)
+			http.NotFound(w, req)
+			return
+		}
+		w.Write(str)
 		return
 	default:
-		http.NotFound(resp, req)
+		http.NotFound(w, req)
 		return
 	}
 }
