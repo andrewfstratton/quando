@@ -1180,10 +1180,14 @@ export function handle_file_selected(new_filename, block_id, elem_name) {
   }
 
 export function handle_upload_media() {
-    if ($('#upload_media').val()) {
-      _handle_file('media', null, null, '')
-    }
+  if ($('#upload_media').val()) {
+    _handle_file('media', null, null, '')
   }
+}
+
+export function clear_upload_media() {
+  $('#upload_media').val(null) // clear once finished - forces a change event next time
+}
 
 export function handle_upload() {
     let file = document.getElementById("upload_media").files[0]
@@ -1194,11 +1198,12 @@ export function handle_upload() {
       // form_data.append('file', file)
       common.Post_file(remote_path,
         (success) => {
-            _success(`Uploaded to ${remote_path}`)
-            $('#file_modal').modal('hide')
-            $('#upload_media').val(null) // clear once finished - forces a change event next time
+          _success(`Uploaded to ${remote_path}`)
+          $('#file_modal').modal('hide')
+          clear_upload_media()
         }, (fail) => {
-            _error('Failed to save')
+          clear_upload_media()
+          _error('Failed to save')
         }, form_data, true)
     }
   }
