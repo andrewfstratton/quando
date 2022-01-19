@@ -1143,8 +1143,11 @@ export function handleFile(event) {
             $('#file_list').append(_folder_list_add(success.folders[i], media, path + '/' + success.folders[i],
                             block_id, elem_name))
           }
-          if (path != '') {
-            path = path.substring(1) + '/' // strip off the initial slash and put in front of the file
+          if (path.startsWith('/')) {
+            path = path.substring(1) // strip off the initial slash
+          }
+          if (path != "") {
+            path += "/" // put '/' in front of the file
           }
           for (let i in success.files) {
             $('#file_list').append(_file_list_add(success.files[i], path,
