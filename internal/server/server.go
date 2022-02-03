@@ -7,6 +7,9 @@ import (
 	"quando/internal/server/blocks"
 	"quando/internal/server/media"
 	"quando/internal/server/scripts"
+	"quando/internal/server/socket"
+
+	"golang.org/x/net/websocket"
 )
 
 func indexOrFail(w http.ResponseWriter, req *http.Request) {
@@ -30,7 +33,7 @@ func showStartup(host string) {
 	fmt.Println("..serving HTTP on : ", host)
 }
 
-func ServeHTTP() {
+func ServeHTTPandIO() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", indexOrFail)
 	mux.HandleFunc("/scripts", scripts.HandleDirectory)
@@ -48,6 +51,9 @@ func ServeHTTP() {
 	mux.Handle("/client/", http.StripPrefix("/client/", http.FileServer(http.Dir("./client"))))
 	mux.Handle("/common/", http.StripPrefix("/common/", http.FileServer(http.Dir("./common"))))
 	mux.Handle("/editor/", http.StripPrefix("/editor/", http.FileServer(http.Dir("./editor"))))
+
+	mux.Handle("/ws/", websocket.Handler(socket.Serve))
+
 	host := ":8080"
 	if !config.RemoteClient() && !config.RemoteEditor() {
 		// If all hosting is localhost, then firewall doesn't need permission

@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 	"path"
+	"quando/internal/server/socket"
 	"strings"
 )
 
@@ -113,6 +114,7 @@ func HandleFile(w http.ResponseWriter, req *http.Request) {
 			http.NotFound(w, req)
 			return
 		}
+		socket.Deploy(fileloc)
 		str, err := json.Marshal(replyJSON{Success: true})
 		if err != nil {
 			fmt.Println("Coding Error creating reply ", err)

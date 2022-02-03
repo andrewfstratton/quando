@@ -23,7 +23,16 @@ if (['wss:','https:'].includes(window.location.protocol)) {
 if (port != '') {
   port = ":" + port
 }
-let socket = io.connect(io_protocol + '://' + window.location.hostname + port)
+
+const socket = new WebSocket(io_protocol + '://' + window.location.hostname + port + "/ws/")
+
+            socket.onopen = function() {
+                console.log("connected ");
+            }
+
+            socket.onclose = function(e) {
+                console.log("connection closed (" + e.code + ")");
+            }
 
   function _displayWidth() {
     return window.innerWidth
@@ -33,13 +42,27 @@ let socket = io.connect(io_protocol + '://' + window.location.hostname + port)
     return window.innerHeight
   }
 
-  socket.on('deploy', function (data) {
-    let locStr = decodeURIComponent(window.location.href)
-    if (locStr.endsWith('/'+data.script)) {
-      window.location.reload(true) // nocache reload - probably not necessary
-    }
-  })
-  socket.on("!ubit", (data) => { self.ubit.handle_message(data)})
+socket.onmessage = (e) => {
+  const message = JSON.parse(e.data)
+
+  console.log("message received: " + JSON.stringify(message))
+  switch (message.type) {
+    case 'deploy':
+      let locStr = decodeURIComponent(window.location.href)
+      if (locStr.endsWith(data.script + ".html")) {
+        window.location.reload(true) // nocache reload - probably not necessary
+      }
+      break
+    case 'message':
+      console.log("NYI: " + "message")
+      break
+    case 'ubit':
+      console.log("NYI: " + "ubit")
+  // socket.on("!ubit", (data) => { self.ubit.handle_message(data)})
+      break
+  }
+}
+
 
   self.add_message_handler = (message, callback) => {
     message = "$" + message

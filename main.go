@@ -14,5 +14,5 @@ func main() {
 	if config.RemoteEditor() {
 		fmt.Println("**SECURITY WARNING** Editor available remotely at ...") // TODO show IP address
 	}
-	server.ServeHTTP()
+	server.ServeHTTPandIO()
 }
