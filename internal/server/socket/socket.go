@@ -1,10 +1,20 @@
 package socket
 
 import (
+	"encoding/json"
 	"fmt"
 
 	"golang.org/x/net/websocket"
 )
+
+type messageJSON struct {
+	Type       string  `json:"type,omitempty"`
+	Message    string  `json:"message,omitempty"`
+	Val        float64 `json:"val,omitempty"`
+	Host       string  `json:"host,omitempty"`
+	Local      bool    `json:"local,omitempty"`
+	Scriptname string  `json:"scriptname,omitempty"`
+}
 
 var sends []chan string
 
@@ -30,32 +40,24 @@ func Broadcast(msg string) {
 
 func Deploy(fileloc string) {
 	fmt.Println("deploy")
-	scriptname := fileloc[1:] // remove .
-	Broadcast("{\"message\":\"deploy\", \"script\":\"" + scriptname + "\"}")
+	bytes, _ := json.Marshal(messageJSON{Type: "deploy", Scriptname: fileloc[1:]}) // remove . at beginning
+	Broadcast(string(bytes))
 }
-
-// Note that this appears to runs in a goroutine
 
 func Serve(ws *websocket.Conn) {
 	fmt.Println("socket.Serve()")
 	go handleSend(ws)
 	for {
-		var reply string
+		var message messageJSON
+		err := websocket.JSON.Receive(ws, &message)
 
-		if err := websocket.Message.Receive(ws, &reply); err != nil {
-			fmt.Println("Client web socket disconnected")
+		if err != nil {
+			fmt.Println("Client websocket disconnected...")
 			break
 		}
 
-		fmt.Println("Received back from client: " + reply)
+		fmt.Println("Received back from client: " + message.Type)
 
-		msg := "Received:  " + reply
-		fmt.Println("Sending to client: " + msg)
-
-		if err := websocket.Message.Send(ws, msg); err != nil {
-			fmt.Println("Can't send")
-			break
-		}
 	}
 	return
 }

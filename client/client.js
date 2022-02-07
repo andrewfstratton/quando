@@ -49,7 +49,7 @@ socket.onmessage = (e) => {
   switch (message.type) {
     case 'deploy':
       let locStr = decodeURIComponent(window.location.href)
-      if (locStr.endsWith(data.script + ".html")) {
+      if (locStr.endsWith(message.scriptname + ".html")) {
         window.location.reload(true) // nocache reload - probably not necessary
       }
       break
