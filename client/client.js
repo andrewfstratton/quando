@@ -11,6 +11,9 @@ let _displays = new Map()
 let _current_display_id = -1 // to avoid being equal by accident to 0
 let io_protocol = "ws"
 let port = window.location.port
+let message_callback = {}
+let message_callback_id = 0
+let socket = false
 
 if (['wss:','https:'].includes(window.location.protocol)) {
   io_protocol += "s"
@@ -24,15 +27,22 @@ if (port != '') {
   port = ":" + port
 }
 
-const socket = new WebSocket(io_protocol + '://' + window.location.hostname + port + "/ws/")
+function _connectWebSocket() {
+  let ws = new WebSocket(io_protocol + '://' + window.location.hostname + port + "/ws/")
 
-            socket.onopen = function() {
-                console.log("connected ");
-            }
-
-            socket.onclose = function(e) {
-                console.log("connection closed (" + e.code + ")");
-            }
+  ws.onclose = (e) => {
+    console.log("reconnecting")
+    socket = false
+    setTimeout(_connectWebSocket, 1000)
+  }
+  ws.onerror = (e) => {
+    console.log("error:"+e)
+    ws.close(e)
+  }
+  ws.onmessage = _handleWebSocketmessage
+  socket = ws
+}
+_connectWebSocket()
 
   function _displayWidth() {
     return window.innerWidth
@@ -42,7 +52,7 @@ const socket = new WebSocket(io_protocol + '://' + window.location.hostname + po
     return window.innerHeight
   }
 
-socket.onmessage = (e) => {
+function _handleWebSocketmessage(e) {
   const message = JSON.parse(e.data)
 
   console.log("message received: " + JSON.stringify(message))
@@ -54,33 +64,34 @@ socket.onmessage = (e) => {
       }
       break
     case 'message':
-      console.log("NYI: " + "message")
+      Object.values(message_callback).forEach(item => {
+        if (item.message == message.message) {
+          item.callback(message.val)
+        }
+      })
       break
     case 'ubit':
       console.log("NYI: " + "ubit")
-  // socket.on("!ubit", (data) => { self.ubit.handle_message(data)})
+  // socket.on("!ubit", (message) => { self.ubit.handle_message(message)})
       break
   }
 }
 
 
   self.add_message_handler = (message, callback) => {
-    message = "$" + message
-    socket.on(message, (data) => {
-      callback(data.val)
-    })
+    let message_id = message_callback_id++
+    message_callback[message_id] = {"message":message, "callback":callback}
     destructor.add( () => {
-      socket.off(message, callback)
+      delete message_callback[message_id]
     })
   }
 
-  self.send_message = function(message, val, host='', type='broadcast') {
-    fetch('/message/' + message, { method: 'POST',
-      body: JSON.stringify({ 
-        'val':val, 'host':host, 'local':type == 'local', 'socketId':socket.id 
-      }),
-      headers: {"Content-Type": "application/json"}
-    })
+  self.send_message = (message, val, host='', type='broadcast') => {
+    if (socket) {
+      socket.send(JSON.stringify({ 
+        'type':'message', 'message':message, 'val':val, 'host':host, 'local':type == 'local'
+      }))
+    }
   }
 
   self.idle_reset = function () {

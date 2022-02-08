@@ -16,17 +16,30 @@ type messageJSON struct {
 	Scriptname string  `json:"scriptname,omitempty"`
 }
 
-var sends []chan string
+type sendChannel chan string
 
-func handleSend(ws *websocket.Conn) {
-	send := make(chan string)
-	sends = append(sends, send)
-	fmt.Println("Started send channel")
+var sends []sendChannel
+
+func addSend() (int, sendChannel) {
+	new_send := make(chan string)
+	for i, send := range sends {
+		if send == nil {
+			sends[i] = new_send
+			return i, new_send
+		}
+	}
+	sends = append(sends, new_send)
+	return len(sends) - 1, new_send
+}
+
+func handleSend(ws *websocket.Conn, i int, send sendChannel) {
+	// fmt.Println("  ", len(sends), " max clients available, added as ", i)
 	for {
 		msg := <-send
-		fmt.Println("send ", msg)
+		// fmt.Println("send ", msg)
 		if err := websocket.Message.Send(ws, msg); err != nil {
-			fmt.Println("Can't send")
+			// fmt.Println("Removed client ", i)
+			sends[i] = nil
 			break
 		}
 	}
@@ -34,7 +47,9 @@ func handleSend(ws *websocket.Conn) {
 
 func Broadcast(msg string) {
 	for _, send := range sends {
-		send <- msg
+		if send != nil {
+			send <- msg
+		}
 	}
 }
 
@@ -46,18 +61,24 @@ func Deploy(fileloc string) {
 
 func Serve(ws *websocket.Conn) {
 	fmt.Println("socket.Serve()")
-	go handleSend(ws)
+	i, send := addSend()
+	go handleSend(ws, i, send)
 	for {
 		var message messageJSON
 		err := websocket.JSON.Receive(ws, &message)
 
 		if err != nil {
-			fmt.Println("Client websocket disconnected...")
+			// fmt.Println("Client websocket disconnected...")
+			sends[i] = nil
 			break
 		}
 
-		fmt.Println("Received back from client: " + message.Type)
-
+		switch message.Type {
+		case "message":
+			bytes, _ := json.Marshal(message) // i.e. forward the message
+			Broadcast(string(bytes))
+		default:
+			fmt.Println("Unhandled message type from client: " + message.Type)
+		}
 	}
-	return
 }
