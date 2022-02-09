@@ -60,7 +60,7 @@ func Deploy(fileloc string) {
 }
 
 func Serve(ws *websocket.Conn) {
-	fmt.Println("socket.Serve()")
+	// fmt.Println("socket.Serve()")
 	i, send := addSend()
 	go handleSend(ws, i, send)
 	for {

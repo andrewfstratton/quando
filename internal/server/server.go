@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"quando/internal/config"
 	"quando/internal/server/blocks"
+	"quando/internal/server/ip"
 	"quando/internal/server/media"
 	"quando/internal/server/scripts"
 	"quando/internal/server/socket"
@@ -48,6 +49,7 @@ func ServeHTTPandIO() {
 	mux.HandleFunc("/objects/", media.HandleGetMediaDirectory)
 
 	mux.HandleFunc("/favicon.ico", favicon)
+	mux.HandleFunc("/ip", ip.PublicIP)
 	mux.Handle("/client/", http.StripPrefix("/client/", http.FileServer(http.Dir("./client"))))
 	mux.Handle("/common/", http.StripPrefix("/common/", http.FileServer(http.Dir("./common"))))
 	mux.Handle("/editor/", http.StripPrefix("/editor/", http.FileServer(http.Dir("./editor"))))

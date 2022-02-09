@@ -1,1 +1,0 @@
-pip install pynput pySerial pydirectinput keyboard

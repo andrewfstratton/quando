@@ -1,13 +1,12 @@
 from __main__ import app
 
 from flask import request
-import server.common
 
 from pynput.mouse import Button, Controller
 
 _mouse = Controller()
 _last_x, _last_y = _mouse.position
-_screen_width, _screen_height = server.common.get_tk_width_height()
+# _screen_width, _screen_height = server.common.get_tk_width_height()
 
 def move_to(x_val, y_val):
     global _last_x, _last_y
@@ -56,5 +55,5 @@ def handle(data):
 
 @app.route('/control/mouse', methods=['POST'])
 def mouse():
-    data = server.common.decode_json_data(request)
+    # data = server.common.decode_json_data(request)
     return handle(data)

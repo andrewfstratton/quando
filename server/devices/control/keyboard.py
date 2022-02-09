@@ -1,7 +1,6 @@
 from __main__ import app
 
 from flask import request
-import server.common
 import pynput # Fallback for MacOS, Linux
 
 # maps keys from directinput name to pynput attribute
@@ -72,13 +71,13 @@ def key_press_release(name, press):
 
 @app.route('/control/type', methods=['POST'])
 def type():
-    data = server.common.decode_json_data(request)
+    # data = server.common.decode_json_data(request)
     for ch in data:
         write_char(ch)
     return ""
 
 @app.route('/control/key', methods=['POST'])
 def key():
-    data = server.common.decode_json_data(request)
+    # data = server.common.decode_json_data(request)
     key_press_release(data['key'], data['press'])
     return ""
