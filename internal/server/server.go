@@ -16,14 +16,9 @@ import (
 func indexOrFail(w http.ResponseWriter, req *http.Request) {
 	if req.URL.Path != "/" {
 		http.NotFound(w, req)
-	} else {
-		// TODO redirect to /editor or wherever
-		for name, headers := range req.Header {
-			for _, h := range headers {
-				fmt.Fprintf(w, "%v: %v\n", name, h)
-			}
-		}
+		return
 	}
+	http.ServeFile(w, req, "./dashboard")
 }
 
 func favicon(w http.ResponseWriter, req *http.Request) {
@@ -49,10 +44,11 @@ func ServeHTTPandIO() {
 	mux.HandleFunc("/objects/", media.HandleGetMediaDirectory)
 
 	mux.HandleFunc("/favicon.ico", favicon)
-	mux.HandleFunc("/ip", ip.PublicIP)
+	mux.HandleFunc("/ip", ip.HandlePrivateIP)
 	mux.Handle("/client/", http.StripPrefix("/client/", http.FileServer(http.Dir("./client"))))
 	mux.Handle("/common/", http.StripPrefix("/common/", http.FileServer(http.Dir("./common"))))
 	mux.Handle("/editor/", http.StripPrefix("/editor/", http.FileServer(http.Dir("./editor"))))
+	mux.Handle("/dashboard/", http.StripPrefix("/dashboard/", http.FileServer(http.Dir("./dashboard"))))
 
 	mux.Handle("/ws/", websocket.Handler(socket.Serve))
 
