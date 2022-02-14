@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"quando/internal/config"
 	"quando/internal/server/blocks"
+	"quando/internal/server/devices/keyboard"
 	"quando/internal/server/ip"
 	"quando/internal/server/media"
 	"quando/internal/server/scripts"
@@ -42,6 +43,8 @@ func ServeHTTPandIO() {
 	mux.HandleFunc("/audio/", media.HandleGetMediaDirectory)
 	mux.HandleFunc("/video/", media.HandleGetMediaDirectory)
 	mux.HandleFunc("/objects/", media.HandleGetMediaDirectory)
+	mux.HandleFunc("/control/key", keyboard.HandleKey)
+	mux.HandleFunc("/control/type", keyboard.HandleType)
 
 	mux.HandleFunc("/favicon.ico", favicon)
 	mux.HandleFunc("/ip", ip.HandlePrivateIP)

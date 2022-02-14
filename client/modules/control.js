@@ -22,12 +22,18 @@ if (!quando) {
 
   self.key = (ch, up_down, on_off) => {
     // ch is a character, or character description string
-    let press = (up_down == 'down')
-    if (up_down == 'either') {
-      press = on_off
+    let press = false
+    switch (up_down) {
+      case 'down':
+        press = true
+        break
+        case 'either':
+          if (on_off && (on_off > 0.5)) {
+            press = true
+          }
     }
-    let val = {'key':ch, 'press':press}
-    _send('key', val)
+    let data = {'key':ch, 'press':press}
+    _send('key', data)
   }
 
   self.mouseX = (x, smooth=false) => {
