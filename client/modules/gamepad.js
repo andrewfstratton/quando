@@ -1,3 +1,5 @@
+import * as destructor from "./destructor.js";
+
 const quando = window['quando']
 if (!quando) {
   alert('Fatal Error: gamepad.js must be included after quando_browser')
@@ -15,10 +17,13 @@ let last_axes = []
 function _handle(lookup, id, down_up, callback) {
   let handlers= lookup[id]
   if (handlers === undefined) {
-    handlers = []
+    handlers = {}
+    lookup[id] = handlers
   }
-  handlers.push({'down_up':down_up, 'callback':callback})
-  lookup[id] = handlers
+  handlers[id] = {'down_up':down_up, 'callback':callback}
+  destructor.add( () => {
+    delete handlers[id]
+  })
 }
 
 self.handleButton = (button_id, down_up, callback) => {
@@ -73,8 +78,10 @@ function _updateButtons(gamepad) {
         let on_off = buttons[i].value
         if (on_off != last_buttons[i]) {
             last_buttons[i] = on_off // update value
-            if (button_handlers[i] !== undefined) {
-                for (let handler of button_handlers[i]) {
+            let handlers = button_handlers[i]
+            if (handlers !== undefined) {
+                for(const i in handlers) {
+                    const handler = handlers[i]
                     let callback = handler['callback']
                     let down_up = handler['down_up']
                     if (on_off > 0) { // now pressed
@@ -161,9 +168,10 @@ function _updateAxes(gamepad) {
             if ((i % 2) == 1) {
                 value = 1 - value
             }
-            if (axis_handlers[i] !== undefined) {
-                for (let handler of axis_handlers[i]) {
-                    let callback = handler['callback']
+            let handlers = axis_handlers[i]
+            if (handlers !== undefined) {
+                for(const i in handlers) {
+                    let callback = handlers[i]['callback']
                     callback(value)
                 }
             }
