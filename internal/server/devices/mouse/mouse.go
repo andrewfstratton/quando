@@ -11,26 +11,33 @@ import (
 type mouseJSON struct {
 	X      *float32 `json:"x,omitempty"`
 	Y      *float32 `json:"y,omitempty"`
-	Left   *bool    `json:"left,omitempty"`
-	Middle *bool    `json:"middle,omitempty"`
-	Right  *bool    `json:"right,omitempty"`
+	Left   string   `json:"left"`
+	Middle string   `json:"middle"`
+	Right  string   `json:"right"`
 }
 
 var (
-	last_left   = false
-	last_middle = false
-	last_right  = false
+	last_left   = ""
+	last_middle = ""
+	last_right  = ""
 )
 
-func check_mouse(button *bool, last_button *bool, button_name string) {
-	if button != nil {
-		if *button != *last_button {
-			direction := "down"
-			if !*button {
-				direction = "up"
+func check_mouse(button_action string, last_action *string, button_name string) {
+	if button_action != "" {
+		if button_action != *last_action {
+			switch button_action {
+			case "click":
+				robotgo.Click(button_name)
+				*last_action = "up"
+			case "up":
+				robotgo.Toggle(button_name, "up")
+				*last_action = button_action
+			case "down":
+				robotgo.Toggle(button_name, "down")
+				*last_action = button_action
+			default:
+				fmt.Println("runtime error or hacking - unexpected mouse button action:", button_action, " for ", button_name)
 			}
-			robotgo.Toggle(button_name, direction)
-			*last_button = *button
 		}
 	}
 }

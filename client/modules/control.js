@@ -47,11 +47,12 @@ if (!quando) {
   }
 
   self.mouseClick = (button, up_down, val) => {
-    let press = false // i.e. up/release
-    if (up_down == 'down') {
-      press = true
-    } else if (up_down == 'either') {
-       press = (val!=0)
+    let press = up_down // this handles up/down/click
+    if (up_down == 'either') {
+      press = "up"
+      if (val!=0) {
+         press = "down"
+      }
     }
     if (button == 'left') {
       mouse.left = press
