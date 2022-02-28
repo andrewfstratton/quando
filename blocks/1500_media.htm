@@ -31,7 +31,8 @@
 </div>
 
 
-<div data-quando-block-type="media-text" class="quando-block" data-quando-javascript="quando.text($(eq$,${txtval}$,input$,'${text}'$,${txtval})$,${append})">
+<div data-quando-block-type="media-text" class="quando-block"
+    data-quando-javascript="quando.text($(eq$,${txtval}$,input$,'${text}'$,${txtval})$,${append},${newline})">
     <div class="quando-left quando-media"></div>
     <div class="quando-right">
         <div class="quando-row quando-media">
@@ -47,6 +48,10 @@
                 &quot;<input data-quando-name="text" type="text" value=""
                     data-quando-encode='normal' />&quot;
             </span>
+            <select data-quando-name='newline' class='quando-toggle'>
+                <option value='false'> </option>
+                <option value='true'>⤶</option>
+            </select>
             <select data-quando-name="extras" class="quando-toggle">
                 <option value="hidden">+</option>
                 <option value="show">-</option>

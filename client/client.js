@@ -280,8 +280,11 @@ function _handleWebSocketmessage(e) {
     _set_or_append_tag_text(text, 'quando_title', append)
   }
 
-  self.text = (text = '', append = false) => {
-    _set_or_append_tag_text(text, 'quando_text', append)
+  self.text = (txt = '', append = false, newline=false) => {
+    if (newline) {
+      txt += "\<br/\>"
+    }
+    _set_or_append_tag_text(txt, 'quando_text', append)
   }
 
   self.display = function (key, fn) { // Yes this is all of it...
