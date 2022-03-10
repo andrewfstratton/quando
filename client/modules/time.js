@@ -85,7 +85,7 @@ self.vary = (count, units, loop, per, per_units, inverted, callback) => {
 function _tidy_filter(filter, near) {
   // average any in last segment
   let {times, segments} = filter
-  let new_val = filter.latest
+  let new_val = filter.current
   if (times.length > 0) {
     let total = 0
     let count = times.length
@@ -123,12 +123,12 @@ self.filter = (type, times_per, units, near, id, val, callback) => {
       _tidy_filter(_filter, near)
       _update_val(type, _filter.segments, callback)
     }, per_ms)
+    destructor.add(() => {
+      clearInterval(_filter.check)
+      delete _filters[id]
+    })
   }
-  // set as latest and add this value
-  _filter.latest = val
+  // set as current and add this value
+  _filter.current = val
   _filter.times.push({'time': new Date().getTime(), 'val': val})
-  destructor.add(() => {
-    clearInterval(_filter.check)
-    delete _filters[id]
-  })
 }
