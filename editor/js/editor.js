@@ -873,7 +873,7 @@ export function handle_test() {
     let code = generateCode(document.getElementById('script'))
     if (code) {
       let clipboard = document.getElementById('clipboard')
-      if (clipboard && code.startsWith('<div class="quando-block"')) { // if inventing a block
+      if (clipboard && code.startsWith('<div data-quando-block-type="')) { // if inventing a block
         let tmp = document.createElement('div')
         tmp.innerHTML = code
         setElementHandlers(tmp.firstChild)
