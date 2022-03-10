@@ -46,6 +46,7 @@ def gesture():
     return # never does
 
 # Main program
+uart.init(115200,8,None,1)
 print('{"started":"true"}')
 image = Image("08008:80800:08808:00800:88008")
 display.show(image)

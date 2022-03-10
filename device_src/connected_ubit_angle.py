@@ -34,6 +34,7 @@ def roll_pitch_heading():
         sleep(50)
     return # never does
 #Main program
+uart.init(115200,8,None,1)
 print('{"started":true}')
 image = Image("00008:00080:00800:08000:88888")
 display.show(image)
