@@ -49,6 +49,7 @@ func ServeHTTPandIO() {
 	mux.HandleFunc("/control/type", keyboard.HandleType)
 	mux.HandleFunc("/control/mouse", mouse.HandleMouse)
 	mux.HandleFunc("/control/ubit/display", ubit.HandleDisplay)
+	mux.HandleFunc("/control/ubit/icon", ubit.HandleIcon)
 
 	mux.HandleFunc("/favicon.ico", favicon)
 	mux.HandleFunc("/ip", ip.HandlePrivateIP)
