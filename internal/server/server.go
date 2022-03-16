@@ -7,6 +7,7 @@ import (
 	"quando/internal/server/blocks"
 	"quando/internal/server/devices/keyboard"
 	"quando/internal/server/devices/mouse"
+	"quando/internal/server/devices/usb/ubit"
 	"quando/internal/server/ip"
 	"quando/internal/server/media"
 	"quando/internal/server/scripts"
@@ -47,6 +48,7 @@ func ServeHTTPandIO() {
 	mux.HandleFunc("/control/key", keyboard.HandleKey)
 	mux.HandleFunc("/control/type", keyboard.HandleType)
 	mux.HandleFunc("/control/mouse", mouse.HandleMouse)
+	mux.HandleFunc("/control/ubit/display", ubit.HandleDisplay)
 
 	mux.HandleFunc("/favicon.ico", favicon)
 	mux.HandleFunc("/ip", ip.HandlePrivateIP)
