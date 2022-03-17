@@ -7,6 +7,7 @@ import (
 	"quando/internal/server/blocks"
 	"quando/internal/server/devices/keyboard"
 	"quando/internal/server/devices/mouse"
+	"quando/internal/server/devices/usb/maker_pi_rp2040"
 	"quando/internal/server/devices/usb/ubit"
 	"quando/internal/server/ip"
 	"quando/internal/server/media"
@@ -51,6 +52,7 @@ func ServeHTTPandIO() {
 	mux.HandleFunc("/control/ubit/display", ubit.HandleDisplay)
 	mux.HandleFunc("/control/ubit/icon", ubit.HandleIcon)
 	mux.HandleFunc("/control/ubit/turn", ubit.HandleServo)
+	mux.HandleFunc("/control/maker_pi_rp2040/turn", maker_pi_rp2040.HandleServo)
 
 	mux.HandleFunc("/favicon.ico", favicon)
 	mux.HandleFunc("/ip", ip.HandlePrivateIP)

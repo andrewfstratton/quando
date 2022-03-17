@@ -7,9 +7,9 @@ if (!quando) {
   let last_servo = [] // FIX change to let
 
   function _rpico_send(key, val) {
-    fetch('/maker_pi_rp2040/' + key, { method: 'POST', 
+    fetch('/control/maker_pi_rp2040/' + key, { method: 'POST', 
       mode: "no-cors",
-      body: JSON.stringify({'val':val}), 
+      body: JSON.stringify(val), 
       headers: {"Content-Type": "application/json"}
     })
   }
