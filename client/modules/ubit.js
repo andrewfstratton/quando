@@ -176,17 +176,17 @@ if (!quando) {
   function _ubit_send(key, val) {
     fetch('/control/ubit/' + key, { method: 'POST', 
       mode: "no-cors",
-      body: JSON.stringify({'val':val}), 
+      body: JSON.stringify(val), 
       headers: {"Content-Type": "application/json"}
     })
   }
 
   self.display = (str) => {
-    _ubit_send('display', str)
+    _ubit_send('display', {'val':str})
   }
 
   self.icon = (index) => {
-    _ubit_send('icon', index)
+    _ubit_send('icon', {'val':index})
   }
 
   self.turn = (val, servo, middle, plus_minus, inverted) => {
@@ -201,6 +201,6 @@ if (!quando) {
     let last_angle = self.last_servo[servo]
     if (last_angle != angle) {
       self.last_servo[servo] = angle
-      _ubit_send('turn', {'servo':servo+1, 'angle':angle}) // also add 1 to servo for no number as well
+      _ubit_send('turn', {'servo':servo+1, 'angle':angle}) // add 1 to servo so 0 can be a parsing error for micropython
     }
   }

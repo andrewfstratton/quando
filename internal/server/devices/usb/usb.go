@@ -10,6 +10,7 @@ import (
 type Device struct {
 	VID, PID   string
 	SerialMode serial.Mode
+	NewLine    string      // The sequence for a newline, i.e. "\r\n" for CircuitPython  and "\n" for MicroPython
 	port       serial.Port // nil when not currently connected
 }
 
@@ -40,17 +41,17 @@ func portName(device *Device) string {
 // }
 
 func _send(device *Device, msg string) {
-	sent, err := device.port.Write([]byte(msg + "\n"))
+	sent, err := device.port.Write([]byte(msg + device.NewLine))
 	if err != nil {
 		device.port.Close()
 		device.port = nil // force reconnect
-	} else if sent != len(msg)+1 {
-		fmt.Println("Error sending msg '", msg, "' : ", len(msg)+1-sent, " characters not sent ")
+	} else if sent != len(msg)+len(device.NewLine) {
+		fmt.Println("Error sending msg '", msg, "' : ", len(msg)-sent, " characters not sent ")
 	}
 }
 
 func Send(device *Device, msg string) {
-	fmt.Println("Send ", device.VID, ":", device.PID, ":", msg)
+	// fmt.Println("Send ", device.VID, ":", device.PID, ":", msg)
 	if device.port == nil { // attempt to connect
 		portName := portName(device)
 		if portName != "" {
