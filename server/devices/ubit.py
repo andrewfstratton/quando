@@ -82,8 +82,3 @@ def check_message():
 
 def run():
     Thread(target=check_message).start()
-
-# Control below:
-
-def send_message(message):
-    _ubit.send_message(message)
