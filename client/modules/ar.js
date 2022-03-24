@@ -5,7 +5,7 @@ const document = window['document']
   if (!quando) {
     alert('Fatal Error: AR must be included after quando_browser')
   }
-  THREEx.ArToolkitContext.baseURL = '/client/lib/data/';
+  THREEx.ArToolkitContext.baseURL = '/client/extlib/data/';
   let self = quando.ar = {}
   self.width = window.innerWidth
   self.height = window.innerHeight
