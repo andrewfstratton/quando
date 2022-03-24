@@ -47,6 +47,10 @@ uart.init(115200,8,None,1)
 print('{"started":"true"}')
 image = Image("08008:80800:08808:00800:88008")
 display.show(image)
+# Enable three lines below for v2 capacitance touch
+# pin0.set_touch_mode(pin0.CAPACITIVE)
+# pin1.set_touch_mode(pin1.CAPACITIVE)
+# pin2.set_touch_mode(pin2.CAPACITIVE)
 sleep(750)
 gesture()
 
