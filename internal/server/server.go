@@ -63,6 +63,8 @@ func ServeHTTPandIO() {
 
 	mux.Handle("/ws/", websocket.Handler(socket.Serve))
 
+	ubit.CheckMessage()
+
 	host := ":8080"
 	if !config.RemoteClient() && !config.RemoteEditor() {
 		// If all hosting is localhost, then firewall doesn't need permission

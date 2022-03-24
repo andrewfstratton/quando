@@ -1,23 +1,22 @@
 # For v2 micro:bit
 from microbit import *
 
-class COMMS: # character
-    BUTTON_A = 'a'
-    BUTTON_B = 'b'
-    FACE_UP = '^'
-    FACE_DOWN = 'v'
-    LEFT = '<'
-    RIGHT = '>'
-    UP = 'B'
-    DOWN = 'F'
+LOOKUP = {
+    'face up':'^',
+    'face down':'v',
+    'left':'<',
+    'right':'>',
+    'up':'B',
+    'down':'F'
+    }
 
 def gesture():
     while True:
         msg = ""
         if button_a.is_pressed():
-            msg += COMMS.BUTTON_A
+            msg += 'a'
         if button_b.is_pressed():
-            msg += COMMS.BUTTON_B
+            msg += 'b'
 
         if pin0.is_touched():
             msg += '0'
@@ -26,18 +25,7 @@ def gesture():
         if pin2.is_touched():
             msg += '2'
         gest = accelerometer.current_gesture()
-        if gest == 'face up':
-            msg += COMMS.FACE_UP
-        elif gest == 'face down':
-            msg += COMMS.FACE_DOWN
-        elif gest == 'up':
-            msg += COMMS.UP
-        elif gest == 'down':
-            msg += COMMS.DOWN
-        elif gest == 'left':
-            msg += COMMS.LEFT
-        elif gest == 'right':
-            msg += COMMS.RIGHT
+        msg += LOOKUP.get(gest, "")
         # N.B. Can fall through when in between directions...
         if msg != "":
             display.show(msg[0])

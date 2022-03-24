@@ -35,6 +35,6 @@ func HandleServo(w http.ResponseWriter, req *http.Request) {
 		fmt.Println("Error parsing request", err)
 		return
 	} else {
-		usb.Send(&device, "T="+string(servo.Servo)+","+string(servo.Angle))
+		device.Send("T=" + string(servo.Servo) + "," + string(servo.Angle))
 	}
 }

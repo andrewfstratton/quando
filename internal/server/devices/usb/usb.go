@@ -1,6 +1,7 @@
 package usb
 
 import (
+	"bufio"
 	"fmt"
 
 	"go.bug.st/serial"
@@ -10,8 +11,9 @@ import (
 type Device struct {
 	VID, PID   string
 	SerialMode serial.Mode
-	NewLine    string      // The sequence for a newline, i.e. "\r\n" for CircuitPython  and "\n" for MicroPython
-	port       serial.Port // nil when not currently connected
+	NewLine    string         // The sequence for a newline, i.e. "\r\n" for CircuitPython  and "\n" for MicroPython
+	port       serial.Port    // nil when not currently connected
+	scanner    *bufio.Scanner // nil when not created
 }
 
 func portName(device *Device) string {
@@ -28,29 +30,32 @@ func portName(device *Device) string {
 	return ""
 }
 
-// func show_read(device serial.Port) {
-// 	buffer := make([]byte, 100)
-// 	for {
-// 		count, err := device.Read(buffer)
-// 		if err != nil {
-// 			fmt.Println("Error reading:", err)
-// 		} else if count != 0 {
-// 			fmt.Print(string(buffer[:count]))
-// 		}
-// 	}
-// }
+func (device *Device) GetLine() string {
+	result := ""
+	if device.port != nil {
+		if device.scanner == nil {
+			device.scanner = bufio.NewScanner(device.port)
+		}
+		if device.scanner.Scan() {
+			result = device.scanner.Text()
+			// fmt.Println(" " + result)
+		}
+	}
+	return result
+}
 
-func _send(device *Device, msg string) {
+func send(device *Device, msg string) {
 	sent, err := device.port.Write([]byte(msg + device.NewLine))
 	if err != nil {
 		device.port.Close()
-		device.port = nil // force reconnect
+		device.port = nil    // force reconnect
+		device.scanner = nil // remove scanner
 	} else if sent != len(msg)+len(device.NewLine) {
 		fmt.Println("Error sending msg '", msg, "' : ", len(msg)-sent, " characters not sent ")
 	}
 }
 
-func Send(device *Device, msg string) {
+func (device *Device) Send(msg string) {
 	// fmt.Println("Send ", device.VID, ":", device.PID, ":", msg)
 	if device.port == nil { // attempt to connect
 		portName := portName(device)
@@ -62,6 +67,6 @@ func Send(device *Device, msg string) {
 		}
 	}
 	if device.port != nil {
-		_send(device, msg)
+		send(device, msg)
 	}
 }

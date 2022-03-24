@@ -83,7 +83,8 @@ def go():
                                 Servo(pin2).write_angle(angle)
                     val =''
         except Exception as ex:
-            print('{"message":"Exception:' + str(ex) + '"}')
+            # Sometimes the passed message is corrupt - this seems to be due to too much data - so we ignore it
+            print('{"error_received":"'+val+'"}')
     # Never finish...
 
 

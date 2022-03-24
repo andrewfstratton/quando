@@ -43,7 +43,7 @@ func HandleDisplay(w http.ResponseWriter, req *http.Request) {
 		fmt.Println("Error parsing request", err)
 		return
 	} else {
-		usb.Send(&device, "D="+display.Val)
+		device.Send("D=" + display.Val)
 	}
 }
 
@@ -54,7 +54,7 @@ func HandleIcon(w http.ResponseWriter, req *http.Request) {
 		fmt.Println("Error parsing request", err)
 		return
 	} else {
-		usb.Send(&device, "I="+string(icon.Val))
+		device.Send("I=" + string(icon.Val))
 	}
 }
 
@@ -65,6 +65,17 @@ func HandleServo(w http.ResponseWriter, req *http.Request) {
 		fmt.Println("Error parsing request", err)
 		return
 	} else {
-		usb.Send(&device, "T="+string(servo.Servo)+","+string(servo.Angle))
+		device.Send("T=" + string(servo.Servo) + "," + string(servo.Angle))
 	}
+}
+
+func CheckMessage() {
+	go func() {
+		for {
+			response := device.GetLine()
+			if response != "" {
+				fmt.Println(response)
+			}
+		}
+	}()
 }
