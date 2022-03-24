@@ -22,7 +22,7 @@ type servoJSON struct {
 	Angle json.Number `json:"angle"`
 }
 
-var serial_mode = serial.Mode{
+var serialMode = serial.Mode{
 	BaudRate: 115200,
 	DataBits: 8,
 	Parity:   serial.NoParity,
@@ -32,7 +32,7 @@ var serial_mode = serial.Mode{
 var device = usb.Device{
 	VID:        "0D28",
 	PID:        "0204",
-	SerialMode: serial_mode,
+	SerialMode: serialMode,
 	NewLine:    "\n",
 }
 
