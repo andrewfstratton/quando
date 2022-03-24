@@ -37,7 +37,7 @@ var device = usb.Device{
 }
 
 func HandleDisplay(w http.ResponseWriter, req *http.Request) {
-	var display displayJSON
+	display := displayJSON{}
 	err := json.NewDecoder(req.Body).Decode(&display)
 	if err != nil {
 		fmt.Println("Error parsing request", err)
@@ -48,7 +48,7 @@ func HandleDisplay(w http.ResponseWriter, req *http.Request) {
 }
 
 func HandleIcon(w http.ResponseWriter, req *http.Request) {
-	var icon iconJSON
+	icon := iconJSON{}
 	err := json.NewDecoder(req.Body).Decode(&icon)
 	if err != nil {
 		fmt.Println("Error parsing request", err)
@@ -59,7 +59,7 @@ func HandleIcon(w http.ResponseWriter, req *http.Request) {
 }
 
 func HandleServo(w http.ResponseWriter, req *http.Request) {
-	var servo servoJSON
+	servo := servoJSON{}
 	err := json.NewDecoder(req.Body).Decode(&servo)
 	if err != nil {
 		fmt.Println("Error parsing request", err)
