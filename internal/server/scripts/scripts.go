@@ -9,6 +9,7 @@ import (
 	"os"
 	"path"
 	"quando/internal/server/socket"
+	"sort"
 	"strings"
 )
 
@@ -146,6 +147,9 @@ func HandleDirectory(w http.ResponseWriter, req *http.Request) {
 		if err != nil {
 			log.Panicf("Missing 'req.URL.Path' directory: %s", err)
 		}
+		sort.Slice(entries, func(i, j int) bool {
+			return entries[i].ModTime().After(entries[j].ModTime())
+		})
 		var files []string
 		for _, file := range entries {
 			files = append(files, file.Name())
