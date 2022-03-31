@@ -129,7 +129,7 @@ if (!quando) {
   }
 
   function _dispatch_up_down(new_data, old_data, event_name) {
-    if (new_data != old_data) { // must have a new value
+    if (new_data !== old_data) { // must have a new value
       let up_down = 'up'
       if (new_data) {
         up_down = 'down'
@@ -162,12 +162,12 @@ if (!quando) {
     _dispatch_up_down(data.pin_1, last_data.pin_1, "ubitP1")
     _dispatch_up_down(data.pin_2, last_data.pin_2, "ubitP2")
     if (data.roll) {
-      quando.idle_reset()
-      quando.dispatch_event('ubitRoll', {'detail': data.roll})
+      let roll = 180 * data.roll / Math.PI // convert to degrees
+      quando.dispatch_event('ubitRoll', {'detail': roll})
     }
     if (data.pitch) {
-      quando.idle_reset()
-      quando.dispatch_event('ubitPitch', {'detail': data.pitch})
+      let pitch = 180 * data.pitch / Math.PI
+      quando.dispatch_event('ubitPitch', {'detail': pitch})
     }
     quando.idle_reset()
     last_data = data

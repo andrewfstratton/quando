@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"quando/internal/server/devices/usb"
+	"quando/internal/server/socket"
 	"strings"
 
 	"go.bug.st/serial"
@@ -23,6 +24,11 @@ type servoJSON struct {
 	Angle json.Number `json:"angle"`
 }
 
+type serialJSON struct {
+	Roll  json.Number `json:"Ro"`
+	Pitch json.Number `json:"Pi"`
+}
+
 type postJSON struct {
 	ButtonA     *bool  `json:"button_a,omitempty"`
 	ButtonB     *bool  `json:"button_b,omitempty"`
@@ -30,6 +36,11 @@ type postJSON struct {
 	Pin1        *bool  `json:"pin_1,omitempty"`
 	Pin2        *bool  `json:"pin_2,omitempty"`
 	Orientation string `json:"orientation,omitempty"`
+}
+
+type postAngleJSON struct {
+	Roll  json.Number `json:"roll,omitempty"`
+	Pitch json.Number `json:"pitch,omitempty"`
 }
 
 var lookupGesture = map[string]string{
@@ -122,29 +133,44 @@ func handleButtonGestureTouchPin(msg string) {
 		fmt.Println("Error marshalling message", err, ":", msg)
 	} else {
 		str := string(bout)
+		prefix := `{"type":"ubit"`
 		if str != "{}" {
-			fmt.Println("  send ", str)
+			prefix += ","
 		}
+		str = prefix + str[1:]
+		socket.Broadcast(str)
 	}
 }
 
 func handleMessage(msg string) {
 	serial_in := serialJSON{}
 	err := json.Unmarshal([]byte(msg), &serial_in)
-	if err != nil { // i.e. non JSON - so this is encocde gesture/button/pin touch
+	if err != nil || msg == "" { // i.e. non JSON - so this is encode gesture/button/pin touch
 		handleButtonGestureTouchPin(msg)
 	} else {
-		fmt.Println("JSON:", serial_in)
+		sendAngle := postAngleJSON{}
+		sendAngle.Roll = serial_in.Roll
+		sendAngle.Pitch = serial_in.Pitch
+		bout, err := json.Marshal(sendAngle)
+		if err != nil {
+			fmt.Println("Error marshalling message", err, ":", msg)
+		} else {
+			str := string(bout)
+			if str != "{}" {
+				prefix := `{"type":"ubit",`
+				str = prefix + str[1:]
+				socket.Broadcast(str)
+				// fmt.Println("  send ", str)
+			}
+		}
 	}
 }
 
-func CheckMessage() {
+func CheckMessages() {
 	go func() {
 		for {
 			response := device.GetLine()
-			if response != "" {
-				handleMessage(response)
-			}
+			handleMessage(response)
 		}
 	}()
 }

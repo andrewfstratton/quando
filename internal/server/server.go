@@ -63,7 +63,7 @@ func ServeHTTPandIO() {
 
 	mux.Handle("/ws/", websocket.Handler(socket.Serve))
 
-	ubit.CheckMessage()
+	ubit.CheckMessages()
 
 	host := ":8080"
 	if !config.RemoteClient() && !config.RemoteEditor() {

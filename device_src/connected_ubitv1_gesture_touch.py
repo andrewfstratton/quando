@@ -9,11 +9,10 @@ LOOKUP = {
     'up':'B',
     'down':'F'
     }
-resend_count = 0
-last_msg = ''
 
 def gesture():
-    global resend_count, last_msg
+    resend_count = 0
+    last_msg = ""
     while True:
         msg = ""
         if button_a.is_pressed():
@@ -27,18 +26,21 @@ def gesture():
             msg += '1'
         if pin2.is_touched():
             msg += '2'
+
         gest = accelerometer.current_gesture()
         msg += LOOKUP.get(gest, "") # Note can be between directions...
-        if msg != "":
-            resend_count += 1
-            if msg == last_msg:
-                if resend_count >= 25: # i.e. resend every second
+        resend_count += 1
+        if msg == last_msg:
+            if resend_count >= 25: # i.e. resend every second
+                if msg != "":
                     print(msg)
-                    resend_count = 0
-            else:
-                print(msg) # always send when different
+                resend_count = 0
+        else:
+            print(msg) # always send when different
+            resend_count = 0
+        if msg != "":
             display.show(msg[0])
-            sleep(40) # 25 FPS
+        sleep(40) # 25 FPS
         last_msg = msg
     return # never does
 

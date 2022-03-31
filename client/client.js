@@ -55,7 +55,7 @@ _connectWebSocket()
 function _handleWebSocketmessage(e) {
   const message = JSON.parse(e.data)
 
-  console.log("message received: " + JSON.stringify(message))
+  // console.log("message received: " + JSON.stringify(message))
   switch (message.type) {
     case 'deploy':
       let locStr = decodeURIComponent(window.location.href)
@@ -71,8 +71,7 @@ function _handleWebSocketmessage(e) {
       })
       break
     case 'ubit':
-      console.log("NYI: " + "ubit")
-  // socket.on("!ubit", (message) => { self.ubit.handle_message(message)})
+      self.ubit.handle_message(message)
       break
   }
 }
