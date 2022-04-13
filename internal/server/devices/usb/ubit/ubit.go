@@ -7,6 +7,7 @@ import (
 	"quando/internal/server/devices/usb"
 	"quando/internal/server/socket"
 	"strings"
+	"time"
 
 	"go.bug.st/serial"
 )
@@ -170,7 +171,11 @@ func CheckMessages() {
 	go func() {
 		for {
 			response := device.GetLine()
-			handleMessage(response)
+			if response == "" {
+				time.Sleep(100 * time.Millisecond)
+			} else {
+				handleMessage(response)
+			}
 		}
 	}()
 }

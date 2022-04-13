@@ -40,7 +40,7 @@ func (device *Device) GetLine() string {
 			result = device.scanner.Text()
 			// fmt.Println(" " + result)
 		} else {
-			fmt.Println(" Scan off")
+			// fmt.Println(" Scan off")
 			device.scanner = nil
 			device.port = nil
 		}
