@@ -65,7 +65,7 @@ func ServeHTTPandIO() {
 
 	ubit.CheckMessages()
 
-	host := ":8080"
+	host := ":80"
 	if !config.RemoteClient() && !config.RemoteEditor() {
 		// If all hosting is localhost, then firewall doesn't need permission
 		host = "127.0.0.1" + host
