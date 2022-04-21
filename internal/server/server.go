@@ -13,6 +13,7 @@ import (
 	"quando/internal/server/media"
 	"quando/internal/server/scripts"
 	"quando/internal/server/socket"
+	"strings"
 
 	"golang.org/x/net/websocket"
 )
@@ -31,6 +32,16 @@ func favicon(w http.ResponseWriter, req *http.Request) {
 
 func showStartup(host string) {
 	fmt.Println("..serving HTTP on : ", host)
+}
+
+// Overrides windows local machine map, which can default to text/plain for javascript files
+// See https://stackoverflow.com/questions/54835510/getting-mime-type-text-plain-error-in-golang-while-serving-css
+func fileServe(w http.ResponseWriter, req *http.Request) {
+	if strings.HasSuffix(req.RequestURI, ".js") {
+		w.Header().Set("Content-Type", "text/javascript")
+	}
+	req.RequestURI = "." + req.RequestURI
+	http.FileServer(http.Dir("")).ServeHTTP(w, req)
 }
 
 func ServeHTTPandIO() {
@@ -56,16 +67,17 @@ func ServeHTTPandIO() {
 
 	mux.HandleFunc("/favicon.ico", favicon)
 	mux.HandleFunc("/ip", ip.HandlePrivateIP)
-	mux.Handle("/client/", http.StripPrefix("/client/", http.FileServer(http.Dir("./client"))))
-	mux.Handle("/common/", http.StripPrefix("/common/", http.FileServer(http.Dir("./common"))))
-	mux.Handle("/editor/", http.StripPrefix("/editor/", http.FileServer(http.Dir("./editor"))))
-	mux.Handle("/dashboard/", http.StripPrefix("/dashboard/", http.FileServer(http.Dir("./dashboard"))))
+	// customer serving to avoid windows overriding javascript MIME type
+	mux.HandleFunc("/editor/", fileServe)
+	mux.HandleFunc("/client/", fileServe)
+	mux.HandleFunc("/common/", fileServe)
+	mux.HandleFunc("/dsahboard/", fileServe)
 
 	mux.Handle("/ws/", websocket.Handler(socket.Serve))
 
 	ubit.CheckMessages()
 
-	host := ":8080"
+	host := ":80"
 	if !config.RemoteClient() && !config.RemoteEditor() {
 		// If all hosting is localhost, then firewall doesn't need permission
 		host = "127.0.0.1" + host
