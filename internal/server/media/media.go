@@ -20,7 +20,7 @@ var MediaMap = map[string][]string{
 	"video":   {"ogg", "ogv", "mp4", "webm"},
 	"audio":   {"mp3", "wav"},
 	"images":  {"bmp", "jpg", "jpeg", "png", "gif"},
-	"objects": {"gltf", "glb"}}
+	"objects": {"gltf", "glb", "nrrd", "nii"}}
 
 func getFilesFolders(directory string, suffixes []string) (files []string, folders []string, err error) {
 	entries, err := ioutil.ReadDir("./media/" + directory)
