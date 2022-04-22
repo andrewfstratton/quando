@@ -131,8 +131,8 @@ function _setup_scene_for_volume() {
 
         const aspect = window.innerWidth / window.innerHeight
         const h = 512  // frustum height
-        camera = new THREE.OrthographicCamera( - h * aspect / 2, h * aspect / 2, h / 2, - h / 2, 1, 1000 )
-        camera.position.set( - 64, - 64 / 2, 128 ) 
+        camera = new THREE.OrthographicCamera( - h * aspect / 2, h * aspect / 2, h / 2, - h / 2, 0.1, 100000 )
+        camera.position.set( - 64, - 64 / 2, 128*10 ) 
         // TODO: keep the following the same or rotate the data to the right direction?
         camera.up.set( 0, 0, 1 ) // In volume data data, z is up
 
