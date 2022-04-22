@@ -24,11 +24,10 @@ let canvas = false
 
 // frame throttling variables
 let fps = 20
-let fpsInterval, now, then, elapsed
+let fpsInterval, now, then, elapsed, pulse
 // volume rendering variables
 let volume = false
 let volumeConfig, material, colourMapTextures
-volumeConfig = { clim1: 0, clim2: 1, renderstyle: 'iso', isothreshold: 400, colormap: 'viridis' } 
 
 // hold the buffered updates...
 let update_object = {}
@@ -132,7 +131,8 @@ function _setup_scene_for_volume() {
         const aspect = window.innerWidth / window.innerHeight
         const h = 512  // frustum height
         camera = new THREE.OrthographicCamera( - h * aspect / 2, h * aspect / 2, h / 2, - h / 2, 0.1, 100000 )
-        camera.position.set( - 64, - 64 / 2, 128*10 ) 
+        camera.position.set( 0, 0, 128*10 ) 
+        // camera.position.set( - 64, - 64 / 2, 128*10 ) 
         // TODO: keep the following the same or rotate the data to the right direction?
         camera.up.set( 0, 0, 1 ) // In volume data data, z is up
 
@@ -157,17 +157,27 @@ function _setup_scene_for_volume() {
     })
 }
 
+let isoOffset;
+let timeFactor = 1000;
+let strFactor = 66;
+let _pulseIso = (newTime) => {
+    isoOffset = (Math.sin(newTime/timeFactor) + 1) * strFactor
+    // console.log(isoOffset)
+    material.uniforms[ 'u_renderthreshold' ].value = volumeConfig.isothreshold + isoOffset
+}
+
 function _update_scene(newTime) {
-    console.log(newTime)
-    console.log("fpsint ", fpsInterval)
     animation_id = requestAnimationFrame(_update_scene)
     _update_object(update_object, object)
     _update_object(update_fixed, fixed)
     // _update_volume(update_object, volume)
+    console.log(pulse);
+    console.log(typeof pulse);
+    if (pulse !== "false") _pulseIso(newTime)
 
     // throttle rerenders to specific fps value
     now = newTime 
-    elapsed = now - then 
+    elapsed = now - then
     if (elapsed > fpsInterval) {
         then = now - (elapsed % fpsInterval)
         renderer.render(scene, camera)
@@ -204,6 +214,13 @@ function _add_volume(vol_mesh) {
             // add volume to scene
             volume = vol_mesh
             scene.add(volume)
+            const bbox = new THREE.Box3().setFromObject(volume);
+            console.log(bbox);
+            volume.position.set(
+                - (bbox.max.x - bbox.min.x) / 4, 
+                - (bbox.max.y - bbox.min.y) / 4,
+                - (bbox.max.z - bbox.min.z) / 6
+            );
             // begin rendering
             _update_scene()
         })
@@ -289,9 +306,10 @@ self.loadGLTF = function(filename, fixed=false) {
     }
 }
 
-self.loadVolume = function(filename) {
+self.loadVolume = function(filename, defaultIso, requestedPulse) {
     if (!filename) return _clear_volume()
     filename = '/media/' + encodeURI(filename)
+    pulse = requestedPulse
 
     new NRRDLoader().load(filename, (volume) => {
         console.log("NRRD Loaded: ", volume) 
@@ -318,7 +336,8 @@ self.loadVolume = function(filename) {
         // Instantiate the Volume Render Shader
         const shader = VolumeRenderShader1 
         const uniforms = THREE.UniformsUtils.clone( shader.uniforms ) 
-        // init the shader uniforms, (i.e. variables)
+        // init the shader uniforms, (i.e. variables) 
+        volumeConfig = { clim1: 0, clim2: 1, renderstyle: 'iso', isothreshold: Number(defaultIso), colormap: 'viridis' } 
         uniforms[ 'u_data' ].value = texture 
         uniforms[ 'u_size' ].value.set( volume.xLength, volume.yLength, volume.zLength ) 
         uniforms[ 'u_clim' ].value.set( volumeConfig.clim1, volumeConfig.clim2 ) 
