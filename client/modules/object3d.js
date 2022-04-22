@@ -142,7 +142,7 @@ function _setup_scene_for_volume() {
         gui.add( volumeConfig, 'clim2', 0, 1, 0.01 ).onChange( _updateUniforms )
         gui.add( volumeConfig, 'colormap', { gray: 'gray', viridis: 'viridis' } ).onChange( _updateUniforms )
         gui.add( volumeConfig, 'renderstyle', { mip: 'mip', iso: 'iso' } ).onChange( _updateUniforms ) 
-        gui.add( volumeConfig, 'isothreshold', 0, 10000, 0.01 ).onChange( _updateUniforms )
+        gui.add( volumeConfig, 'isothreshold', 0, 1000, 0.01 ).onChange( _updateUniforms )
 
         // Create controls
         let controls = new OrbitControls( camera, renderer.domElement ) 
@@ -337,8 +337,7 @@ self.loadVolume = function(filename) {
         geometry.translate( volume.xLength / 2 - 0.5, volume.yLength / 2 - 0.5, volume.zLength / 2 - 0.5 ) 
         // assign material to geometry
         const DEBUG_MAT = new THREE.MeshDepthMaterial()
-        const mesh = new THREE.Mesh( geometry, DEBUG_MAT ) 
-        // const mesh = new THREE.Mesh( geometry, material ) 
+        const mesh = new THREE.Mesh( geometry, material ) 
         // add to scene
         _add_volume(mesh) 
     }, progress => {}, err => console.log("Error loading NRRD:", err)) 
