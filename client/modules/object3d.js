@@ -27,8 +27,8 @@ let fps = 20
 let fpsInterval, now, then, elapsed
 // volume rendering variables
 let volume = false
-let volconfig, material, colourMapTextures
-volconfig = { clim1: 0, clim2: 1, renderstyle: 'iso', isothreshold: 400, colormap: 'viridis' } 
+let volumeConfig, material, colourMapTextures
+volumeConfig = { clim1: 0, clim2: 1, renderstyle: 'iso', isothreshold: 400, colormap: 'viridis' } 
 
 // hold the buffered updates...
 let update_object = {}
@@ -138,11 +138,11 @@ function _setup_scene_for_volume() {
 
         const gui = new GUI()
         // The gui for volume interaction
-        gui.add( volconfig, 'clim1', 0, 1, 0.01 ).onChange( _updateUniforms )
-        gui.add( volconfig, 'clim2', 0, 1, 0.01 ).onChange( _updateUniforms )
-        gui.add( volconfig, 'colormap', { gray: 'gray', viridis: 'viridis' } ).onChange( _updateUniforms )
-        gui.add( volconfig, 'renderstyle', { mip: 'mip', iso: 'iso' } ).onChange( _updateUniforms ) 
-        gui.add( volconfig, 'isothreshold', 0, 10000, 0.01 ).onChange( _updateUniforms )
+        gui.add( volumeConfig, 'clim1', 0, 1, 0.01 ).onChange( _updateUniforms )
+        gui.add( volumeConfig, 'clim2', 0, 1, 0.01 ).onChange( _updateUniforms )
+        gui.add( volumeConfig, 'colormap', { gray: 'gray', viridis: 'viridis' } ).onChange( _updateUniforms )
+        gui.add( volumeConfig, 'renderstyle', { mip: 'mip', iso: 'iso' } ).onChange( _updateUniforms ) 
+        gui.add( volumeConfig, 'isothreshold', 0, 10000, 0.01 ).onChange( _updateUniforms )
 
         // Create controls
         let controls = new OrbitControls( camera, renderer.domElement ) 
@@ -321,10 +321,10 @@ self.loadVolume = function(filename) {
         // init the shader uniforms, (i.e. variables)
         uniforms[ 'u_data' ].value = texture 
         uniforms[ 'u_size' ].value.set( volume.xLength, volume.yLength, volume.zLength ) 
-        uniforms[ 'u_clim' ].value.set( volconfig.clim1, volconfig.clim2 ) 
-        uniforms[ 'u_renderstyle' ].value = volconfig.renderstyle == 'mip' ? 0 : 1  // 0: MIP, 1: ISO
-        uniforms[ 'u_renderthreshold' ].value = volconfig.isothreshold  // For ISO renderstyle
-        uniforms[ 'u_cmdata' ].value = colourMapTextures[ volconfig.colormap ] 
+        uniforms[ 'u_clim' ].value.set( volumeConfig.clim1, volumeConfig.clim2 ) 
+        uniforms[ 'u_renderstyle' ].value = volumeConfig.renderstyle == 'mip' ? 0 : 1  // 0: MIP, 1: ISO
+        uniforms[ 'u_renderthreshold' ].value = volumeConfig.isothreshold  // For ISO renderstyle
+        uniforms[ 'u_cmdata' ].value = colourMapTextures[ volumeConfig.colormap ] 
         // create material
         material = new THREE.ShaderMaterial({
             uniforms: uniforms,
@@ -336,7 +336,9 @@ self.loadVolume = function(filename) {
         const geometry = new THREE.BoxGeometry( volume.xLength, volume.yLength, volume.zLength ) 
         geometry.translate( volume.xLength / 2 - 0.5, volume.yLength / 2 - 0.5, volume.zLength / 2 - 0.5 ) 
         // assign material to geometry
-        const mesh = new THREE.Mesh( geometry, material ) 
+        const DEBUG_MAT = new THREE.MeshDepthMaterial()
+        const mesh = new THREE.Mesh( geometry, DEBUG_MAT ) 
+        // const mesh = new THREE.Mesh( geometry, material ) 
         // add to scene
         _add_volume(mesh) 
     }, progress => {}, err => console.log("Error loading NRRD:", err)) 
@@ -346,10 +348,10 @@ self.loadVolume = function(filename) {
  * Update the shader as the volume config changes
  */
 function _updateUniforms() {
-    material.uniforms[ 'u_clim' ].value.set( volconfig.clim1, volconfig.clim2 ) 
-    material.uniforms[ 'u_renderstyle' ].value = volconfig.renderstyle == 'mip' ? 0 : 1  // 0: MIP, 1: ISO
-    material.uniforms[ 'u_renderthreshold' ].value = volconfig.isothreshold  // For ISO renderstyle
-    material.uniforms[ 'u_cmdata' ].value = colourMapTextures[ volconfig.colormap ] 
+    material.uniforms[ 'u_clim' ].value.set( volumeConfig.clim1, volumeConfig.clim2 ) 
+    material.uniforms[ 'u_renderstyle' ].value = volumeConfig.renderstyle == 'mip' ? 0 : 1  // 0: MIP, 1: ISO
+    material.uniforms[ 'u_renderthreshold' ].value = volumeConfig.isothreshold  // For ISO renderstyle
+    material.uniforms[ 'u_cmdata' ].value = colourMapTextures[ volumeConfig.colormap ] 
 
     _update_scene() 
 }
