@@ -71,7 +71,7 @@ func ServeHTTPandIO() {
 	mux.HandleFunc("/editor/", fileServe)
 	mux.HandleFunc("/client/", fileServe)
 	mux.HandleFunc("/common/", fileServe)
-	mux.HandleFunc("/dsahboard/", fileServe)
+	mux.HandleFunc("/dashboard/", fileServe)
 
 	mux.Handle("/ws/", websocket.Handler(socket.Serve))
 
