@@ -64,7 +64,7 @@ function _clear_canvas() {
 
 self.clear = function() {
     _clear_object()
-    // _clear_volume()
+    _clear_volume()
     _clear_fixed()
     _clear_canvas()
 }
@@ -86,12 +86,13 @@ function _update_object(update, object) {
 function _update_volume(update, volume) {
     if (volume) {
         if (update) {
+            // console.log("vol,     ", volume, "update, ", update)
             if (update.z) { volume.position.z = update.z; delete update.z }
             if (update.y) { volume.position.y = update.y; delete update.y }
             if (update.x) { volume.position.x = update.x; delete update.x }
-            if (update._roll) { volume.rotation.z = update._roll; delete update._roll }
-            if (update._pitch) { volume.rotation.x = update._pitch; delete update._pitch }
-            if (update._yaw) { volume.rotation.y = update._yaw; delete update._yaw }
+            if (update._roll) { volume.rotation.y = update._roll; delete update._roll }
+            if (update._pitch) { volume.rotation.x = -update._pitch; delete update._pitch }
+            if (update._yaw) { volume.rotation.z = update._yaw; delete update._yaw }
         }
     }
 }
@@ -118,7 +119,28 @@ function _setup_scene_for_object() {
         then = window.performance.now()
     }
 }
-function _setup_scene_for_volume() {
+
+function _get_object3D_center(obj) {
+    let bounds;
+    if (obj.geometry.boundingBox) {
+        bounds = obj.geometry.boundingBox
+        return {
+            x: (bounds.max.x - bounds.min.x) / 2,
+            y: (bounds.max.y - bounds.min.y) / 2,
+            z: (bounds.max.z - bounds.min.z) / 2,
+        }
+    } else {
+        bounds = obj.geometry.boundingSphere
+        return {
+            x: bounds.center.x / 2,
+            y: bounds.center.y / 2,
+            z: bounds.center.z / 2,
+        }
+    }    
+}
+
+// TODO: rename promise to reflect its resolve data
+function _setup_scene_for_volume(vol_mesh) {
     return new Promise((resolve, reject) => {
         if (renderer !== false) reject("Scene already set up")
         scene = new THREE.Scene()
@@ -128,14 +150,25 @@ function _setup_scene_for_volume() {
         canvas = renderer.domElement
         document.getElementById('quando_3d').append(canvas)
 
+        // -- configure camera
         const aspect = window.innerWidth / window.innerHeight
-        const h = 512  // frustum height
-        camera = new THREE.OrthographicCamera( - h * aspect / 2, h * aspect / 2, h / 2, - h / 2, 0.1, 100000 )
-        camera.position.set( 0, 0, 128*10 ) 
-        // camera.position.set( - 64, - 64 / 2, 128*10 ) 
-        // TODO: keep the following the same or rotate the data to the right direction?
+        // frustum height
+        const h = 512  
+        let ortho = true;
+        // camera z position must be far back to mitigate clipping errors
+        let camZ = 300;
+        if (ortho) {
+            camera = new THREE.OrthographicCamera( - h * aspect / 2, h * aspect / 2, h / 2, - h / 2, 0.1, 10000 )
+            camZ = 1000;
+        }
+        if (!ortho) camera = new THREE.PerspectiveCamera(90, aspect, 0.1, 10000 )
+        // set camera to look at volume center
+        let vol_center = _get_object3D_center(vol_mesh)
+        camera.position.set(vol_center.x, vol_center.y, camZ)
+        camera.lookAt(vol_center.x, vol_center.y, 0)
         camera.up.set( 0, 0, 1 ) // In volume data data, z is up
 
+        // debug GUI
         const gui = new GUI()
         // The gui for volume interaction
         gui.add( volumeConfig, 'clim1', 0, 1, 0.01 ).onChange( _updateUniforms )
@@ -143,17 +176,8 @@ function _setup_scene_for_volume() {
         gui.add( volumeConfig, 'colormap', { gray: 'gray', viridis: 'viridis' } ).onChange( _updateUniforms )
         gui.add( volumeConfig, 'renderstyle', { mip: 'mip', iso: 'iso' } ).onChange( _updateUniforms ) 
         gui.add( volumeConfig, 'isothreshold', 0, 1000, 0.01 ).onChange( _updateUniforms )
-
-        // Create controls
-        let controls = new OrbitControls( camera, renderer.domElement ) 
-        controls.addEventListener( 'change', _update_scene ) 
-        controls.target.set( 64, 64, 128 ) 
-        controls.minZoom = 0.5 
-        controls.maxZoom = 4 
-        controls.enablePan = false 
-        controls.update() 
         
-        resolve(renderer)
+        resolve(vol_center)
     })
 }
 
@@ -170,9 +194,7 @@ function _update_scene(newTime) {
     animation_id = requestAnimationFrame(_update_scene)
     _update_object(update_object, object)
     _update_object(update_fixed, fixed)
-    // _update_volume(update_object, volume)
-    console.log(pulse);
-    console.log(typeof pulse);
+    _update_volume(update_object, volume)
     if (pulse !== "false") _pulseIso(newTime)
 
     // throttle rerenders to specific fps value
@@ -204,24 +226,25 @@ function _add_fixed_object(_fixed) {
 }
 
 function _add_volume(vol_mesh) {
-    _setup_scene_for_volume()
-        .then(() => {
-            console.log("scene setup complete")
+    _setup_scene_for_volume(vol_mesh)
+        .then(vol_center => {
             _clear_volume()
+            // create parent empty for volume rotation
+            let rotationParent = new THREE.Object3D()
+            volume = rotationParent
+            // set parent at volume center
+            rotationParent.position.set(vol_center.x, vol_center.y, vol_center.z)
+            rotationParent.add(vol_mesh) 
+            // move volume mesh to parent point
+            vol_mesh.translateX(-vol_center.x)
+            vol_mesh.translateY(-vol_center.y)
+            vol_mesh.translateZ(-vol_center.z)
+            // add parent to scene
+            scene.add(rotationParent)
+            // begin rendering
             // init fps throttling
             fpsInterval = 1000 / fps
             then = window.performance.now()
-            // add volume to scene
-            volume = vol_mesh
-            scene.add(volume)
-            const bbox = new THREE.Box3().setFromObject(volume);
-            console.log(bbox);
-            volume.position.set(
-                - (bbox.max.x - bbox.min.x) / 4, 
-                - (bbox.max.y - bbox.min.y) / 4,
-                - (bbox.max.z - bbox.min.z) / 6
-            );
-            // begin rendering
             _update_scene()
         })
         .catch(err => console.log(err))
@@ -306,17 +329,15 @@ self.loadGLTF = function(filename, fixed=false) {
     }
 }
 
-self.loadVolume = function(filename, defaultIso, requestedPulse) {
+self.loadVolume = function(filename, defaultIso, pulseRequired) {
     if (!filename) return _clear_volume()
     filename = '/media/' + encodeURI(filename)
-    pulse = requestedPulse
-
+    pulse = pulseRequired
     new NRRDLoader().load(filename, (volume) => {
-        console.log("NRRD Loaded: ", volume) 
         // Texture to hold the volume. We have scalars, so we put our data in the red channel.
         // THREEJS will select R32F (33326) based on the THREE.RedFormat and THREE.FloatType.
         // Also see https://www.khronos.org/registry/webgl/specs/latest/2.0/#TEXTURE_TYPES_FORMATS_FROM_DOM_ELEMENTS_TABLE
-        let currentDataType = volume.header.type 
+        let currentDataType = volume.header.type
         let texture = new THREE.Data3DTexture( 
             _ensureCorrectDataType(volume.data), volume.xLength, volume.yLength, volume.zLength 
         )
@@ -351,12 +372,10 @@ self.loadVolume = function(filename, defaultIso, requestedPulse) {
             fragmentShader: shader.fragmentShader,
             side: THREE.BackSide // The volume shader uses the backface as its "reference point"
         }) 
-        // create the box geometry
+        // create the box geometry to render the volume within
         const geometry = new THREE.BoxGeometry( volume.xLength, volume.yLength, volume.zLength ) 
-        geometry.translate( volume.xLength / 2 - 0.5, volume.yLength / 2 - 0.5, volume.zLength / 2 - 0.5 ) 
         // assign material to geometry
-        const DEBUG_MAT = new THREE.MeshDepthMaterial()
-        const mesh = new THREE.Mesh( geometry, material ) 
+        const mesh = new THREE.Mesh( geometry, material )
         // add to scene
         _add_volume(mesh) 
     }, progress => {}, err => console.log("Error loading NRRD:", err)) 

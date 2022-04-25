@@ -148,13 +148,27 @@
 </div>
 
 <div data-quando-block-type="media-show-volume3d" class="quando-block" data-quando-id="true"
-    data-quando-javascript="quando.object3d.loadVolume('${file_name}')">
+    data-quando-javascript="quando.object3d.loadVolume('${file_name}', '${default_iso}', '${pulse}')">
     <div class="quando-left quando-media"></div>
     <div class="quando-right">
         <div class="quando-row quando-media">
             🎁 Show 3D Volume
             <input data-quando-media="objects" data-quando-name="file_name" type="text" readonly="true" value=""
                 data-quando-encode="normal" />
+                <select data-quando-name='extras' class='quando-toggle'>
+                    <option value='hidden'>+</option>
+                    <option value='show'>-</option>
+                </select>
+                <span data-quando-toggle='extras=show'><br />
+                    default iso&nbsp;
+                    <input data-quando-name='default_iso' type='number' value='100' placeholder=''
+                        style='width: 4em' min='0.01' max='1000' data-quando-encode='normal'/>
+                    &nbsp;
+                    <select data-quando-name='pulse' class='quando-toggle'>
+                        <option value='false'>no pulse</option>
+                        <option value='true'>pulse</option>
+                    </select>
+                </span>
         </div>
     </div>
 </div>
@@ -162,39 +176,39 @@
 
 
 <div data-quando-block-type="media-speech" class="quando-block"
-  data-quando-javascript="quando.speech.say($(eq$,${txtval}$,input$,'${text}'$,${txtval})$, ${speed}, ${pitch}, ${volume})">
-  <div class="quando-left quando-media"></div>
-  <div class="quando-right">
-    <div class="quando-row quando-media">
-      <span data-quando-toggle='txtval=txt'>❓</span>
-      <span data-quando-toggle='txtval=val'>⚡</span>
-      💬 Say
-      <span data-quando-toggle='txtval=input'>
-        &quot;<input data-quando-name="text" type="text" value="" data-quando-encode='normal' />&quot;
-      </span>
-      <select data-quando-name='extras' class='quando-toggle'>
-        <option value='hidden'>+</option>
-        <option value='show'>-</option>
-      </select>
-      <span data-quando-toggle='extras=show'><br />
-        <select data-quando-name='txtval' class='quando-toggle'>
-          <option value='input'>""</option>
-          <option value='val'>⚡</option>
-          <option value='txt'>❓</option>
-        </select>
-        Speed
-        <input data-quando-name='speed' type='number' value='100' placeholder=''
-          style='width: 4em' min='10' max='1000' data-quando-encode='normal'/>
-        %&nbsp; Pitch
-        <input data-quando-name='pitch' type='number' value='100' placeholder=''
-          style='width: 4em' min='0' max='200' data-quando-encode='normal'/>
-        %&nbsp; Volume
-        <input data-quando-name='volume' type='number' value='100' placeholder=''
-          style='width: 4em' min='0' max='100' data-quando-encode='normal'/>
-        %
-      </span>
+    data-quando-javascript="quando.speech.say($(eq$,${txtval}$,input$,'${text}'$,${txtval})$, ${speed}, ${pitch}, ${volume})">
+    <div class="quando-left quando-media"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-media">
+            <span data-quando-toggle='txtval=txt'>❓</span>
+            <span data-quando-toggle='txtval=val'>⚡</span>
+            💬 Say
+            <span data-quando-toggle='txtval=input'>
+                &quot;<input data-quando-name="text" type="text" value="" data-quando-encode='normal' />&quot;
+            </span>
+            <select data-quando-name='extras' class='quando-toggle'>
+                <option value='hidden'>+</option>
+                <option value='show'>-</option>
+            </select>
+            <span data-quando-toggle='extras=show'><br />
+                <select data-quando-name='txtval' class='quando-toggle'>
+                    <option value='input'>""</option>
+                    <option value='val'>⚡</option>
+                    <option value='txt'>❓</option>
+                </select>
+                Speed
+                <input data-quando-name='speed' type='number' value='100' placeholder=''
+                style='width: 4em' min='10' max='1000' data-quando-encode='normal'/>
+                %&nbsp; Pitch
+                <input data-quando-name='pitch' type='number' value='100' placeholder=''
+                style='width: 4em' min='0' max='200' data-quando-encode='normal'/>
+                %&nbsp; Volume
+                <input data-quando-name='volume' type='number' value='100' placeholder=''
+                style='width: 4em' min='0' max='100' data-quando-encode='normal'/>
+                %
+            </span>
+        </div>
     </div>
-  </div>
 </div>
 
 
