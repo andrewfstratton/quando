@@ -121,6 +121,8 @@ function _setup_scene_for_object() {
 }
 
 function _get_object3D_center(obj) {
+    obj.geometry.computeBoundingBox();
+    console.log(obj);
     let bounds;
     if (obj.geometry.boundingBox) {
         bounds = obj.geometry.boundingBox
@@ -374,6 +376,7 @@ self.loadVolume = function(filename, defaultIso, pulseRequired) {
         }) 
         // create the box geometry to render the volume within
         const geometry = new THREE.BoxGeometry( volume.xLength, volume.yLength, volume.zLength ) 
+        geometry.translate( volume.xLength / 2 - 0.5, volume.yLength / 2 - 0.5, volume.zLength / 2 - 0.5 )
         // assign material to geometry
         const mesh = new THREE.Mesh( geometry, material )
         // add to scene
