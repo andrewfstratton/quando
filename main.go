@@ -7,6 +7,8 @@ import (
 	"quando/internal/server/ip"
 )
 
+var handlers = []server.Handler{}
+
 func main() {
 	fmt.Println("Quando Go Server started")
 	if config.RemoteClient() {
@@ -15,5 +17,5 @@ func main() {
 	if config.RemoteEditor() {
 		fmt.Println("**SECURITY WARNING** Editor available on local network at ", ip.PrivateIP()) // TODO show IP address
 	}
-	server.ServeHTTPandIO()
+	server.ServeHTTPandIO(handlers)
 }

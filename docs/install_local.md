@@ -7,12 +7,9 @@ Install these if you don't have them already:
 
 Quando has been developed with Chrome Browser.  Other browsers are untested, but may work.
 </details>
-<details><summary>2. Python 3</summary>
+<details><summary>2. Go tools</summary>
 
-You can install Python from the Microsoft Store, or by downloading from https://www.python.org/downloads/windows/
-_Note: Tested with v3.9.5_
-
-_Standard installation also includes **pip** for installing python libraries._
+You will need to (currently) install Go on your (Windows 10/11 tested) PC.
 </details>
 
 ## Installing Quando
@@ -31,34 +28,12 @@ You need to:
     ```
   _Note: This will leave Quando in the C:\quando directory_
 
-3. In the C:\Quando directory, you need (once only) run `install.bat`.
-
 **Updating Quando**
 
 You can update quando, in a command line, in C:\quando, using:
 ```
 git pull
 ```
-
-</details>
-
-<details><summary>B. Offline (no internet) PC Installation</summary>
-
-This option suits a single PC (Windows 10, 64 bit, has been used at present) being used for interaction, e.g. within an offline area, such as inside a museum where Internet access is unavailable or too slow.
-
-You need to, on an online PC (or with temporary internet access):
-
-1. Download the zipped code from the [Quando Github Page](https://github.com/andrewfstratton/quando).  Choose the 'Code' Option and select 'Download ZIP:
-
-    ![](./docs/images/code_download_zip.png)
-
-2. Unzip the contents into the directory C:\Quando.
-3. In the C:\Quando directory, you need (once only) run `install.bat`.
-3. You can now
-  - move the PC offline
-  - or copy the contents of C:\Quando to a USB and then transfer to the Offline PC
-
-You can update Quando by repeating the above steps.
 
 </details>
 

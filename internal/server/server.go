@@ -5,8 +5,6 @@ import (
 	"net/http"
 	"quando/internal/config"
 	"quando/internal/server/blocks"
-	"quando/internal/server/devices/keyboard"
-	"quando/internal/server/devices/mouse"
 	"quando/internal/server/devices/usb/maker_pi_rp2040"
 	"quando/internal/server/devices/usb/ubit"
 	"quando/internal/server/ip"
@@ -17,6 +15,11 @@ import (
 
 	"golang.org/x/net/websocket"
 )
+
+type Handler struct {
+	Url  string
+	Func func(w http.ResponseWriter, req *http.Request)
+}
 
 func indexOrFail(w http.ResponseWriter, req *http.Request) {
 	if req.URL.Path != "/" {
@@ -44,7 +47,7 @@ func fileServe(w http.ResponseWriter, req *http.Request) {
 	http.FileServer(http.Dir("")).ServeHTTP(w, req)
 }
 
-func ServeHTTPandIO() {
+func ServeHTTPandIO(handlers []Handler) {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", indexOrFail)
 	mux.HandleFunc("/scripts", scripts.HandleDirectory)
@@ -57,9 +60,9 @@ func ServeHTTPandIO() {
 	mux.HandleFunc("/audio/", media.HandleGetMediaDirectory)
 	mux.HandleFunc("/video/", media.HandleGetMediaDirectory)
 	mux.HandleFunc("/objects/", media.HandleGetMediaDirectory)
-	mux.HandleFunc("/control/key", keyboard.HandleKey)
-	mux.HandleFunc("/control/type", keyboard.HandleType)
-	mux.HandleFunc("/control/mouse", mouse.HandleMouse)
+	for _, handler := range handlers {
+		mux.HandleFunc(handler.Url, handler.Func)
+	}
 	mux.HandleFunc("/control/ubit/display", ubit.HandleDisplay)
 	mux.HandleFunc("/control/ubit/icon", ubit.HandleIcon)
 	mux.HandleFunc("/control/ubit/turn", ubit.HandleServo)
@@ -67,7 +70,7 @@ func ServeHTTPandIO() {
 
 	mux.HandleFunc("/favicon.ico", favicon)
 	mux.HandleFunc("/ip", ip.HandlePrivateIP)
-	// customer serving to avoid windows overriding javascript MIME type
+	// custom serving to avoid windows overriding javascript MIME type
 	mux.HandleFunc("/editor/", fileServe)
 	mux.HandleFunc("/client/", fileServe)
 	mux.HandleFunc("/common/", fileServe)
