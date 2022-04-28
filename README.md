@@ -59,6 +59,10 @@ Quando can currently be installed:
 
 - locally - please [see these instructions](./docs/install_local.md).
 
+# Running Quando
+
+To run Quando, [follow these instructions](./docs/run_local.md)
+
 # Using the Quando:Editor
 
 You can open the Editor from the dashboard at [127.0.0.1](127.0.0.1) or be opening [127.0.0.1/editor](127.0.0.1/editor) in Chrome browser.

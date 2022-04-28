@@ -9,7 +9,28 @@ Quando has been developed with Chrome Browser.  Other browsers are untested, but
 </details>
 <details><summary>2. Go tools</summary>
 
-You will need to (currently) install Go on your (Windows 10/11 tested) PC.
+You will need to (currently) install Go on your (Windows 10/11 tested) PC - you may install this when using VS Code.
+</details>
+
+<details><summary>3. Optional - GCC compiler - for the 'Full' features of Quando</summary>
+
+This is needed if you wish to control the keyboard/mouse on your (tested on windows) PC.
+
+You will need to install GCC to build robotgo:
+
+1. Open https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/8.1.0/threads-posix/seh/x86_64-8.1.0-release-posix-seh-rt_v6-rev0.7z to download the compressed code for 64 bit windows.
+2. If you don't have an uncompress program that works, download from https://www.7-zip.org/
+3. Extract the compressed file to `C:\mingw64` - _check that you do not have a mingw64 folder inside C:\mingw64_
+4. Add C:\mingw64\bin to your path:
+  - Press the windows key and type `environment` then choose 'Edit the System environment variables'
+  - Choose `Environment Variables` at the bottom
+  - in the bottom panel 'System Variables', select 'Path' then `Edit`
+  - Choose `New` then type in `C:\mingw64\bin` then choose `OK` (three times)
+
+To check that gcc is installed:
+- Open a **new** command line and typing 'gcc --version'
+  - you should see something like 'gcc (x86_64-posix-seh-rev0, Built by MinGW-W64 project) 8.1.0...'
+
 </details>
 
 ## Installing Quando
@@ -36,6 +57,3 @@ git pull
 ```
 
 </details>
-
-# Running Quando
-To run Quando, [follow these instructions](./run_local.md)
