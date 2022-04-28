@@ -23,9 +23,6 @@ coverage
 # node-waf configuration
 .lock-wscript
 
-# Compiled binary addons (http://nodejs.org/api/addons.html)
-build/Release
-
 #speech-to-text files
 *.webm
 client/media/visrec.png
@@ -33,4 +30,5 @@ client/media/stt/*
 cloud/rest/client/media/visrec.png
 
 #Python build
-scripts/
+scripts/*
+!scripts/example_speech
