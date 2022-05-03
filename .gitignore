@@ -29,6 +29,6 @@ client/media/visrec.png
 client/media/stt/*
 cloud/rest/client/media/visrec.png
 
-#Python build
+# Runtime folders
 scripts/*
 !scripts/example_speech

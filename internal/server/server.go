@@ -2,6 +2,7 @@ package server
 
 import (
 	"fmt"
+	"net"
 	"net/http"
 	"quando/internal/config"
 	"quando/internal/server/blocks"
@@ -80,11 +81,20 @@ func ServeHTTPandIO(handlers []Handler) {
 
 	ubit.CheckMessages()
 
-	host := ":80"
+	url := ":80"
 	if !config.RemoteClient() && !config.RemoteEditor() {
 		// If all hosting is localhost, then firewall doesn't need permission
-		host = "127.0.0.1" + host
+		url = "127.0.0.1" + url
 	}
-	showStartup(host)
-	http.ListenAndServe(host, mux)
+	showStartup(url)
+	listen, err := net.Listen("tcp", url)
+	if err != nil {
+		fmt.Println("Failed to start server - port 80 may already be in use - exiting...\n", err)
+		return
+	}
+	defer listen.Close()
+	err = http.Serve(listen, mux)
+	if err != nil {
+		fmt.Println("Failed to Serve - exiting...\n", err)
+	}
 }
