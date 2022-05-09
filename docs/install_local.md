@@ -7,12 +7,30 @@ Install these if you don't have them already:
 
 Quando has been developed with Chrome Browser.  Other browsers are untested, but may work.
 </details>
-<details><summary>2. Python 3</summary>
+<details><summary>2. Go tools</summary>
 
-You can install Python from the Microsoft Store, or by downloading from https://www.python.org/downloads/windows/
-_Note: Tested with v3.9.5_
+You will need to (currently) install Go on your (Windows 10/11 tested) PC - you may install this when using VS Code.
+</details>
 
-_Standard installation also includes **pip** for installing python libraries._
+<details><summary>3. Optional - GCC compiler - for the 'Full' features of Quando</summary>
+
+This is needed if you wish to control the keyboard/mouse on your (tested on windows) PC.
+
+You will need to install GCC to build robotgo:
+
+1. Open https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/8.1.0/threads-posix/seh/x86_64-8.1.0-release-posix-seh-rt_v6-rev0.7z to download the compressed code for 64 bit windows.
+2. If you don't have an uncompress program that works, download from https://www.7-zip.org/
+3. Extract the compressed file to `C:\mingw64` - _check that you do not have a mingw64 folder inside C:\mingw64_
+4. Add C:\mingw64\bin to your path:
+  - Press the windows key and type `environment` then choose 'Edit the System environment variables'
+  - Choose `Environment Variables` at the bottom
+  - in the bottom panel 'System Variables', select 'Path' then `Edit`
+  - Choose `New` then type in `C:\mingw64\bin` then choose `OK` (three times)
+
+To check that gcc is installed:
+- Open a **new** command line and typing 'gcc --version'
+  - you should see something like 'gcc (x86_64-posix-seh-rev0, Built by MinGW-W64 project) 8.1.0...'
+
 </details>
 
 ## Installing Quando
@@ -31,8 +49,6 @@ You need to:
     ```
   _Note: This will leave Quando in the C:\quando directory_
 
-3. In the C:\Quando directory, you need (once only) run `install.bat`.
-
 **Updating Quando**
 
 You can update quando, in a command line, in C:\quando, using:
@@ -41,26 +57,3 @@ git pull
 ```
 
 </details>
-
-<details><summary>B. Offline (no internet) PC Installation</summary>
-
-This option suits a single PC (Windows 10, 64 bit, has been used at present) being used for interaction, e.g. within an offline area, such as inside a museum where Internet access is unavailable or too slow.
-
-You need to, on an online PC (or with temporary internet access):
-
-1. Download the zipped code from the [Quando Github Page](https://github.com/andrewfstratton/quando).  Choose the 'Code' Option and select 'Download ZIP:
-
-    ![](./docs/images/code_download_zip.png)
-
-2. Unzip the contents into the directory C:\Quando.
-3. In the C:\Quando directory, you need (once only) run `install.bat`.
-3. You can now
-  - move the PC offline
-  - or copy the contents of C:\Quando to a USB and then transfer to the Offline PC
-
-You can update Quando by repeating the above steps.
-
-</details>
-
-# Running Quando
-To run Quando, [follow these instructions](./run_local.md)

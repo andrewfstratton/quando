@@ -1,51 +1,37 @@
-
 ## Running Quando locally
 
-If Python is setup, then you can run Quando by double clicking `quando.bat` file in the `C:\Quando` directory.
+The instructions below assume that if you are using Visual Studio Code, you have the golang extensions installed.
 
-_The command line window should not show any errors._
+# Building Quando executable
 
-Developers should see below in 'Edit as Block/API/Framework Developer'
+The standard build does not include control of local keyboard/mouse to simplify the build process.
 
-<details><summary>First time only setup</summary>
+You can either:
+- build from the command line, in C:\quando, with `go build .`
+- or within VS Code
+  - open the C:\quando as a workplace, then choose:
+  - F5 or Ctrl-F5
+  - or:
+    - Run and Debug (or Ctrl+Shift+D)
+    - select (if not selected) 'Launch File (quando)'
+    - Select the green triangle just to the left of the Launch File...
+      - or Press F5
+  
+## OPTIONAL - Full Build
 
-You will likely see a Firewall warning.  You should select at least 'Private Networks', then allow access.
+This includes control of the local keyboard and mouse.
 
-To check Quando is running, in Chrome, open [the dashboard](from the popup or http://127.0.0.1) on the **same PC** you installed Quando on.
+**You must have installed GCC for this to work**
 
-You should see two QR Codes and links to the Editor and Client.
-
-_If you don't see the option, check the command line from before._
-</details>
-
-<details><summary>
-Run Quando on Startup
-</summary>
-
-**N.B. This is intended for deployed use - not for development**
-
-1. Type Windows+R, then type in `gpedit.msc` and Enter
-2. Choose Computer Configuration->Windows Settings->Scripts->Startup
-3. Then 'Add' C:\quando\quando.bat
-</details>
-
-<details><summary>
-Edit as Block/API/Framework Developer
-</summary>
-
-The instructions below assume that you are using Visual Studio Code, though specifics are generally avoided.
-
-Run the editor, then:
-1. Run Quando, in a terminal, with `python server.py`
-2. In the popup window, choose `Dashboard` or `Editor` for editing or `Client`
-3. If Chrome does not open, then open a Chrome browser to http://127.0.0.1
-
-Note: The client screen can be right clicked to allow you to select already deployed/created scripts - whichever one you open will be reopened next time you open 127.0.0.1/client.  This can also be done from the kiosk boot, so that a different interaction is loaded next time the PC reboots.
-
-</details>
+To run Quando:
+- Now open a command line at C:\quando and then run `go build -tags=full .`
+  - or Restart VSCode
+  - Select 'Full Run' from the Run and Debug option (at the top of the screen)
+  - Use F5
+    - or select the green triangle to run.
 
 <details><summary>
-Develop new Blocks
+Developing new Blocks
 </summary>
 
 An (in progress) guide to [Creating new Blocks](creating_new_blocks.md) is available.

@@ -9,12 +9,21 @@
             "type": "go",
             "request": "launch",
             "mode": "debug",
-            "program": "main.go",
+            "program": ".",
             "env": {},
             "args": [
                 // "-remote_client"
                 // "-remote_editor"
             ]
-        }
+        },
+        {
+            "name": "Full Run",
+            "type": "go",
+            "buildFlags": "-tags=full",
+            "go.buildTags": "full",
+            "request": "launch",
+            "mode": "debug",
+            "program": ".",
+        },
     ]
 }
