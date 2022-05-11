@@ -51,7 +51,7 @@ func setup() {
 
 func openChrome(suffix string) {
 	loc := lorca.LocateChrome()
-	cmd := exec.Command(loc, "--new-window", "--user-data-dir=C:\\chrome_dir", "--allow-insecure-localhost", "http://127.0.0.1"+suffix)
+	cmd := exec.Command(loc, "--new-window", "--user-data-dir=C:\\chrome_dir", "--allow-insecure-localhost", "http://127.0.0.1"+server.Port()+suffix)
 	err := cmd.Run()
 	if err != nil {
 		fmt.Println(err)

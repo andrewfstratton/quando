@@ -16,10 +16,15 @@ import (
 )
 
 var listen net.Listener
+var port string
 
 type Handler struct {
 	Url  string
 	Func func(w http.ResponseWriter, req *http.Request)
+}
+
+func Port() string {
+	return port
 }
 
 func indexOrFail(w http.ResponseWriter, req *http.Request) {
@@ -82,17 +87,22 @@ func ServeHTTPandIO(handlers []Handler) {
 
 	mux.Handle("/ws/", websocket.Handler(socket.Serve))
 
-	url := ":80"
+	url := ""
+	port = ":80"
 	if !config.RemoteClient() && !config.RemoteEditor() {
-		// If all hosting is localhost, then firewall doesn't need permission
-		url = "127.0.0.1" + url
+		// If all hosting is localhost, then firewall doesn't need to give permission
+		url = "127.0.0.1"
 	}
-	showStartup(url)
-	listen, err = net.Listen("tcp", url)
+	listen, err = net.Listen("tcp", url+port)
 	if err != nil {
-		fmt.Println("Failed to start server - port 80 may already be in use - exiting...\n", err)
-		return
+		port = ":8080"
+		listen, err = net.Listen("tcp", url+port)
+		if err != nil {
+			fmt.Println("Failed to start server - port 80 and 8080 may already be in use - exiting...\n", err)
+			return
+		}
 	}
+	showStartup(url + port)
 	err = http.Serve(listen, mux)
 	if err != nil && listen != nil {
 		fmt.Println("Exiting... ", err)
