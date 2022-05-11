@@ -5,7 +5,6 @@ import (
 	"quando/internal/config"
 	"quando/internal/server"
 	"quando/internal/server/ip"
-	"quando/internal/tray"
 )
 
 var handlers = []server.Handler{} // extra handlers are added when running full version
@@ -18,6 +17,5 @@ func main() {
 	if config.RemoteEditor() {
 		fmt.Println("**SECURITY WARNING** Editor available on local network at ", ip.PrivateIP()) // TODO show IP address
 	}
-	go server.ServeHTTPandIO(handlers)
-	tray.Run()
+	server.ServeHTTPandIO(handlers)
 }

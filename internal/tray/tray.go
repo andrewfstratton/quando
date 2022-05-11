@@ -1,9 +1,12 @@
+//go:build local || full
+
 package tray
 
 import (
 	"fmt"
 	"os/exec"
 	"quando/internal/icon"
+	"quando/internal/server"
 
 	"github.com/getlantern/systray"
 	"github.com/skratchdot/open-golang/open"
@@ -32,6 +35,7 @@ func setup() {
 			select {
 			case <-sysQuit.ClickedCh:
 				systray.Quit()
+				server.Quit()
 			case <-sysEditor.ClickedCh:
 				openChrome("/editor")
 			case <-sysClient.ClickedCh:
