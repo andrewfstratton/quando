@@ -1,3 +1,62 @@
+<div data-quando-block-type="" class="quando-block" 
+  data-quando-javascript="quando.leap.setBoundsBehaviour('${left_right}', '${return}', '${range_percent}')">
+  <div class="quando-left quando-devices"></div>
+  <div class="quando-right">
+    <div class="quando-row quando-devices">
+      👋When
+      <select data-quando-name="left_right">
+        <option value='either'>🖐</option>
+        <option value='left'>👈</option>
+        <option value='right'>👉</option>
+      </select>
+      outside
+      <select data-quando-name='return' class='quando-toggle'>
+        <option value='false'>ignore</option>
+        <option value='true'>return</option>
+      </select>
+      <span data-quando-toggle='return=true'>
+        to middle
+      </span>
+      <span data-quando-toggle='return=false'>
+        <select data-quando-name="ignore">
+          <option value='all'>all</option>
+          <option value='move'>⇕⇔⤢ move</option>
+          <option value='rotate'>⤹⤸ rotate</option>
+          <option value='grip'>🤏grip</option>
+          <option value='move_rotate'>⇕⇔⤢ and ⤹⤸</option>
+          <option value='move_grip'>⇕⇔⤢ and 🤏</option>
+          <option value='rotate_grip'>⤹⤸ and 🤏</option>
+          <option value='none'>none</option>
+        </select>
+      </span>
+      <select data-quando-name="extras" class="quando-toggle">
+        <option value="hidden">+</option>
+        <option value="show">-</option>
+      </select>
+      <span data-quando-toggle="extras=show">
+        <br>
+        Range 
+        ±
+        <input data-quando-name='range_percent'
+          type='number' value='20' placeholder=''
+          style='width: 4em' min='0' max='100' data-quando-encode='normal'/>
+        % 
+        <span data-quando-toggle='return=true'><br/>
+          After
+          <input data-quando-name='wait_sec'
+            type='number' value='0' placeholder=''
+            style='width: 4em' min='0' max='60' data-quando-encode='normal'/>
+          seconds, take
+          <input data-quando-name='return_sec'
+            type='number' value='2.5' placeholder=''
+            style='width: 4em' min='0' max='60' data-quando-encode='normal'/>
+          seconds
+        </span>
+      </span>
+    </div>
+  </div>
+</div>
+
 <div data-quando-block-type="devices-leap-when" class="quando-block" data-quando-drop-valid="display-when-display,advanced-comment,inventor-flip,inventor-function-block,advanced-group"
     data-quando-javascript="quando.leap.${hand_fn}('${hand}', ()=>{${box}})">
     <div class="quando-left quando-devices"></div>

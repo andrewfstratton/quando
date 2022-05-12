@@ -43,16 +43,19 @@
         max = -75
       }
     }
+    self.bounds.x = { max: max, min: min, range: max - min }
     _handleXYZ('leapX' + hand, min, max, inverted, callback)
   }
 
   self.handleY = function (hand, range, inverted, callback) {
     let min = 200 // 20cm
     let max = min + 20*range
+    self.bounds.y = { max: max, min: min, range: max - min }
     _handleXYZ('leapY' + hand, min, max, inverted, callback)
   }
 
   self.handleZ = function (hand, range, inverted, callback) {
+    self.bounds.y = { max: range*10, min: -range*10, range: range }
     _handleXYZ('leapZ' + hand, -range*10, range*10, inverted, callback)
   }
 
@@ -68,11 +71,37 @@
     _handleAngle('leapYaw' + hand, mid_angle, plus_minus, inverted, callback)
   }
 
+  self.setBoundsBehaviour = function (hand, behaviour, tolerance) {
+    self.bounds.tolerance = Number(tolerance) / 100;
+    console.log(self.bounds.tolerance)
+    if (behaviour === "false") {
+      self.ignore_all = true;
+    }
+  }
+
   function _radians_to_degrees (radians) {
     var degrees = 180 * radians / Math.PI
     return (degrees + 360) % 360 // avoid negative remainder - % is not mod...
   }
 
+  let _isOutOfBounds = (x, y, z, bounds) => {
+    if (bounds.x) {
+      if (x < (bounds.x.min - bounds.x.range * bounds.tolerance) 
+        || x > (bounds.x.max + bounds.x.range * bounds.tolerance)
+      ) return true;
+    }
+    if (bounds.y) {
+      if (y < bounds.y.min || y > bounds.y.max) return true;
+    }
+    if (bounds.z) {
+      if (z < bounds.z.min || z > bounds.z.max) return true;
+    }
+    return false;
+  }
+  
+  self.ignore_all = false
+  self.out_of_bounds = false
+  self.bounds = {}
   self.last_x = { 'Left': false, 'Right': false }
   self.last_y = { 'Left': false, 'Right': false }
   self.last_z = { 'Left': false, 'Right': false }
@@ -82,6 +111,7 @@
   self.last_flat = { 'Left': false, 'Right': false }
   self.last_grip = { 'Left': false, 'Right': false }
   self.handler = function (frame) {
+
     if (frame.hands) {
       if (frame.hands.length >= 1) {
         for (hand of frame.hands) {
@@ -90,20 +120,31 @@
             var [x, y, z] = hand.palmPosition
             var type = hand.type.charAt(0).toUpperCase() + hand.type.slice(1)
             z = -z // make z increase as the hand moves away from the visitor
-            if (x != self.last_x[type]) {
-              quando.dispatch_event('leapX' + type, {'detail': x})
-              quando.dispatch_event('leapXEither', {'detail': x})
-              self.last_x[type] = x
-            }
-            if (y != self.last_y[type]) {
-              quando.dispatch_event('leapY' + type, {'detail': y})
-              quando.dispatch_event('leapYEither', {'detail': y})
-              self.last_y[type] = y
-            }
-            if (z != self.last_z[type]) {
-              quando.dispatch_event('leapZ' + type, {'detail': z})
-              quando.dispatch_event('leapZEither', {'detail': z})
-              self.last_z[type] = z
+            if (!self.out_of_bounds) {
+              if (_isOutOfBounds(x, y, z, self.bounds) && self.ignore_all) {
+                self.out_of_bounds = true
+                console.log("oob", x)
+              }
+              if (x != self.last_x[type]) {
+                console.log(x, self.bounds.x);
+                quando.dispatch_event('leapX' + type, {'detail': x})
+                quando.dispatch_event('leapXEither', {'detail': x})
+                self.last_x[type] = x
+              }
+              if (y != self.last_y[type]) {
+                quando.dispatch_event('leapY' + type, {'detail': y})
+                quando.dispatch_event('leapYEither', {'detail': y})
+                self.last_y[type] = y
+              }
+              if (z != self.last_z[type]) {
+                quando.dispatch_event('leapZ' + type, {'detail': z})
+                quando.dispatch_event('leapZEither', {'detail': z})
+                self.last_z[type] = z
+              }
+            } else {
+              if (!_isOutOfBounds(x, y, z, self.bounds))
+                self.out_of_bounds = false
+              console.log("ignoring movement along axes");
             }
             var roll = _radians_to_degrees(-hand.roll())
             if (roll != self.last_roll[type]) {
