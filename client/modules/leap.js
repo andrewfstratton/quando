@@ -71,11 +71,44 @@
     _handleAngle('leapYaw' + hand, mid_angle, plus_minus, inverted, callback)
   }
 
-  self.setBoundsBehaviour = function (hand, behaviour, tolerance) {
+  self.setBoundsBehaviour = function (hand, backToMiddle, tolerance, ignore) {
     self.bounds.tolerance = Number(tolerance) / 100;
     console.log(self.bounds.tolerance)
-    if (behaviour === "false") {
-      self.ignore_all = true;
+    if (backToMiddle === "true") {
+      return self.ignore_all = true;
+    }
+    switch (ignore) {
+      case "all":
+        self.ignore.move = true;
+        self.ignore.rotate = true;
+        self.ignore.grip = true;
+        break;
+      case "move":
+        self.ignore.move = true;
+        break;
+      case "rotate":
+        self.ignore.rotate = true;
+        break;
+      case "grip":
+        self.ignore.grip = true;
+        break;
+      case "move_rotate":
+        self.ignore.move = true;
+        self.ignore.rotate = true;
+        break;
+      case "move_grip":
+        self.ignore.move = true;
+        self.ignore.grip = true;
+        break;
+      case "rotate_grip":
+        self.ignore.rotate = true;
+        self.ignore.grip = true;
+        break;
+      default:
+        self.ignore.move = false;
+        self.ignore.rotate = false;
+        self.ignore.grip = false;
+        break;
     }
   }
 
@@ -91,15 +124,20 @@
       ) return true;
     }
     if (bounds.y) {
-      if (y < bounds.y.min || y > bounds.y.max) return true;
+      if (y < (bounds.y.min - bounds.y.range * bounds.tolerance) 
+        || y > (bounds.y.max + bounds.y.range * bounds.tolerance)
+      ) return true;
     }
     if (bounds.z) {
-      if (z < bounds.z.min || z > bounds.z.max) return true;
+      if (z < (bounds.z.min - bounds.z.range * bounds.tolerance) 
+        || z > (bounds.z.max + bounds.z.range * bounds.tolerance)
+      ) return true;
     }
     return false;
   }
   
   self.ignore_all = false
+  self.ignore = { 'move': false, 'rotate': false, 'grip': false }
   self.out_of_bounds = false
   self.bounds = {}
   self.last_x = { 'Left': false, 'Right': false }
@@ -120,13 +158,15 @@
             var [x, y, z] = hand.palmPosition
             var type = hand.type.charAt(0).toUpperCase() + hand.type.slice(1)
             z = -z // make z increase as the hand moves away from the visitor
-            if (!self.out_of_bounds) {
-              if (_isOutOfBounds(x, y, z, self.bounds) && self.ignore_all) {
-                self.out_of_bounds = true
-                console.log("oob", x)
-              }
+            if (_isOutOfBounds(x, y, z, self.bounds)) {
+              self.out_of_bounds = true
+              console.log("oob")
+            } else {
+              self.out_of_bounds = false
+            }
+            if (!(self.out_of_bounds && self.ignore.move)) {
+              console.log("moving")
               if (x != self.last_x[type]) {
-                console.log(x, self.bounds.x);
                 quando.dispatch_event('leapX' + type, {'detail': x})
                 quando.dispatch_event('leapXEither', {'detail': x})
                 self.last_x[type] = x
@@ -141,44 +181,44 @@
                 quando.dispatch_event('leapZEither', {'detail': z})
                 self.last_z[type] = z
               }
-            } else {
-              if (!_isOutOfBounds(x, y, z, self.bounds))
-                self.out_of_bounds = false
-              console.log("ignoring movement along axes");
             }
-            var roll = _radians_to_degrees(-hand.roll())
-            if (roll != self.last_roll[type]) {
-              quando.dispatch_event('leapRoll' + type, {'detail': roll})
-              quando.dispatch_event('leapRollEither', {'detail': roll})
-              self.last_roll[type] = roll
+            if (!(self.out_of_bounds && self.ignore.rotate)) {
+              var roll = _radians_to_degrees(-hand.roll())
+              if (roll != self.last_roll[type]) {
+                quando.dispatch_event('leapRoll' + type, {'detail': roll})
+                quando.dispatch_event('leapRollEither', {'detail': roll})
+                self.last_roll[type] = roll
+              }
+              var pitch = _radians_to_degrees(hand.pitch())
+              if (pitch != self.last_pitch[type]) {
+                quando.dispatch_event('leapPitch' + type, {'detail': pitch})
+                quando.dispatch_event('leapPitchEither', {'detail': pitch})
+                self.last_pitch[type] = pitch
+              }
+              var yaw = _radians_to_degrees(hand.yaw())
+              if (yaw != self.last_yaw[type]) {
+                quando.dispatch_event('leapYaw' + type, {'detail': yaw})
+                quando.dispatch_event('leapYawEither', {'detail': yaw})
+                self.last_yaw[type] = yaw
+              }
             }
-            var pitch = _radians_to_degrees(hand.pitch())
-            if (pitch != self.last_pitch[type]) {
-              quando.dispatch_event('leapPitch' + type, {'detail': pitch})
-              quando.dispatch_event('leapPitchEither', {'detail': pitch})
-              self.last_pitch[type] = pitch
-            }
-            var yaw = _radians_to_degrees(hand.yaw())
-            if (yaw != self.last_yaw[type]) {
-              quando.dispatch_event('leapYaw' + type, {'detail': yaw})
-              quando.dispatch_event('leapYawEither', {'detail': yaw})
-              self.last_yaw[type] = yaw
-            }
-            var strength = hand.grabStrength
-            if (strength == 1 && self.last_flat[type]) {
-              quando.dispatch_event('leapHandClosed' + type)
-              quando.dispatch_event('leapHandClosedEither')
-              self.last_flat[type] = false
-            }
-            if (strength <= 0.9 && !self.last_flat[type]) {
-              quando.dispatch_event('leapHandOpen' + type)
-              quando.dispatch_event('leapHandOpenEither')
-              self.last_flat[type] = true
-            }
-            if (strength != self.last_grip[type]) {
-              quando.dispatch_event('leapHandGrip' + type, {'detail': strength})
-              quando.dispatch_event('leapHandGripEither', {'detail': strength})
-              self.last_grip[type] = strength
+            if (!(self.out_of_bounds && self.ignore.grip)) {
+              var strength = hand.grabStrength
+              if (strength == 1 && self.last_flat[type]) {
+                quando.dispatch_event('leapHandClosed' + type)
+                quando.dispatch_event('leapHandClosedEither')
+                self.last_flat[type] = false
+              }
+              if (strength <= 0.9 && !self.last_flat[type]) {
+                quando.dispatch_event('leapHandOpen' + type)
+                quando.dispatch_event('leapHandOpenEither')
+                self.last_flat[type] = true
+              }
+              if (strength != self.last_grip[type]) {
+                quando.dispatch_event('leapHandGrip' + type, {'detail': strength})
+                quando.dispatch_event('leapHandGripEither', {'detail': strength})
+                self.last_grip[type] = strength
+              }
             }
           }
         }
