@@ -1,3 +1,5 @@
+//go:build local || full
+
 package maker_pi_rp2040
 
 import (

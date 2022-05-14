@@ -1,3 +1,5 @@
+//go:build local || full
+
 package ubit
 
 import (
