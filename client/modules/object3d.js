@@ -86,7 +86,6 @@ function _update_object(update, object) {
 function _update_volume(update, volume) {
     if (volume) {
         if (update) {
-            // console.log("vol,     ", volume, "update, ", update)
             if (update.z) { volume.position.z = update.z; delete update.z }
             if (update.y) { volume.position.y = update.y; delete update.y }
             if (update.x) { volume.position.x = update.x; delete update.x }
@@ -352,7 +351,12 @@ self.loadVolume = function(filename, defaultIso, pulseRequired) {
         // TODO: bring these to client
         colourMapTextures = {
             viridis: new THREE.TextureLoader().load( 
-                'https://raw.githubusercontent.com/mrdoob/three.js/f9d1f8495f2ca581b2b695288b97c97e030c5407/examples/textures/cm_viridis.png',
+                'https://raw.githubusercontent.com/mrdoob/three.js/f9d1f8495f2ca581b2b695288b97c97e030c5407/examples/textures/cm_gray.png',
+                // 'https://raw.githubusercontent.com/mrdoob/three.js/f9d1f8495f2ca581b2b695288b97c97e030c5407/examples/textures/cm_viridis.png',
+                _update_scene
+            ),
+            gray: new THREE.TextureLoader().load( 
+                'https://raw.githubusercontent.com/mrdoob/three.js/f9d1f8495f2ca581b2b695288b97c97e030c5407/examples/textures/cm_gray.png',
                 _update_scene
             ),
         } 
@@ -360,7 +364,7 @@ self.loadVolume = function(filename, defaultIso, pulseRequired) {
         const shader = VolumeRenderShader1 
         const uniforms = THREE.UniformsUtils.clone( shader.uniforms ) 
         // init the shader uniforms, (i.e. variables) 
-        volumeConfig = { clim1: 0, clim2: 1, renderstyle: 'iso', isothreshold: Number(defaultIso), colormap: 'viridis' } 
+        volumeConfig = { clim1: 0, clim2: 1, renderstyle: 'iso', isothreshold: Number(defaultIso), colormap: 'gray' } 
         uniforms[ 'u_data' ].value = texture 
         uniforms[ 'u_size' ].value.set( volume.xLength, volume.yLength, volume.zLength ) 
         uniforms[ 'u_clim' ].value.set( volumeConfig.clim1, volumeConfig.clim2 ) 
