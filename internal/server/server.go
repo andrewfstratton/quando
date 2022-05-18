@@ -6,8 +6,6 @@ import (
 	"net/http"
 	"quando/internal/config"
 	"quando/internal/server/blocks"
-	"quando/internal/server/devices/usb/maker_pi_rp2040"
-	"quando/internal/server/devices/usb/ubit"
 	"quando/internal/server/ip"
 	"quando/internal/server/media"
 	"quando/internal/server/scripts"
@@ -17,9 +15,16 @@ import (
 	"golang.org/x/net/websocket"
 )
 
+var listen net.Listener
+var port string
+
 type Handler struct {
 	Url  string
 	Func func(w http.ResponseWriter, req *http.Request)
+}
+
+func Port() string {
+	return port
 }
 
 func indexOrFail(w http.ResponseWriter, req *http.Request) {
@@ -48,7 +53,15 @@ func fileServe(w http.ResponseWriter, req *http.Request) {
 	http.FileServer(http.Dir("")).ServeHTTP(w, req)
 }
 
+func Quit() {
+	fmt.Println("Exiting...")
+	tmp := listen
+	listen = nil
+	tmp.Close()
+}
+
 func ServeHTTPandIO(handlers []Handler) {
+	var err error
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", indexOrFail)
 	mux.HandleFunc("/scripts", scripts.HandleDirectory)
@@ -64,11 +77,6 @@ func ServeHTTPandIO(handlers []Handler) {
 	for _, handler := range handlers {
 		mux.HandleFunc(handler.Url, handler.Func)
 	}
-	mux.HandleFunc("/control/ubit/display", ubit.HandleDisplay)
-	mux.HandleFunc("/control/ubit/icon", ubit.HandleIcon)
-	mux.HandleFunc("/control/ubit/turn", ubit.HandleServo)
-	mux.HandleFunc("/control/maker_pi_rp2040/turn", maker_pi_rp2040.HandleServo)
-
 	mux.HandleFunc("/favicon.ico", favicon)
 	mux.HandleFunc("/ip", ip.HandlePrivateIP)
 	// custom serving to avoid windows overriding javascript MIME type
@@ -79,22 +87,24 @@ func ServeHTTPandIO(handlers []Handler) {
 
 	mux.Handle("/ws/", websocket.Handler(socket.Serve))
 
-	ubit.CheckMessages()
-
-	url := ":80"
+	url := ""
+	port = ":80"
 	if !config.RemoteClient() && !config.RemoteEditor() {
-		// If all hosting is localhost, then firewall doesn't need permission
-		url = "127.0.0.1" + url
+		// If all hosting is localhost, then firewall doesn't need to give permission
+		url = "127.0.0.1"
 	}
-	showStartup(url)
-	listen, err := net.Listen("tcp", url)
+	listen, err = net.Listen("tcp", url+port)
 	if err != nil {
-		fmt.Println("Failed to start server - port 80 may already be in use - exiting...\n", err)
-		return
+		port = ":8080"
+		listen, err = net.Listen("tcp", url+port)
+		if err != nil {
+			fmt.Println("Failed to start server - port 80 and 8080 may already be in use - exiting...\n", err)
+			return
+		}
 	}
-	defer listen.Close()
+	showStartup(url + port)
 	err = http.Serve(listen, mux)
-	if err != nil {
-		fmt.Println("Failed to Serve - exiting...\n", err)
+	if err != nil && listen != nil {
+		fmt.Println("Exiting... ", err)
 	}
 }
