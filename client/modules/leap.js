@@ -72,8 +72,15 @@
     _handleAngle('leapYaw' + hand, mid_angle, plus_minus, inverted, callback)
   }
 
+  /** linear interpolation function
+   * @param {Number} alpha - range 0-1, interpolation progress
+   */
   function _lerp(start, end, alpha) {
-    return (1-alpha) * start + alpha * end
+    return start + (end - start) * alpha
+  }
+  // easing in/out function for linear interpolation using sin curve
+  function _easeAlpha(alpha) {
+    return -(Math.cos(Math.PI * alpha) - 1) / 2;
   }
 
   self.setBoundsBehaviour = function (hand, backToMiddle, tolerance, ignore, wait_sec, return_sec) {
@@ -86,36 +93,36 @@
     } else {
       switch (ignore) {
         case "all":
-          self.ignore.move = true;
-          self.ignore.rotate = true;
-          self.ignore.grip = true;
-          break;
+          self.ignore.move = true
+          self.ignore.rotate = true
+          self.ignore.grip = true
+          break
         case "move":
-          self.ignore.move = true;
-          break;
+          self.ignore.move = true
+          break
         case "rotate":
-          self.ignore.rotate = true;
-          break;
+          self.ignore.rotate = true
+          break
         case "grip":
-          self.ignore.grip = true;
-          break;
+          self.ignore.grip = true
+          break
         case "move_rotate":
-          self.ignore.move = true;
-          self.ignore.rotate = true;
-          break;
+          self.ignore.move = true
+          self.ignore.rotate = true
+          break
         case "move_grip":
-          self.ignore.move = true;
-          self.ignore.grip = true;
-          break;
+          self.ignore.move = true
+          self.ignore.grip = true
+          break
         case "rotate_grip":
-          self.ignore.rotate = true;
-          self.ignore.grip = true;
-          break;
+          self.ignore.rotate = true
+          self.ignore.grip = true
+          break
         default:
-          self.ignore.move = false;
-          self.ignore.rotate = false;
-          self.ignore.grip = false;
-          break;
+          self.ignore.move = false
+          self.ignore.rotate = false
+          self.ignore.grip = false
+          break
       }
     }
   }
@@ -125,7 +132,7 @@
     return (degrees + 360) % 360 // avoid negative remainder - % is not mod...
   }
 
-  let _isOutOfBounds = (x, y, z, bounds) => {
+  function _isOutOfBounds(x, y, z, bounds) {
     if (bounds.x) {
       if (x < (bounds.x.min - bounds.x.range * bounds.tolerance) 
         || x > (bounds.x.max + bounds.x.range * bounds.tolerance)
@@ -152,47 +159,69 @@
   self.lerp_timeout = false
   self.wait_sec = false
   self.return_sec = false
+  self.return_end_timestamp = false
 
   self.last_x = { 'Left': false, 'Right': false }
   self.last_y = { 'Left': false, 'Right': false }
   self.last_z = { 'Left': false, 'Right': false }
+  self.lerping_from = { 
+    last_x: {...self.last_x},
+    last_y: {...self.last_y},
+    last_z: {...self.last_z},
+  }
+  self.last_hand = false
   self.last_roll = { 'Left': false, 'Right': false }
   self.last_pitch = { 'Left': false, 'Right': false }
   self.last_yaw = { 'Left': false, 'Right': false }
   self.last_flat = { 'Left': false, 'Right': false }
   self.last_grip = { 'Left': false, 'Right': false }
+  let axes = ["x", "y", "z"]
 
-  // let lerped_value;
-  let _are_close_enough = (number, target) => {
+  function _close_enough(number, target) {
     if (Math.floor(number) === Math.floor(target)) return true;
     if (Math.ceil(number) === Math.ceil(target)) return true;
     return false;
   }
 
-  let axes = ["x", "y", "z"]
   self.handler = function (frame) {
     // interpolate to middle if required
     if (self.out_of_bounds && self.to_middle) {
       // if not already waiting to interpolate, set a timeout
       if (!self.lerp_timeout) {
         self.lerp_timeout = setTimeout(() => {
-          self.lerping = true;
-        }, self.wait_sec*1000);
+          self.lerping = true
+          self.lerping_from = { 
+            last_x: {...self.last_x},
+            last_y: {...self.last_y},
+            last_z: {...self.last_z},
+            timestamp: Date.now()
+          }
+          self.return_end_timestamp = 
+            self.lerping_from.timestamp + self.return_sec * 1000;
+        }, self.wait_sec * 1000);
       }
       // if we're currently interpolating
       if (self.lerping) {
         axes.forEach(axis => {
           // if we aren't handling this axis
           if (!self.bounds[axis]) return;
-          // stop interpolating if we have reached midpoint to 0 dp
-          if (_are_close_enough(self[`last_${axis}`]["Right"], self.bounds[`${axis}`].mid)) return;
-          // interpolate value
-          lerped_value = _lerp(self[`last_${axis}`]["Right"], self.bounds[`${axis}`].mid, 0.1)
+          // stop interpolating if we have reached midpoint
+          if (_close_enough(self[`last_${axis}`][self.last_hand], self.bounds[`${axis}`].mid)) return;
+
+          // interpolate axis value
+          let duration = self.return_end_timestamp - self.lerping_from.timestamp
+          let elapsed = self.return_end_timestamp - Date.now()
+          lerped_value = _lerp(
+            self.lerping_from[`last_${axis}`][self.last_hand], 
+            self.bounds[`${axis}`].mid, 
+            _easeAlpha(1 - (elapsed / duration))
+          )
+
           console.log("lerped", axis, lerped_value)
-          self[`last_${axis}`]["Right"] = lerped_value
-          // dispatch events
-          // quando.dispatch_event('leapX' + type, {'detail': x})
-          console.log(`attempting to dispatch leap${axis.toUpperCase()}Either`)
+
+          // dispatch value
+          self[`last_${axis}`][self.last_hand] = lerped_value
+          quando.dispatch_event('leapX' + self.last_hand, {'detail': x})
           quando.dispatch_event(`leap${axis.toUpperCase()}Either`, {'detail': lerped_value})
         });
       }
@@ -208,13 +237,14 @@
             z = -z // make z increase as the hand moves away from the visitor
             if (_isOutOfBounds(x, y, z, self.bounds)) {
               self.out_of_bounds = true
+              self.last_hand = type
               console.log("oob")
             } else {
               self.out_of_bounds = false
               // clear lerp timeout
-              clearTimeout(self.lerp_timeout);
-              self.lerp_timeout = false;
-              self.lerping = false;
+              clearTimeout(self.lerp_timeout)
+              self.lerp_timeout = false
+              self.lerping = false
             }
             if (!(self.out_of_bounds && self.ignore.move)) {
               console.log("moving")
