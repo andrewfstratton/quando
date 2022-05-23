@@ -160,6 +160,8 @@
   self.wait_sec = false
   self.return_sec = false
   self.return_end_timestamp = false
+  self.signal_last_frame = false
+  self.no_signal_timeout = false
 
   self.last_x = { 'Left': false, 'Right': false }
   self.last_y = { 'Left': false, 'Right': false }
@@ -169,7 +171,7 @@
     last_y: {...self.last_y},
     last_z: {...self.last_z},
   }
-  self.last_hand = false
+  self.last_hand = null
   self.last_roll = { 'Left': false, 'Right': false }
   self.last_pitch = { 'Left': false, 'Right': false }
   self.last_yaw = { 'Left': false, 'Right': false }
@@ -184,6 +186,17 @@
   }
 
   self.handler = function (frame) {
+    if (!self.signal_last_frame && !self.no_signal_timeout && !self.out_of_bounds) {
+      self.no_signal_timeout = setTimeout(() => {
+        self.out_of_bounds = true
+      }, 1000)
+    } else if (self.signal_last_frame === true) {
+      clearTimeout(self.no_signal_timeout);
+      self.no_signal_timeout = null
+    }
+
+    self.signal_last_frame = false
+
     // interpolate to middle if required
     if (self.out_of_bounds && self.to_middle) {
       // if not already waiting to interpolate, set a timeout
@@ -197,7 +210,7 @@
             timestamp: Date.now()
           }
           self.return_end_timestamp = 
-            self.lerping_from.timestamp + self.return_sec * 1000;
+            self.lerping_from.timestamp + self.return_sec * 1000
         }, self.wait_sec * 1000);
       }
       // if we're currently interpolating
@@ -216,8 +229,7 @@
             self.bounds[`${axis}`].mid, 
             _easeAlpha(1 - (elapsed / duration))
           )
-
-          console.log("lerped", axis, lerped_value)
+          // console.log("lerped", axis, lerped_value)
 
           // dispatch value
           self[`last_${axis}`][self.last_hand] = lerped_value
@@ -232,14 +244,15 @@
         for (hand of frame.hands) {
           quando.idle_reset()
           if (hand.confidence == 1) {
+            self.signal_last_frame = true
             var [x, y, z] = hand.palmPosition
             var type = hand.type.charAt(0).toUpperCase() + hand.type.slice(1)
+            self.last_hand = type
             z = -z // make z increase as the hand moves away from the visitor
             if (_isOutOfBounds(x, y, z, self.bounds)) {
               self.out_of_bounds = true
-              self.last_hand = type
-              console.log("oob")
             } else {
+              // console.log("not oob")
               self.out_of_bounds = false
               // clear lerp timeout
               clearTimeout(self.lerp_timeout)
@@ -247,7 +260,6 @@
               self.lerping = false
             }
             if (!(self.out_of_bounds && self.ignore.move)) {
-              console.log("moving")
               if (x != self.last_x[type]) {
                 quando.dispatch_event('leapX' + type, {'detail': x})
                 quando.dispatch_event('leapXEither', {'detail': x})
