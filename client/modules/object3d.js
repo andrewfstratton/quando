@@ -1,11 +1,9 @@
 import * as THREE from 'three'
 
 import { GUI } from 'https://unpkg.com/three@0.139.2/examples/jsm/libs/lil-gui.module.min.js'
-import { OrbitControls } from 'https://unpkg.com/three@0.139.2/examples/jsm/controls/OrbitControls.js'
 import { GLTFLoader } from 'https://unpkg.com/three@0.139.2/examples/jsm/loaders/GLTFLoader.js'
 import { NRRDLoader } from 'https://unpkg.com/three@0.139.2/examples/jsm/loaders/NRRDLoader.js'
 import { VolumeRenderShader1 } from 'https://unpkg.com/three@0.139.2/examples/jsm/shaders/VolumeShader.js'
-import WebGL from 'https://unpkg.com/three@0.139.2/examples/jsm/capabilities/WebGL.js'
 
 let quando = window.quando
 
@@ -86,7 +84,10 @@ function _update_object(update, object) {
 function _update_volume(update, volume) {
     if (volume) {
         if (update) {
-            if (update.z) { volume.position.z = update.z; delete update.z }
+            if (update.z) { 
+                volume.scale.setScalar(Math.max(0, 1 + (update.z / 100))); 
+                delete update.z;
+            }
             if (update.y) { volume.position.y = update.y; delete update.y }
             if (update.x) { volume.position.x = update.x; delete update.x }
             if (update._roll) { volume.rotation.y = update._roll; delete update._roll }
