@@ -25,6 +25,41 @@
     </div>
 </div>
 
+<div data-quando-block-type="" class="quando-block" data-quando-id="true" 
+    data-quando-javascript="quando.misc.mapToStick(${data-quando-id}, val, ${deadzone}, (val) => {${box}}, ${wrap}, ${speed})">
+    <div class="quando-left quando-advanced"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-advanced">⚡
+            Map to joystick
+            🕹️️️️️
+            ⚡
+            <select data-quando-name="extras" class="quando-toggle">
+                <option value="hidden">+</option>
+                <option value="show">-</option>
+            </select>
+            <span data-quando-toggle="extras=show">
+                <br>
+                with 
+                <input data-quando-name='deadzone'
+                    type='text' value='15' placeholder=''
+                    data-quando-encode='normal'/>
+                % deadzone and
+                <input data-quando-name='speed'
+                    type='number' value='5' placeholder=''
+                    data-quando-encode='normal'/> 
+                speed
+                <br>
+                <select data-quando-name='wrap' class='quando-toggle'>
+                    <option value='true'>wrapping</option>
+                    <option value='false'>stopping</option>
+                </select>
+                at ends
+            </span>
+        </div>
+        <div data-quando-name="box" class="quando-box"></div>
+        <div class="quando-row quando-advanced"></div>
+    </div>
+</div>
 
 <div data-quando-block-type="advanced-log" class="quando-block" data-quando-javascript="console.log($(eq$,${txtval}$,input$,'${text}'$,${txtval})$)">
     <div class="quando-left quando-advanced"></div>

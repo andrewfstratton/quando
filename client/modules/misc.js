@@ -24,6 +24,75 @@ function tidy_adjuster(adjuster) { // collect any values since the last 'per' cy
   return adjust_val
 }
 
+
+let _value_mappings = {}
+self.mapToStick = (block_id, val_in, deadzone, callback, wrap, speed) => {
+  speed = speed / 1000
+  let _mapping = _value_mappings[block_id]
+  if (!_mapping) {
+    _value_mappings[block_id] = _mapping = {
+      valid_zone: { 
+        min: 0.5 - (deadzone/100 * 0.5), 
+        max: 0.5 + (deadzone/100 * 0.5) 
+      },
+      zone_state: "in_deadzone",
+      incremented_val: 0.5,
+      incrementer: 0,
+      interval: null,
+      wrap: wrap
+    }
+  } else {
+    let newZoneState = _get_zone_state(val_in, _mapping.valid_zone)
+    // if we're still in the same zone, don't do anything
+    if (_mapping.zone_state === newZoneState) return
+    _mapping.zone_state = newZoneState
+    if (_mapping.stick_interval) clearInterval(_mapping.stick_interval)
+    // set incrementer w.r.t zone state
+    switch (_mapping.zone_state) {
+      case "under_deadzone":
+        _mapping.incrementer = -speed
+        break
+      case "over_deadzone":
+        _mapping.incrementer = speed
+        break
+      case "in_deadzone":
+        _mapping.incrementer = 0
+        break
+      default:
+        _mapping.incrementer = 0
+        break
+    }
+    // set interval to increment value
+    _mapping.stick_interval = setInterval(() => {
+      _mapping.incremented_val += _mapping.incrementer
+      _mapping.incremented_val = _handleValue(_mapping.incremented_val, _mapping.wrap)
+      callback(_mapping.incremented_val)
+    }, 10);
+  }
+  
+  destructor.add(() => {
+    clearInterval(_mapping.stick_interval)
+    delete _value_mappings[block_id]
+  })
+}
+
+let _get_zone_state = (val_in, valid_zone) => {
+  if (val_in > valid_zone.max) return "over_deadzone"
+  if (val_in < valid_zone.min) return "under_deadzone"
+  return "in_deadzone"
+}
+
+let _handleValue = (value, wrap) => {
+  if (wrap) {
+    if (value < 0) return value + 1
+    if (value > 1) return value - 1
+    return value
+  }
+  if (value < 0) return 0
+  if (value > 1) return 1
+  return value
+}
+
 self.adjust = (block_id, val_in, count, units, times_per, per_units, wrap, inverted, callback) => {
   let _adjuster = _adjusters[block_id]
   if (!_adjuster) {
