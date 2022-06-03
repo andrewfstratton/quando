@@ -15,6 +15,7 @@ self.height = window.innerHeight
 let scene = false
 let renderer = false
 let camera = false
+let camZ = 300
 let object = false
 let fixed = false
 let animation_id = false 
@@ -47,6 +48,12 @@ function _clear_volume() {
     if (volume) {
         scene.remove(volume)
         volume = false
+        // scene = false
+        // renderer = false
+        // camera = false
+        // object = false
+        // animation_id = false 
+        // canvas = false
     }
 }
 function _clear_canvas() {
@@ -144,40 +151,42 @@ function _get_object3D_center(obj) {
 // TODO: rename promise to reflect its resolve data
 function _setup_scene_for_volume(vol_mesh) {
     return new Promise((resolve, reject) => {
-        if (renderer !== false) reject("Scene already set up")
-        scene = new THREE.Scene()
-        renderer = new THREE.WebGLRenderer()
-        renderer.setPixelRatio( window.devicePixelRatio )
-        renderer.setSize( window.innerWidth, window.innerHeight )
-        canvas = renderer.domElement
-        document.getElementById('quando_3d').append(canvas)
 
-        // -- configure camera
-        const aspect = window.innerWidth / window.innerHeight
-        // frustum height
-        const h = 512  
-        let ortho = true;
-        // camera z position must be far back to mitigate clipping errors
-        let camZ = 300;
-        if (ortho) {
-            camera = new THREE.OrthographicCamera( - h * aspect / 2, h * aspect / 2, h / 2, - h / 2, 0.1, 10000 )
-            camZ = 1000;
+        if (renderer === false) {
+            scene = new THREE.Scene()
+            renderer = new THREE.WebGLRenderer()
+            renderer.setPixelRatio( window.devicePixelRatio )
+            renderer.setSize( window.innerWidth, window.innerHeight )
+            canvas = renderer.domElement
+            document.getElementById('quando_3d').append(canvas)
+            // -- configure camera
+            const aspect = window.innerWidth / window.innerHeight
+            // frustum height
+            const h = 512  
+            let ortho = true;
+            // camera z position must be far back to mitigate clipping errors
+            if (ortho) {
+                camera = new THREE.OrthographicCamera( - h * aspect / 2, h * aspect / 2, h / 2, - h / 2, 0.1, 10000 )
+                camZ = 1000;
+            }
+            if (!ortho) camera = new THREE.PerspectiveCamera(90, aspect, 0.1, 10000 )
+            
+
+            // debug GUI
+            const gui = new GUI()
+            // The gui for volume interaction
+            gui.add( volumeConfig, 'clim1', 0, 1, 0.01 ).onChange( _updateUniforms )
+            gui.add( volumeConfig, 'clim2', 0, 1, 0.01 ).onChange( _updateUniforms )
+            gui.add( volumeConfig, 'colormap', { gray: 'gray', viridis: 'viridis' } ).onChange( _updateUniforms )
+            gui.add( volumeConfig, 'renderstyle', { mip: 'mip', iso: 'iso' } ).onChange( _updateUniforms ) 
+            gui.add( volumeConfig, 'isothreshold', 0, 1000, 0.01 ).onChange( _updateUniforms )
         }
-        if (!ortho) camera = new THREE.PerspectiveCamera(90, aspect, 0.1, 10000 )
+
         // set camera to look at volume center
         let vol_center = _get_object3D_center(vol_mesh)
         camera.position.set(vol_center.x, vol_center.y, camZ)
         camera.lookAt(vol_center.x, vol_center.y, 0)
         camera.up.set( 0, 0, 1 ) // In volume data data, z is up
-
-        // debug GUI
-        const gui = new GUI()
-        // The gui for volume interaction
-        gui.add( volumeConfig, 'clim1', 0, 1, 0.01 ).onChange( _updateUniforms )
-        gui.add( volumeConfig, 'clim2', 0, 1, 0.01 ).onChange( _updateUniforms )
-        gui.add( volumeConfig, 'colormap', { gray: 'gray', viridis: 'viridis' } ).onChange( _updateUniforms )
-        gui.add( volumeConfig, 'renderstyle', { mip: 'mip', iso: 'iso' } ).onChange( _updateUniforms ) 
-        gui.add( volumeConfig, 'isothreshold', 0, 1000, 0.01 ).onChange( _updateUniforms )
         
         resolve(vol_center)
     })
@@ -228,9 +237,9 @@ function _add_fixed_object(_fixed) {
 }
 
 function _add_volume(vol_mesh) {
+    _clear_volume()
     _setup_scene_for_volume(vol_mesh)
         .then(vol_center => {
-            _clear_volume()
             // create parent empty for volume rotation
             let rotationParent = new THREE.Object3D()
             volume = rotationParent
