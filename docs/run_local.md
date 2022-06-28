@@ -24,11 +24,11 @@ This includes control of the local keyboard and mouse.
 **You must have installed GCC for this to work**
 
 To run Quando:
-- Now open a command line at C:\quando and then run `go build -tags=full .`
-  - or Restart VSCode
+- either open a command line at C:\quando and then run `go build -tags=full .`
+- or from VSCode, do one of:
   - Select 'Full Run' from the Run and Debug option (at the top of the screen)
   - Use F5
-    - or select the green triangle to run.
+  - or select the green triangle to run.
 
 <details><summary>
 Developing new Blocks

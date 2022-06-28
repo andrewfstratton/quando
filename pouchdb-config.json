@@ -1,8 +1,0 @@
-{
-  "log": {
-    "file": "pouchdb/log.txt"
-  },
-  "couchdb": {
-    "uuid": "9ad73c2f-65e0-4069-bffa-6859c6e57d84"
-  }
-}

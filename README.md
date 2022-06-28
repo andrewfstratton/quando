@@ -7,7 +7,8 @@ Quando looks similar to the Scratch 'block' editor often used for learning to pr
 However, Quando does not use standard programming concepts and **does not expect users to learn to program** and is aimed at End User Development.
 
 ## Who is Quando for?
- Quando is aimed at end users and domain experts wishing to create and edit digital interactions without having to become programmers.
+
+Quando is aimed at end users and domain experts wishing to create and edit digital interactions without having to become programmers.
 
 ## What can Quando do?
 
@@ -22,9 +23,8 @@ The main benefits of Quando are:
 Quando allows many different inputs (and more are being added), including:
 
 - Leap Motion hand movement in 3 dimensions and rotation in 3 'angles' (six degrees of freedom)
-- Mouse movement
-- Keyboard input
-- micro:bit key and orientation
+- Mouse and Keyboard
+- micro:bit keys, orientation and (version 2 only) touch
 - Gamepad input
 - (experimental) EEG headset
 - (experimental) speech recognition
@@ -33,7 +33,7 @@ Quando allows many different inputs (and more are being added), including:
 
 Some of these outputs also include inputs:
 
-- digital media - images, video, audio, (experimental) sound waves
+- digital media - images, video, audio and (experimental) sound waves
 - (in progess) 3d object/scene
 - (experimental) Augmented Reality
 - Speech
@@ -45,8 +45,8 @@ Some of these outputs also include inputs:
 
 Quando has been used for:
 
-- interactive exhibits for museums, tpycially using the touchless Leap motion controller to interact with information displays
-- touchless interactive control of robots to aid understaning of robot abilites
+- interactive exhibits for museums, typically using the touchless Leap motion controller to interact with information displays
+- touchless interactive control of robots to aid understanding of robot abilites
 - 
 
 ## Why is it called Quando?
@@ -57,7 +57,7 @@ The name Quando comes from Latin for 'when' since Quando use a When based approa
 
 Quando can currently be installed:
 
-- locally - please [see these instructions](./docs/install_local.md).
+- locally - please [see these instructions](./docs/install_local.md).  You should only need to do this once.
 
 # Running Quando
 
@@ -65,12 +65,19 @@ To run Quando, [follow these instructions](./docs/run_local.md)
 
 # Using the Quando:Editor
 
-You can open the Editor from the dashboard at [127.0.0.1](127.0.0.1) or be opening [127.0.0.1/editor](127.0.0.1/editor) in Chrome browser.
+You can open the Editor from the dashboard at [127.0.0.1](127.0.0.1) or by opening [127.0.0.1/editor](127.0.0.1/editor) in Chrome browser.
 
 
 ## Using the Quando:Client
 
 After you have deployed scripts, you can open them from the dashboard at [127.0.0.1](127.0.0.1) or through [127.0.0.1/client](127.0.0.1/client) in Chrome browser, which will load the last script that was opened.  You can `right click the screen` to choose a different script to load.
+
+### Updating Quando
+
+Assuming you installed correctly, you can update quando, in a command line, in C:\quando, using:
+```
+git pull
+```
 
 ### Optional - Leap Motion
 

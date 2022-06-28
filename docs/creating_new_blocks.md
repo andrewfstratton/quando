@@ -1,6 +1,6 @@
 # Creating New blocks
 
-Quando includes a menu of 'Inventor' blocks used to create new blocks.  All Inventor blocks are contained within a 'New' Block:
+Quando includes a menu of 'Inventor' blocks used to create new blocks.  All Inventor blocks are contained within an Inventor 'UI' Block:
 
 ![](./images/new_block.png)
 
@@ -13,7 +13,7 @@ The Inventor blocks can be used to:
 
 _Note: reading this section will help with the next section - creating new Blocks._
 
-First, drag a New Block into the editor.  _If you 'Test' this, you should see a very short, empty, row in the colour of the Class chosen._
+First, drag a UI Block into the editor.  _If you 'Test' this, you should see a very short, empty, row in the colour of the Class chosen._
 
 ### Creating an Action Block UI - User Interface
 
@@ -31,7 +31,7 @@ _Try also adding 'standard' icons._
 
 ### Adding a block to be used
 
-You should make sure the New block has 'block' generator selected, then drag in the Advanced log block:
+You should make sure the UI block has 'block' generator selected, then drag in the Advanced log block:
 
 ![](./images/new_block_log.png)
 
@@ -89,17 +89,15 @@ _Note: Toggle is usually used with 2 choices, occasionally three.  On Mobile Saf
 
 # Adding new blocks to the editor
 
-Inventor blocks can be saved and loaded as usual.  You can also view the Code and copy and paste the generated code into VS Code.  New blocks are held in the blocks directory, e.g. media blocks are held in blocks/11_media, where the number prefix is used to order the block menus in the editor.  Similarily, the block filenames are in the form 99_name.htm, e.g. 10_alert.htm orders the alert block (currently) at the top of the blocks in the Advanced menu.  **N.B. The filename, with the menu name, is used as a unique identifier for loading/saving blocks, e.g. 'advanced_alert' must be unique.**  The number prefixes can safely be changed for reordering.
+Inventor blocks can be saved and loaded as usual.  You can also view the Code and copy and paste the generated code into VS Code.  New blocks are held in the blocks directory as a `.htm` file, e.g. media blocks are held in `1500_media.htm`, where the number prefix is used to order the block menus in the editor.  The blocks are then held in order inside the `.htm` file.  Each block contains a `data-quando-block-type` that is a unique identifier across all existing blocks (not just the menu), e.g. `data-quando-block-type="display-when-display"` where display-when-display must be unique within Quando, i.e. unique across all the `.htm` files in the blocks directory.  The order of blocks with `.htm` files and the number prefix for the `.htm` files can safely be changed for reordering.
 
 Currently, to add a new block to the editor:
 
 1. Use `Code` to show the generated code
 2. Click in the text box, select all and copy
-3. In VS Code (or other), in the blocks directory, choose the menu name - this should match the block 'class', e.g. 17_advanced
-4. Right click and create a new filename.  The 2 digit prefix is used for ordering within the menu, e.g. 20, then put an underscore, then the unique (in the menu) name with underscore separators, followed by .htm, e.g. 22_leap_updown.htm
-5. Paste in the code copied from the previous step
-6. You can reformat (this will be easier to read)
-7. The generated javascript may need line breaks removing
+3. In VS Code (or other), in the blocks directory, choose the menu filename, e.g. `4500_advanced.htm`, edit this and paste in the code where you want it to appear in the menu.
+6. You should reformat (this will be easier to read)
+7. The generated javascript usually needs line breaks removing
 8. Save, then reload the editor and the block should appear
 
 **N.B. Any errors in the generated html (e.g. when editing by hand) are likely to make the editor fail - check the browser console if you think this has happened.**
@@ -137,13 +135,17 @@ It would be nice to change these to coloured characters - but this is not part o
 
 ## Creating the generator
 
-We need to make a (very) few decisions about how the API will be called.  We need to have a name for the function and will use `handleButton` and two parameters.  The first parameter is the button identifier, for which we will use the button index from the standard gamepad API as the identifier (see also https://w3c.github.io/gamepad/#remapping) since this is simple enough for our purpose.  The second parameter is to access the  `box` of contained blocks.
+We need to make a few decisions about how the API will be called.  We need to have a name for the function; we will use `handleButton` and two parameters.  The first parameter is the button identifier, for which we will use the button index from the standard gamepad API as the identifier (see also https://w3c.github.io/gamepad/#remapping) since this is simple enough for our purpose.  The second parameter is to access the  `box` of contained blocks.
 
 These updates can be seen below, where the API generator is also been added. **Note that the `box` callback has also been added as a parameter**:
 
 ![](./images/new_block_eg_gamepad_inventor_blocks_3.png)
 
-To deploy this to the editor, we need (currently) to use the Code button - take the generated code and paste it into a new block file - `blocks/30_devices/22_when_gamepad_button.htm`.
+To deploy this to the editor, we need (currently) to:
+
+1. Add the (unique) id as `devices-when-gamepad-button`.  _Note: this is not yet shown in the following code_
+2. Use the Code button and copy the generated code
+3. Paste the code into the `3500_devices.htm` file.
 
 Note that the generated code is (currently incorrectly) spread across several lines:
 
@@ -212,3 +214,5 @@ The next steps would likely include:
 3. Adding the analogue values (sometimes just 0 or 1) for triggers - these give a range output from 0 to 1.
 4. Adding the stick axes for X/Y.  These also give a range output.
 5. Considering whether to design a hold/released option as well/instead that calls back when the button is first pressed and also calls back when the button is released.
+
+Note: Quando includes extended gamepad blocks for buttons, joystick movement and triggers; the code is in the gamepad.js module and the generated blocks are in `3500_devices.htm`.  The included button block has been redesigned to allow for more buttons, as well as allowing the detection of button down, button up and button change (i.e. up or down) which is then passed back as a val (which can only be 0 or 1).
