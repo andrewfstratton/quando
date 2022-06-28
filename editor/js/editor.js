@@ -660,7 +660,7 @@ export function setup() {
   window.onbeforeunload = () => {
     let obj = getScriptAsObject()
     if (obj.length) {
-      local_save(AUTOSAVE, obj)
+      save_autosave(obj)
     } else {
       localStorage.removeItem(AUTOSAVE)
     }
@@ -730,7 +730,7 @@ export function setup() {
         if (first_title) {
           _leftClickTitle(first_title)
         }
-        local_load(AUTOSAVE) // load last edit from localStorage
+        load_autosave() // try and load autosave
       }, (fail) => {
         _warning(fail.message)
       })
@@ -776,28 +776,11 @@ function _warning (message) {
     $('#loading_modal').modal('hide')
   }
 
-  function _local_load_list () {
-    $('#local_load_list').html('')
-    let op = {fn:'local_delete'}
-    for (let key in localStorage) {
-      if (key.startsWith(PREFIX)) {
-        let name = key.slice(PREFIX.length)
-        let main = {name:name, fn:'local_load'}
-        $('#local_load_list').append(_load_list_add(key, main, op))
-      }
-    }
-    if ($('#local_load_list').html() === '') {
-      $('#local_load_list').html('No saves available')
-    }
-  }
-
-export function loaded(obj, modal_id) {
+export function loaded(obj) {
     showObject(obj.script)
     _deploy = obj.deploy
-    name = obj.filename
-    $(modal_id).modal('hide')
+    let name = obj.filename
     _success('Loaded...')
-    $('#local_save_key').val(name)
     $('#remote_save_key').val(name)
     if (name == '') {
       name = '[no file]'
@@ -808,7 +791,6 @@ export function loaded(obj, modal_id) {
 
   function _saved (name) {
     _success('Saved...')
-    $('#local_save_key').val(name)
     $('#remote_save_key').val(name)
     $('#file_name').html(name)
   }
@@ -829,16 +811,6 @@ export function loaded(obj, modal_id) {
     return result
   }
 
-  function _load_list_add (id, main, op) {
-    let result = '<div class="row">' +
-        '<a class="list-group-item col-md-5"' + _load_list_add_fn(id, main)
-        + '>' + main.name + '</a>' +
-        '<div class="list-group-item col-sm-1 glyphicon glyphicon-remove"' +
-        _load_list_add_fn(id, op) + '></div>' +
-      '</div>\n'
-    return result
-  }
-  
   function _remote_load_list_add (id, main, fn) {
     let result = '<div class="row">' +
         '<a class="list-group-item col-md-11"' + _load_list_add_fn(id, main)
@@ -892,26 +864,10 @@ export function handle_save() {
     $('#remote_save_modal').modal('show')
   }
 
-export function handle_remote_to_local_save() {
-    $('#remote_save_modal').modal('hide')
-    $('#local_save_modal').modal('show')
-  }
-
-export function handle_local_save() {
-    let key = $('#local_save_key').val()
-    if (key == "") {
-      _warning("No name given, so not saved")
-    } else {
-      local_save(PREFIX + key, getScriptAsObject())
-      $('#local_save_modal').modal('hide')
-      _saved(key)
-    }
-  }
-
-  function local_save(key, _script) {
-    localStorage.setItem(key, JSON.stringify({
+  function save_autosave(_script) {
+    localStorage.setItem(AUTOSAVE, JSON.stringify({
       deploy: _deploy,
-      filename: $('#local_save_key').val(),
+      filename: $('#remote_save_key').val(),
       script: _script
     }))
   }
@@ -940,22 +896,12 @@ export function handle_load() {
     _remote_load_list()
   }
 
-export function handle_remote_to_local_load() {
-    _local_load_list()
-    $('#remote_load_modal').modal('hide')
-    $('#local_load_modal').modal('show')
-  }
-  
-export function local_load(key) {
-    let obj = JSON.parse(localStorage.getItem(key))
+export function load_autosave() {
+    let obj = JSON.parse(localStorage.getItem(AUTOSAVE))
     if (obj) {
-      loaded(obj, '#local_load_modal')
+      loaded(obj)
     } else {
-      if (key == AUTOSAVE) {
         _warning('No Autosave...')
-      } else {
-        _warning("Failed to load local")
-      }
     }
   }
   
@@ -966,17 +912,11 @@ export function remote_load(index) {
         script : JSON.parse(success.script),
         filename : _remote_list[index]
       }
-      loaded(script, '#remote_load_modal')
+      $('#remote_load_modal').modal('hide')
+      loaded(script)
     }, (fail) => {
         alert('Failed to find script')
   })
-  }
-
-export function local_delete(key) {
-    if (confirm("Delete forever '" + key + "'?")) {
-      localStorage.removeItem(key)
-      _local_load_list()
-    }
   }
 
 export function remote_delete(index) {
@@ -1002,20 +942,17 @@ export function handle_clear() {
   let old_object = getScriptAsObject()
   let old_deploy = _deploy
   let old_filename = document.getElementById("file_name").innerHTML
-  let old_local_save_key = document.getElementById("local_save_key").value
   let old_remote_save_key = document.getElementById("remote_save_key").value
   undo.reset() // clears all old undo/redo
   let _undo = () => {
     showObject(old_object)
     _deploy = old_deploy
     document.getElementById("file_name").innerHTML = old_filename
-    document.getElementById("local_save_key").value = old_local_save_key 
     document.getElementById("remote_save_key").value = old_remote_save_key 
   }
   let _redo = () => {
     _deploy = ''
     document.getElementById("file_name").innerHTML = '[no file]'
-    document.getElementById("local_save_key").value = ''
     document.getElementById("remote_save_key").value = ''
     showObject()
   }

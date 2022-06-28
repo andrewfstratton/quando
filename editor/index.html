@@ -92,7 +92,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</span></button>
-                    <h4 class="modal-title">Load from local server</h4>
+                    <h4 class="modal-title">Load from server</h4>
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
@@ -101,50 +101,7 @@
                     </div>
                 </div>
                 <div class="modal-footer" data-position="fixed">
-                    <button type="button" class="btn btn-primary" onclick='index.handle_remote_to_local_load()'>Browser Files</button>
                     <button type="button" class="btn" data-dismiss="modal">Cancel</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="modal fade" id="local_load_modal" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">Load from Browser</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <div class="list-group" id="local_load_list">
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn" data-dismiss="modal">Cancel</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="modal fade" id="local_save_modal" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">Save</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label>Save to local/browser storage</label>
-                    </div>
-                    <div class="form-group">
-                        <label for="local_save_key">Key</label>
-                        <input type="text" class="form-control" id="local_save_key">
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" onclick='index.handle_local_save()'>Save</button>
-                    <button type="button" class="btn" onclick='' data-dismiss="modal">Cancel</button>
                 </div>
             </div>
         </div>
@@ -167,7 +124,6 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" onclick='index.handle_remote_save()'>Save</button>
-                    <button type="button" class="btn btn-primary" onclick='index.handle_remote_to_local_save()'>Browser Files</button>
                     <button type="button" class="btn" onclick='' data-dismiss="modal">Cancel</button>
                 </div>
             </div>
