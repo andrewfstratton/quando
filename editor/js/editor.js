@@ -9,7 +9,6 @@ export { _undo as undo, _redo as redo } // this allows html/bootstrap button bin
 let _deploy = 'test'
 let _remote_list = []
 const AUTOSAVE = 'quandoAutosave' // used for key to save/load to/from browser
-const PREFIX = 'quando_' // used for key to save/load to/from browser
 export let client_script = ""
 const QUANDO_DISABLED = 'quando-disabled';
 const POSIX_FILENAME_REGEXP = /^[a-zA-Z0-9\-_.]+$/

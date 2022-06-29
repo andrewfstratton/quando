@@ -104,6 +104,7 @@ export function addObjectToElement (obj, elem, setElementHandlers=null) {
               if (text) {
                 text.value = key + " = " + block.values[key]
               }
+              setElementHandlers(error_elem)
             }
             console.log("Failed to set block '" + block.block_type + "', key '" + key + "' to:")
             console.log(block.values[key])
