@@ -170,16 +170,14 @@ func handleMessage(msg string) {
 }
 
 func CheckMessages() {
-	go func() {
-		for {
-			response := device.GetLine()
-			if response == "" {
-				time.Sleep(100 * time.Millisecond)
-			} else {
-				handleMessage(response)
-			}
+	for {
+		response := device.GetLine()
+		if response == "" {
+			time.Sleep(100 * time.Millisecond)
+		} else {
+			handleMessage(response)
 		}
-	}()
+	}
 }
 
 func init() {
