@@ -73,6 +73,9 @@ function _handleWebSocketmessage(e) {
     case 'ubit':
       self.ubit.handle_message(message)
       break
+    case 'system':
+      self.system.handle_message(message)
+      break
   }
 }
 
