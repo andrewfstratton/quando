@@ -1,6 +1,6 @@
 import * as destructor from "./destructor.js";
 
-let quando = window.quando
+let quando = window['quando']
 if (!quando) {
   alert('Fatal Error: system must be included after client.js')
 }

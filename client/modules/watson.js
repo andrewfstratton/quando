@@ -162,7 +162,7 @@
         div.innerHTML = "Stop listening..."
         recording = true
       } else {
-        quando.send_message('rec stop')
+        quando.message.send('rec stop')
         recording = false
         mediaRecorder.stop()
         div.innerHTML = "Working..."

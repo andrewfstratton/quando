@@ -9,40 +9,6 @@ let idle_reset_ms = 0
 let idle_callback_id = 0
 let _displays = new Map()
 let _current_display_id = -1 // to avoid being equal by accident to 0
-let io_protocol = "ws"
-let port = window.location.port
-let message_callback = {}
-let message_callback_id = 0
-let socket = false
-
-if (['wss:','https:'].includes(window.location.protocol)) {
-  io_protocol += "s"
-  if (port == 443) {
-    port = ''
-  }
-} else if (port == 80) {
-  port = ''
-}
-if (port != '') {
-  port = ":" + port
-}
-
-function _connectWebSocket() {
-  let ws = new WebSocket(io_protocol + '://' + window.location.hostname + port + "/ws/")
-
-  ws.onclose = (e) => {
-    console.log("reconnecting")
-    socket = false
-    setTimeout(_connectWebSocket, 1000)
-  }
-  ws.onerror = (e) => {
-    console.log("error:"+e)
-    ws.close(e)
-  }
-  ws.onmessage = _handleWebSocketmessage
-  socket = ws
-}
-_connectWebSocket()
 
   function _displayWidth() {
     return window.innerWidth
@@ -52,49 +18,6 @@ _connectWebSocket()
     return window.innerHeight
   }
 
-function _handleWebSocketmessage(e) {
-  const message = JSON.parse(e.data)
-
-  // console.log("message received: " + JSON.stringify(message))
-  switch (message.type) {
-    case 'deploy':
-      let locStr = decodeURIComponent(window.location.href)
-      if (locStr.endsWith(message.scriptname + ".html")) {
-        window.location.reload(true) // nocache reload - probably not necessary
-      }
-      break
-    case 'message':
-      Object.values(message_callback).forEach(item => {
-        if (item.message == message.message) {
-          item.callback(message.val)
-        }
-      })
-      break
-    case 'ubit':
-      self.ubit.handle_message(message)
-      break
-    case 'system':
-      self.system.handle_message(message)
-      break
-  }
-}
-
-
-  self.add_message_handler = (message, callback) => {
-    let message_id = message_callback_id++
-    message_callback[message_id] = {"message":message, "callback":callback}
-    destructor.add( () => {
-      delete message_callback[message_id]
-    })
-  }
-
-  self.send_message = (message, val, host='', type='broadcast') => {
-    if (socket) {
-      socket.send(JSON.stringify({ 
-        'type':'message', 'message':message, 'val':val, 'host':host, 'local':type == 'local'
-      }))
-    }
-  }
 
   self.idle_reset = function () {
     if (idle_reset_ms > 0) {

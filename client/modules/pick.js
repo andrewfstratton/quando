@@ -74,7 +74,7 @@ self.one = (block_id, message, next, val, txt) => {
   }
 
   if (message.length) {
-    quando.add_message_handler(message, () => self.reset(block_id))
+    quando.message.add_handler(message, () => self.reset(block_id))
   }
 }
 

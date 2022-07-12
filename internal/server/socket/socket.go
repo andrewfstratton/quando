@@ -11,6 +11,7 @@ type messageJSON struct {
 	Type       string  `json:"type,omitempty"`
 	Message    string  `json:"message,omitempty"`
 	Val        float64 `json:"val,omitempty"`
+	Txt        string  `json:"txt,omitempty"`
 	Host       string  `json:"host,omitempty"`
 	Local      bool    `json:"local,omitempty"`
 	Scriptname string  `json:"scriptname,omitempty"`
