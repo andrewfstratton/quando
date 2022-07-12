@@ -1,4 +1,4 @@
-const quando = window['quando']
+let quando = window['quando']
 if (!quando) {
     alert('Fatal Error: media must be included after quando_browser')
 }

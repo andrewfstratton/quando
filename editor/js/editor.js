@@ -594,7 +594,7 @@ function _setupDragula() {
       accept = false
     } else { // satisfy the valid check
       let limited = elem.dataset.quandoDropValid
-      if (limited != undefined) {
+      if (limited !== undefined) {
         accept = false // assume rejecting for now...
         if (limited != "") { // i.e. can't be dropped in anything...
           let parent_block = _getParentBlock(target)
