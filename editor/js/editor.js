@@ -896,13 +896,13 @@ export function handle_load() {
   }
 
 export function load_autosave() {
-    let obj = JSON.parse(localStorage.getItem(AUTOSAVE))
-    if (obj) {
-      loaded(obj)
-    } else {
-        _warning('No Autosave...')
-    }
+  let obj = JSON.parse(localStorage.getItem(AUTOSAVE))
+  if (obj) {
+    loaded(obj)
+  } else {
+      _warning('No Autosave...')
   }
+}
   
 export function remote_load(index) {
   common.Get('/scripts/' + _remote_list[index],
@@ -916,7 +916,7 @@ export function remote_load(index) {
     }, (fail) => {
         alert('Failed to find script')
   })
-  }
+}
 
 export function remote_delete(index) {
     if (confirm("Delete forever '" + _remote_list[index] + "' ?")) {
