@@ -132,7 +132,7 @@
 
 
 <div data-quando-block-type="media-show-object3d" class="quando-block" data-quando-id="true"
-    data-quando-javascript="quando.object3d.loadGLTF('${file_name}', ${fixed})">
+    data-quando-javascript="quando.object3d.loadObject('${file_name}', ${fixed})">
     <div class="quando-left quando-media"></div>
     <div class="quando-right">
         <div class="quando-row quando-media">
@@ -146,13 +146,28 @@
         </div>
     </div>
 </div>
+<!-- <div data-quando-block-type="media-show-object3d" class="quando-block" data-quando-id="true"
+        data-quando-javascript="quando.object3d.loadGLTF('${file_name}', ${fixed})">
+    <div class="quando-left quando-media"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-media">
+            🎁 Show 3D
+            <select data-quando-name='fixed' class='quando-toggle'>
+                <option value='false'>Object</option>
+                <option value='true'>Scene</option>
+            </select>
+            <input data-quando-media="objects" data-quando-name="file_name" type="text" readonly="true" value=""
+                data-quando-encode="normal" />
+        </div>
+    </div>
+</div> -->
 
 <div data-quando-block-type="media-show-volume3d" class="quando-block" data-quando-id="true"
     data-quando-javascript="quando.object3d.loadVolume('${file_name}', '${default_iso}', '${pulse}', '${mask_file_name}')">
     <div class="quando-left quando-media"></div>
     <div class="quando-right">
         <div class="quando-row quando-media">
-            🎁 Show 3D Volume
+            🎁 Show 3D Volume ADVANCED
             <input data-quando-media="objects" data-quando-name="file_name" type="text" readonly="true" value=""
                     data-quando-encode="normal" />
                 <select data-quando-name='extras' class='quando-toggle'>
@@ -174,7 +189,6 @@
         </div>
     </div>
 </div>
-
 
 
 <div data-quando-block-type="media-speech" class="quando-block"

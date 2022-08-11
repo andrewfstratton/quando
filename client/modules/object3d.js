@@ -180,23 +180,9 @@ function _setup_scene_for_volume(vol_mesh) {
                 camZ = 1000;
             }
             if (!ortho) camera = new THREE.PerspectiveCamera(90, aspect, 0.1, 10000 )
-            
-
-            // // debug GUI
-            const gui = new GUI()
-            // const CLIM_MAX = 2048;
-            const CLIM_MAX = 204800;
-            const ISO_MAX = 100000;
-            // The gui for volume interaction
-            gui.add( volumeConfig, 'clim1', 0, CLIM_MAX, 0.01 ).onChange( _updateUniforms )
-            gui.add( volumeConfig, 'clim2', 0, CLIM_MAX, 0.01 ).onChange( _updateUniforms )
-            gui.add( volumeConfig, 'mask_clim1', 0, CLIM_MAX, 0.01 ).onChange( _updateUniforms )
-            gui.add( volumeConfig, 'mask_clim2', 0, CLIM_MAX, 0.01 ).onChange( _updateUniforms )
-            gui.add( volumeConfig, 'mixamount', 0.0, 1.0, 0.01 ).onChange( _updateUniforms )
-            gui.add( volumeConfig, 'colormap', { gray: 'gray', viridis: 'viridis' } ).onChange( _updateUniforms )
-            gui.add( volumeConfig, 'renderstyle', { mip: 'mip', iso: 'iso' } ).onChange( _updateUniforms ) 
-            gui.add( volumeConfig, 'isothreshold', 0, ISO_MAX, 0.01 ).onChange( _updateUniforms )
         }
+
+        _showGUI()
 
         // set camera to look at volume center
         let vol_center = _get_object3D_center(vol_mesh)
@@ -206,6 +192,22 @@ function _setup_scene_for_volume(vol_mesh) {
         
         resolve(vol_center)
     })
+}
+
+const _showGUI = () => {
+    const gui = new GUI()
+    const CLIM_MAX = 204800;
+    const ISO_MAX = 100000;
+    // The gui for volume interaction
+    gui.add( volumeConfig, 'clim1', 0, CLIM_MAX, 0.01 ).onChange( _updateUniforms )
+    gui.add( volumeConfig, 'clim2', 0, CLIM_MAX, 0.01 ).onChange( _updateUniforms )
+    gui.add( volumeConfig, 'mask_clim1', 0, CLIM_MAX, 0.01 ).onChange( _updateUniforms )
+    gui.add( volumeConfig, 'mask_clim2', 0, CLIM_MAX, 0.01 ).onChange( _updateUniforms )
+    gui.add( volumeConfig, 'mixamount', 0.0, 1.0, 0.01 ).onChange( _updateUniforms )
+    gui.add( volumeConfig, 'colormap', { gray: 'gray', viridis: 'viridis' } ).onChange( _updateUniforms )
+    gui.add( volumeConfig, 'mask_colormap', { gray: 'gray', viridis: 'viridis' } ).onChange( _updateUniforms )
+    gui.add( volumeConfig, 'renderstyle', { mip: 'mip', iso: 'iso' } ).onChange( _updateUniforms ) 
+    gui.add( volumeConfig, 'isothreshold', 0, ISO_MAX, 0.01 ).onChange( _updateUniforms )
 }
 
 let isoOffset;
@@ -355,6 +357,13 @@ self.loadGLTF = function(filename, fixed=false) {
     }
 }
 
+self.loadObject = (filename, fixed) => {
+    if (filename.includes(".gltf")) return self.loadGLTF(filename, fixed)
+    if (filename.includes(".nrrd")) return self.loadVolume(filename, 100, false, '')
+    // as fallback assume gltf
+    return self.loadGLTF(filename, fixed)
+}
+
 self.loadVolume = async function(filename, defaultIso, pulseRequired = false, maskFilename) {
     if (!filename) return _clear_volume()
     filename = '/media/' + encodeURI(filename)
@@ -406,7 +415,17 @@ self.loadVolume = async function(filename, defaultIso, pulseRequired = false, ma
                 const shader = VolumeRenderShader1 
                 const uniforms = THREE.UniformsUtils.clone( shader.uniforms ) 
                 // init the shader uniforms, (i.e. variables) 
-                volumeConfig = { clim1: 0, clim2: 1024, mask_clim1: 0, mask_clim2: 1024, mixamount: 0.42, renderstyle: 'iso', isothreshold: Number(defaultIso), colormap: 'gray' } 
+                volumeConfig = { 
+                    clim1: 0, 
+                    clim2: 1024, 
+                    mask_clim1: 0, 
+                    mask_clim2: 1024,
+                    mixamount: 0.42, 
+                    renderstyle: 'iso', 
+                    isothreshold: Number(defaultIso), 
+                    colormap: 'gray',
+                    mask_colormap: 'gray',
+                } 
                 uniforms[ 'u_data' ].value = mainTexture 
                 uniforms[ 'u_mask_data' ].value = maskTexture 
                 uniforms[ 'u_size' ].value.set( volume.xLength, volume.yLength, volume.zLength ) 
@@ -416,6 +435,7 @@ self.loadVolume = async function(filename, defaultIso, pulseRequired = false, ma
                 uniforms[ 'u_renderstyle' ].value = volumeConfig.renderstyle == 'mip' ? 0 : 1  // 0: MIP, 1: ISO
                 uniforms[ 'u_renderthreshold' ].value = volumeConfig.isothreshold  // For ISO renderstyle
                 uniforms[ 'u_cmdata' ].value = colourMapTextures[ volumeConfig.colormap ] 
+                uniforms[ 'u_mask_cmdata' ].value = colourMapTextures[ volumeConfig.mask_colormap ] 
                 // create material
                 material = new THREE.ShaderMaterial({
                     uniforms: uniforms,
@@ -464,7 +484,17 @@ self.loadVolume = async function(filename, defaultIso, pulseRequired = false, ma
             const shader = VolumeRenderShader1 
             const uniforms = THREE.UniformsUtils.clone( shader.uniforms ) 
             // init the shader uniforms, (i.e. variables) 
-            volumeConfig = { clim1: 0, clim2: 1024, mask_clim1: 0, mask_clim2: 1024, mixamount: 0.42, renderstyle: 'iso', isothreshold: Number(defaultIso), colormap: 'gray' } 
+                volumeConfig = { 
+                    clim1: 0, 
+                    clim2: 1024, 
+                    mask_clim1: 0, 
+                    mask_clim2: 1024,
+                    mixamount: 0.42, 
+                    renderstyle: 'iso', 
+                    isothreshold: Number(defaultIso), 
+                    colormap: 'gray',
+                    mask_colormap: 'gray',
+                } 
             uniforms[ 'u_data' ].value = texture 
             uniforms[ 'u_size' ].value.set( volume.xLength, volume.yLength, volume.zLength ) 
             uniforms[ 'u_mask_clim' ].value.set( volumeConfig.mask_clim1, volumeConfig.mask_clim2 ) 
@@ -472,7 +502,8 @@ self.loadVolume = async function(filename, defaultIso, pulseRequired = false, ma
             uniforms[ 'u_mixamount' ].value = volumeConfig.mixamount
             uniforms[ 'u_renderstyle' ].value = volumeConfig.renderstyle == 'mip' ? 0 : 1  // 0: MIP, 1: ISO
             uniforms[ 'u_renderthreshold' ].value = volumeConfig.isothreshold  // For ISO renderstyle
-            uniforms[ 'u_cmdata' ].value = colourMapTextures[ volumeConfig.colormap ] 
+            uniforms[ 'u_mask_cmdata' ].value = colourMapTextures[ volumeConfig.colormap ] 
+            uniforms[ 'u_cmdata' ].value = colourMapTextures[ volumeConfig.mask_colormap ] 
             // create material
             material = new THREE.ShaderMaterial({
                 uniforms: uniforms,
@@ -502,6 +533,7 @@ function _updateUniforms() {
     material.uniforms[ 'u_renderstyle' ].value = volumeConfig.renderstyle == 'mip' ? 0 : 1  // 0: MIP, 1: ISO
     material.uniforms[ 'u_renderthreshold' ].value = volumeConfig.isothreshold  // For ISO renderstyle
     material.uniforms[ 'u_cmdata' ].value = colourMapTextures[ volumeConfig.colormap ] 
+    material.uniforms[ 'u_mask_cmdata' ].value = colourMapTextures[ volumeConfig.mask_colormap ] 
 
     _update_scene() 
 }
@@ -536,7 +568,8 @@ const VolumeRenderShader1 = {
         'u_mixamount' : { value: 0.42 },
 		'u_data': { value: null },
 		'u_mask_data': { value: null },
-		'u_cmdata': { value: null }
+		'u_cmdata': { value: null },
+		'u_mask_cmdata': { value: null },
 	},
 
 	vertexShader: /* glsl */`
@@ -584,6 +617,7 @@ const VolumeRenderShader1 = {
         uniform sampler3D u_data;
         uniform sampler3D u_mask_data;
         uniform sampler2D u_cmdata;
+        uniform sampler2D u_mask_cmdata;
 
         varying vec3 v_position;
         varying vec4 v_nearpos;
@@ -669,7 +703,7 @@ const VolumeRenderShader1 = {
         }
         vec4 apply_mask_colormap(float val) {
             val = (val - u_mask_clim[0]) / (u_mask_clim[1] - u_mask_clim[0]);
-            return texture2D(u_cmdata, vec2(val, 0.5));
+            return texture2D(u_mask_cmdata, vec2(val, 0.5));
         }
 
 
