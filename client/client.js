@@ -8,7 +8,9 @@ let self = window.quando = {}
 let idle_reset_ms = 0
 let idle_callback_id = 0
 let _displays = new Map()
-let _current_display_id = -1 // to avoid being equal by accident to 0
+let _current_display = {
+  id: -1, // to avoid being equal by accident to 0
+}
 let io_protocol = "ws"
 let port = window.location.port
 let message_callback = {}
@@ -286,8 +288,9 @@ function _handleWebSocketmessage(e) {
     _set_or_append_tag_text(txt, 'quando_text', append)
   }
 
-  self.display = function (key, fn) { // Yes this is all of it...
-    _displays.set(key, fn)
+  self.display = function (key, fn, options = { animation: "fadeInOut" }) {
+    // Yes this is all of it...
+    _displays.set(key, {fn, options})
   }
 
   self._removeFocus = function () {
@@ -339,7 +342,7 @@ function _handleWebSocketmessage(e) {
   }
 
   self.showDisplay = function (id) {
-    if (_current_display_id != id) {
+    if (_current_display.id != id) {
       // perform any destructors - which will cancel pending events, etc.
       // assumes that display is unique...
       destructor.destroy()
@@ -347,13 +350,26 @@ function _handleWebSocketmessage(e) {
       document.getElementById('quando_labels').innerHTML = ''
       self.title()
       self.text()
-      //clear AR 
-  //    quando.ar.clear()
-  //        self.video() removed to make sure video can continue playing between displays
+      // clear AR 
+      // quando.ar.clear()
+      // self.video() removed to make sure video can continue playing between displays
       self.style.reset()
-      _current_display_id = id
+      _current_display.id = id
       // Find display and execute...
-      _displays.get(id)()
+      if (_displays.get(id).options.animation) {
+        const containerElem =  document.getElementById("container")
+        // animate out
+        containerElem.classList.add("fadeOut")
+        setTimeout(() => {
+          _displays.get(id).fn()
+          setTimeout(() => {
+            // animate in
+            containerElem.classList.remove("fadeOut")
+          }, 1000);
+        }, 1250)
+      } else {
+        _displays.get(id).fn()
+      }
     }
   }
 
