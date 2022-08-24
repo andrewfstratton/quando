@@ -1,13 +1,12 @@
 import * as THREE from 'three'
+import {
+	Vector2,
+	Vector3
+} from 'three'
 
 import { GUI } from 'https://unpkg.com/three@0.139.2/examples/jsm/libs/lil-gui.module.min.js'
 import { GLTFLoader } from 'https://unpkg.com/three@0.139.2/examples/jsm/loaders/GLTFLoader.js'
 import { NRRDLoader } from 'https://unpkg.com/three@0.139.2/examples/jsm/loaders/NRRDLoader.js'
-
-import {
-	Vector2,
-	Vector3
-} from 'three';
 
 let quando = window.quando
 if (!quando) alert('Fatal Error: object3d must be included after client.js')
@@ -26,7 +25,8 @@ let canvas = false
 
 // frame throttling variables
 let fps = 20
-let fpsInterval, now, then, elapsed, pulse
+let fpsInterval, now, then, elapsed
+let pulse = false
 // volume rendering variables
 let volume = false
 let volumeConfig, material, colourMapTextures
@@ -80,7 +80,19 @@ self.clear = function() {
 function _update_object(update, object) {
     if (object) {
         if (update) {
-            if (update.z) { object.position.z = update.z; delete update.z }
+            if (update.zoom) { object.position.z = update.zoom; delete update.zoom }
+            if (update.scaleZ) { 
+                object.scale.set(object.scale.x, object.scale.y, update.scaleZ)
+                delete update.scaleZ
+            }
+            if (update.scaleX) { 
+                object.scale.set(update.scaleX, object.scale.y, object.scale.z)
+                delete update.scaleX
+            }
+            if (update.scaleY) { 
+                object.scale.set(object.scale.x, update.scaleY, object.scale.z)
+                delete update.scaleY
+            }
             if (update.y) { object.position.y = update.y; delete update.y }
             if (update.x) { object.position.x = update.x; delete update.x }
             if (update._roll) { object.rotation.z = update._roll; delete update._roll }
@@ -94,9 +106,21 @@ function _update_object(update, object) {
 function _update_volume(update, volume) {
     if (volume) {
         if (update) {
-            if (update.z) { 
-                volume.scale.setScalar(Math.max(0, 1 + (update.z / 100))); 
-                delete update.z;
+            if (update.zoom) {
+                volume.scale.setScalar(Math.max(0, 1 + (update.zoom / 100)))
+                delete update.zoom
+            }
+            if (update.scaleZ) { 
+                volume.scale.set(volume.scale.x, volume.scale.y, update.scaleZ)
+                delete update.scaleZ
+            }
+            if (update.scaleX) { 
+                volume.scale.set(update.scaleX, volume.scale.y, volume.scale.z)
+                delete update.scaleX
+            }
+            if (update.scaleY) { 
+                volume.scale.set(volume.scale.x, update.scaleY, volume.scale.z)
+                delete update.scaleY
             }
             if (update.y) { volume.position.y = update.y; delete update.y }
             if (update.x) { volume.position.x = update.x; delete update.x }
@@ -223,7 +247,7 @@ function _update_scene(newTime) {
     _update_object(update_object, object)
     _update_object(update_fixed, fixed)
     _update_volume(update_object, volume)
-    if (pulse !== "false") _pulseIso(newTime)
+    if (pulse === "true") _pulseIso(newTime)
 
     // throttle rerenders to specific fps value
     now = newTime 
@@ -281,7 +305,7 @@ function _add_volume(vol_mesh) {
 self.in_out = (val, mid, range, inverted, fixed=false) => {
     var buffered = fixed?update_fixed:update_object
     mid *= 10; range *= 10 // convert to mm
-    buffered.z = quando.convert_linear(val, mid, range, inverted)
+    buffered.zoom = quando.convert_linear(val, mid, range, inverted)
 }
 
 self.left_right = (val, mid, range, inverted, fixed=false) => {
@@ -310,6 +334,26 @@ self.pitch = function (val, mid, range, inverted, fixed=false) {
 self.yaw = function (val, mid, range, inverted, fixed=false) {
     var buffered = fixed?update_fixed:update_object
     buffered._yaw = quando.convert_angle(val, mid, range, inverted)
+}
+
+self.scale = function (val, axis, mid, range, inverted, fixed=false, pct) {
+    let buffered = fixed?update_fixed:update_object
+    switch (axis) {
+        case "x":
+            buffered.scaleX = quando.convert_linear(val, mid, range, inverted)
+            if (pct) buffered.scaleX = pct / 100
+            break;
+        case "y":
+            buffered.scaleY = quando.convert_linear(val, mid, range, inverted)
+            if (pct) buffered.scaleY = pct / 100
+            break;
+        case "z":
+            buffered.z = quando.convert_linear(val, mid, range, inverted)
+            if (pct) buffered.z = pct / 100
+            break;
+        default:
+            break;
+    }
 }
 
 function _load_obj(loader, path, obj) {

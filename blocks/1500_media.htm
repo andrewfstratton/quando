@@ -417,7 +417,46 @@
 </div>
 
 
-<div data-quando-block-type="media-move-object3d" class="quando-block" data-quando-javascript="quando.object3d.${direction}(val, ${mid}, ${range}, ${inverted}, ${fixed})">
+<div data-quando-block-type="media-move-object3d" class="quando-block" data-quando-javascript="quando.object3d.scale(val, '${direction}', ${mid}, ${range}, ${inverted}, ${fixed}, ${pct})">
+    <div class="quando-left quando-media"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-media">
+            ⚡🎁 Scale 3D 
+            <select data-quando-name='fixed' class='quando-toggle'>
+                <option value='false'>Object</option>
+                <option value='true'>Scene</option>
+            </select>
+            <select data-quando-name="direction">
+                <option value='x'>⇔</option>
+                <option value='y'>⇕</option>
+                <option value='z'>🔍</option>
+            </select>
+            &nbsp;
+            <select data-quando-name='extras' class='quando-toggle'>
+                <option value='hidden'>+</option>
+                <option value='show'>-</option>
+            </select>
+            <span data-quando-toggle='extras=show'>
+                <br />
+                <input data-quando-name="pct" type="number" value="100"
+                    style='width: 4em' min='0' max='100' data-quando-encode='normal'/>
+                %
+                <input data-quando-name="mid" type="number" value="0"
+                    style='width: 4em' min='0' max='100' data-quando-encode='normal'/>
+                cm ±
+                <input data-quando-name="range" type="number" value="5"
+                    style='width: 4em' min='1' max='100' data-quando-encode='normal'/>
+                cm
+                <select data-quando-name='inverted' class='quando-toggle'>
+                    <option value='false'>Normal</option>
+                    <option value='true'>Inverted</option>
+                </select>
+            </span>
+        </div>
+    </div>
+</div>
+
+<div data-quando-block-type="media-scale-object3d" class="quando-block" data-quando-javascript="quando.object3d.${direction}(val, ${mid}, ${range}, ${inverted}, ${fixed})">
     <div class="quando-left quando-media"></div>
     <div class="quando-right">
         <div class="quando-row quando-media">
@@ -452,7 +491,6 @@
         </div>
     </div>
 </div>
-
 
 <div data-quando-block-type="media-wave-frequency" class="quando-block" data-quando-javascript="quando.media.wave_frequency(${min},${max},${channel},val)">
     <div class="quando-left quando-media"></div>
