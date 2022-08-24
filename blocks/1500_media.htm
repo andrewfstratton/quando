@@ -163,7 +163,7 @@
 </div> -->
 
 <div data-quando-block-type="media-show-volume3d" class="quando-block" data-quando-id="true"
-    data-quando-javascript="quando.object3d.loadVolume('${file_name}', '${default_iso}', '${pulse}', '${mask_file_name}')">
+    data-quando-javascript="quando.object3d.loadVolume('${file_name}', ${default_iso}, '${pulse}', '${mask_file_name}', ${clim1}, ${clim2}, ${mask_clim1}, ${mask_clim2}, ${mixamount}, '${renderstyle}', '${colormap}', '${mask_colormap}')">
     <div class="quando-left quando-media"></div>
     <div class="quando-right">
         <div class="quando-row quando-media">
@@ -175,16 +175,55 @@
                     <option value='show'>-</option>
                 </select>
                 <span data-quando-toggle='extras=show'><br />
-                    default iso&nbsp;
-                    <input data-quando-name='default_iso' type='number' value='100' placeholder=''
-                        style='width: 4em' min='0.01' max='1000' data-quando-encode='normal'/>
-                    &nbsp;
                     <select data-quando-name='pulse' class='quando-toggle'>
                         <option value='false'>no pulse</option>
                         <option value='true'>pulse</option>
                     </select>
                     <input placeholder="mask data" data-quando-media="objects" data-quando-name="mask_file_name" type="text" readonly="true" value=""
                             data-quando-encode="normal" />
+                    <br/>
+                    default iso&nbsp;
+                    <input data-quando-name='default_iso' type='number' value='100' placeholder=''
+                        style='width: 4em' min='0.01' max='1000' data-quando-encode='normal'/>
+                    &nbsp;
+                    <br/>
+                    lower colour limit&nbsp;
+                    <input data-quando-name='clim1' type='number' value='0' placeholder=''
+                        style='width: 4em' min='0.01' max='150000' data-quando-encode='normal'/>
+                    &nbsp;
+                    upper colour limit&nbsp;
+                    <input data-quando-name='clim2' type='number' value='1024' placeholder=''
+                        style='width: 4em' min='0.01' max='150000' data-quando-encode='normal'/>
+                    &nbsp;
+                    <br/>
+                    mask lower colour limit&nbsp;
+                    <input data-quando-name='mask_clim1' type='number' value='0' placeholder=''
+                        style='width: 4em' min='0.01' max='150000' data-quando-encode='normal'/>
+                    &nbsp;
+                    mask upper colour limit&nbsp;
+                    <input data-quando-name='mask_clim2' type='number' value='1024' placeholder=''
+                        style='width: 4em' min='0.01' max='150000' data-quando-encode='normal'/>
+                    &nbsp;
+                    <br/>
+                    mix amount&nbsp;
+                    <input data-quando-name='mixamount' type='number' value='0.42' placeholder=''
+                        style='width: 4em' min='0.01' max='150000' data-quando-encode='normal'/>
+                    render method&nbsp;
+                    <select data-quando-name='renderstyle' class='quando-toggle'>
+                        <option value='mip'>mip</option>
+                        <option value='iso'>iso</option>
+                    </select>
+                    <br/>
+                    colour map&nbsp;
+                    <select data-quando-name='colormap' class='quando-toggle'>
+                        <option value='gray'>gray</option>
+                        <option value='viridis'>viridis</option>
+                    </select>
+                    mask colour map&nbsp;
+                    <select data-quando-name='mask_colormap' class='quando-toggle'>
+                        <option value='gray'>gray</option>
+                        <option value='viridis'>viridis</option>
+                    </select>
                 </span>
         </div>
     </div>

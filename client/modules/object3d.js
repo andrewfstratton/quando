@@ -408,7 +408,14 @@ self.loadObject = (filename, fixed) => {
     return self.loadGLTF(filename, fixed)
 }
 
-self.loadVolume = async function(filename, defaultIso, pulseRequired = false, maskFilename) {
+self.loadVolume = async function(filename, defaultIso, pulseRequired = false, 
+        maskFilename, 
+        clim1, clim2,
+        mask_clim1, mask_clim2,
+        mixamount,
+        renderstyle,
+        colormap, mask_colormap
+) {
     if (!filename) return _clear_volume()
     filename = '/media/' + encodeURI(filename)
     if (maskFilename.length > 0) maskFilename = '/media/' + encodeURI(maskFilename)
@@ -460,15 +467,15 @@ self.loadVolume = async function(filename, defaultIso, pulseRequired = false, ma
                 const uniforms = THREE.UniformsUtils.clone( shader.uniforms ) 
                 // init the shader uniforms, (i.e. variables) 
                 volumeConfig = { 
-                    clim1: 0, 
-                    clim2: 1024, 
-                    mask_clim1: 0, 
-                    mask_clim2: 1024,
-                    mixamount: 0.42, 
-                    renderstyle: 'iso', 
-                    isothreshold: Number(defaultIso), 
-                    colormap: 'gray',
-                    mask_colormap: 'gray',
+                    clim1, 
+                    clim2, 
+                    mask_clim1, 
+                    mask_clim2,
+                    mixamount, 
+                    renderstyle, 
+                    isothreshold: defaultIso, 
+                    colormap,
+                    mask_colormap,
                 } 
                 uniforms[ 'u_data' ].value = mainTexture 
                 uniforms[ 'u_mask_data' ].value = maskTexture 
@@ -476,7 +483,7 @@ self.loadVolume = async function(filename, defaultIso, pulseRequired = false, ma
                 uniforms[ 'u_clim' ].value.set( volumeConfig.clim1, volumeConfig.clim2 ) 
                 uniforms[ 'u_mask_clim' ].value.set( volumeConfig.mask_clim1, volumeConfig.mask_clim2 ) 
                 uniforms[ 'u_mixamount' ].value = volumeConfig.mixamount
-                uniforms[ 'u_renderstyle' ].value = volumeConfig.renderstyle == 'mip' ? 0 : 1  // 0: MIP, 1: ISO
+                uniforms[ 'u_renderstyle' ].value = volumeConfig.renderstyle === 'mip' ? 0 : 1  // 0: MIP, 1: ISO
                 uniforms[ 'u_renderthreshold' ].value = volumeConfig.isothreshold  // For ISO renderstyle
                 uniforms[ 'u_cmdata' ].value = colourMapTextures[ volumeConfig.colormap ] 
                 uniforms[ 'u_mask_cmdata' ].value = colourMapTextures[ volumeConfig.mask_colormap ] 
@@ -528,23 +535,23 @@ self.loadVolume = async function(filename, defaultIso, pulseRequired = false, ma
             const shader = VolumeRenderShader1 
             const uniforms = THREE.UniformsUtils.clone( shader.uniforms ) 
             // init the shader uniforms, (i.e. variables) 
-                volumeConfig = { 
-                    clim1: 0, 
-                    clim2: 1024, 
-                    mask_clim1: 0, 
-                    mask_clim2: 1024,
-                    mixamount: 0.42, 
-                    renderstyle: 'iso', 
-                    isothreshold: Number(defaultIso), 
-                    colormap: 'gray',
-                    mask_colormap: 'gray',
-                } 
+            volumeConfig = { 
+                clim1, 
+                clim2, 
+                mask_clim1, 
+                mask_clim2,
+                mixamount, 
+                renderstyle, 
+                isothreshold: defaultIso, 
+                colormap,
+                mask_colormap,
+            } 
             uniforms[ 'u_data' ].value = texture 
             uniforms[ 'u_size' ].value.set( volume.xLength, volume.yLength, volume.zLength ) 
             uniforms[ 'u_mask_clim' ].value.set( volumeConfig.mask_clim1, volumeConfig.mask_clim2 ) 
             uniforms[ 'u_clim' ].value.set( volumeConfig.clim1, volumeConfig.clim2 ) 
             uniforms[ 'u_mixamount' ].value = volumeConfig.mixamount
-            uniforms[ 'u_renderstyle' ].value = volumeConfig.renderstyle == 'mip' ? 0 : 1  // 0: MIP, 1: ISO
+            uniforms[ 'u_renderstyle' ].value = volumeConfig.renderstyle === 'mip' ? 0 : 1  // 0: MIP, 1: ISO
             uniforms[ 'u_renderthreshold' ].value = volumeConfig.isothreshold  // For ISO renderstyle
             uniforms[ 'u_mask_cmdata' ].value = colourMapTextures[ volumeConfig.colormap ] 
             uniforms[ 'u_cmdata' ].value = colourMapTextures[ volumeConfig.mask_colormap ] 
