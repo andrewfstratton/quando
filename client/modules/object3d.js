@@ -80,7 +80,6 @@ self.clear = function() {
 function _update_object(update, object) {
     if (object) {
         if (update) {
-            if (update.zoom) { object.position.z = update.zoom; delete update.zoom }
             if (update.scaleZ) { 
                 object.scale.set(object.scale.x, object.scale.y, update.scaleZ)
                 delete update.scaleZ
@@ -92,6 +91,15 @@ function _update_object(update, object) {
             if (update.scaleY) { 
                 object.scale.set(object.scale.x, update.scaleY, object.scale.z)
                 delete update.scaleY
+            }
+            if (update.zoom) {
+                const zoomFactor = Math.max(0, 1 + (update.zoom / 100))
+                object.scale.set(
+                    object.scale.x * zoomFactor, 
+                    object.scale.y * zoomFactor, 
+                    object.scale.z * zoomFactor
+                )
+                delete update.zoom
             }
             if (update.y) { object.position.y = update.y; delete update.y }
             if (update.x) { object.position.x = update.x; delete update.x }
@@ -106,10 +114,6 @@ function _update_object(update, object) {
 function _update_volume(update, volume) {
     if (volume) {
         if (update) {
-            if (update.zoom) {
-                volume.scale.setScalar(Math.max(0, 1 + (update.zoom / 100)))
-                delete update.zoom
-            }
             if (update.scaleZ) { 
                 volume.scale.set(volume.scale.x, volume.scale.y, update.scaleZ)
                 delete update.scaleZ
@@ -121,6 +125,15 @@ function _update_volume(update, volume) {
             if (update.scaleY) { 
                 volume.scale.set(volume.scale.x, update.scaleY, volume.scale.z)
                 delete update.scaleY
+            }
+            if (update.zoom) {
+                const zoomFactor = Math.max(0, 1 + (update.zoom / 100))
+                volume.scale.set(
+                    volume.scale.x * zoomFactor, 
+                    volume.scale.y * zoomFactor, 
+                    volume.scale.z * zoomFactor
+                )
+                delete update.zoom
             }
             if (update.y) { volume.position.y = update.y; delete update.y }
             if (update.x) { volume.position.x = update.x; delete update.x }
@@ -176,7 +189,7 @@ function _get_object3D_center(obj) {
 }
 
 // TODO: rename promise to reflect its resolve data
-function _setup_scene_for_volume(vol_mesh) {
+function _setup_scene_for_volume(vol_mesh, showGUI) {
     return new Promise((resolve, reject) => {
 
         if (renderer === false) {
@@ -206,7 +219,7 @@ function _setup_scene_for_volume(vol_mesh) {
             if (!ortho) camera = new THREE.PerspectiveCamera(90, aspect, 0.1, 10000 )
         }
 
-        _showGUI()
+        if (showGUI) _showGUI()
 
         // set camera to look at volume center
         let vol_center = _get_object3D_center(vol_mesh)
@@ -220,7 +233,7 @@ function _setup_scene_for_volume(vol_mesh) {
 
 const _showGUI = () => {
     const gui = new GUI()
-    const CLIM_MAX = 204800;
+    const CLIM_MAX = 504800;
     const ISO_MAX = 100000;
     // The gui for volume interaction
     gui.add( volumeConfig, 'clim1', 0, CLIM_MAX, 0.01 ).onChange( _updateUniforms )
@@ -277,9 +290,9 @@ function _add_fixed_object(_fixed) {
     _update_scene()
 }
 
-function _add_volume(vol_mesh) {
+function _add_volume(vol_mesh, showGUI) {
     _clear_volume()
-    _setup_scene_for_volume(vol_mesh)
+    _setup_scene_for_volume(vol_mesh, showGUI)
         .then(vol_center => {
             // create parent empty for volume rotation
             let rotationParent = new THREE.Object3D()
@@ -403,18 +416,20 @@ self.loadGLTF = function(filename, fixed=false) {
 
 self.loadObject = (filename, fixed) => {
     if (filename.includes(".gltf")) return self.loadGLTF(filename, fixed)
-    if (filename.includes(".nrrd")) return self.loadVolume(filename, 100, false, '')
+    if (filename.includes(".nrrd")) return self.loadVolume(filename, true, 100, false, '')
     // as fallback assume gltf
     return self.loadGLTF(filename, fixed)
 }
 
-self.loadVolume = async function(filename, defaultIso, pulseRequired = false, 
-        maskFilename, 
-        clim1, clim2,
-        mask_clim1, mask_clim2,
-        mixamount,
-        renderstyle,
-        colormap, mask_colormap
+self.loadVolume = async function(
+    filename, showGUI, 
+    defaultIso, pulseRequired = false, 
+    maskFilename, 
+    clim1, clim2,
+    mask_clim1, mask_clim2,
+    mixamount,
+    renderstyle,
+    colormap, mask_colormap,
 ) {
     if (!filename) return _clear_volume()
     filename = '/media/' + encodeURI(filename)
@@ -500,7 +515,7 @@ self.loadVolume = async function(filename, defaultIso, pulseRequired = false,
                 // assign material to geometry
                 const mesh = new THREE.Mesh( geometry, material )
                 // add to scene
-                _add_volume(mesh) 
+                _add_volume(mesh, showGUI) 
             }, progress => {}, err => console.log("Error loading NRRD:", err)) 
         }, progress => {}, err => console.log("Error loading mask:", err)) 
     } else {
@@ -568,7 +583,7 @@ self.loadVolume = async function(filename, defaultIso, pulseRequired = false,
             // assign material to geometry
             const mesh = new THREE.Mesh( geometry, material )
             // add to scene
-            _add_volume(mesh) 
+            _add_volume(mesh, showGUI) 
         }, progress => {}, err => console.log("Error loading NRRD:", err)) 
     }
 }
