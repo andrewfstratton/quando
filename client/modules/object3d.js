@@ -16,6 +16,7 @@ self.width = window.innerWidth
 self.height = window.innerHeight
 let scene = false
 let renderer = false
+let last_renderer_type = ""
 let camera = false
 let camZ = 300
 let object = false
@@ -51,12 +52,6 @@ function _clear_volume() {
     if (volume) {
         scene.remove(volume)
         volume = false
-        // scene = false
-        // renderer = false
-        // camera = false
-        // object = false
-        // animation_id = false 
-        // canvas = false
     }
 }
 function _clear_canvas() {
@@ -75,11 +70,13 @@ self.clear = function() {
     _clear_volume()
     _clear_fixed()
     _clear_canvas()
+    renderer = false
 }
 
 function _update_object(update, object) {
     if (object) {
         if (update) {
+            console.log("update", update)
             if (update.scaleZ) { 
                 object.scale.set(object.scale.x, object.scale.y, update.scaleZ)
                 delete update.scaleZ
@@ -92,17 +89,9 @@ function _update_object(update, object) {
                 object.scale.set(object.scale.x, update.scaleY, object.scale.z)
                 delete update.scaleY
             }
-            if (update.zoom) {
-                const zoomFactor = Math.max(0, 1 + (update.zoom / 100))
-                object.scale.set(
-                    object.scale.x * zoomFactor, 
-                    object.scale.y * zoomFactor, 
-                    object.scale.z * zoomFactor
-                )
-                delete update.zoom
-            }
             if (update.y) { object.position.y = update.y; delete update.y }
             if (update.x) { object.position.x = update.x; delete update.x }
+            if (update.zoom) { object.position.z = update.zoom; delete update.zoom; console.log(object.position.z) }
             if (update._roll) { object.rotation.z = update._roll; delete update._roll }
             if (update._pitch) { object.rotation.x = update._pitch; delete update._pitch }
             if (update._yaw) { object.rotation.y = update._yaw; delete update._yaw }
@@ -110,31 +99,36 @@ function _update_object(update, object) {
     }
 }
 
-// TODO: check axes here this dont work right
 function _update_volume(update, volume) {
     if (volume) {
         if (update) {
+            let new_scale = { x: volume.scale.x, y: volume.scale.y, z: volume.scale.z }
             if (update.scaleZ) { 
                 volume.scale.set(volume.scale.x, volume.scale.y, update.scaleZ)
+                new_scale.z = update.scaleZ
                 delete update.scaleZ
             }
             if (update.scaleX) { 
                 volume.scale.set(update.scaleX, volume.scale.y, volume.scale.z)
+                new_scale.x = update.scaleX
                 delete update.scaleX
             }
             if (update.scaleY) { 
                 volume.scale.set(volume.scale.x, update.scaleY, volume.scale.z)
+                new_scale.y = update.scaleY
                 delete update.scaleY
             }
+            let zoomFactor = 1
             if (update.zoom) {
-                const zoomFactor = Math.max(0, 1 + (update.zoom / 100))
-                volume.scale.set(
-                    volume.scale.x * zoomFactor, 
-                    volume.scale.y * zoomFactor, 
-                    volume.scale.z * zoomFactor
-                )
+                zoomFactor = 1 + (update.zoom / 100)
+                zoomFactor = Math.max(0, zoomFactor) // ensure always > 0
                 delete update.zoom
             }
+            volume.scale.set(
+                new_scale.x * zoomFactor, 
+                new_scale.y * zoomFactor, 
+                new_scale.z * zoomFactor
+            )
             if (update.y) { volume.position.y = update.y; delete update.y }
             if (update.x) { volume.position.x = update.x; delete update.x }
             if (update._roll) { volume.rotation.y = update._roll; delete update._roll }
@@ -145,7 +139,8 @@ function _update_volume(update, volume) {
 }
 
 function _setup_scene_for_object() {
-    if (renderer == false) {
+    if (last_renderer_type !== "object") self.clear()
+    if (renderer === false) {
         renderer = new THREE.WebGLRenderer()
         camera = new THREE.PerspectiveCamera( 25, self.width/self.height, 0.0001, 1000000 )
         camera.position.z = 100 // pull back camera
@@ -167,32 +162,12 @@ function _setup_scene_for_object() {
     }
 }
 
-function _get_object3D_center(obj) {
-    obj.geometry.computeBoundingBox();
-    console.log(obj);
-    let bounds;
-    if (obj.geometry.boundingBox) {
-        bounds = obj.geometry.boundingBox
-        return {
-            x: (bounds.max.x - bounds.min.x) / 2,
-            y: (bounds.max.y - bounds.min.y) / 2,
-            z: (bounds.max.z - bounds.min.z) / 2,
-        }
-    } else {
-        bounds = obj.geometry.boundingSphere
-        return {
-            x: bounds.center.x / 2,
-            y: bounds.center.y / 2,
-            z: bounds.center.z / 2,
-        }
-    }    
-}
 
 // TODO: rename promise to reflect its resolve data
 function _setup_scene_for_volume(vol_mesh, showGUI) {
+    if (last_renderer_type !== "object") self.clear()
     return new Promise((resolve, reject) => {
-
-        if (renderer === false) {
+        if (renderer === false || last_renderer_type !== "volume") {
             scene = new THREE.Scene()
             renderer = new THREE.WebGLRenderer()
             renderer.setPixelRatio( window.devicePixelRatio )
@@ -216,7 +191,7 @@ function _setup_scene_for_volume(vol_mesh, showGUI) {
                 );
                 camZ = 1000;
             }
-            if (!ortho) camera = new THREE.PerspectiveCamera(90, aspect, 0.1, 10000 )
+            if (!ortho) camera = new THREE.PerspectiveCamera(90, aspect, 0.1, 10000)
         }
 
         if (showGUI) _showGUI()
@@ -226,9 +201,32 @@ function _setup_scene_for_volume(vol_mesh, showGUI) {
         camera.position.set(vol_center.x, vol_center.y, camZ)
         camera.lookAt(vol_center.x, vol_center.y, 0)
         camera.up.set( 0, 0, 1 ) // In volume data data, z is up
+        // reset camera rotation
+        camera.rotation.set( 0, 0, -0 )
         
         resolve(vol_center)
     })
+}
+
+function _get_object3D_center(obj) {
+    obj.geometry.computeBoundingBox();
+    console.log(obj);
+    let bounds;
+    if (obj.geometry.boundingBox) {
+        bounds = obj.geometry.boundingBox
+        return {
+            x: (bounds.max.x - bounds.min.x) / 2,
+            y: (bounds.max.y - bounds.min.y) / 2,
+            z: (bounds.max.z - bounds.min.z) / 2,
+        }
+    } else {
+        bounds = obj.geometry.boundingSphere
+        return {
+            x: bounds.center.x / 2,
+            y: bounds.center.y / 2,
+            z: bounds.center.z / 2,
+        }
+    }    
 }
 
 const _showGUI = () => {
@@ -415,7 +413,7 @@ self.loadGLTF = function(filename, fixed=false) {
 }
 
 self.loadObject = (filename, fixed) => {
-    if (filename.includes(".gltf")) return self.loadGLTF(filename, fixed)
+    if (filename.includes(".gltf") || filename.includes(".glb")) return self.loadGLTF(filename, fixed)
     if (filename.includes(".nrrd")) return self.loadVolume(filename, true, 100, false, '')
     // as fallback assume gltf
     return self.loadGLTF(filename, fixed)
@@ -468,7 +466,6 @@ self.loadVolume = async function(
                 // TODO: bring these to client
                 colourMapTextures = {
                     viridis: new THREE.TextureLoader().load( 
-                        // 'https://raw.githubusercontent.com/mrdoob/three.js/f9d1f8495f2ca581b2b695288b97c97e030c5407/examples/textures/cm_gray.png',
                         'https://raw.githubusercontent.com/mrdoob/three.js/f9d1f8495f2ca581b2b695288b97c97e030c5407/examples/textures/cm_viridis.png',
                         _update_scene
                     ),
