@@ -32,3 +32,6 @@ cloud/rest/client/media/visrec.png
 # Runtime folders
 scripts/*
 !scripts/example_speech
+
+# executables
+*.exe
