@@ -23,7 +23,7 @@ func portName(device *Device) string {
 	}
 	for _, new_port := range new_ports {
 		if new_port.IsUSB && new_port.VID == device.VID && new_port.PID == device.PID {
-			fmt.Println("  Found port:", new_port.Name)
+			// fmt.Println("  Found port:", new_port.Name)
 			return new_port.Name
 		}
 	}
