@@ -13,22 +13,25 @@ You can either:
   - F5 or Ctrl-F5
   - or:
     - Run and Debug (or Ctrl+Shift+D)
-    - select (if not selected) 'Launch File (quando)'
+    - (select `Local (quando)`
     - Select the green triangle just to the left of the Launch File...
       - or Press F5
   
-## OPTIONAL - Full Build
+## OPTIONAL - Full Build/Run
 
 This includes control of the local keyboard and mouse.
 
-**You must have installed GCC for this to work**
+**You must have installed GCC for this to work** See [install local](install_local.md).
 
 To run Quando:
-- either open a command line at C:\quando and then run `go build -tags=full .`
-- or from VSCode, do one of:
-  - Select 'Full Run' from the Run and Debug option (at the top of the screen)
-  - Use F5
-  - or select the green triangle to run.
+- From VSCode:
+  - Choose Run and Debug icon (on left)
+  - (select 'Full (quando)i' - at the top of the screen)
+  - select the green triangle to run (or F5 or Ctrl-F5 for debug)
+
+For a full build, you can build an executable.  e.g. for Windows:
+- open a command line at `C:\quando` and then run `build.bat`
+- start `quando.exe`
 
 <details><summary>
 Developing new Blocks
