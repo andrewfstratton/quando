@@ -25,7 +25,7 @@ Quando allows many different inputs (and more are being added), including:
 - Leap Motion hand movement in 3 dimensions and rotation in 3 'angles' (six degrees of freedom)
 - Mouse and Keyboard
 - micro:bit keys, orientation and (version 2 only) touch
-- Gamepad input
+- Gamepad input (from browser)
 - (experimental) EEG headset
 - (experimental) speech recognition
 
