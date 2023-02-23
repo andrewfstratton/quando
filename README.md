@@ -70,7 +70,7 @@ You can open the Editor from the dashboard at [127.0.0.1](127.0.0.1) or by openi
 
 ## Using the Quando:Client
 
-After you have deployed scripts, you can open them from the dashboard at [127.0.0.1](127.0.0.1) or through [127.0.0.1/client](127.0.0.1/client) in Chrome browser, which will load the last script that was opened.  You can `right click the screen` to choose a different script to load.
+After you have deployed scripts, you can open them from the dashboard at [127.0.0.1](127.0.0.1) or through [127.0.0.1/client](127.0.0.1/client) in Chrome browser, which will load the last script that was opened.  You can `Ctrl right click the screen` to choose a different script to load.
 
 ### Updating Quando
 

@@ -118,3 +118,25 @@
         </div>
     </div>
 </div>
+
+
+<div data-quando-block-type="display-add-button" class="quando-block"
+    data-quando-javascript="quando.addButton({text:'${text}', up_down:'${down_up}'}, ($(eq$,${down_up}$,either$,val)$)=>{${box}})">
+    <div class="quando-left quando-display"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-display">
+            When Button
+            <input data-quando-name='text' type='text' value='' placeholder='' data-quando-encode='normal' />
+            press
+            <select data-quando-name="down_up">
+                <option value='down'>down</option>
+                <option value='up'>up</option>
+                <option value='either'>⇕</option>
+            </select>
+            <span data-quando-toggle='down_up=either'>⚡
+            </span>
+        </div>
+        <div data-quando-name="box" class="quando-box"></div>
+        <div class="quando-row quando-display"></div>
+    </div>
+</div>

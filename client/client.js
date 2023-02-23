@@ -234,10 +234,12 @@ let _current_display_id = -1 // to avoid being equal by accident to 0
       self.style.set(self.style.DEFAULT, '#cursor', 'height', '4.4vw')
       self.style.set(self.style.DEFAULT, '#cursor', 'margin-left', '-2.2vw')    
       self.style.set(self.style.DEFAULT, '#cursor', 'margin-top', '-2.2vw')    
-      document.querySelector('body').addEventListener('contextmenu', // right click title to go to setup
+      document.querySelector('body').addEventListener('contextmenu', // Ctrl right click title to go to setup
               function (ev) {
                 ev.preventDefault()
-                window.location.href = '../../client/setup.html'
+                if (ev.ctrlKey) {
+                  window.location.href = '../../client/setup.html'
+                }
                 return false
               }, false)
       exec() // this is the function added by the generator
@@ -320,6 +322,48 @@ let _current_display_id = -1 // to avoid being equal by accident to 0
     if (padding_location.match(/^(after|both)$/)) {
       _add_padding_elements(elem, padding_size)
     }
+  }
+
+  self.addButton = function({text = "", up_down = "down"},fn) {
+    const elem = document.getElementById('quando_labels')
+    let div = document.createElement('br') // new element
+    // Show even when no title
+    div = document.createElement('div')
+    // TODO change to button class
+    div.className = 'quando_label'
+    div.innerHTML = text
+    div.setAttribute('id', 'button'+text)
+    function handleTouch(ev) {
+      ev.preventDefault() // Avoids double event
+      switch (ev.type) {
+        case "touchstart" :
+        case "mousedown" :
+          if (up_down == "down") {
+            fn()
+          } else if (up_down == "either") {
+            fn(1)
+          }
+          break;
+        case "touchend" :
+        case "mouseup" :
+          if (up_down == "up") {
+            fn()
+          } else if (up_down == "either") {
+            fn(0)
+          }
+          break;
+        // case "touchmove" :
+        // case "mousemove" :
+        //   break;
+      }
+    }
+    div.onmousedown = handleTouch
+    div.ontouchstart = handleTouch
+    div.onmouseup = handleTouch
+    div.ontouchend = handleTouch
+    // div.onmousemove = handleTouch
+    // div.ontouchmove = handleTouch
+    elem.appendChild(div)
   }
 
   self.promptInput = function() {

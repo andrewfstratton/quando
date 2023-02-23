@@ -1,4 +1,3 @@
-
 ### Client browser Kiosk setup
 _i.e. allow PC to boot straight into client browser interaction_
 
@@ -11,7 +10,7 @@ The following setup can be done (by itself) on any client machine.
 3. Create a folder `c:\quando\chrome_user`
 4. Run quando\kiosk.bat
 5. Then choose the interaction you want to automatically load on booting.
-  - _Note: You can right click the screen to go back to the client setup_
+  - _Note: You can Ctrl right click the screen to go back to the client setup_
 6. Type Windows+R, then type in `gpedit.msc` and Enter
     * Choose Computer Configuration->Windows Settings->Scripts->Startup
     * Then 'Add' C:\quando\kiosk.bat to autostart Chrome
