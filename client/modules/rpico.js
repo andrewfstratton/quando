@@ -6,12 +6,20 @@ if (!quando) {
   let self = quando.rpico = {}
   let last_servo = [] // FIX change to let
 
-  function _rpico_send(key, val) {
-    fetch('/control/maker_pi_rp2040/' + key, { method: 'POST', 
+  function _send(dest, key, val) {
+    fetch(dest + key, { method: 'POST', 
       mode: "no-cors",
       body: JSON.stringify(val), 
       headers: {"Content-Type": "application/json"}
     })
+  }
+
+  function _maker_pico_send(key, val) {
+    _send('/control/maker_pi_rp2040/', key, val)
+  }
+
+  function _pico_w_send(key, val) {
+    _send('/control/rpi_pico_w/', key, val)
   }
 
   self.turn = (val, servo, middle, plus_minus, inverted) => {
@@ -26,6 +34,14 @@ if (!quando) {
     let last_angle = last_servo[servo]
     if (last_angle != angle) {
       last_servo[servo] = angle
-      _rpico_send('turn', {'servo':servo, 'angle':angle}) // servo is 1 to 4
+      _maker_pico_send('turn', {'servo':servo, 'angle':angle}) // servo is 1 to 4
     }
+  }
+
+  self.led = (val) => {
+    let on_off = 0 // N.B. Sent as int 0 or 1 only
+    if (val && (val > 0.5)) {
+      on_off = 1
+    }
+    _pico_w_send('led', {'on_off': on_off})
   }

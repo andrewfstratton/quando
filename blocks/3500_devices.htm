@@ -597,6 +597,23 @@ data-quando-drop-valid="display-when-display,advanced-comment,inventor-flip,inve
 </div>
 
 
+<div data-quando-block-type="rpico-w-led" class="quando-block" data-quando-javascript="quando.rpico.led(${on_off})">
+  <div class="quando-left quando-devices"></div>
+  <div class="quando-right">
+    <div class="quando-row quando-devices">
+      <span data-quando-toggle='on_off=val'>⚡</span>
+      📟 <span class="cconify">Pico</span>
+      led
+      <select data-quando-name="on_off">
+        <option value='1'>on</option>
+        <option value='0'>off</option>
+        <option value='val'>⇕</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+
 <div data-quando-block-type="devices-control-type" class="quando-block" data-quando-javascript="quando.control.type($(eq$,${txt}$,input$,'${text}'$,${txt})$)">
   <div class="quando-left quando-devices"></div>
   <div class="quando-right">
