@@ -11,9 +11,10 @@ let handlers = []
 
 self.handle_message = (data) => {
   let title = data.title
-  if (title != last_title) {
+  if (title != last_title) { // i.e. title has changed
     for (let handler of handlers) {
       if (handler.match.test(title) != handler.match.test(last_title)) {
+        // i.e. title match has changed true<>false
         if (handler.match.test(title)) {
           handler.callback()
         } else {
@@ -40,6 +41,7 @@ self.whenFocus = (block_id, comparison, title, callback, fn_change) => {
   }
   handlers[block_id] = {'match': new RegExp(match), 'callback': callback, 'change': fn_change}
   destructor.add( () => {
+    // TODO check whether need to callback change
     delete handlers[block_id]
   })
 }

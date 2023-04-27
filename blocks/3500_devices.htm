@@ -815,7 +815,7 @@ data-quando-drop-valid="display-when-display,advanced-comment,inventor-flip,inve
 </div>
 
 
-<div data-quando-block-type="" class="quando-block" data-quando-id="true"
+<div data-quando-block-type="devices-window-title" class="quando-block" data-quando-id="true"
   data-quando-drop-valid="display-when-display,advanced-comment,inventor-flip,inventor-function-block,advanced-group"
   data-quando-javascript="quando.system.whenFocus('${data-quando-id}','${comparison}','${title}',()=>{${box}},()=>{${box_change}})">
   <div class="quando-left quando-devices"></div>
@@ -824,18 +824,29 @@ data-quando-drop-valid="display-when-display,advanced-comment,inventor-flip,inve
       <span class="quando-info" title="This block can only be dragged into When Display.">⚠</span>
       💾 When Window title
       <select data-quando-name="comparison">
-        <option value='equals'>equals</option>
+        <option value='contains'>contains</option>
         <option value='starts'>starts with</option>
         <option value='ends'>ends with</option>
-        <option value='contains'>contains</option>
+        <option value='equals'>equals</option>
       </select>
       <input data-quando-name='title' type='text' value='' placeholder='title' data-quando-encode='normal' />
+      <select data-quando-name="extras" class="quando-toggle">
+        <option value="hidden">+</option>
+        <option value="show">-</option>
+      </select>
     </div>
     <div data-quando-name="box" class="quando-box"></div>
-    <div class="quando-row quando-devices">
-      or else
-    </div>
-    <div data-quando-name="box_change" class="quando-box"></div>
+    <span data-quando-toggle="extras=show">
+      <div class="quando-row quando-devices">
+        then when
+        <span class="iconify"> does not </span>
+        <span data-quando-toggle='comparison=contains'>contain</span>
+        <span data-quando-toggle='comparison=starts'>start with</span>
+        <span data-quando-toggle='comparison=ends'>end with</span>
+        <span data-quando-toggle='comparison=equals'>equal</span>
+      </div>
+      <div data-quando-name="box_change" class="quando-box"></div>
+    </span>
     <div class="quando-row quando-devices"></div>
   </div>
 </div>
