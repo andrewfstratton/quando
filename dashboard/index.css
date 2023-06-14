@@ -2,6 +2,118 @@
     width:160px;
     height:160px;
     padding:15px;
-    border: 10px solid #ddd;
+    border: 1px solid #ddd;
     margin: 15px;
+    border-radius: 1.2rem;
+}
+
+.badge{
+    flex-direction: column;
+    display: flex;
+    height: 4rem;
+    padding-right: 1rem;
+    padding-left: 1rem;
+    width: auto;
+    justify-content: center;
+    margin-left: 4rem;
+    margin-right: 4rem;
+    border-radius: 1rem;
+    background-color: #3c3c8a;
+    color: white;
+}
+
+.badge-title{
+    margin-bottom: 0.3rem;
+    font-weight: 600;
+}
+
+.badge-content{
+    font-size: 0.9rem;
+}
+
+.dashboard-title {
+    margin-left: 4rem;
+    height: 15%;
+    display: flex;
+    width: calc(100% - 4rem);
+    justify-content: space-between;
+}
+
+.dashboard-title > span {
+    margin-left: 0.5rem;
+    color: #3c3c8a;
+    font-size: 1.5rem;
+    width: 20%;
+    display: flex;
+    font-weight: bold;
+}
+
+.dashboard-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 15px;
+    width: 100%;
+    border: 2px solid #b1b1b1;
+    border-radius: 1.4rem;
+    margin: 4rem;
+}
+
+.dashboard-section-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #3c3c8a;
+    margin-bottom: 1rem;
+}
+
+.margin-top {
+    margin-top: 1rem;
+}
+
+.dashboard-content {
+    height: calc(80% - 0.5rem);
+    margin-left: 4rem;
+    margin-right: 4rem;
+    display: flex;
+    flex-direction: row;
+}
+
+.btn {
+    display: flex;
+    border-radius: 2rem;
+    padding: 0.7rem;
+    cursor: pointer;
+    border: 1px solid black;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: black;
+}
+
+.btn:hover {
+    color: white;
+}
+
+.btn a {
+    text-decoration: none;
+    color: black;
+}
+
+.btn:hover a {
+    color: white;
+}
+
+.btn-editor:hover {
+    border: 1px solid white;
+    background-color: #5876c3;
+}
+
+.btn-client:hover {
+    border: 1px solid white;
+    background-color: #599259;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    margin-top: 3rem;
 }

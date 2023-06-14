@@ -11,12 +11,34 @@
 </head>
 
 <body onload="onload();">
-    <div>Local Network IP Address: <span id="ip">Loading...</span></div>
-    <div>Open <a href="/editor" target="quando_editor">Quando:Editor</a></div>
-    <div id="editor_qrcode" class="qrcode"></div>
-    <br/>
-    <div>Open <a href="/client" target="quando_client">Quando:Client</a></div>
-    <div id="client_qrcode" class="qrcode"></div>
+    <div class="dashboard-title">
+        <span>Quando Visual Editor</span>
+        <div class="badge">
+            <div class="badge-title">
+                <span>Local Network IP Address</span> 
+            </div>
+            <div class="badge-content">
+                <span id="ip">Loading...</span>
+            </div>
+        </div>
+    </div>
+    <div class="dashboard-content">
+        <div class="dashboard-section">
+            <div class="dashboard-section-title">
+                Editor
+            </div>
+            <div id="editor_qrcode" class="qrcode"></div>
+            <span class="margin-top btn btn-editor"><a href="/editor" target="quando_editor">Launch Editor!</a></span>
+        </div>
+        <div class="dashboard-section">
+            <div class="dashboard-section-title">
+                Client
+            </div>
+            <div id="client_qrcode" class="qrcode"></div>
+            <span class="margin-top btn btn-client"><a href="/client" target="quando_client">Launch Client!</a></span>
+        </div>
+    </div>
+    
 </body>
 
 </html>
