@@ -57,11 +57,31 @@ The name Quando comes from Latin for 'when' since Quando use a When based approa
 
 Quando can currently be installed:
 
-- locally - please [see these instructions](./docs/install_local.md).  You should only need to do this once.
+- On PC (windows tested) as a local server - please [see these instructions](./docs/install_local.md).  You should only need to do this once.
+- (NYI) Cloud - this installation will not include control of (PC) keyboard, mouse, or access to connected (USB) devices.
 
 # Running Quando
 
-To run Quando, [follow these instructions](./docs/run_local.md)
+To run Quando locally, [follow these instructions](./docs/run_local.md)
+
+## Building Quando as a separate executable
+
+Quando can be **built** for three different deployments:
+
+1. (typical) local - which includes access to USB devices and typically runs on a PC
+2. full - the same as local but also including control of mouse and keyboard which may be **UNSAFE**. _See also below re. running Quando_
+3. cloud - without either the above tags - this build does not access any local devices or have access to keyboard or mouse and is intended for cloud deployment
+
+## Running Quando
+
+At the command line, there are two options for running Quando to allow remote editing and client (end user) access:
+
+- -remote_editor
+  - allows editing of scripts from other machines - e.g.  by scanning the QR Code from the hub at 127.0.0.1.  _Note: testing scripts will also work_
+- -remote_client
+  - allows running **deployed** scripts emotely.  This is **UNSAFE** and allows scripts to potentially control the PCs keyboard and mouse (if quando has been built with 'full')
+
+Otherwise, the client and editor are **only available to the local, i.e. on PC, browser** 
 
 # Using the Quando:Editor
 
