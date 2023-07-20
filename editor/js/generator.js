@@ -35,7 +35,7 @@ function nextMatch(str, open, close) {
     return [parsed, matched, remaining]
 }
 
-export function getCodeInBlock(block) {
+function getCodeInBlock(block) {
     let code = ''
     if (block.dataset && block.dataset.quandoJavascript) {
         code = block.dataset.quandoJavascript
