@@ -3,7 +3,9 @@ import time
 
 led = Pin("LED", Pin.OUT)
 
+led.value(1)
 print("Started...")
+led.value(0)
 while True:
     inp = input()
     eq = inp.find("=")
