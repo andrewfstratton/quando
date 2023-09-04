@@ -86,6 +86,12 @@ self.add_handler = (message, callback) => {
 
 self.send = (message, val_txt, val) => {
   if (socket) {
+    if (val === false) {
+      val = 0.5
+      if (val_txt == 'txt') {
+        val = ''
+      }
+    }
     let json = JSON.stringify({ 
       'type':'message', 'message':message, [val_txt]:val
     })

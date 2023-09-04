@@ -67,6 +67,7 @@ let _current_display_id = -1 // to avoid being equal by accident to 0
   self.new_scaler = function (min, max, inverted = false) {
     return function (value) {
       // convert to range 0 to 1 for min to max
+      if (value === false) { value = 0.5 }
       let result = (value - min) / (max - min)
       result = Math.min(1, result)
       result = Math.max(0, result)
@@ -86,6 +87,7 @@ let _current_display_id = -1 // to avoid being equal by accident to 0
     // i.e. 25% of the non used range
     let crossover_range = (180 - Math.abs(plus_minus)) / 4
     return function (value) {
+      if (value === false) { value = 0.5 }
       let x = mod(value - mid, 360)
       if (x > 180) { x -= 360}
       let result = (x + plus_minus) / (2 * plus_minus)
@@ -192,7 +194,7 @@ let _current_display_id = -1 // to avoid being equal by accident to 0
     if (append) {
       txt = elem.innerHTML + txt
     }
-      if (txt) {
+    if (txt) {
       elem.style.visibility = 'visible'
     } else {
       elem.style.visibility = 'hidden'
