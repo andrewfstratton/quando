@@ -61,12 +61,12 @@ self.one = (block_id, message, next, val, txt) => {
       }
     }
     let fn = arr[arr.index]
-    if (next) {
-      if (++arr.index >= arr.length) {
+    if (next) { // forward through list
+      if (++arr.index >= arr.length) { // wrap around
         arr.index = 0
       }
-    } else {
-      if (--arr.index < 0) {
+    } else { // backwards through list
+      if (--arr.index < 0) { // wrap around
         arr.index = arr.length-1
       }
     }
@@ -90,7 +90,7 @@ self.val = (block_id, val) => {
     if (last_block != block) { // i.e. we have changed block
       let boundary_fn = arr[block]
       if (typeof boundary_fn === 'function') {
-        boundary_fn()
+        boundary_fn(val) // val makes little sense but can help debugging at least
       }
       _last_pick[block_id] = block
     }
