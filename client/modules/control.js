@@ -20,20 +20,33 @@ if (!quando) {
     _send('type', text.decode(str))
   }
 
-  self.key = (ch, up_down, on_off) => {
+  self.key = (ch, up_down, shift, ctrl, alt, on_off) => {
     // ch is a character, or character description string
     let press = false
     switch (up_down) {
       case 'down':
         press = true
         break
-        case 'either':
-          if (on_off && (on_off > 0.5)) {
-            press = true
-          }
+      case 'either':
+        if (on_off && (on_off > 0.5)) {
+          press = true
+        }
     }
-    let data = {'key':ch, 'press':press}
-    _send('key', data)
+    let key_data = {'key':ch, 'press':press}
+    let shift_data = {'key':'shift', 'press':press}
+    let ctrl_data = {'key':'ctrl', 'press':press}
+    let alt_data = {'key':'alt', 'press':press}
+    if (press) { // Send the key press modifier before the key press
+      if (shift) { _send('key', shift_data) }
+      if (ctrl) { _send('key', ctrl_data) }
+      if (alt) { _send('key', alt_data) }
+    }
+    _send('key', key_data)
+    if (!press) { // Send the key modifier release after the key press
+      if (shift) { _send('key', shift_data) }
+      if (ctrl) { _send('key', ctrl_data) }
+      if (alt) { _send('key', alt_data) }
+    }
   }
 
   self.mouseX = (x, smooth=false) => {

@@ -639,7 +639,7 @@ data-quando-drop-valid="display-when-display,advanced-comment,inventor-flip,inve
 </div>
 
 
-<div data-quando-block-type="devices-key-click" class="quando-block" data-quando-javascript="quando.control.key($(eq$,${txt}$,input$,'${text}'$,txt)$, '${press}', val)">
+<div data-quando-block-type="devices-key-click" class="quando-block" data-quando-javascript="quando.control.key($(eq$,${txt}$,input$,'${text}'$,txt)$, '${press}', ${shift}, ${ctrl}, ${alt}, val)">
   <div class="quando-left quando-devices"></div>
   <div class="quando-right">
     <div class="quando-row quando-devices">
@@ -660,6 +660,18 @@ data-quando-drop-valid="display-when-display,advanced-comment,inventor-flip,inve
       </select>
       <span data-quando-toggle="extras=show">
         <br>
+        <select data-quando-name='shift' class='quando-toggle'>
+          <option value='false'>no Shift</option>
+          <option value='true'>Shift</option>
+        </select>
+        <select data-quando-name='ctrl' class='quando-toggle'>
+          <option value='false'>no Ctrl</option>
+          <option value='true'>Ctrl</option>
+        </select>
+        <select data-quando-name='alt' class='quando-toggle'>
+          <option value='false'>no Alt</option>
+          <option value='true'>Alt</option>
+        </select>
         <select data-quando-name='txt' class='quando-toggle'>
             <option value='input'>""</option>
             <option value='txt'>❓</option>
@@ -671,7 +683,7 @@ data-quando-drop-valid="display-when-display,advanced-comment,inventor-flip,inve
 </div>
 
 
-<div data-quando-block-type="devices-special-key-click" class="quando-block" data-quando-javascript="quando.control.key('${name}', '${press}', val)">
+<div data-quando-block-type="devices-special-key-click" class="quando-block" data-quando-javascript="quando.control.key('${name}', '${press}', ${shift}, ${ctrl}, ${alt}, val)">
   <div class="quando-left quando-devices"></div>
   <div class="quando-right">
     <div class="quando-row quando-devices">
@@ -763,6 +775,25 @@ data-quando-drop-valid="display-when-display,advanced-comment,inventor-flip,inve
         <option value='num_enter'>Num Enter</option>
         <option value='num_equal'>Num =</option>
       </select>
+      <select data-quando-name="extras" class="quando-toggle">
+        <option value="hidden">+</option>
+        <option value="show">-</option>
+      </select>
+      <span data-quando-toggle="extras=show">
+        <br>
+        <select data-quando-name='shift' class='quando-toggle'>
+          <option value='false'>no Shift</option>
+          <option value='true'>Shift</option>
+        </select>
+        <select data-quando-name='ctrl' class='quando-toggle'>
+          <option value='false'>no Ctrl</option>
+          <option value='true'>Ctrl</option>
+        </select>
+        <select data-quando-name='alt' class='quando-toggle'>
+          <option value='false'>no Alt</option>
+          <option value='true'>Alt</option>
+        </select>
+      </span>
     </div>
   </div>
 </div>
