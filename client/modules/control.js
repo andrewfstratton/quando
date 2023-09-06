@@ -32,21 +32,8 @@ if (!quando) {
           press = true
         }
     }
-    let key_data = {'key':ch, 'press':press}
-    let shift_data = {'key':'shift', 'press':press}
-    let ctrl_data = {'key':'ctrl', 'press':press}
-    let alt_data = {'key':'alt', 'press':press}
-    if (press) { // Send the key press modifier before the key press
-      if (shift) { _send('key', shift_data) }
-      if (ctrl) { _send('key', ctrl_data) }
-      if (alt) { _send('key', alt_data) }
-    }
+    let key_data = {'key':ch, 'shift':shift, 'ctrl':ctrl, 'alt':alt, 'press':press}
     _send('key', key_data)
-    if (!press) { // Send the key modifier release after the key press
-      if (shift) { _send('key', shift_data) }
-      if (ctrl) { _send('key', ctrl_data) }
-      if (alt) { _send('key', alt_data) }
-    }
   }
 
   self.mouseX = (x, smooth=false) => {
