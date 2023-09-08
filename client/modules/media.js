@@ -87,7 +87,7 @@ self.play_video = (vid, loop = false) => {
     }
 }
 
-self.projection = (front = true) => {
+self.projection = ({front = true}) => {
     let scale = 1
     if (!front) {
         scale = -1
