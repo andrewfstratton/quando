@@ -14,7 +14,7 @@
             "program": ".",
             "env": {},
             "args": [
-                // "-remote_client"
+                "-remote_client"
                 // "-remote_editor"
             ]
         },
@@ -25,6 +25,11 @@
             "request": "launch",
             "mode": "debug",
             "program": ".",
+            "env": {},
+            "args": [
+                "-remote_client"
+                // "-remote_editor"
+            ]
         },
         {
             "name": "Cloud",
