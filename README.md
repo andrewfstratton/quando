@@ -101,7 +101,7 @@ git pull
 
 ### Optional - Leap Motion
 
-To use the Leap Motion, the (not latest) Windows software v4.1.0+52211 must be installed on the Windows PC that will be the 'Client', i.e.  where the leap motion will be plugged in and the client interaction will be opened (in a web browser).  The software may be downloaded from [here](https://www2.leapmotion.com/v4.1-lmc-windows-sdk).  You will need to extract the contents, then run the 'Leap_Motion_Installer...' - you can uncheck 'Launch Browser for VR Setup'
+To use the Leap Motion, the (not latest) Windows software v4.1.0+52211 must be installed on the Windows PC that will be the 'Client', i.e.  where the leap motion will be plugged in and the client interaction will be opened (in a web browser).  The software may be downloaded from [here](https://www2.leapmotion.com/downloads/orion/v4.1.0/windows).  You will need to extract the contents, then run the 'Leap_Motion_Installer...' - you can uncheck 'Launch Browser for VR Setup'
 
 After installing the Leap Motion Control Panel, the recommended settings are:
 - Enable in General - disable everything else
