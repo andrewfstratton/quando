@@ -72,7 +72,7 @@ Quando can be **built** for three different deployments:
 2. full - the same as local but also including control of mouse and keyboard which may be **UNSAFE**. _See also below re. running Quando_
 3. cloud - without either the above tags - this build does not access any local devices or have access to keyboard or mouse and is intended for cloud deployment
 
-## Running Quando
+## Runtime options for remote access
 
 At the command line, there are two options for running Quando to allow remote editing and client (end user) access:
 
@@ -87,7 +87,6 @@ Otherwise, the client and editor are **only available to the local, i.e. on PC, 
 
 You can open the Editor from the dashboard at [127.0.0.1](127.0.0.1) or by opening [127.0.0.1/editor](127.0.0.1/editor) in Chrome browser.
 
-
 ## Using the Quando:Client
 
 After you have deployed scripts, you can open them from the dashboard at [127.0.0.1](127.0.0.1) or through [127.0.0.1/client](127.0.0.1/client) in Chrome browser, which will load the last script that was opened.  You can `Ctrl right click the screen` to choose a different script to load.
@@ -101,7 +100,13 @@ git pull
 
 ### Optional - Leap Motion
 
-To use the Leap Motion, the (not latest) Windows software v4.1.0+52211 must be installed on the Windows PC that will be the 'Client', i.e.  where the leap motion will be plugged in and the client interaction will be opened (in a web browser).  The software may be downloaded from [here](https://www2.leapmotion.com/downloads/orion/v4.1.0/windows).  You will need to extract the contents, then run the 'Leap_Motion_Installer...' - you can uncheck 'Launch Browser for VR Setup'
+To use the Leap Motion, an older version of the Windows software v4.1.0+52211 must be installed on the 'client' PC:
+
+- i.e.  where the leap motion will be plugged in and the client interaction will be opened (in a web browser)
+- The software may be downloaded from [here](https://www2.leapmotion.com/downloads/orion/v4.1.0/windows).
+  - Note: this will download a zip and also open the newer software page - which you should ignore.
+- You will need to extract the zip contents
+- then run the 'Leap_Motion_Installer...' - you can uncheck 'Launch Browser for VR Setup'.
 
 After installing the Leap Motion Control Panel, the recommended settings are:
 - Enable in General - disable everything else
