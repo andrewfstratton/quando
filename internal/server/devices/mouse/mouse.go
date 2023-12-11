@@ -49,10 +49,15 @@ func move_press(mouse mouseJSON) {
 	check_mouse(mouse.Right, &last_right, "right")
 	check_mouse(mouse.Middle, &last_middle, "center")
 
-	if mouse.X != nil && mouse.Y != nil {
+	if mouse.X != nil || mouse.Y != nil {
+		x, y := robotgo.GetMousePos()
 		width, height := robotgo.GetScreenSize()
-		x := int(*mouse.X * float32(width))
-		y := int(*mouse.Y * float32(height))
+		if mouse.X != nil {
+			x = int(*mouse.X * float32(width))
+		}
+		if mouse.Y != nil {
+			y = int(*mouse.Y * float32(height))
+		}
 		robotgo.Move(x, y)
 	}
 }
