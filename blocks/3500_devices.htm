@@ -836,7 +836,8 @@ data-quando-drop-valid="display-when-display,advanced-comment,inventor-flip,inve
 </div>
 
 
-<div data-quando-block-type="devices-control-mouse-xy" class="quando-block" data-quando-javascript="quando.control.mouse${XY}(val)"> <!--</div>, ${smooth})">-->
+<div data-quando-block-type="devices-control-mouse-xy" class="quando-block"
+data-quando-javascript="quando.control_mouse.move${XY}({val:val, inverted:${inverted}, relative:${relative}, time:${time}, limited:${limited}})">
   <div class="quando-left quando-devices"></div>
   <div class="quando-right">
     <div class="quando-row quando-devices">
@@ -845,23 +846,36 @@ data-quando-drop-valid="display-when-display,advanced-comment,inventor-flip,inve
         <option value='X'>⇔</option>
         <option value='Y'>⇕</option>
       </select>
-      <!-- <select data-quando-name="extras" class="quando-toggle">
+      <select data-quando-name="extras" class="quando-toggle">
         <option value="hidden">+</option>
         <option value="show">-</option>
       </select>
       <span data-quando-toggle="extras=show">
         <br>
-        <select data-quando-name='smooth' class='quando-toggle'>
-          <option value='false'>fast</option>
-          <option value='true'>smooth</option>
+          <select data-quando-name='relative' class='quando-toggle'>
+              <option value='false'>Absolute</option>
+              <option value='true'>Relative</option>
         </select>
-      </span> -->
+          <span data-quando-toggle="relative=true">
+            in
+            <input data-quando-name='time' type='number' value='1' style='width: 4em' min='0' max='10' data-quando-encode='normal'/>
+            seconds
+            <select data-quando-name='limited' class='quando-toggle'>
+                <option value='true'>Display</option>
+                <option value='false'>Unlimited</option>
+            </select>
+          </span>
+          <select data-quando-name='inverted' class='quando-toggle'>
+              <option value='false'>Normal</option>
+              <option value='true'>Inverted</option>
+          </select>
+        </span>
     </div>
   </div>
 </div>
 
 
-<div data-quando-block-type="devices-mouse-click" class="quando-block" data-quando-javascript="quando.control.mouseClick('${button}', '${press}', val)">
+<div data-quando-block-type="devices-mouse-click" class="quando-block" data-quando-javascript="quando.control_mouse.click('${button}', '${press}', val)">
   <div class="quando-left quando-devices"></div>
   <div class="quando-right">
     <div class="quando-row quando-devices">
