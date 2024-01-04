@@ -1,6 +1,10 @@
 import * as destructor from "./modules/destructor.js";
 import * as text from "/common/text.js";
 
+// N.B. the next two variables MUST be Global/var
+window.val = false // force handlers to manage whether embedded or not
+window.txt = false // assume default is ignore
+
 // Note: This is not a true module - but pretends to be one to include a module itself
 // next line sets quando as a global object to contain all the other client 'modules'
 let self = window.quando = {}
@@ -418,10 +422,6 @@ let _current_display_id = -1 // to avoid being equal by accident to 0
   self.alert = (txt, callback) => {
     callback(text.decode(alert(txt)))
   }
-
-// N.B. the next two variables MUST be Global/var
-var val = false // force handlers to manage when not embedded
-var txt = false // assume default is ignore
 
 if (document.title == "{{ title }}") { // this was opened by Editor >> Test
   document.title = "TEST"
