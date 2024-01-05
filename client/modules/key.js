@@ -6,29 +6,62 @@ if (!quando) {
 }
 let self = quando.key = {}
 let key_pressed = {}
+let key_released = {}
 
 function _keydown(event) {
   if (!event.repeat) {
-    let handlers = key_pressed[event.key]
-    for (let id in handlers) {
-      handlers[id](event.ctrlKey, event.altKey)
+    let down_handlers = key_pressed[event.key]
+    for (let id in down_handlers) {
+      down_handlers[id](event.ctrlKey, event.altKey)
     }
   }
 }
 
-self.handleKey = (id, key, ctrl=false, alt=false, callback) => {
-  let handlers = key_pressed[key]
-  if (!handlers) {
-    handlers = key_pressed[key] = {}
+function _keyup(event) {
+  let up_handlers = key_released[event.key]
+  for (let id in up_handlers) {
+    up_handlers[id](event.ctrlKey, event.altKey)
   }
-  handlers[id]=(e_ctrl, e_alt) => {
-    if ((ctrl == e_ctrl) && (e_alt == alt)) {
-      callback()
+}
+
+self.handleKey = ({id, key, down_up, ctrl=false, alt=false, callback}) => {
+  if (["either", "down"].includes(down_up)) {
+    let down_handlers = key_pressed[key]
+    if (!down_handlers) {
+      down_handlers = key_pressed[key] = {} // a map of possible handlers ...
     }
+    down_handlers[id]=(e_ctrl, e_alt) => { // Note that id is the unique block
+      if ((ctrl == e_ctrl) && (e_alt == alt)) {
+        if (down_up == "either") {
+          callback(1)
+        } else {
+          callback()
+        }
+      }
+    }
+    destructor.add(() => {
+      delete down_handlers[id]
+    })
   }
-  destructor.add(() => {
-    delete handlers[id]
-  })
+  if (["either", "up"].includes(down_up)) {
+    let up_handlers = key_released[key]
+    if (!up_handlers) {
+      up_handlers = key_released[key] = {}
+    }
+    up_handlers[id]=(e_ctrl, e_alt) => {
+      if ((ctrl == e_ctrl) && (e_alt == alt)) {
+        if (down_up == "either") {
+          callback(0)
+        } else {
+          callback()
+        }
+      }
+    }
+    destructor.add(() => {
+      delete up_handlers[id]
+    })
+  }
 }
 
 addEventListener('keydown', _keydown)
+addEventListener('keyup', _keyup)

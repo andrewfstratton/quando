@@ -152,7 +152,7 @@ data-quando-drop-valid="display-when-display,advanced-comment,inventor-flip,inve
 
 <div data-quando-block-type="devices-when-key" class="quando-block" data-quando-id="true"
   data-quando-drop-valid="display-when-display,advanced-comment,inventor-flip,inventor-function-block,advanced-group"
-  data-quando-javascript="quando.key.handleKey(${data-quando-id},'${key}',${control},${alt},()=>{${box}})">
+  data-quando-javascript="quando.key.handleKey({id:${data-quando-id}, key:'${key}', down_up:'${down_up}', ctrl:${control}, alt:${alt}, callback:(val)=>{${box}}})">
   <div class="quando-left quando-devices"></div>
   <div class="quando-right">
     <div class="quando-row quando-devices">
@@ -162,7 +162,12 @@ data-quando-drop-valid="display-when-display,advanced-comment,inventor-flip,inve
       <span class="iconify">
         key
       </span>
-      pressed
+      <select data-quando-name="down_up">
+          <option value='down'>press</option>
+          <option value='up'>release</option>
+          <option value='either'>⇕</option>
+      </select>
+      <span data-quando-toggle="down_up=either">⚡</span>
       <select data-quando-name="extras" class="quando-toggle">
         <option value="hidden">+</option>
         <option value="show">-</option>
@@ -855,7 +860,7 @@ data-quando-javascript="quando.control_mouse.move${XY}({val:val, inverted:${inve
           <select data-quando-name='relative' class='quando-toggle'>
               <option value='false'>Absolute</option>
               <option value='true'>Relative</option>
-        </select>
+          </select>
           <span data-quando-toggle="relative=true">
             in
             <input data-quando-name='time' type='number' value='1' style='width: 4em' min='0' max='10' data-quando-encode='normal'/>
