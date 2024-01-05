@@ -163,10 +163,18 @@ export function toggleRelativesOnElement(elem) {
     for (let child of toggles) {
       // now match all toggles
       let toggle = child.dataset && child.dataset.quandoToggle
-      if (toggle && toggle.includes('=')) { // check for name and value
-        let [key, value] = toggle.split('=')
-        if (key == elem_name) { // key must be specified - only toggle when the key is the same...
-          child.style.display = (value == elem.value ? '' : 'none')
+      if (toggle) {
+        // N.B. since '!=' contains '=' this check is first and then followed by else
+        if (toggle.includes('!=')) { // check for name and value
+          let [key, value] = toggle.split('!=')
+          if (key == elem_name) { // only show when the key is different...
+            child.style.display = (value == elem.value ? 'none' : '')
+          }
+        } else if (toggle.includes('=')) { // check for name and value
+          let [key, value] = toggle.split('=')
+          if (key == elem_name) { // only show when the key is equal...
+            child.style.display = (value == elem.value ? '' : 'none')
+          }
         }
       }
     }
