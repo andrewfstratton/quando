@@ -14,21 +14,21 @@ let axis_handlers = {}
 let last_buttons = []
 let last_axes = []
 
-function _handle(lookup, id, down_up, callback) {
-  let handlers= lookup[id]
-  if (handlers === undefined) {
-    handlers = {}
-    lookup[id] = handlers
+function _handle(handlers, block_id, button_id, down_up_either, callback) {
+  let button_handler_list = handlers[button_id]
+  if (button_handler_list === undefined) {
+    button_handler_list = {}
+    handlers[button_id] = button_handler_list
   }
-  handlers[id] = {'down_up':down_up, 'callback':callback}
+  button_handler_list[block_id] = {'down_up':down_up_either, 'callback':callback}
   destructor.add( () => {
-    delete handlers[id]
+    delete button_handler_list[block_id]
   })
 }
 
-self.handleButton = (button_id, down_up, callback) => {
-    let down_up_code = DOWN_UP[down_up]
-    _handle(button_handlers, button_id, down_up_code, callback)
+self.handleButton = (block_id, button_id, down_up, callback) => {
+    let down_up_either = DOWN_UP[down_up]
+    _handle(button_handlers, block_id, button_id, down_up_either, callback)
 }
 
 window.addEventListener("gamepadconnected", (event) => {
@@ -106,13 +106,13 @@ function _updateButtons(gamepad) {
 // N.B. The triggers are added as axes, but actually held as button handlers
 const AXIS_MAP = {true:{'x':0, 'y':1,'trigger':6}, false:{'x':2, 'y':3,'trigger':7}}
 
-self.handleAxis = (left, axis, middle, plus_minus, ignore, inverted, callback) => {
+self.handleAxis = (block_id, left, axis, middle, plus_minus, ignore, inverted, callback) => {
   middle /= 100
   plus_minus /= 100
   ignore /= 100
   let half_ignore = ignore / 2
   let min_max_scaler = quando.new_scaler(middle-plus_minus, middle+plus_minus, inverted)
-  let id = AXIS_MAP[left][axis]
+  let axis_id = AXIS_MAP[left][axis]
   let ignore_handler = (val) => {
     let new_val = min_max_scaler(val)
     // Adjust for deadzone if not at limit
@@ -132,19 +132,19 @@ self.handleAxis = (left, axis, middle, plus_minus, ignore, inverted, callback) =
     }
     return callback(new_val)
   }
-  _handle(axis_handlers, id, EITHER, ignore_handler) 
+  _handle(axis_handlers, block_id, axis_id, EITHER, ignore_handler) 
 }
 
-self.handleTrigger = (left, min, max, inverted, callback) => {
+self.handleTrigger = (block_id, left, min, max, inverted, callback) => {
   min /= 100
   max /= 100
-  let id = AXIS_MAP[left]['trigger']
+  let trigger_id = AXIS_MAP[left]['trigger']
   let min_max_scaler = quando.new_scaler(min, max, inverted)
   let handler = (val) => {
     let new_val = min_max_scaler(val)
     return callback(new_val)
   }
-  _handle(button_handlers, id, EITHER, handler) 
+  _handle(button_handlers, block_id, trigger_id, EITHER, handler) 
 }
 
 function _updateAxes(gamepad) {

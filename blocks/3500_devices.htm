@@ -290,7 +290,7 @@ data-quando-drop-valid="display-when-display,advanced-comment,inventor-flip,inve
 
 <div data-quando-block-type="devices-when-gamepad-button" class="quando-block" data-quando-id="true"
   data-quando-drop-valid="display-when-display,advanced-comment,inventor-flip,inventor-function-block,advanced-group"
-  data-quando-javascript="quando.gamepad.handleButton(${button_index},'${down_up}',($(eq$,${down_up}$,either$,val)$)=>{${box}})">
+  data-quando-javascript="quando.gamepad.handleButton(${data-quando-id},${button_index},'${down_up}',($(eq$,${down_up}$,either$,val)$)=>{${box}})">
     <div class="quando-left quando-devices"></div>
     <div class="quando-right">
         <div class="quando-row quando-devices">
@@ -330,7 +330,7 @@ data-quando-drop-valid="display-when-display,advanced-comment,inventor-flip,inve
 
 <div data-quando-block-type="devices-when-gamepad-axis" class="quando-block" data-quando-id="true"
   data-quando-drop-valid="display-when-display,advanced-comment,inventor-flip,inventor-function-block,advanced-group"
-  data-quando-javascript="quando.gamepad.handleAxis(${left},'${axis}',${middle},${plus_minus},${ignore},${inverted},(val)=>{${box}})">
+  data-quando-javascript="quando.gamepad.handleAxis(${data-quando-id},${left},'${axis}',${middle},${plus_minus},${ignore},${inverted},(val)=>{${box}})">
     <div class="quando-left quando-devices"></div>
     <div class="quando-right">
         <div class="quando-row quando-devices">
@@ -373,7 +373,7 @@ data-quando-drop-valid="display-when-display,advanced-comment,inventor-flip,inve
 
 <div data-quando-block-type="devices-when-gamepad-trigger" class="quando-block" data-quando-id="true" 
   data-quando-drop-valid="display-when-display,advanced-comment,inventor-flip,inventor-function-block,advanced-group"
-  data-quando-javascript="quando.gamepad.handleTrigger(${left},${min},${max},${inverted},(val)=>{${box}})">
+  data-quando-javascript="quando.gamepad.handleTrigger(${data-quando-id},${left},${min},${max},${inverted},(val)=>{${box}})">
     <div class="quando-left quando-devices"></div>
     <div class="quando-right">
         <div class="quando-row quando-devices">
