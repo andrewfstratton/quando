@@ -11,7 +11,7 @@ let _remote_list = []
 const AUTOSAVE = 'quandoAutosave' // used for key to save/load to/from browser
 export let client_script = ""
 const QUANDO_DISABLED = 'quando-disabled';
-const POSIX_FILENAME_REGEXP = /^[a-zA-Z0-9\-_.]+$/
+const FILENAME_REGEXP = /^[^\"*\/:<>?\\\|]+$/
 
 export function showObject(obj) {
   let script = document.getElementById('script')
@@ -883,8 +883,8 @@ export function handle_remote_save() {
   let name = $('#remote_save_key').val()
   if (name == "") {
     _warning("No name given, so not saved")
-  } else if (!POSIX_FILENAME_REGEXP.test(name)){
-    _warning("Not saved - filename can only contain characters, digits or '_-.'")
+  } else if (!FILENAME_REGEXP.test(name)){
+    _error("Not saved - filename cannot contain \" * / : < > ? \\ | ")
   } else {
     let code = generateCode(document.getElementById('script'))
     common.Put('/scripts/' + encodeURI(name),
