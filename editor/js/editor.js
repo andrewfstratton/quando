@@ -867,9 +867,14 @@ export function handle_test() {
     }
   }
 
-export function handle_save() {
+export function handle_save(quick = false) {
+  if (($('#remote_save_key').val() == "") // i.e. missing a filename
+    || (quick == false)) {
     $('#remote_save_modal').modal('show')
+  } else { // save without modal
+    handle_remote_save(false)
   }
+}
 
   function save_autosave(_script) {
     localStorage.setItem(AUTOSAVE, JSON.stringify({
@@ -879,7 +884,7 @@ export function handle_save() {
     }))
   }
   
-export function handle_remote_save() {
+export function handle_remote_save(close_modal = true) {
   let name = $('#remote_save_key').val()
   if (name == "") {
     _warning("No name given, so not saved")
@@ -889,7 +894,9 @@ export function handle_remote_save() {
     let code = generateCode(document.getElementById('script'))
     common.Put('/scripts/' + encodeURI(name),
       (success) => {
-        $('#remote_save_modal').modal('hide')
+        if (close_modal) {
+          $('#remote_save_modal').modal('hide')
+        }
         _saved(name)
       }, (fail) => {
         alert('Failed to save')
