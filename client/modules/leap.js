@@ -9,12 +9,25 @@
     self.controller.on('frame', self.handler)
   })
 
-  self.handOpen = function (hand, callback) {
-    quando.add_handler('leapHandOpen' + hand, callback)
-  }
-
-  self.handClosed = function (hand, callback) {
-    quando.add_handler('leapHandClosed' + hand, callback)
+  self.handOpenClose = (hand, open_close, callback) => {
+    if (["open", "either"].includes(open_close)) {
+      quando.add_handler('leapHandOpen' + hand, () => {
+        if (open_close == 'open') {
+          callback()
+        } else {
+          callback(0)
+        }
+      })
+    }
+    if (["close", "either"].includes(open_close)) {
+      quando.add_handler('leapHandClosed' + hand, () => {
+        if (open_close == 'close') {
+          callback()
+        } else {
+          callback(1)
+        }
+      })
+    }
   }
 
   self.handleGrip = (hand, min, max, inverted, callback) => {

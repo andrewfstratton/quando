@@ -1,25 +1,27 @@
 <div data-quando-block-type="devices-leap-when" class="quando-block"
-data-quando-drop-valid="display-when-display,advanced-comment,inventor-flip,inventor-function-block,advanced-group"
-    data-quando-javascript="quando.leap.${hand_fn}('${hand}', ()=>{${box}})">
-    <div class="quando-left quando-devices"></div>
-    <div class="quando-right">
-        <div class="quando-row quando-devices">
-            <span class="quando-info" title="This block can only be dragged into When Display.">⚠</span>
-            <span class="quando-info" title="Leap motion required"> 👋</span>
-            When
-            <select data-quando-name='hand'>
-                <option value='Either'>🖐</option>
-                <option value='Left'>👈</option>
-                <option value='Right'>👉</option>
-            </select>
-            <select data-quando-name='hand_fn' class='quando-toggle'>
-                <option value='handClosed'>Fist</option>
-                <option value='handOpen'>Flat</option>
-            </select>
-        </div>
-        <div data-quando-name="box" class="quando-box"></div>
-        <div class="quando-row quando-devices"></div>
+  data-quando-drop-valid="display-when-display,advanced-comment,inventor-flip,inventor-function-block,advanced-group"
+  data-quando-javascript="quando.leap.handOpenClose('${hand}', '${open_close}', (val)=>{${box}})">
+  <div class="quando-left quando-devices"></div>
+  <div class="quando-right">
+    <div class="quando-row quando-devices">
+      <span class="quando-info" title="This block can only be dragged into When Display.">⚠</span>
+      <span class="quando-info" title="Leap motion required"> 👋</span>
+      When
+      <select data-quando-name='hand'>
+        <option value='Either'>🖐</option>
+        <option value='Left'>👈</option>
+        <option value='Right'>👉</option>
+      </select>
+      <select data-quando-name='open_close' class='quando-menu'>
+        <option value='close'>Fist</option>
+        <option value='open'>Flat</option>
+        <option value='either'>⇕</option>
+      </select>
+      <span data-quando-toggle="open_close=either">⚡</span>
     </div>
+    <div data-quando-name="box" class="quando-box"></div>
+    <div class="quando-row quando-devices"></div>
+  </div>
 </div>
 
 
