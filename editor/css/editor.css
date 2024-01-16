@@ -109,7 +109,7 @@ input, #_hidden_width_element_ {
 .quando-block {
   width: max-content;
   height: max-content;
-  margin: 0px 0px 4px 4px;
+  margin: 2px 0px 2px 4px;
   position:relative;
 }
 
@@ -120,10 +120,10 @@ input, #_hidden_width_element_ {
 .quando-left {
   position:absolute;
   top:0px;
-  left:0px;
+  left:4px;
   float:left;
   z-index:1;
-  width: 8px;
+  width: 6px;
   height:100%;
   border-radius: 6px 0px 0px 6px;
 }
@@ -131,7 +131,7 @@ input, #_hidden_width_element_ {
 .quando-right {
   position:relative;
   z-index:1;
-  margin-left: 8px;
+  margin-left: 10px;
   width:100%;
 }
 
@@ -142,7 +142,7 @@ input, #_hidden_width_element_ {
 
 .quando-right>.quando-row:first-child {
   border-radius: 6px 6px 6px 6px;
-  margin-left: -12px;
+  margin-left: -14px;
 }
 
 .quando-block, .quando-box {
