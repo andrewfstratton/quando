@@ -24,6 +24,7 @@
             "buildFlags": "-tags=full",
             "request": "launch",
             "mode": "debug",
+            "output": "debug",
             "program": ".",
             "env": {},
             "args": [
