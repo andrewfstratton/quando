@@ -952,6 +952,10 @@ export function handle_show_code() {
     update_code_clip()
   }
 
+export function handle_show_unicode() {
+  $('#show_unicode').modal('show')
+}
+
 export function handle_clear() {
   let old_object = getScriptAsObject()
   let old_deploy = _deploy

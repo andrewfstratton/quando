@@ -64,6 +64,9 @@
                         <label for="upload_media" type="button" class="btn btn-primary">
                             <span class="glyphicon glyphicon-cloud-upload"></span> Upload Media
                         </label>
+                        <button type="button" class="btn btn-primary" onclick="index.handle_show_unicode();">
+                            <span class="glyphicon glyphicon-exclamation-sign"></span> Unicode
+                        </button>
                     </div>
                     <div class="btn-group" role="group">
                         <button type="button" class="btn btn-primary" onclick="index.handle_test();">
@@ -178,6 +181,38 @@
                         onclick="index.handle_upload();">Upload</button>
                     <button type="button" class="btn" data-dismiss="modal"
                         onclick="index.clear_upload_media();">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="show_unicode" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    Select unicode character/s below and Copy to clipboard:
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <figure class="highlight">
+                            <pre><textarea readonly="true" id="show_modal_unicode" class="language-html" data-lang="html">
+⚡	❓	❗	❔	±
+⚙️	🔍	📄	📷	📺
+👋	🖐	👈	👉	💾
+📟	🅰	🅱	📡	⏰
+🖱	⌨	🕹	📍	🎮	
+🎹	🎵	🥁	🔊	️🗿️
+🤖	🌈	🎁	🧠	👣
+
+⇔	⇕	⤢	⤹⤸
+⇧	⇩	⇦	⇨
+⬀	⬃	↰	↱
+                            </textarea></pre>
+                        </figure>
+                    </div>
+                    Scratch: <textarea id="show_unicode_scratch"  class="language-html" data-lang="html" style="resize: horizontal;" rows="1"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
