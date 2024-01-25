@@ -3,7 +3,6 @@ module quando // N.B. This will never be a module
 go 1.17
 
 require (
-	github.com/fstanis/screenresolution v0.0.0-20190527020317-869904d15333
 	github.com/getlantern/systray v1.2.1
 	github.com/go-vgo/robotgo v0.110.0
 	github.com/skratchdot/open-golang v0.0.0-20200116055534-eef842397966
