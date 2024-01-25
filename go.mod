@@ -9,7 +9,7 @@ require (
 	github.com/skratchdot/open-golang v0.0.0-20200116055534-eef842397966
 	github.com/zserge/lorca v0.1.10
 	go.bug.st/serial v1.3.5
-	golang.org/x/net v0.6.0
+	golang.org/x/net v0.20.0
 )
 
 require (
@@ -42,5 +42,5 @@ require (
 	github.com/vcaesar/tt v0.20.0 // indirect
 	github.com/yusufpapurcu/wmi v1.2.3 // indirect
 	golang.org/x/image v0.12.0 // indirect
-	golang.org/x/sys v0.12.0 // indirect
+	golang.org/x/sys v0.16.0 // indirect
 )
