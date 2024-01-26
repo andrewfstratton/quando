@@ -7,7 +7,7 @@ import (
 	"quando/internal/server/ip"
 )
 
-var handlers = []server.Handler{} // extra handlers are added when running full version
+var handlers = []server.Handler{} // extra handlers are added when built as full version
 
 func main() {
 	fmt.Println("Quando Go Server started")
