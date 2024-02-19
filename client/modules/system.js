@@ -13,12 +13,14 @@ self.handle_message = (data) => {
   let title = data.title
   if (title != last_title) { // i.e. title has changed
     for (let handler of handlers) {
-      if (handler.match.test(title) != handler.match.test(last_title)) {
-        // i.e. title match has changed true<>false
-        if (handler.match.test(title)) {
-          handler.callback()
-        } else {
-          handler.change()
+      if (handler != undefined) { // may have been deconstructed
+        if (handler.match.test(title) != handler.match.test(last_title)) {
+          // i.e. title match has changed true<>false
+          if (handler.match.test(title)) {
+            handler.callback()
+          } else {
+            handler.change()
+          }
         }
       }
     }
