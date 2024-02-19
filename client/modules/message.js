@@ -59,7 +59,7 @@ function _handleWebSocketmessage(e) {
     case 'message':
       Object.values(message_callback).forEach(item => {
         if (item.message == message.message) {
-          let val = message.val
+          let val = message.val || 0 // 0 won't be sent so must fallback to 0
           if (message.txt !== undefined) {
             val = message.txt
           }
