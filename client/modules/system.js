@@ -47,3 +47,11 @@ self.whenFocus = (block_id, comparison, title, callback, fn_change) => {
     delete handlers[block_id]
   })
 }
+
+self.fullScreen = (val) => {
+  if (val) {
+    document.querySelector("body").requestFullscreen()
+  } else {
+    document.exitFullscreen()
+  }
+}
