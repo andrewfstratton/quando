@@ -56,6 +56,8 @@ github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZN
 github.com/power-devops/perfstat v0.0.0-20210106213030-5aafc221ea8c/go.mod h1:OmDBASR4679mdNQnz2pUhc2G8CO2JrUAVFDRBDP/hJE=
 github.com/power-devops/perfstat v0.0.0-20221212215047-62379fc7944b h1:0LFwY6Q3gMACTjAbMZBjXAqTOzOwFaj2Ld6cjeQ7Rig=
 github.com/power-devops/perfstat v0.0.0-20221212215047-62379fc7944b/go.mod h1:OmDBASR4679mdNQnz2pUhc2G8CO2JrUAVFDRBDP/hJE=
+github.com/power-devops/perfstat v0.0.0-20240221224432-82ca36839d55 h1:o4JXh1EVt9k/+g42oCprj/FisM4qX9L3sZB3upGN2ZU=
+github.com/power-devops/perfstat v0.0.0-20240221224432-82ca36839d55/go.mod h1:OmDBASR4679mdNQnz2pUhc2G8CO2JrUAVFDRBDP/hJE=
 github.com/robotn/xgb v0.0.0-20190912153532-2cb92d044934 h1:2lhSR8N3T6I30q096DT7/5AKEIcf1vvnnWAmS0wfnNY=
 github.com/robotn/xgb v0.0.0-20190912153532-2cb92d044934/go.mod h1:SxQhJskUJ4rleVU44YvnrdvxQr0tKy5SRSigBrCgyyQ=
 github.com/robotn/xgbutil v0.0.0-20190912154524-c861d6f87770 h1:2uX8QRLkkxn2EpAQ6I3KhA79BkdRZfvugJUzJadiJwk=
@@ -100,6 +102,8 @@ github.com/zserge/lorca v0.1.10 h1:f/xBJ3D3ipcVRCcvN8XqZnpoKcOXV8I4vwqlFyw7ruc=
 github.com/zserge/lorca v0.1.10/go.mod h1:bVmnIbIRlOcoV285KIRSe4bUABKi7R7384Ycuum6e4A=
 go.bug.st/serial v1.3.5 h1:k50SqGZCnHZ2MiBQgzccXWG+kd/XpOs1jUljpDDKzaE=
 go.bug.st/serial v1.3.5/go.mod h1:z8CesKorE90Qr/oRSJiEuvzYRKol9r/anJZEb5kt304=
+go.bug.st/serial v1.6.2 h1:kn9LRX3sdm+WxWKufMlIRndwGfPWsH1/9lCWXQCasq8=
+go.bug.st/serial v1.6.2/go.mod h1:UABfsluHAiaNI+La2iESysd9Vetq7VRdpxvjx7CmmOE=
 golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2/go.mod h1:djNgcEr1/C05ACkg1iLfiJU5Ep61QUkGW8qpdssI0+w=
 golang.org/x/crypto v0.0.0-20210921155107-089bfa567519/go.mod h1:GvvjBRRGRdwPK5ydBHafDWAxML/pGHZbMvKqRZ5+Abc=
 golang.org/x/crypto v0.19.0/go.mod h1:Iy9bg/ha4yyC70EfRS8jz+B6ybOBKMaSxLj6P6oBDfU=

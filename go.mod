@@ -1,13 +1,15 @@
 module quando // N.B. This will never be a module
 
-go 1.17
+go 1.21
+
+toolchain go1.22.0
 
 require (
 	github.com/getlantern/systray v1.2.1
 	github.com/go-vgo/robotgo v0.110.0
 	github.com/skratchdot/open-golang v0.0.0-20200116055534-eef842397966
 	github.com/zserge/lorca v0.1.10
-	go.bug.st/serial v1.3.5
+	go.bug.st/serial v1.6.2
 	golang.org/x/net v0.21.0
 )
 
@@ -28,7 +30,7 @@ require (
 	github.com/lxn/win v0.0.0-20210218163916-a377121e959e // indirect
 	github.com/otiai10/gosseract v2.2.1+incompatible // indirect
 	github.com/oxtoacart/bpool v0.0.0-20190530202638-03653db5a59c // indirect
-	github.com/power-devops/perfstat v0.0.0-20221212215047-62379fc7944b // indirect
+	github.com/power-devops/perfstat v0.0.0-20240221224432-82ca36839d55 // indirect
 	github.com/robotn/xgb v0.0.0-20190912153532-2cb92d044934 // indirect
 	github.com/robotn/xgbutil v0.0.0-20190912154524-c861d6f87770 // indirect
 	github.com/shirou/gopsutil/v3 v3.24.1 // indirect
