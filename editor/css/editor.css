@@ -314,6 +314,14 @@ select.quando-toggle {
   float: right
 }
 
+.hover-display {
+  display:none;
+}
+
+.quando-block:hover .hover-display {
+  display:unset;
+}
+
 /* Fix for Firefox */
 input[type=number] { 
   -moz-appearance: textfield;
