@@ -73,8 +73,11 @@ self.one = (block_id, message, next, val, txt) => {
     if (typeof fn === 'function') { fn(val, txt) }
   }
 
-  if (message.length) {
-    quando.message.add_handler(message, () => self.reset(block_id))
+  if (message.length) {  // To avoid multiple handlers and resets
+    if (!arr.reset) {
+      arr.reset = true
+      quando.message.add_handler(message, () => self.reset(block_id))
+    }
   }
 }
 
