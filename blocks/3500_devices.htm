@@ -515,7 +515,7 @@
 
 <div data-quando-block-type="devices-window-title" class="quando-block" data-quando-id="true"
   data-quando-drop-valid="display-when-display,advanced-comment,inventor-flip,inventor-function-block,advanced-group"
-  data-quando-javascript="quando.system.whenFocus('${data-quando-id}','${comparison}','${title}',()=>{${box}},()=>{${box_change}})">
+  data-quando-javascript="quando.system.whenFocus('${data-quando-id}','${comparison}','${title}',()=>{${box}},()=>{${box2}})">
   <div class="quando-left quando-devices"></div>
   <div class="quando-right">
     <div class="quando-row quando-devices">
@@ -534,17 +534,15 @@
       </select>
     </div>
     <div data-quando-name="box" class="quando-box"></div>
-    <span data-quando-toggle="extras=show">
-      <div class="quando-row quando-devices">
-        then when
-        <span class="iconify"> does not </span>
-        <span data-quando-toggle='comparison=contains'>contain</span>
-        <span data-quando-toggle='comparison=starts'>start with</span>
-        <span data-quando-toggle='comparison=ends'>end with</span>
-        <span data-quando-toggle='comparison=equals'>equal</span>
-      </div>
-      <div data-quando-name="box_change" class="quando-box"></div>
-    </span>
+    <div class="quando-row quando-devices" data-quando-toggle="extras=show">
+      then when
+      <span class="iconify"> does not </span>
+      <span data-quando-toggle='comparison=contains'>contain</span>
+      <span data-quando-toggle='comparison=starts'>start with</span>
+      <span data-quando-toggle='comparison=ends'>end with</span>
+      <span data-quando-toggle='comparison=equals'>equal</span>
+    </div>
+    <div data-quando-name="box2" class="quando-box" data-quando-toggle="extras=show"></div>
     <div class="quando-row quando-devices"></div>
   </div>
 </div>
