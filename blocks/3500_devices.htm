@@ -714,6 +714,42 @@
 </div>
 
 
+<div data-quando-block-type="rpico-gamepad-button" class="quando-block"
+  data-quando-javascript="quando.rpico.gamepad_button(val,${button_index},'${press_release}')">
+  <div class="quando-left quando-devices"></div>
+  <div class="quando-right">
+    <div class="quando-row quando-devices">
+      <span data-quando-toggle='press_release=either'>⚡</span>
+      🎮️️
+      <span class="iconify">Pico</span>
+      <select data-quando-name="press_release">
+        <option value='press'>press</option>
+        <option value='release'>release</option>
+        <option value='either'>⇕</option>
+      </select>
+      <select data-quando-name="button_index">
+        <option value='0'>Ⓐ/✕</option>
+        <option value='1'>Ⓑ/◯</option>
+        <option value='2'>Ⓧ/☐</option>
+        <option value='3'>Ⓨ/🛆</option>
+        <option value='14'>🠈</option>
+        <option value='15'>🠊</option>
+        <option value='12'>🠉</option>
+        <option value='13'>🠋</option>
+        <option value='4'>👈 Bumper</option>
+        <option value='5'>👉 Bumper</option>
+        <option value='10'>📍👈</option>
+        <option value='11'>👉📍</option>
+        <option value='8'>Back 👈</option>
+        <option value='9'>👉 Start</option>
+        <option value='6'>🏠 Home</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+
+
 <div data-quando-block-type="devices-control-type" class="quando-block" data-quando-javascript="quando.control.type($(eq$,${txt}$,input$,'${text}'$,${txt})$)">
   <div class="quando-left quando-devices"></div>
   <div class="quando-right">
