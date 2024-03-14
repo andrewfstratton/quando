@@ -7,21 +7,19 @@ from gamepad import Gamepad
 led = digitalio.DigitalInOut(board.LED)
 led.direction = digitalio.Direction.OUTPUT
 
-btn = 1
+btn_up = 1
+btn_down = 8
 
-print("Started!!")
-state = True
-led.value = state
-try:
-    gp = Gamepad(usb_hid.devices)
-except NameError:
-    state = False
+gp = Gamepad(usb_hid.devices)
 
 while True:
-    led.value = state
-    led.value = True
-    gp.press_buttons(btn)
-    time.sleep(0.7)
-    led.value = not state
-    gp.release_buttons(btn)
-    time.sleep(0.15)
+    btn_down += 1
+    if btn_down > 16:
+        btn_down = 1
+    btn_up += 1
+    if btn_up > 16:
+        btn_up = 1
+    gp.press_buttons(btn_up)
+    gp.release_buttons(btn_down)
+    time.sleep(0.1)
+    led.value = not led.value

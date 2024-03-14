@@ -16,27 +16,13 @@ def find_device(devices, *, usage_page, usage):
     raise ValueError("Could not find matching HID device.")
 
 class Gamepad:
-    """Emulate a generic gamepad controller with 8 buttons,
-    numbered 1-8 and one joystick controlling
-    ``x` and ``y`` values.
-
-    The joystick values could be interpreted
-    differently by the receiving program: those are just the names used here.
-    The joystick values are in the range 0 to 255.
-"""
-
     def __init__(self, devices):
         self._gamepad_device = find_device(devices, usage_page=0x1, usage=0x05)
-        self._report = bytearray(5)
-        self._last_report = bytearray(5)
-        self._buttons_state = 0
-        self._joy_x = 0
-        self._joy_y = 0
-        self._joy_z = 0
-        self._joy_rz = 0
+        self._report = bytearray(6)
+        self._last_report = bytearray(6)
 
         # Send an initial report to test if HID device is ready.
-        # If not, wait a bit and try once more.
+        # If not, wait a second and try once more.
         try:
             self.reset_all()
         except OSError:
@@ -78,8 +64,8 @@ class Gamepad:
         self._send(always=True)
 
     def _send(self, always=False):
-        # struct.pack_into('<HBBBB', self._report, 0,
-        struct.pack_into('<BBBBB', self._report, 0,
+        # Use h for signed 16 bit short
+        struct.pack_into('<HBBBB', self._report, 0,
                          self._buttons_state,
                          self._joy_x, self._joy_y, self._joy_z, self._joy_rz)
 
@@ -91,10 +77,8 @@ class Gamepad:
 
     @staticmethod
     def _validate_button_number(button):
-        if not 1 <= button <= 8:
-        # if not 1 <= button <= 16:
-            # raise ValueError("Button number must in range 1 to 16")
-            raise ValueError("Button number must in range 1 to 8")
+        if not 1 <= button <= 16:
+            raise ValueError("Button number must in range 1 to 16")
         return button
 
     @staticmethod
