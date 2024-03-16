@@ -18,8 +18,8 @@ def find_device(devices, *, usage_page, usage):
 class Gamepad:
     def __init__(self, devices):
         self._gamepad_device = find_device(devices, usage_page=0x1, usage=0x05)
-        self._report = bytearray(6)
-        self._last_report = bytearray(6)
+        self._report = bytearray(10)
+        self._last_report = bytearray(10)
 
         # Send an initial report to test if HID device is ready.
         # If not, wait a second and try once more.
@@ -57,15 +57,14 @@ class Gamepad:
     def reset_all(self):
         """Release all buttons and set joystick to zero."""
         self._buttons_state = 0
-        self._joy_x = 128
-        self._joy_y = 128
-        self._joy_z = 128
-        self._joy_rz = 128
+        self._joy_x = 0
+        self._joy_y = 0
+        self._joy_z = 0
+        self._joy_rz = 0
         self._send(always=True)
 
     def _send(self, always=False):
-        # Use h for signed 16 bit short
-        struct.pack_into('<HBBBB', self._report, 0,
+        struct.pack_into('<Hhhhh', self._report, 0,
                          self._buttons_state,
                          self._joy_x, self._joy_y, self._joy_z, self._joy_rz)
 
@@ -83,6 +82,6 @@ class Gamepad:
 
     @staticmethod
     def _validate_joystick_value(value):
-        if not 0 <= value <= 255:
-            raise ValueError("Joystick value must be in range 0 to 255")
+        if not -32767 <= value <= 32767:
+            raise ValueError("Joystick value must be in range -32767 to 32767")
         return value
