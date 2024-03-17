@@ -22,10 +22,6 @@ if (!quando) {
     _send('/control/rpi_pico_w/', key, val)
   }
 
-  function _badger_2040_send(key, val) {
-    _send('/control/badger2040/', key, val)
-  }
-
   self.turn = (val, servo, middle, plus_minus, inverted) => {
     if (val === false) { val = 0.5 }
     let min = middle - plus_minus
@@ -62,7 +58,6 @@ if (!quando) {
     }
     if (button_num <= 15) {
       button_num++ // increment so B0 is passed as 1 so empty is detected as 0
-      _badger_2040_send('button', {'num': button_num, 'press': press})
-      // _pico_w_send('button', {'num': button_num, 'press': press})
+      _pico_w_send('button', {'num': button_num, 'press': press})
     }
   }
