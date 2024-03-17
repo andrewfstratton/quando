@@ -32,7 +32,7 @@ var device = usb.Device{
 	VID:        "2E8A",
 	PID:        "000A",
 	SerialMode: serialMode,
-	NewLine:    "\r\n",
+	NewLine:    "\r",
 }
 
 func HandleLed(w http.ResponseWriter, req *http.Request) {
@@ -56,11 +56,8 @@ func HandleHIDButton(w http.ResponseWriter, req *http.Request) {
 		btn, err := button.Num.Int64()
 		ibtn := int(btn - 1) // -1 is due to empty being 0 so +1 was added before sending here
 		if (err == nil) && (ibtn >= 0) {
-			// prefix := button.Press // i.e. '0' or '1'
 			if (err == nil) && (ibtn >= 0) {
-				message := "B" + strconv.Itoa(ibtn) + "," + (button.Press) // button.Press is '0' or '1'
-				// message := prefix + strconv.Itoa(ibtn)
-				// fmt.Println(message)
+				message := button.Press + strconv.Itoa(ibtn) // button.Press is 'b' or 'B'
 				device.Send(message)
 			}
 		}

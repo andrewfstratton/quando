@@ -48,12 +48,12 @@ if (!quando) {
 
   self.gamepad_button = (val, button_num, press_release) => {
     // N.B. Sent as string 0 or 1 only
-    let press = '0' // default to release
+    let press = 'b' // default to release
     if (press_release == 'press') {
-      press = '1'
+      press = 'B'
     } else if (press_release == 'either') {
       if (val && (val > 0.5)) {
-        press = '1'
+        press = 'B'
       }
     }
     if (button_num <= 15) {
