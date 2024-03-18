@@ -77,8 +77,8 @@ func HandleHIDAxis(w http.ResponseWriter, req *http.Request) {
 		return
 	} else {
 		val64, err := axis.Num.Int64()
-		if (err == nil) && (val64 >= 0) {
-			message := axis.Id + strconv.Itoa(int(val64-1)) // -1 is adjustment for zero avoidance
+		if (err == nil) && (val64 > 0) {
+			message := axis.Id + strconv.Itoa(int(val64-32768)) // -1 adjustment for zero avoidance
 			device.Send(message)
 		}
 	}

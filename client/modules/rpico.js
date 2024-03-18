@@ -63,5 +63,5 @@ if (!quando) {
 
   self.gamepad_axis = (val, axis_id) => {
     let intval = 1 + Math.floor(65534 * val)// convert 0..1 to 1..65535
-    _pico_w_send('axis', {'id': axis_id, 'val': intval})
+    _pico_w_send('axis', {'id': axis_id, 'num': intval})
   }
