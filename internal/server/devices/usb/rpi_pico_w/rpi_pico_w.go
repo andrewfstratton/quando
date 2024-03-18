@@ -21,6 +21,11 @@ type buttonJSON struct {
 	Press string      `json:"press"`         // use B press and b release
 }
 
+type axisJSON struct {
+	Id  string      `json:"id"`            // one of XYZxyz
+	Num json.Number `json:"num,omitempty"` // add one before send to avoid 0 being same as empty
+}
+
 var serialMode = serial.Mode{
 	BaudRate: 115200,
 	DataBits: 8,
@@ -60,6 +65,21 @@ func HandleHIDButton(w http.ResponseWriter, req *http.Request) {
 				message := button.Press + strconv.Itoa(ibtn) // button.Press is 'b' or 'B'
 				device.Send(message)
 			}
+		}
+	}
+}
+
+func HandleHIDAxis(w http.ResponseWriter, req *http.Request) {
+	var axis axisJSON
+	err := json.NewDecoder(req.Body).Decode(&axis)
+	if err != nil {
+		fmt.Println("Error parsing request", err)
+		return
+	} else {
+		val64, err := axis.Num.Int64()
+		if (err == nil) && (val64 >= 0) {
+			message := axis.Id + strconv.Itoa(int(val64-1)) // -1 is adjustment for zero avoidance
+			device.Send(message)
 		}
 	}
 }

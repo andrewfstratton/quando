@@ -47,7 +47,6 @@ if (!quando) {
   }
 
   self.gamepad_button = (val, button_num, press_release) => {
-    // N.B. Sent as string 0 or 1 only
     let press = 'b' // default to release
     if (press_release == 'press') {
       press = 'B'
@@ -60,4 +59,9 @@ if (!quando) {
       button_num++ // increment so B0 is passed as 1 so empty is detected as 0
       _pico_w_send('button', {'num': button_num, 'press': press})
     }
+  }
+
+  self.gamepad_axis = (val, axis_id) => {
+    let intval = 1 + Math.floor(65534 * val)// convert 0..1 to 1..65535
+    _pico_w_send('axis', {'id': axis_id, 'val': intval})
   }

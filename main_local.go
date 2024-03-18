@@ -19,5 +19,6 @@ func init() {
 		server.Handler{Url: "/control/maker_pi_rp2040/turn", Func: maker_pi_rp2040.HandleServo},
 		server.Handler{Url: "/control/rpi_pico_w/led", Func: rpi_pico_w.HandleLed},
 		server.Handler{Url: "/control/rpi_pico_w/button", Func: rpi_pico_w.HandleHIDButton},
+		server.Handler{Url: "/control/rpi_pico_w/axis", Func: rpi_pico_w.HandleHIDAxis},
 	)
 }
