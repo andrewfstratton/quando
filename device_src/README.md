@@ -1,0 +1,1 @@
+This includes built hex files (UF2) that can be dropped directly onto the relevant device, as well as source for specific devices/purposes.
