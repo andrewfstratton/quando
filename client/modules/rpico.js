@@ -61,7 +61,17 @@ if (!quando) {
     }
   }
 
-  self.gamepad_axis = (val, axis_id) => {
+  self.gamepad_axis = (val, axis_id) => { // TODO add inverted
+    switch (axis_id) {
+      case "Y": // fallthrough
+      case "x":
+        val = 1 - val // up/down axis are inverted
+        break;
+      case "y": // fallthrough
+      case "z":
+        val = 0.5 + (val/2) // trigger are 0.5 to 1
+        break;
+    }
     let intval = 1 + Math.floor(65534 * val)// convert 0..1 to 1..65535
     _pico_w_send('axis', {'id': axis_id, 'num': intval})
   }
