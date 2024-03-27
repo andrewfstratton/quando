@@ -2,10 +2,10 @@ import * as text from "/common/text.js";
 
 let quando = window['quando']
 if (!quando) {
-  alert('Fatal Error: control must be included after quando_browser')
+  alert('Fatal Error: key_control must be included after quando_browser')
 }
 
-  let self = quando.control = {}
+  let self = quando.key_control = {}
 
   function _send(command, arg) {
     fetch('/control/' + command, { method: 'POST', 

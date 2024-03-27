@@ -1,9 +1,9 @@
 let quando = window['quando']
 if (!quando) {
-  alert('Fatal Error: control_mouse must be included after quando_browser')
+  alert('Fatal Error: mouse_control must be included after quando_browser')
 }
 
-  let self = quando.control_mouse = {}
+  let self = quando.mouse_control = {}
   let mouse = {}
 
   function _send(arg) {
@@ -89,7 +89,7 @@ if (!quando) {
       delete mouse.right
     }
     if (Object.keys(send).length) { //  i.e. something has been set
-      console.log("send="+JSON.stringify(send))
+      // console.log("send="+JSON.stringify(send))
       _send(send)
     }
   }
