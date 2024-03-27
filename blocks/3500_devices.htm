@@ -750,20 +750,27 @@
 
 
 <div data-quando-block-type="rpico-gamepad-axis" class="quando-block"
-  data-quando-javascript="quando.rpico.gamepad_axis(val,'${axis_id}')">
+  data-quando-javascript="quando.rpico.gamepad_axis(val, ${left}, ${stick}, '${axis}')">
   <div class="quando-left quando-devices"></div>
   <div class="quando-right">
     <div class="quando-row quando-devices">
       ⚡ 🎮️️
       <span class="iconify">Pico</span>
-      <select data-quando-name="axis_id">
-        <option value='X'>📍👈⇔</option>
-        <option value='Y'>📍👈⇕</option>
-        <option value='Z'>👉📍⇔</option>
-        <option value='x'>👉📍⇕</option>
-        <option value='y'>👈 trigger</option>
-        <option value='z'>👉 trigger</option>
-      </select>
+        <select data-quando-name='left' class='quando-toggle'>
+          <option value='true'>👈️</option>
+          <option value='false'>️👉</option>
+        </select>
+        <select data-quando-name='stick' class='quando-toggle'>
+          <option value='true'>📍️</option>
+          <option value='false'>️trigger</option>
+        </select> 
+        <span data-quando-toggle='stick=true'>move
+          <select data-quando-name="axis" class="quando-toggle">
+            <option value='x'>⇔</option>
+            <option value='y'>⇕</option>
+          </select>
+        </span>
+        <span data-quando-toggle='stick=false'>⇕</span>
     </div>
   </div>
 </div>
