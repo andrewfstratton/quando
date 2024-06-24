@@ -379,6 +379,20 @@ let _current_display_id = -1 // to avoid being equal by accident to 0
     row.appendChild(button)
   }
 
+  self.addSpacer = function() {
+    let button = document.createElement('div')
+    button.className = 'quando_button'
+    button.style.opacity = 0
+    let buttons = document.getElementById('quando_buttons')
+    let row = buttons.lastElementChild
+    if (row == null) {
+      row = document.createElement('div')
+      row.className = "quando_buttons_row"
+      buttons.appendChild(row)
+    }
+    row.appendChild(button)
+  }
+
   self.buttonRow = function(fn) {
     let buttons = document.getElementById('quando_buttons')
     let new_row = document.createElement('div')
