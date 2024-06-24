@@ -121,7 +121,7 @@
 
 
 <div data-quando-block-type="display-add-button" class="quando-block"
-    data-quando-javascript="quando.addButton({text:'${text}', up_down:'${down_up}'}, ($(eq$,${down_up}$,either$,val)$)=>{${box}})">
+    data-quando-javascript="quando.addButton({text:'${text}', up_down:'${down_up}', text_colour:'${text_colour}', button_colour:'${button_colour}'}, ($(eq$,${down_up}$,either$,val)$)=>{${box}})">
     <div class="quando-left quando-display"></div>
     <div class="quando-right">
         <div class="quando-row quando-display">
@@ -134,6 +134,30 @@
             </select>
             <span data-quando-toggle='down_up=either'>⚡
             </span>
+            <select data-quando-name="extras" class="quando-toggle">
+                <option value="hidden">+</option>
+                <option value="show">-</option>
+            </select>
+            <span data-quando-toggle="extras=show">
+                <br>
+                Text 
+                <input data-quando-name="text_colour" type="color" value="#ffffff" />
+                Button
+                <input data-quando-name="button_colour" type="color" value="#e07700" />
+            </span>
+        </div>
+        <div data-quando-name="box" class="quando-box"></div>
+        <div class="quando-row quando-display"></div>
+    </div>
+</div>
+
+
+<div data-quando-block-type="display-button-row" class="quando-block"
+    data-quando-javascript="quando.buttonRow((val)=>{${box}})">
+    <div class="quando-left quando-display"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-display">
+            Button Row
         </div>
         <div data-quando-name="box" class="quando-box"></div>
         <div class="quando-row quando-display"></div>
