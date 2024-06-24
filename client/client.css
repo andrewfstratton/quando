@@ -4,7 +4,7 @@ body {
     margin:0;
 }
 
-#quando_labels {
+#quando_labels, #quando_buttons {
     -webkit-user-select: auto;
     user-select: auto;
 }
@@ -30,14 +30,44 @@ body {
     z-index: 2;
 }
 
+.quando_label {
+    opacity: 0.7;
+    margin: 2px 2px 5px 2px;
+    font-size: 2.1vw;
+}
+
 .quando_label::before {
     content: '\25b6\0020';
 }
-.quando_label {
-    font-size: 2.1vw;
+
+.quando_label, .quando_button {
     color: ffffff;
     padding: 5px;
-    margin: 2px 2px 5px 2px;
+    font-weight: normal;
+    transition: opacity 1.0s linear;
+    background-color: rgb(224, 119, 0);
+}
+
+.quando_button {
+    flex-grow: 1; /* overridable weight of width */
+    flex-basis: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 8px 8px 8px 8px;
+    font-size: 5vw;
+}
+
+.quando_label:focus, .quando_button:focus {
+    font-weight: 700;
+    margin: 0px 0px 3px 0px;
+    background-color: rgb(224, 119, 0);
+    opacity: 1;
+}
+
+.quando_buttons_row {
+    display: flex;
+    flex-grow: 1; /* i.e. the weight of the height */
 }
 
 #inp {
@@ -50,13 +80,27 @@ body {
     height: 1.9vw;
 }
 
-#quando_labels {
+#quando_labels, #quando_buttons {
     position: absolute;
     z-index: 100;
+}
+
+#quando_labels {
     bottom: 5%;
     width: 50%;
     left:10%;
 }
+
+#quando_buttons {
+    bottom: 5%;
+    width: 90%;
+    height: 70%;
+    left: 5%;
+    display: flex;
+    flex-direction: column;
+    
+}
+
 #quando_title {
     font-size: 3.7vw;
     top: 0%;
@@ -134,17 +178,3 @@ body {
     transition: width 0.1s linear;
 /*    background: radial-gradient(100px 100px, circle, #ffff00, #000);*/
 }
-.quando_label {
-    font-weight: normal;
-    /*background-color: rgba(224, 119, 0, 0.7);*/
-    transition: opacity 1.0s linear;
-    background-color: rgb(224, 119, 0);
-    opacity: 0.7;
-}
-.quando_label.focus {
-    font-weight: 700;
-    margin: 0px 0px 3px 0px;
-    background-color: rgb(224, 119, 0);
-    opacity: 1;
-}
-

@@ -277,7 +277,8 @@ let _current_display_id = -1 // to avoid being equal by accident to 0
       // perform any destructors - which will cancel pending events, etc.
       // assumes that display is unique...
       destructor.destroy()
-      // Clear current labels, title and text
+      // Clear current labels, buttons, title and text
+      document.getElementById('quando_buttons').innerHTML = ''
       document.getElementById('quando_labels').innerHTML = ''
       self.title()
       self.text()
@@ -330,15 +331,14 @@ let _current_display_id = -1 // to avoid being equal by accident to 0
     }
   }
 
-  self.addButton = function({text = "", up_down = "down"},fn) {
-    const elem = document.getElementById('quando_labels')
-    let div = document.createElement('br') // new element
-    // Show even when no title
-    div = document.createElement('div')
-    // TODO change to button class
-    div.className = 'quando_label'
-    div.innerHTML = text
-    div.setAttribute('id', 'button'+text)
+  self.addButton = function({text = "", up_down = "down", text_colour, button_colour},fn) {
+    let button = document.createElement('div')
+    button.className = 'quando_button'
+    button.innerHTML = text
+    button.style.color = text_colour
+    button.style.background = button_colour   
+    // set button.flexGrow to float weight
+    button.setAttribute('id', 'button'+text)
     function handleTouch(ev) {
       ev.preventDefault() // Avoids double event
       switch (ev.type) {
@@ -363,13 +363,28 @@ let _current_display_id = -1 // to avoid being equal by accident to 0
         //   break;
       }
     }
-    div.onmousedown = handleTouch
-    div.ontouchstart = handleTouch
-    div.onmouseup = handleTouch
-    div.ontouchend = handleTouch
-    // div.onmousemove = handleTouch
-    // div.ontouchmove = handleTouch
-    elem.appendChild(div)
+    button.onmousedown = handleTouch
+    button.ontouchstart = handleTouch
+    button.onmouseup = handleTouch
+    button.ontouchend = handleTouch
+    // button.onmousemove = handleTouch
+    // button.ontouchmove = handleTouch
+    let buttons = document.getElementById('quando_buttons')
+    let row = buttons.lastElementChild
+    if (row == null) {
+      row = document.createElement('div')
+      row.className = "quando_buttons_row"
+      buttons.appendChild(row)
+    }
+    row.appendChild(button)
+  }
+
+  self.buttonRow = function(fn) {
+    let buttons = document.getElementById('quando_buttons')
+    let new_row = document.createElement('div')
+    new_row.className = "quando_buttons_row"
+    buttons.appendChild(new_row)
+    fn()
   }
 
   self.promptInput = function() {
