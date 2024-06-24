@@ -120,8 +120,20 @@
 </div>
 
 
+<div data-quando-block-type="display-add-button-spacer" class="quando-block"
+    data-quando-javascript="quando.display.addSpacer()">
+    <div class="quando-left quando-display"></div>
+    <div class="quando-right">
+        <div class="quando-row quando-display">
+            <span class="iconify">☳</span>
+              Spacer
+        </div>
+    </div>
+</div>
+
+
 <div data-quando-block-type="display-add-button" class="quando-block"
-    data-quando-javascript="quando.addButton({text:'${text}', up_down:'${down_up}', text_colour:'${text_colour}', button_colour:'${button_colour}'}, ($(eq$,${down_up}$,either$,val)$)=>{${box}})">
+    data-quando-javascript="quando.display.addButton({text:'${text}', up_down:'${down_up}', text_colour:'${text_colour}', button_colour:'${button_colour}'}, ($(eq$,${down_up}$,either$,val)$)=>{${box}})">
     <div class="quando-left quando-display"></div>
     <div class="quando-right">
         <div class="quando-row quando-display">
@@ -154,7 +166,7 @@
 
 
 <div data-quando-block-type="display-button-row" class="quando-block"
-    data-quando-javascript="quando.buttonRow((val)=>{${box}})">
+    data-quando-javascript="quando.display.buttonRow((val)=>{${box}})">
     <div class="quando-left quando-display"></div>
     <div class="quando-right">
         <div class="quando-row quando-display">
