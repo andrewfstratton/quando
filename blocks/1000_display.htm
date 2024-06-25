@@ -126,7 +126,7 @@
     <div class="quando-right">
         <div class="quando-row quando-display">
             <span class="iconify">☳</span>
-              Spacer
+            Spacer
         </div>
     </div>
 </div>
@@ -153,7 +153,7 @@
             </select>
             <span data-quando-toggle="extras=show">
                 <br>
-                Text 
+                Text
                 <input data-quando-name="text_colour" type="color" value="#ffffff" />
                 Button
                 <input data-quando-name="button_colour" type="color" value="#e07700" />
@@ -166,12 +166,16 @@
 
 
 <div data-quando-block-type="display-button-row" class="quando-block"
-    data-quando-javascript="quando.display.buttonRow((val)=>{${box}})">
+    data-quando-javascript="quando.display.buttonRow({row_flow:${row_column}}, (val)=>{${box}})">
     <div class="quando-left quando-display"></div>
     <div class="quando-right">
         <div class="quando-row quando-display">
             <span class="iconify">☳</span>
-            Button Row
+            Button
+            <select data-quando-name='row_column' class='quando-toggle'>
+                <option value='true'>⋯ row</option>
+                <option value='false'>⋮column</option>
+            </select>
         </div>
         <div data-quando-name="box" class="quando-box"></div>
         <div class="quando-row quando-display"></div>

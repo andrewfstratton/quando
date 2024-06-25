@@ -4,11 +4,6 @@ body {
     margin:0;
 }
 
-#quando_labels, #quando_buttons {
-    -webkit-user-select: auto;
-    user-select: auto;
-}
-
 #container {
     -webkit-user-select: none;
     user-select: none;
@@ -51,11 +46,13 @@ body {
 .quando_button {
     flex-grow: 1; /* overridable weight of width */
     flex-basis: 0;
+    margin: 8px 8px 8px 8px;
+    font-size: clamp(1em, min(4vw,4vh), 3em); 
+    /* font-size: 25%; */
+    /* need below to force centre middle */
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 8px 8px 8px 8px;
-    font-size: 5vw;
 }
 
 .quando_label:focus, .quando_button:focus {
@@ -65,9 +62,14 @@ body {
     opacity: 1;
 }
 
-.quando_buttons_row {
+.quando_buttons_row, .quando_buttons_column {
     display: flex;
-    flex-grow: 1; /* i.e. the weight of the height */
+    flex-grow: 1;
+    /* i.e. the weight of the height/width */
+}
+
+.quando_buttons_column {
+    flex-direction: column;
 }
 
 #inp {
@@ -83,6 +85,8 @@ body {
 #quando_labels, #quando_buttons {
     position: absolute;
     z-index: 100;
+    -webkit-user-select: auto;
+    user-select: auto;
 }
 
 #quando_labels {
@@ -98,7 +102,6 @@ body {
     left: 5%;
     display: flex;
     flex-direction: column;
-    
 }
 
 #quando_title {
