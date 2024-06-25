@@ -8,6 +8,13 @@ if (!quando) {
 let self = quando.display = {}
 let buttons_parent = null // this is where to drop in new rows/columns
 
+  function _getButtonsParent() {
+    if (buttons_parent == null) {
+      buttons_parent = document.getElementById("quando_buttons")
+    }
+    return buttons_parent
+  }
+
   self.addButton = function({text = "", up_down = "down", text_colour, button_colour},fn) {
     let button = document.createElement('div')
     button.className = 'quando_button'
@@ -46,29 +53,25 @@ let buttons_parent = null // this is where to drop in new rows/columns
     button.ontouchend = handleTouch
     // button.onmousemove = handleTouch
     // button.ontouchmove = handleTouch
-    buttons_parent.appendChild(button)
+    _getButtonsParent().appendChild(button)
   }
 
   self.addSpacer = function() {
     let spacer = document.createElement('div')
     spacer.className = 'quando_button'
     spacer.style.opacity = 0
-    buttons_parent.appendChild(spacer)
+    _getButtonsParent().appendChild(spacer)
   }
 
   self.buttonRow = function({row_flow=true}, fn) {
-    // first time will set buttons parent - which requires the document to be loaded...
-    if (buttons_parent == null) {
-      buttons_parent = document.getElementById("quando_buttons")
-    }
-    let original_parent = buttons_parent
     let new_parent = document.createElement('div')
     if (row_flow) {
       new_parent.className = "quando_buttons_row"
     } else {
       new_parent.className = "quando_buttons_column"
     }
-    buttons_parent.appendChild(new_parent)
+    let original_parent = _getButtonsParent()
+    original_parent.appendChild(new_parent)
     // descend into the child
     buttons_parent = new_parent
     fn()
