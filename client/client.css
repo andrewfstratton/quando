@@ -37,22 +37,31 @@ body {
 
 .quando_label, .quando_button {
     color: ffffff;
-    padding: 5px;
     font-weight: normal;
     transition: opacity 1.0s linear;
     background-color: rgb(224, 119, 0);
 }
 
-.quando_button {
-    flex-grow: 1; /* overridable weight of width */
+.quando_button_parent {
+    /* overridable weight */
+    flex-grow: 1;
     flex-basis: 0;
-    margin: 8px 8px 8px 8px;
+    margin: 0;
+    border: 0;
+    padding: 0;
+}
+
+.quando_button {
     font-size: clamp(1em, min(4vw,4vh), 3em); 
-    /* font-size: 25%; */
-    /* need below to force centre middle */
+    /* make flex allow for border and padding */
+    box-sizing: border-box;
+    border: 5px solid black;
+    /* force centre middle */
     display: flex;
     justify-content: center;
     align-items: center;
+    height: 100%;
+    width: 100%;
 }
 
 .quando_label:focus, .quando_button:focus {
@@ -64,8 +73,8 @@ body {
 
 .quando_buttons_row, .quando_buttons_column {
     display: flex;
+    /* the weight of the height/width */
     flex-grow: 1;
-    /* i.e. the weight of the height/width */
 }
 
 .quando_buttons_column {
