@@ -218,7 +218,7 @@ let _current_display_id = -1 // to avoid being equal by accident to 0
     _set_or_append_tag_text(txt, 'quando_text', append)
   }
 
-  self.display = function (key, fn) { // Yes this is all of it...
+  self.newDisplay = (key, fn) => { // Yes this is all of it...
     _displays.set(key, fn)
   }
 
