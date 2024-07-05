@@ -14,7 +14,7 @@ function onload() {
           port = ":" + port
         }
         let editor_url = `${ip}${port}/editor`
-        let client_url = `${ip}${port}/client`
+        let client_url = `${ip}${port}/client/setup.html`
         if (res.local == false) { // remote access 
           editor_url = document.location + 'editor'
           client_url = document.location + 'client'
