@@ -45,24 +45,26 @@
         elem.src = img_address
     }
 
+    function _transform(element, property, value) {
+        let style_transform = element.style.transform
+        if (style_transform && style_transform.includes(property)) { // remove current value
+            let start = style_transform.indexOf(property)
+            let end = style_transform.indexOf(')', start)
+            style_transform = style_transform.substring(0, start) + style_transform.substring(end+1) // +1 to skip the ')'
+            style_transform = style_transform.trim()  // in case there was a space separator
+        }
+        if (style_transform != "") { // need to append to existing
+            style_transform += " "
+        }
+        style_transform += `${property}(${value})`
+        element.style.transform = style_transform
+    }
+
     function _rotate(display, axis, val, mid, range, inverted) {
         let rad = quando.convert_angle(val, mid, range, inverted)
         let rotAxis = `rotate${axis}`
         let elem = document.getElementById('quando_image' + (display?'_display':''))
-        let transform = elem.style.transform
-        if (transform && transform.includes(rotAxis)) { // need to replace value
-            let start = 1 + rotAxis.length + transform.indexOf(rotAxis) // gets past the rotate#(
-            let end = transform.indexOf('rad)', start)
-            transform = transform.substring(0, start) + rad + transform.substring(end)
-        } else {
-            if (transform) { // need to append to existing
-                transform += " "
-            } else { // need to just set - no existing transform
-                transform = ''
-            }
-            transform += `${rotAxis}(${rad}rad)`
-        }
-        elem.style.transform = transform
+        _transform(elem, rotAxis, rad+"rad")
     }
 
     self.roll = (display, val, mid, range, inverted) => {
@@ -101,7 +103,7 @@
         let range = (max - min) / 2
         let scale = quando.convert_linear(val, mid, range, inverted)
         let elem = document.getElementById('quando_image' + (display?'_display':''))
-        elem.style.transform = `scale(${scale})`
+        _transform(elem, `scale`, scale)
         elem.dataset.quandoZoom = scale // save the zoom for later - simpler than calculating
     }
 
