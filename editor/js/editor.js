@@ -637,6 +637,8 @@ function _setupDragula() {
   let drake = dragula(collections, options).on('drop', (elem) => {
     moveBlock(elem, last_parent, next_sibling)
   }).on('drag', (elem, src) => {
+    var stylesheet = document.styleSheets[(document.styleSheets.length - 1)];
+    stylesheet.insertRule("#script .quando-box { min-width: 9em; }") // always inserted as 0th index
     // Only use when outside the menu
     if (_hasAncestor(elem, document.getElementById('menu'))) {
       last_parent = null
@@ -644,7 +646,10 @@ function _setupDragula() {
       last_parent = src
     }
     next_sibling = elem.nextSibling
-//  }).on('dragend', (elem) => {
+  }).on('dragend', (elem) => {
+    var stylesheet = document.styleSheets[(document.styleSheets.length - 1)];
+    // N.B. This is fragile and may break - recording the index is also fragile
+    stylesheet.deleteRule(0)
   }).on('cloned', (clone, old, type) => {
     if (type == 'copy') {
       copyBlock(old, clone)
