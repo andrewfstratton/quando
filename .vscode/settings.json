@@ -1,0 +1,6 @@
+{
+    "go.buildFlags": [
+        "-tags=full local"
+    ],
+    "go.testTags": "full local",
+}
