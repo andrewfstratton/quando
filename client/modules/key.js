@@ -12,7 +12,7 @@ function _keydown(event) {
   if (!event.repeat) {
     let down_handlers = key_pressed[event.key]
     for (let id in down_handlers) {
-      down_handlers[id](event.ctrlKey, event.altKey)
+      down_handlers[id](event.ctrlKey, event.altKey, event.shiftKey)
     }
   }
 }
@@ -20,19 +20,19 @@ function _keydown(event) {
 function _keyup(event) {
   let up_handlers = key_released[event.key]
   for (let id in up_handlers) {
-    up_handlers[id](event.ctrlKey, event.altKey)
+    up_handlers[id](event.ctrlKey, event.altKey, event.shiftKey)
   }
 }
 
-self.handleKey = ({id, key, down_up, ctrl=false, alt=false, special=false, callback}) => {
+self.handleKey = ({id, key, down_up, ctrl=false, alt=false, shift=false, special=false, callback}) => {
   if (["either", "down"].includes(down_up)) {
     let down_handlers = key_pressed[key]
     if (!down_handlers) {
       down_handlers = key_pressed[key] = {} // a map of possible handlers ...
     }
     // Note that ctrl/alt are ignored when a special key
-    down_handlers[id]=(e_ctrl, e_alt) => { // Note that id is the unique block
-      if (special || ((ctrl == e_ctrl) && (e_alt == alt))) {
+    down_handlers[id]=(e_ctrl, e_alt, e_shift) => { // Note that id is the unique block
+      if (special || ((ctrl == e_ctrl) && (e_alt == alt) && (e_shift == shift))) {
         if (down_up == "either") {
           callback(1)
         } else {
@@ -49,8 +49,8 @@ self.handleKey = ({id, key, down_up, ctrl=false, alt=false, special=false, callb
     if (!up_handlers) {
       up_handlers = key_released[key] = {}
     }
-    up_handlers[id]=(e_ctrl, e_alt) => {
-      if (special || ((ctrl == e_ctrl) && (e_alt == alt))) {
+    up_handlers[id]=(e_ctrl, e_alt, e_shift) => {
+      if (special || ((ctrl == e_ctrl) && (e_alt == alt) && (e_shift == shift))) {
         if (down_up == "either") {
           callback(0)
         } else {

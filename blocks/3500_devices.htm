@@ -154,13 +154,16 @@
 
 <div data-quando-block-type="devices-when-key" class="quando-block" data-quando-id="true"
   data-quando-drop-valid="display-when-display,advanced-comment,inventor-flip,inventor-function-block,advanced-group"
-  data-quando-javascript="quando.key.handleKey({id:${data-quando-id}, key:'${key}', down_up:'${down_up}', special:false, ctrl:${control}, alt:${alt}, callback:(val)=>{${box}}})">
+  data-quando-javascript="quando.key.handleKey({id:${data-quando-id}, key:'${key}', down_up:'${down_up}', special:false, ctrl:${ctrl}, alt:${alt}, shift:${shift}, callback:(val)=>{${box}}})">
   <div class="quando-left quando-devices"></div>
   <div class="quando-right">
     <div class="quando-row quando-devices">
       <span class="quando-info" title="This block can only be dragged into When Display.">⚠</span>
       ⌨️️ When
-      <input data-quando-name='key' type='text' maxLength="1" value='' placeholder='' data-quando-encode='normal' />
+      <span data-quando-toggle='ctrl=true'>ctrl˖</span
+        ><span data-quando-toggle='alt=true'>alt˖</span
+        ><span data-quando-toggle='shift=true'>shift˖</span
+        ><input data-quando-name='key' type='text' maxLength="1" value='' placeholder='' data-quando-encode='normal' />
       <span class="iconify">
         key
       </span>
@@ -176,13 +179,17 @@
       </select>
       <span data-quando-toggle="extras=show">
         <br>
-        <select data-quando-name='control' class='quando-toggle'>
-          <option value='false'>no control</option>
-          <option value='true'>control</option>
+        <select data-quando-name='ctrl' class='quando-toggle'>
+          <option value='false'>no Ctrl</option>
+          <option value='true'>Ctrl</option>
         </select>
         <select data-quando-name='alt' class='quando-toggle'>
-          <option value='false'>no alt</option>
-          <option value='true'>alt</option>
+          <option value='false'>no Alt</option>
+          <option value='true'>Alt</option>
+        </select>
+        <select data-quando-name='shift' class='quando-toggle'>
+          <option value='false'>no Shift</option>
+          <option value='true'>Shift</option>
         </select>
       </span>
     </div>
@@ -814,8 +821,11 @@
         <option value='up'>release</option>
         <option value='either'>⇕</option>
       </select>
-      <span data-quando-toggle='txt=input'>
-          &quot;<input data-quando-name="text" type="text" value="" maxLength="1" data-quando-encode='normal' />&quot;
+      <span data-quando-toggle='ctrl=true'> ctrl˖</span
+        ><span data-quando-toggle='alt=true'>alt˖</span
+        ><span data-quando-toggle='shift=true'>shift˖</span
+        ><span data-quando-toggle='txt=input'
+        ><input data-quando-name="text" type="text" value="" maxLength="1" data-quando-encode='normal' />
       </span>
       <select data-quando-name="extras" class="quando-toggle">
         <option value="hidden">+</option>
@@ -823,10 +833,6 @@
       </select>
       <span data-quando-toggle="extras=show">
         <br>
-        <select data-quando-name='shift' class='quando-toggle'>
-          <option value='false'>no Shift</option>
-          <option value='true'>Shift</option>
-        </select>
         <select data-quando-name='ctrl' class='quando-toggle'>
           <option value='false'>no Ctrl</option>
           <option value='true'>Ctrl</option>
@@ -834,6 +840,10 @@
         <select data-quando-name='alt' class='quando-toggle'>
           <option value='false'>no Alt</option>
           <option value='true'>Alt</option>
+        </select>
+        <select data-quando-name='shift' class='quando-toggle'>
+          <option value='false'>no Shift</option>
+          <option value='true'>Shift</option>
         </select>
         <select data-quando-name='txt' class='quando-toggle'>
             <option value='input'>""</option>
@@ -857,7 +867,10 @@
         <option value='up'>release</option>
         <option value='either'>⇕</option>
       </select>
-      <select data-quando-name="name">
+      <span data-quando-toggle='ctrl=true'> ctrl˖</span
+        ><span data-quando-toggle='alt=true'>alt˖</span
+        ><span data-quando-toggle='shift=true'>shift˖</span
+        ><select data-quando-name="name">
         <option value='shift'>Shift</option>
         <option value='ctrl'>Ctrl</option>
         <option value='alt'>Alt</option>
@@ -945,10 +958,6 @@
       </select>
       <span data-quando-toggle="extras=show">
         <br>
-        <select data-quando-name='shift' class='quando-toggle'>
-          <option value='false'>no Shift</option>
-          <option value='true'>Shift</option>
-        </select>
         <select data-quando-name='ctrl' class='quando-toggle'>
           <option value='false'>no Ctrl</option>
           <option value='true'>Ctrl</option>
@@ -956,6 +965,10 @@
         <select data-quando-name='alt' class='quando-toggle'>
           <option value='false'>no Alt</option>
           <option value='true'>Alt</option>
+        </select>
+        <select data-quando-name='shift' class='quando-toggle'>
+          <option value='false'>no Shift</option>
+          <option value='true'>Shift</option>
         </select>
       </span>
     </div>
