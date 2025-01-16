@@ -22,7 +22,7 @@ func Run() {
 
 func setup() {
 	// handle OS interrupt
-	interrupt_channel := make(chan os.Signal)
+	interrupt_channel := make(chan os.Signal, 1)
 	signal.Notify(interrupt_channel, os.Interrupt)
 	go handleInterrupt(interrupt_channel)
 
