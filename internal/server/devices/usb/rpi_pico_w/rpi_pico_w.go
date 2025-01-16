@@ -61,10 +61,8 @@ func HandleHIDButton(w http.ResponseWriter, req *http.Request) {
 		btn, err := button.Num.Int64()
 		ibtn := int(btn - 1) // -1 is due to empty being 0 so +1 was added before sending here
 		if (err == nil) && (ibtn >= 0) {
-			if (err == nil) && (ibtn >= 0) {
-				message := button.Press + strconv.Itoa(ibtn) // button.Press is 'b' or 'B'
-				device.Send(message)
-			}
+			message := button.Press + strconv.Itoa(ibtn) // button.Press is 'b' or 'B'
+			device.Send(message)
 		}
 	}
 }
