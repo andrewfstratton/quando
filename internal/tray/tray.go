@@ -73,7 +73,6 @@ func openChrome(suffix string) {
 }
 
 func close() {
-	// fmt.Println("Close systray...")
-	time.Sleep(1 * time.Second)
+	fmt.Println("Systray quit...shutting down server...")
 	server.Quit()
 }
