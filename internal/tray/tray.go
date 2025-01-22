@@ -9,7 +9,6 @@ import (
 	"os/signal"
 	"quando/internal/icon"
 	"quando/internal/server"
-	"time"
 
 	"github.com/getlantern/systray"
 	"github.com/skratchdot/open-golang/open"
