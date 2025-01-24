@@ -85,7 +85,7 @@ func HandleGetMediaDirectory(w http.ResponseWriter, req *http.Request) {
 	getMediaDirectory(w, req)
 }
 
-func copyFile(w http.ResponseWriter, req *http.Request) (success bool) {
+func copyFile(req *http.Request) (success bool) {
 	location := strings.TrimPrefix(req.URL.Path, "/")
 	req.ParseMultipartForm(req.ContentLength)
 	uploadedFile, handler, err := req.FormFile("file")
@@ -95,11 +95,11 @@ func copyFile(w http.ResponseWriter, req *http.Request) (success bool) {
 	}
 	defer uploadedFile.Close()
 	destination, err := os.Create("./" + location + "/" + handler.Filename)
-	defer destination.Close()
 	if err != nil {
 		fmt.Println("Error creating file - ", err)
 		return
 	}
+	defer destination.Close()
 	_, err = io.Copy(destination, uploadedFile)
 	if err != nil {
 		fmt.Println("Error copying file - ", err)
@@ -118,7 +118,7 @@ func HandleMedia(w http.ResponseWriter, req *http.Request) {
 		http.ServeFile(w, req, "."+req.URL.Path)
 		return
 	case "POST":
-		success := copyFile(w, req)
+		success := copyFile(req)
 		reply := replyJSON{Success: success}
 		str, err := json.Marshal(reply)
 		if err != nil {
