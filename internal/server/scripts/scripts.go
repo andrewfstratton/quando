@@ -3,7 +3,6 @@ package scripts
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -31,9 +30,6 @@ type replyJSON struct {
 	Message    string `json:"message,omitempty"`
 }
 
-func handlePutFile(w http.ResponseWriter, req *http.Request) {
-}
-
 func getFile(filepath string) (result fileJSON, err error) {
 	contents, err := os.ReadFile(filepath)
 	if err == nil {
@@ -53,7 +49,6 @@ func getUpdatedHtml(w http.ResponseWriter, req *http.Request) {
 	title := strings.TrimSuffix(filename, ".html")
 	reply := strings.Replace(string(contents), "{{ title }}", title, 2)
 	fmt.Fprint(w, reply)
-	return
 }
 
 func HandleFile(w http.ResponseWriter, req *http.Request) {
@@ -143,12 +138,24 @@ func HandleFile(w http.ResponseWriter, req *http.Request) {
 
 func HandleDirectory(w http.ResponseWriter, req *http.Request) {
 	if req.Method == "GET" {
-		entries, err := ioutil.ReadDir("." + req.URL.Path)
+		entries, err := os.ReadDir("." + req.URL.Path)
 		if err != nil {
 			log.Panicf("Missing 'req.URL.Path' directory: %s", err)
 		}
 		sort.Slice(entries, func(i, j int) bool {
-			return entries[i].ModTime().After(entries[j].ModTime())
+			fileInfoI, err := entries[i].Info()
+			if err != nil {
+				fmt.Println("Error accessing file '", entries[i], "'", err)
+				http.NotFound(w, req)
+				return false
+			}
+			fileInfoJ, err := entries[j].Info()
+			if err != nil {
+				fmt.Println("Error accessing file '", entries[j], "'", err)
+				http.NotFound(w, req)
+				return false
+			}
+			return fileInfoI.ModTime().After(fileInfoJ.ModTime())
 		})
 		var files []string
 		for _, file := range entries {
@@ -160,5 +167,4 @@ func HandleDirectory(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 	http.NotFound(w, req)
-	return
 }
