@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"os"
 	"strings"
@@ -22,24 +21,24 @@ var MediaMap = map[string][]string{
 	"images":  {"bmp", "jpg", "jpeg", "png", "gif"},
 	"objects": {"gltf", "glb"}}
 
-func getFilesFolders(directory string, suffixes []string) (files []string, folders []string, err error) {
-	entries, err := ioutil.ReadDir("./media/" + directory)
+func getFileFolderNames(directory string, suffixes []string) (fileNames []string, folderNames []string, err error) {
+	entries, err := os.ReadDir("./media/" + directory)
 	if err != nil {
 		fmt.Println("Missing directory: ", directory, " - ", err)
 		return
 	}
 	for _, entry := range entries {
-		filename := entry.Name()
+		name := entry.Name()
 		if entry.IsDir() {
-			folders = append(folders, filename)
+			folderNames = append(folderNames, name)
 			continue
 		}
 		if suffixes == nil {
-			files = append(files, filename)
+			fileNames = append(fileNames, name)
 		} else {
 			for _, suffix := range suffixes {
-				if strings.HasSuffix(filename, suffix) {
-					files = append(files, filename)
+				if strings.HasSuffix(name, suffix) {
+					fileNames = append(fileNames, name)
 					break
 				}
 			}
@@ -64,13 +63,13 @@ func getMediaDirectory(w http.ResponseWriter, req *http.Request) {
 	if !exists { // No suffix means this is finding folder for upload
 		suffixes = nil // don't filter by suffix
 	}
-	files, folders, err := getFilesFolders(location, suffixes)
+	fileNames, folderNames, err := getFileFolderNames(location, suffixes)
 	if err != nil {
 		fmt.Println("Deployment or coding directory error - ", err)
 		http.NotFound(w, req)
 		return
 	}
-	reply := replyJSON{Files: files, Folders: folders, Success: true}
+	reply := replyJSON{Files: fileNames, Folders: folderNames, Success: true}
 	str, err := json.Marshal(reply)
 	if err != nil {
 		fmt.Println("Error Marshalling JSON - ", err)
