@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -65,7 +64,7 @@ func parseBlock(content string) (string, *MenuJSON) {
 }
 
 func Handle(w http.ResponseWriter, req *http.Request) {
-	entries, err := ioutil.ReadDir("./blocks")
+	entries, err := os.ReadDir("./blocks")
 	if err != nil {
 		log.Panicf("Missing '/blocks' directory: %s", err)
 	}
