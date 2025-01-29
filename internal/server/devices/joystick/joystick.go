@@ -1,6 +1,6 @@
 //go:build full
 
-package joystick
+package gamepad
 
 import (
 	"fmt"
@@ -9,13 +9,13 @@ import (
 	"github.com/simulatedsimian/joystick"
 )
 
-const MAX_JOYSTICKS = 8
+const MAX_GAMEPAD = 8
 
-var joysticks [MAX_JOYSTICKS]joystick.Joystick
+var gamepads [MAX_GAMEPAD]joystick.Joystick
 var last_buttons uint32 = 0
 
-func joystickChanged(jsid int) {
-	if js := joysticks[jsid]; js != nil {
+func gamepadChanged(jsid int) {
+	if js := gamepads[jsid]; js != nil {
 		state, err := js.Read()
 		if err == nil {
 			buttons := state.Buttons
@@ -25,21 +25,21 @@ func joystickChanged(jsid int) {
 			}
 		} else { // dropped
 			last_buttons = 0
-			joysticks[jsid] = nil // to avoid reading
+			gamepads[jsid] = nil // to avoid reading
 			fmt.Println(jsid, " Lost...")
 		}
 	}
 }
 
-func checkNewJoysticks() {
+func checkNewGamepads() {
 	for {
-		for id, jsx := range joysticks {
+		for id, jsx := range gamepads {
 			if jsx == nil {
 				js, err := joystick.Open(id)
 				if err == nil {
-					joysticks[id] = js
-					fmt.Println("Opened joystick ", id)
-					fmt.Println("Joystick Name: ", js.Name())
+					gamepads[id] = js
+					fmt.Println("Opened gamepad ", id)
+					fmt.Println("  Name: ", js.Name())
 					fmt.Println("  # buttons : ", js.ButtonCount())
 					fmt.Println("  # axes : ", js.AxisCount())
 				}
@@ -51,10 +51,10 @@ func checkNewJoysticks() {
 }
 
 func CheckChanged() {
-	go checkNewJoysticks() // runs until application exits
+	go checkNewGamepads() // runs until application exits
 	for {
 		// fmt.Print(".")
-		joystickChanged(0)
+		gamepadChanged(0)
 		time.Sleep(time.Second / 60) // 60 times a second
 	}
 }
