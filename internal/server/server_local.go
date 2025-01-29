@@ -3,13 +3,13 @@
 package server
 
 import (
-	"quando/internal/server/devices/joystick"
+	gamepad "quando/internal/server/devices/joystick"
 	"quando/internal/server/devices/usb/ubit"
 	"quando/internal/server/system"
 )
 
 func init() {
 	go ubit.CheckMessages()
-	go joystick.CheckChanged()
+	go gamepad.CheckChanged()
 	go system.CheckChanged()
 }
