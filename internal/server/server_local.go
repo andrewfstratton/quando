@@ -3,7 +3,7 @@
 package server
 
 import (
-	gamepad "quando/internal/server/devices/joystick"
+	gamepad "quando/internal/server/devices/gamepad"
 	"quando/internal/server/devices/usb/ubit"
 	"quando/internal/server/system"
 )
