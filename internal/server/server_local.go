@@ -2,10 +2,14 @@
 
 package server
 
-import "quando/internal/server/devices/usb/ubit"
-import "quando/internal/server/system"
+import (
+	"quando/internal/server/devices/joystick"
+	"quando/internal/server/devices/usb/ubit"
+	"quando/internal/server/system"
+)
 
 func init() {
 	go ubit.CheckMessages()
+	go joystick.CheckChanged()
 	go system.CheckChanged()
 }
