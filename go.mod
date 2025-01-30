@@ -5,6 +5,7 @@ go 1.22
 toolchain go1.22.1
 
 require (
+	github.com/0xcafed00d/joystick v1.0.1
 	github.com/getlantern/systray v1.2.2
 	github.com/go-vgo/robotgo v0.110.0
 	github.com/skratchdot/open-golang v0.0.0-20200116055534-eef842397966
@@ -37,7 +38,6 @@ require (
 	github.com/robotn/xgbutil v0.0.0-20190912154524-c861d6f87770 // indirect
 	github.com/shirou/gopsutil/v3 v3.24.1 // indirect
 	github.com/shoenig/go-m1cpu v0.1.6 // indirect
-	github.com/simulatedsimian/joystick v1.0.1 // indirect
 	github.com/tklauser/go-sysconf v0.3.13 // indirect
 	github.com/tklauser/numcpus v0.7.0 // indirect
 	github.com/vcaesar/gops v0.30.2 // indirect
@@ -48,7 +48,6 @@ require (
 	go.opentelemetry.io/otel v1.32.0 // indirect
 	go.opentelemetry.io/otel/metric v1.32.0 // indirect
 	go.opentelemetry.io/otel/trace v1.32.0 // indirect
-	go.uber.org/atomic v1.11.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	go.uber.org/zap v1.27.0 // indirect
 	golang.org/x/image v0.18.0 // indirect
