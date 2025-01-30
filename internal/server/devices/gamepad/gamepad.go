@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/simulatedsimian/joystick"
+	"github.com/0xcafed00d/joystick"
 )
 
 const MAX_GAMEPAD = 8
