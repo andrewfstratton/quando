@@ -11,37 +11,47 @@ import (
 
 const MAX_GAMEPAD = 8
 
-var gamepads [MAX_GAMEPAD]joystick.Joystick
-var last_buttons uint32 = 0
+type Gamepad struct {
+	last_buttons uint32
+	last_axes    []int
+	joystick     joystick.Joystick
+}
 
-func gamepadChanged(jsid int) {
-	if js := gamepads[jsid]; js != nil {
-		state, err := js.Read()
+var gamepads [MAX_GAMEPAD]Gamepad
+
+func gamepadUpdate(num int) {
+	gamepad := gamepads[num]
+	if joystick := gamepad.joystick; joystick != nil {
+		state, err := joystick.Read()
 		if err == nil {
 			buttons := state.Buttons
-			if last_buttons != buttons {
+			if gamepad.last_buttons != buttons {
 				fmt.Println(state.Buttons)
-				last_buttons = buttons
+				gamepads[num].last_buttons = buttons
 			}
 		} else { // dropped
-			last_buttons = 0
-			gamepads[jsid] = nil // to avoid reading
-			fmt.Println(jsid, " Lost...")
+			gamepads[num].last_buttons = 0
+			gamepads[num].joystick = nil // to avoid reading
+			fmt.Println(num, " Lost...")
 		}
 	}
 }
 
 func checkNewGamepads() {
 	for {
-		for id, jsx := range gamepads {
-			if jsx == nil {
-				js, err := joystick.Open(id)
+		for num, gamepad := range gamepads {
+			if gamepad.joystick == nil {
+				js, err := joystick.Open(num)
 				if err == nil {
-					gamepads[id] = js
-					fmt.Println("Opened gamepad ", id)
-					fmt.Println("  Name: ", js.Name())
-					fmt.Println("  # buttons : ", js.ButtonCount())
-					fmt.Println("  # axes : ", js.AxisCount())
+					_, err := js.Read()
+					if err == nil {
+						gamepads[num].joystick = js
+						gamepads[num].last_buttons = 0
+						fmt.Println("Opened gamepad ", num)
+						fmt.Println("  Name: ", js.Name())
+						fmt.Println("  # buttons : ", js.ButtonCount())
+						fmt.Println("  # axes : ", js.AxisCount())
+					}
 				}
 			}
 			// else do nothing since we already have a handle
@@ -54,7 +64,8 @@ func CheckChanged() {
 	go checkNewGamepads() // runs until application exits
 	for {
 		// fmt.Print(".")
-		gamepadChanged(0)
+		gamepadUpdate(0)
+		gamepadUpdate(1)
 		time.Sleep(time.Second / 60) // 60 times a second
 	}
 }
