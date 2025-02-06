@@ -32,6 +32,24 @@ type Gamepad struct {
 var gamepads [NUM_GAMEPADS]Gamepad
 var last_buttons [NUM_GAMEPADS]BUTTON_MASK
 
+const (
+	UP = 1 << iota
+	DOWN
+	LEFT
+	RIGHT
+	START
+	BACK
+	L_STICK
+	R_STICK
+	L_BUMPER
+	R_BUMPER
+	_ // not mapped
+	_ // not mapped
+	A
+	B
+	X
+	Y
+)
 
 func gamepadUpdate(num uint) {
 	gamepad := gamepads[num]
