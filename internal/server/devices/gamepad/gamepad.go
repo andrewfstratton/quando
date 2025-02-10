@@ -5,17 +5,21 @@ package gamepad
 import (
 	"fmt"
 	"syscall"
-	"time"
 	"unsafe"
 )
 
 const (
-	NUM_GAMEPADS        = 4
-	XINPUT_DLL_FILENAME = "xinput1_3.dll"
-	XINPUT_GET_STATE    = "XInputGetState"
+	NUM_GAMEPADS            = 4
+	GAME_INPUT_DLL_FILENAME = "gameinput.dll"
+	GAME_INPUT_CREATE       = "GameInputCreate"
 )
 
-var getState *syscall.Proc
+var gameInputCreate *syscall.Proc
+
+type IGameInput struct {
+}
+
+var iGameInput IGameInput
 
 type BUTTON_MASK uint16
 type Gamepad struct {
@@ -53,7 +57,7 @@ const (
 
 func gamepadUpdate(num uint) {
 	gamepad := gamepads[num]
-	result, _, _ := getState.Call(uintptr(num), uintptr(unsafe.Pointer(&gamepad)))
+	result, _, _ := gameInputCreate.Call(uintptr(num), uintptr(unsafe.Pointer(&gamepad)))
 	if result == 0 { // success
 		if last_buttons[num] != gamepad.button_masks {
 			last_buttons[num] = gamepad.button_masks
@@ -66,26 +70,29 @@ func gamepadUpdate(num uint) {
 }
 
 func CheckChanged() {
-	if getState == nil {
-		fmt.Println("** XInput joystick not being checked...")
-		return
-	} // else
-	for {
-		for gamepad := range NUM_GAMEPADS { // note this will be 0..3
-			gamepadUpdate(uint(gamepad))
-		}
-		time.Sleep(time.Second / 60) // 60 times a second
-	}
+	// for {
+	// 	for gamepad := range NUM_GAMEPADS { // note this will be 0..3
+	// 		gamepadUpdate(uint(gamepad))
+	// 	}
+	// 	time.Sleep(time.Second / 60) // 60 times a second
+	// }
 }
 
 func init() {
-	dll, err := syscall.LoadDLL(XINPUT_DLL_FILENAME) // use older version for now
+	dll, err := syscall.LoadDLL(GAME_INPUT_DLL_FILENAME) // use older version for now
 	if err != nil {
-		fmt.Println("** Failed to find", XINPUT_DLL_FILENAME)
+		fmt.Println("** Failed to find", GAME_INPUT_DLL_FILENAME)
 	} else {
-		getState, err = dll.FindProc(XINPUT_GET_STATE)
+		gameInputCreate, err = dll.FindProc(GAME_INPUT_CREATE)
 		if err != nil {
-			fmt.Println("** Failed to find proc :", XINPUT_GET_STATE)
+			fmt.Println("** Failed to find proc :", GAME_INPUT_CREATE)
+			fmt.Println("** Joystick not being checked...")
+			return
 		}
+	} // else
+	result, _, _ := gameInputCreate.Call(uintptr(unsafe.Pointer(&iGameInput)))
+	if result == 0 {
+		fmt.Print("Success ")
 	}
+	fmt.Println(result)
 }
