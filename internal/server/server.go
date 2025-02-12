@@ -40,7 +40,7 @@ func favicon(w http.ResponseWriter, req *http.Request) {
 }
 
 func showStartup(host string) {
-	fmt.Println("..serving HTTP on : ", host)
+	fmt.Println("  Quando Server HTTP on port: ", host)
 }
 
 // Overrides windows local machine map, which can default to text/plain for javascript files
@@ -105,6 +105,6 @@ func ServeHTTPandIO(handlers []Handler) {
 	showStartup(url + port)
 	err = http.Serve(listen, mux)
 	if err != nil && listen != nil {
-		fmt.Println("Exiting... ", err)
+		fmt.Println("  Quando Exiting... ", err)
 	}
 }
