@@ -63,9 +63,9 @@ func checkNewGamepads() {
 func CheckChanged() {
 	go checkNewGamepads() // runs until application exits
 	for {
-		// fmt.Print(".")
-		gamepadUpdate(0)
-		gamepadUpdate(1)
+		for num := range gamepads {
+			gamepadUpdate(num)
+		}
 		time.Sleep(time.Second / 60) // 60 times a second
 	}
 }
