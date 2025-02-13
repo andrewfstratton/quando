@@ -5,12 +5,15 @@ import (
 	"fmt"
 	"net"
 	"net/http"
+	"quando/internal/config"
 )
 
 type ipJSON struct {
-	Success bool   `json:"success"`
-	IP      string `json:"ip"`
-	Local   bool   `json:"local"`
+	Success      bool   `json:"success"`
+	IP           string `json:"ip"`
+	Local        bool   `json:"local"`
+	RemoteClient bool   `json:"remote_client"`
+	RemoteEditor bool   `json:"remote_editor"`
 }
 
 func PrivateIP() string {
@@ -27,6 +30,9 @@ func PrivateIP() string {
 func HandlePrivateIP(w http.ResponseWriter, req *http.Request) {
 	success := true
 	privateIP := PrivateIP()
-	reply, _ := json.Marshal(ipJSON{Success: success, Local: true, IP: privateIP})
+	remoteClient := config.RemoteClient()
+	remoteEditor := config.RemoteEditor()
+	reply, _ := json.Marshal(ipJSON{Success: success, Local: true, IP: privateIP,
+		RemoteClient: remoteClient, RemoteEditor: remoteEditor})
 	w.Write(reply)
 }
