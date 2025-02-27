@@ -5,7 +5,6 @@ go 1.22
 toolchain go1.22.1
 
 require (
-	github.com/0xcafed00d/joystick v1.0.1
 	github.com/getlantern/systray v1.2.2
 	github.com/go-vgo/robotgo v0.110.0
 	github.com/skratchdot/open-golang v0.0.0-20200116055534-eef842397966
