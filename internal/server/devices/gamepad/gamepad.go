@@ -29,9 +29,8 @@ type Gamepad struct {
 	right_y       int16
 }
 
-var gamepads [MAX_GAMEPADS]Gamepad
-var last_buttons [MAX_GAMEPADS]BUTTON_MASK
-var button_masks = [...]int{UP, DOWN, LEFT, RIGHT,
+var gamepads [MAX_GAMEPADS]*Gamepad // stores the last returned to identify changes - or nil
+var button_mask_index = [...]int{UP, DOWN, LEFT, RIGHT,
 	START, BACK, L_STICK, R_STICK, L_BUMPER, R_BUMPER,
 	A, B, X, Y}
 
@@ -53,17 +52,53 @@ const (
 	Y        = 0x8000
 )
 
+func triggersChanged(gamepad_old, gamepad_new Gamepad) bool {
+	// return as soon as we detect a change
+	if gamepad_old.left_trigger != gamepad_new.left_trigger {
+		return true
+	}
+	return gamepad_old.right_trigger != gamepad_new.right_trigger
+}
+
+func axesChanged(gamepad_old, gamepad_new Gamepad) bool {
+	// return as soon as we detect a change
+	if gamepad_old.left_x != gamepad_new.left_x {
+		return true
+	}
+	if gamepad_old.left_y != gamepad_new.left_y {
+		return true
+	}
+	if gamepad_old.right_x != gamepad_new.right_x {
+		return true
+	}
+	return gamepad_old.right_y != gamepad_new.right_y
+}
+
 func gamepadUpdate(num uint) {
-	gamepad := gamepads[num]
+	var gamepad Gamepad
 	result, _, _ := getState.Call(uintptr(num), uintptr(unsafe.Pointer(&gamepad)))
 	if result == 0 { // success
-		if last_buttons[num] != gamepad.button_masks {
-			last_buttons[num] = gamepad.button_masks
+		changed := false
+		if gamepads[num] == nil {
+			fmt.Println("Gamepad connected : ", num)
+			changed = true
+		} else {
+			var last_gamepad = gamepads[num]
+			if last_gamepad.button_masks != gamepad.button_masks {
+				changed = true
+			} else if triggersChanged(*last_gamepad, gamepad) {
+				changed = true
+			} else if axesChanged(*last_gamepad, gamepad) {
+				changed = true
+			}
+		}
+		if changed {
 			fmt.Println("changed ", num, gamepad.button_masks)
 		}
-	} else if last_buttons[num] != 0 {
-		last_buttons[num] = 0
-		fmt.Println("lost ", num)
+		gamepads[num] = &gamepad // always update even state hasn't changed
+	} else if gamepads[num] != nil { // has just disconnected
+		gamepads[num] = nil
+		fmt.Println("Gamepad disconnected : ", num)
 	}
 }
 
