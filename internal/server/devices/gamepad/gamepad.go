@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	NUM_GAMEPADS        = 4
+	MAX_GAMEPADS        = 4
 	XINPUT_DLL_FILENAME = "xinput1_3.dll"
 	XINPUT_GET_STATE    = "XInputGetState"
 )
@@ -29,26 +29,25 @@ type Gamepad struct {
 	right_y       int16
 }
 
-var gamepads [NUM_GAMEPADS]Gamepad
-var last_buttons [NUM_GAMEPADS]BUTTON_MASK
+var gamepads [MAX_GAMEPADS]Gamepad
+var last_buttons [MAX_GAMEPADS]BUTTON_MASK
 
 const (
-	UP = 1 << iota
-	DOWN
-	LEFT
-	RIGHT
-	START
-	BACK
-	L_STICK
-	R_STICK
-	L_BUMPER
-	R_BUMPER
-	_ // not mapped
-	_ // not mapped
-	A
-	B
-	X
-	Y
+	UP         = 0x0001
+	DOWN       = 0x0002
+	LEFT       = 0x0004
+	RIGHT      = 0x0008
+	START_MENU = 0x0010
+	BACK_VIEW  = 0x0020
+	L_STICK    = 0x0040
+	R_STICK    = 0x0080
+	L_BUMPER   = 0x0100
+	R_BUMPER   = 0x0200
+	_          // guide not mapped
+	A          = 0x1000
+	B          = 0x2000
+	X          = 0x4000
+	Y          = 0x8000
 )
 
 func gamepadUpdate(num uint) {
@@ -71,7 +70,7 @@ func CheckChanged() {
 		return
 	} // else
 	for {
-		for gamepad := range NUM_GAMEPADS { // note this will be 0..3
+		for gamepad := range MAX_GAMEPADS { // note this will be 0..3
 			gamepadUpdate(uint(gamepad))
 		}
 		time.Sleep(time.Second / 60) // 60 times a second
