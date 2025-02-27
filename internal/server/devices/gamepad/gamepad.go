@@ -31,23 +31,26 @@ type Gamepad struct {
 
 var gamepads [MAX_GAMEPADS]Gamepad
 var last_buttons [MAX_GAMEPADS]BUTTON_MASK
+var button_masks = [...]int{UP, DOWN, LEFT, RIGHT,
+	START, BACK, L_STICK, R_STICK, L_BUMPER, R_BUMPER,
+	A, B, X, Y}
 
 const (
-	UP         = 0x0001
-	DOWN       = 0x0002
-	LEFT       = 0x0004
-	RIGHT      = 0x0008
-	START_MENU = 0x0010
-	BACK_VIEW  = 0x0020
-	L_STICK    = 0x0040
-	R_STICK    = 0x0080
-	L_BUMPER   = 0x0100
-	R_BUMPER   = 0x0200
-	_          // guide not mapped
-	A          = 0x1000
-	B          = 0x2000
-	X          = 0x4000
-	Y          = 0x8000
+	UP       = 0x0001
+	DOWN     = 0x0002
+	LEFT     = 0x0004
+	RIGHT    = 0x0008
+	START    = 0x0010
+	BACK     = 0x0020
+	L_STICK  = 0x0040
+	R_STICK  = 0x0080
+	L_BUMPER = 0x0100
+	R_BUMPER = 0x0200
+	_        // guide not mapped
+	A        = 0x1000
+	B        = 0x2000
+	X        = 0x4000
+	Y        = 0x8000
 )
 
 func gamepadUpdate(num uint) {
