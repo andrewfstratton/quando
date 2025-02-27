@@ -49,6 +49,40 @@ const (
 	Y        = "Y"
 )
 
+func buttonNameToMask(name string) int {
+	switch name {
+	case UP:
+		return 0x0001
+	case DOWN:
+		return 0x0002
+	case LEFT:
+		return 0x0004
+	case RIGHT:
+		return 0x0008
+	case START:
+		return 0x0010
+	case BACK:
+		return 0x0020
+	case L_STICK:
+		return 0x0040
+	case R_STICK:
+		return 0x0080
+	case L_BUMPER:
+		return 0x0100
+	case R_BUMPER:
+		return 0x0200
+	case A:
+		return 0x1000
+	case B:
+		return 0x2000
+	case X:
+		return 0x4000
+	case Y:
+		return 0x8000
+	}
+	return 0
+}
+
 func triggersChanged(gamepad_old, gamepad_new Gamepad) bool {
 	// return as soon as we detect a change
 	if gamepad_old.left_trigger != gamepad_new.left_trigger {
