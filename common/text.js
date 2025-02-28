@@ -6,6 +6,7 @@ export function decode(str) {
           .replace(/&gt;/g, '>')
           .replace(/&quot;/g, '"')
           .replace(/&apos;/g, "'")
+          .replace(/\\\\/g, "\\")
 }
 
 export function encode(str) {
@@ -14,4 +15,5 @@ export function encode(str) {
           .replace(/>/g, '&gt;')
           .replace(/"/g, '&quot;')
           .replace(/'/g, '&apos;')
+          .replace(/\\/g, '\\\\')
 }
