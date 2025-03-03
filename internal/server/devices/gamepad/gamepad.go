@@ -3,6 +3,7 @@
 package gamepad
 
 import (
+	"encoding/json"
 	"fmt"
 	"syscall"
 	"time"
@@ -46,6 +47,13 @@ type Gamepad struct {
 }
 
 var gamepads [MAX_GAMEPADS]*Gamepad // stores the last returned to identify changes - or nil
+
+type postJSON struct {
+	Gamepad_0 string `json:"u0,omitempty"`
+	Gamepad_1 string `json:"u1,omitempty"`
+	Gamepad_2 string `json:"u2,omitempty"`
+	Gamepad_3 string `json:"u3,omitempty"`
+}
 
 func buttonNameToMask(name string) int {
 	switch name {
@@ -129,20 +137,56 @@ func gamepadUpdated(num uint) bool {
 	return changed
 }
 
+func addPostJSON(gamepad *Gamepad, num int, post_json *postJSON) {
+	bdata := ""
+	if gamepad == nil { // i.e. disconnected
+		bdata = "LOST"
+	} else if gamepad.button_masks != 0 {
+		bdata = "1"
+	}
+	switch num {
+	case 0:
+		post_json.Gamepad_0 = bdata
+	case 1:
+		post_json.Gamepad_1 = bdata
+	case 2:
+		post_json.Gamepad_2 = bdata
+	case 3:
+		post_json.Gamepad_3 = bdata
+	}
+}
+
 func CheckChanged() {
 	if getState == nil {
 		fmt.Println("** XInput joystick not being checked...")
 		return
 	} // else
 	for {
+		updated := false
+		post_json := postJSON{}
 		for num := range MAX_GAMEPADS { // note this will be 0..3
 			if gamepadUpdated(uint(num)) {
+				updated = true
+				var gamepad *Gamepad // is nil
 				if gamepads[num] != nil {
-					gamepad := gamepads[num]
-					fmt.Println("changed ", num, gamepad.button_masks, gamepad.left_trigger)
-				} else {
-					fmt.Println("Gamepad disconnected : ", num)
+					gamepad = gamepads[num]
 				}
+				addPostJSON(gamepad, num, &post_json)
+			}
+		}
+		if updated {
+			bout, err := json.Marshal(post_json)
+			if err != nil {
+				fmt.Println("Error marshalling gamepad", err)
+			} else {
+				str := string(bout)
+				prefix := `{"type":"gamepad"`
+				if str != "{}" {
+					prefix += ","
+				}
+				str = prefix + str[1:]
+				fmt.Println(str)
+				// socket.Broadcast(str)
 			}
 		}
 		time.Sleep(time.Second / 60) // 60 times a second
