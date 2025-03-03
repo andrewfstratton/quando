@@ -34,10 +34,9 @@ const (
 
 var getState *syscall.Proc
 
-type BUTTON_MASK uint16
 type Gamepad struct {
 	_             uint32 // packet - updates too often and not useful
-	button_masks  BUTTON_MASK
+	button_mask   uint16
 	left_trigger  uint8
 	right_trigger uint8
 	left_x        int16
