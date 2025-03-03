@@ -105,11 +105,11 @@ func axesChanged(gamepad_old, gamepad_new Gamepad) bool {
 	return gamepad_old.right_y != gamepad_new.right_y
 }
 
-func gamepadUpdate(num uint) {
+func gamepadUpdated(num uint) bool {
+	changed := false
 	var gamepad Gamepad
 	result, _, _ := getState.Call(uintptr(num), uintptr(unsafe.Pointer(&gamepad)))
 	if result == 0 { // success
-		changed := false
 		if gamepads[num] == nil {
 			fmt.Println("Gamepad connected : ", num)
 			changed = true
@@ -123,14 +123,12 @@ func gamepadUpdate(num uint) {
 				changed = true
 			}
 		}
-		if changed {
-			fmt.Println("changed ", num, gamepad.button_masks)
-		}
 		gamepads[num] = &gamepad // always update even state hasn't changed
 	} else if gamepads[num] != nil { // has just disconnected
 		gamepads[num] = nil
 		fmt.Println("Gamepad disconnected : ", num)
 	}
+	return changed
 }
 
 func CheckChanged() {
@@ -139,8 +137,13 @@ func CheckChanged() {
 		return
 	} // else
 	for {
-		for gamepad := range MAX_GAMEPADS { // note this will be 0..3
-			gamepadUpdate(uint(gamepad))
+		for num := range MAX_GAMEPADS { // note this will be 0..3
+			if gamepadUpdated(uint(num)) {
+				if gamepads[num] != nil {
+					gamepad := gamepads[num]
+					fmt.Println("changed ", num, gamepad.button_masks, gamepad.left_trigger)
+				}
+			}
 		}
 		time.Sleep(time.Second / 60) // 60 times a second
 	}
