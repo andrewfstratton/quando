@@ -125,8 +125,8 @@ func gamepadUpdated(num uint) bool {
 		}
 		gamepads[num] = &gamepad // always update even state hasn't changed
 	} else if gamepads[num] != nil { // has just disconnected
+		changed = true
 		gamepads[num] = nil
-		fmt.Println("Gamepad disconnected : ", num)
 	}
 	return changed
 }
@@ -142,6 +142,8 @@ func CheckChanged() {
 				if gamepads[num] != nil {
 					gamepad := gamepads[num]
 					fmt.Println("changed ", num, gamepad.button_masks, gamepad.left_trigger)
+				} else {
+					fmt.Println("Gamepad disconnected : ", num)
 				}
 			}
 		}
