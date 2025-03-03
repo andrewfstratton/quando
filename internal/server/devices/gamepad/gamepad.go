@@ -13,6 +13,22 @@ const (
 	MAX_GAMEPADS        = 4
 	XINPUT_DLL_FILENAME = "xinput1_3.dll"
 	XINPUT_GET_STATE    = "XInputGetState"
+	// Buton names
+	UP       = "UP"
+	DOWN     = "DOWN"
+	LEFT     = "LEFT"
+	RIGHT    = "RIGHT"
+	START    = "START"
+	BACK     = "BACK"
+	L_STICK  = "L_STICK"
+	R_STICK  = "R_STICK"
+	L_BUMPER = "L_BUMPER"
+	R_BUMPER = "R_BUMPER"
+	_        // guide not mapped
+	A        = "A"
+	B        = "B"
+	X        = "X"
+	Y        = "Y"
 )
 
 var getState *syscall.Proc
@@ -30,24 +46,6 @@ type Gamepad struct {
 }
 
 var gamepads [MAX_GAMEPADS]*Gamepad // stores the last returned to identify changes - or nil
-
-const (
-	UP       = "UP"
-	DOWN     = "DOWN"
-	LEFT     = "LEFT"
-	RIGHT    = "RIGHT"
-	START    = "START"
-	BACK     = "BACK"
-	L_STICK  = "L_STICK"
-	R_STICK  = "R_STICK"
-	L_BUMPER = "L_BUMPER"
-	R_BUMPER = "R_BUMPER"
-	_        // guide not mapped
-	A        = "A"
-	B        = "B"
-	X        = "X"
-	Y        = "Y"
-)
 
 func buttonNameToMask(name string) int {
 	switch name {
