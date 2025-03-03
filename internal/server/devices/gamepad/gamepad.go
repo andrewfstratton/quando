@@ -47,11 +47,16 @@ type Gamepad struct {
 
 var gamepads [MAX_GAMEPADS]*Gamepad // stores the last returned to identify changes - or nil
 
-type postJSON struct {
-	Gamepad_0 string `json:"u0,omitempty"`
-	Gamepad_1 string `json:"u1,omitempty"`
-	Gamepad_2 string `json:"u2,omitempty"`
-	Gamepad_3 string `json:"u3,omitempty"`
+type gamepadJSON struct {
+	Id       int8   `json:"id"`
+	Drop     bool   `json:"drop,omitempty"`
+	Mask     uint16 `json:"mask,omitempty"`
+	Ltrigger uint8  `json:"l_trigger,omitempty"`
+	Rtrigger uint8  `json:"r_trigger,omitempty"`
+	Lx       int16  `json:"l_x,omitempty"`
+	Ly       int16  `json:"l_y,omitempty"`
+	Rx       int16  `json:"r_x,omitempty"`
+	Ry       int16  `json:"r_y,omitempty"`
 }
 
 func buttonNameToMask(name string) int {
@@ -120,7 +125,7 @@ func gamepadUpdated(num uint) bool {
 			changed = true
 		} else {
 			var last_gamepad = gamepads[num]
-			if last_gamepad.button_masks != gamepad.button_masks {
+			if last_gamepad.button_mask != gamepad.button_mask {
 				changed = true
 			} else if triggersChanged(*last_gamepad, gamepad) {
 				changed = true
@@ -136,22 +141,18 @@ func gamepadUpdated(num uint) bool {
 	return changed
 }
 
-func addPostJSON(gamepad *Gamepad, num int, post_json *postJSON) {
-	bdata := ""
-	if gamepad == nil { // i.e. disconnected
-		bdata = "LOST"
-	} else if gamepad.button_masks != 0 {
-		bdata = "1"
-	}
-	switch num {
-	case 0:
-		post_json.Gamepad_0 = bdata
-	case 1:
-		post_json.Gamepad_1 = bdata
-	case 2:
-		post_json.Gamepad_2 = bdata
-	case 3:
-		post_json.Gamepad_3 = bdata
+func addPostJSON(gamepad *Gamepad, num int, gamepad_json *gamepadJSON) {
+	gamepad_json.Id = int8(num)
+	if gamepad == nil { // dropped
+		gamepad_json.Drop = true
+	} else {
+		gamepad_json.Mask = gamepad.button_mask
+		gamepad_json.Ltrigger = gamepad.left_trigger
+		gamepad_json.Rtrigger = gamepad.right_trigger
+		gamepad_json.Lx = gamepad.left_x
+		gamepad_json.Ly = gamepad.left_y
+		gamepad_json.Rx = gamepad.right_x
+		gamepad_json.Ry = gamepad.right_y
 	}
 }
 
@@ -162,7 +163,7 @@ func CheckChanged() {
 	} // else
 	for {
 		updated := false
-		post_json := postJSON{}
+		gamepad_json := gamepadJSON{}
 		for num := range MAX_GAMEPADS { // note this will be 0..3
 			if gamepadUpdated(uint(num)) {
 				updated = true
@@ -170,11 +171,11 @@ func CheckChanged() {
 				if gamepads[num] != nil {
 					gamepad = gamepads[num]
 				}
-				addPostJSON(gamepad, num, &post_json)
+				addPostJSON(gamepad, num, &gamepad_json)
 			}
 		}
 		if updated {
-			bout, err := json.Marshal(post_json)
+			bout, err := json.Marshal(gamepad_json)
 			if err != nil {
 				fmt.Println("Error marshalling gamepad", err)
 			} else {
