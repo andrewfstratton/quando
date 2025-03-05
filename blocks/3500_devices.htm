@@ -329,7 +329,7 @@
 
 <div data-quando-block-type="devices-when-gamepad-button" class="quando-block" data-quando-id="true"
   data-quando-drop-valid="display-when-display,advanced-comment,inventor-flip,inventor-function-block,advanced-group"
-  data-quando-javascript="quando.gamepad.handleButton(${data-quando-id},${button_index},'${down_up}',($(eq$,${down_up}$,either$,val)$)=>{${box}})">
+  data-quando-javascript="quando.gamepad$(eq$,${source}$,server$,_server)$.handleButton(${data-quando-id},${button_index},'${down_up}',($(eq$,${down_up}$,either$,val)$)=>{${box}})">
     <div class="quando-left quando-devices"></div>
     <div class="quando-right">
         <div class="quando-row quando-devices">
@@ -361,6 +361,18 @@
                 <option value='either'>⇕</option>
             </select>
             <span data-quando-toggle="down_up=either">⚡</span>
+            <select data-quando-name="extras" class="quando-toggle">
+              <option value="hidden">+</option>
+              <option value="show">-</option>
+            </select>
+            <span data-quando-toggle="extras=show">
+              <br>
+              from
+              <select data-quando-name="source">
+                <option value='browser'>Browser</option>
+                <option value='server'>Server</option>
+              </select>
+            </span>
         </div>
         <div data-quando-name="box" class="quando-box"></div>
         <div class="quando-row quando-devices"></div>
