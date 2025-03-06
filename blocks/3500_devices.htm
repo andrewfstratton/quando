@@ -382,7 +382,7 @@
 
 <div data-quando-block-type="devices-when-gamepad-axis" class="quando-block" data-quando-id="true"
   data-quando-drop-valid="display-when-display,advanced-comment,inventor-flip,inventor-function-block,advanced-group"
-  data-quando-javascript="quando.gamepad.handleAxis(${data-quando-id},${left},'${axis}',${middle},${plus_minus},${ignore},${inverted},(val)=>{${box}})">
+  data-quando-javascript="quando.gamepad$(eq$,${source}$,server$,.server)$.handleAxis(${data-quando-id},${left},'${axis}',${middle},${plus_minus},${ignore},${inverted},(val)=>{${box}})">
     <div class="quando-left quando-devices"></div>
     <div class="quando-right">
         <div class="quando-row quando-devices">
@@ -403,6 +403,11 @@
             </select>
             <span data-quando-toggle="extras=show">
                 <br>
+                from
+                <select data-quando-name="source">
+                  <option value='browser'>Browser</option>
+                  <option value='server'>Server</option>
+                </select>
                 <input data-quando-name='middle' type='number' value='50' placeholder='' style='width: 4em' min='0' max='100'
                 data-quando-encode='normal' />
                 % ±
