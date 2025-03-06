@@ -5,6 +5,7 @@ package gamepad
 import (
 	"encoding/json"
 	"fmt"
+	"quando/internal/server/socket"
 	"syscall"
 	"time"
 	"unsafe"
@@ -185,8 +186,7 @@ func CheckChanged() {
 					prefix += ","
 				}
 				str = prefix + str[1:]
-				fmt.Println(str)
-				// socket.Broadcast(str)
+				socket.Broadcast(str)
 			}
 		}
 		time.Sleep(time.Second / 60) // 60 times a second

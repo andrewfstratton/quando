@@ -73,6 +73,9 @@ function _handleWebSocketmessage(e) {
     case 'system':
       quando.system.handle_message(message)
       break
+    case 'gamepad':
+      quando.gamepad.server.handle_message(message)
+      break
   }
 }
 
