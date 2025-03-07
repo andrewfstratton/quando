@@ -88,9 +88,12 @@ const L_TRIGGER = 0, R_TRIGGER = 1, L_X = 2, R_X = 3, L_Y = 4, R_Y = 5, AXES = 6
 
 function _axis_value(value, trigger = false) {
     let result = 0.5
+    if (trigger) {
+        result = 0
+    }
     if (value) {
         if (trigger) { // 8 bit unsigned - can be 0 to 255
-            result = 0.5 + (value / (255*2)) // 255 * 2 is to give 0 to 0.5 range for 0.5 to 1 final value
+            result = value / 255 // to give 0 to 1
         } else { // 16 bit signed - can be -32768 to 32767
             let val = value
             if (val == -32768) val++ // so range is now -32767 to +32767, i.e. equal around 0
