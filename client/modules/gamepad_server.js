@@ -78,11 +78,11 @@ self.handleTrigger = (block_id, left, min, max, inverted, callback) => {
   _handle(axis_handlers, block_id, trigger_id, EITHER, handler) 
 }
 
-const BUTTON_TO_MASK = [0x1000, 0x2000, 0x4000, 0x8000, // ABXY
+const BUTTON_MASK = [0x1000, 0x2000, 0x4000, 0x8000, // ABXY
                         0x0100, 0x0200, 0, 0, // l_bump, r-bump
                         0x0020, 0x0010, 0x0040, 0x0080, // Back Start L_stick r_stick
                         0x0001, 0x0002, 0x0004, 0x0008 // up down left right
-]
+] // HOME/GUIDE would map to 0x0400, but doesn't work at present - needs C++ call?
 
 const L_TRIGGER = 0, R_TRIGGER = 1, L_X = 2, R_X = 3, L_Y = 4, R_Y = 5, AXES = 6
 
@@ -111,8 +111,8 @@ function createGamepad(data) {
     } else {
         let mask = data.mask
         gamepad.buttons = [] // n.b. stored as array of booleans, not as pressed/value object
-        for (let i=0; i<BUTTON_TO_MASK.length; i++) {
-            let pressed  = (BUTTON_TO_MASK[i] & mask) > 0 // i.e. true when mask bit is set
+        for (let i=0; i<BUTTON_MASK.length; i++) {
+            let pressed  = (BUTTON_MASK[i] & mask) > 0 // i.e. true when mask bit is set
             gamepad.buttons[i] = pressed
         }
         gamepad.axis = []
@@ -164,7 +164,7 @@ function _handle_axes_update(gamepad, id) {
 
 function _handle_button_update(gamepad, id) {
     let last_gamepad = gamepads[id]
-    for (let i = 0; i < BUTTON_TO_MASK.length; i++) {
+    for (let i = 0; i < BUTTON_MASK.length; i++) {
         // Check for change
         let pressed = gamepad?gamepad.buttons[i]:false // false when gamepad is null or button not pressed
         let last_pressed = last_gamepad?(last_gamepad.buttons[i] == true):false
