@@ -190,3 +190,8 @@ function _handle_button_update(gamepad, id) {
         }
     }
 }
+
+if (["127.0.0.1", "localhost"].includes(window.location.hostname))  { // replaces standard browser gamepad when running locally
+    quando.gamepad = self
+    quando.gamepad.server = self // to allow direct server gamepad access as well and handle_message
+}
