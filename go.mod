@@ -1,8 +1,7 @@
 module quando // N.B. This will never be a module
 
 go 1.22
-
-toolchain go1.22.1
+toolchain go1.23.7
 
 require (
 	github.com/getlantern/systray v1.2.2
@@ -10,7 +9,7 @@ require (
 	github.com/skratchdot/open-golang v0.0.0-20200116055534-eef842397966
 	github.com/zserge/lorca v0.1.10
 	go.bug.st/serial v1.6.2
-	golang.org/x/net v0.23.0
+	golang.org/x/net v0.36.0
 )
 
 require (
@@ -50,5 +49,5 @@ require (
 	go.uber.org/multierr v1.11.0 // indirect
 	go.uber.org/zap v1.27.0 // indirect
 	golang.org/x/image v0.18.0 // indirect
-	golang.org/x/sys v0.28.0 // indirect
+	golang.org/x/sys v0.30.0 // indirect
 )
