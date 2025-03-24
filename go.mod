@@ -1,12 +1,12 @@
 module quando // N.B. This will never be a module
 
-go 1.22
+go 1.23.0
 
-toolchain go1.22.1
+toolchain go1.23.7
 
 require (
 	github.com/getlantern/systray v1.2.2
-	github.com/go-vgo/robotgo v0.110.0
+	github.com/go-vgo/robotgo v0.110.6
 	github.com/skratchdot/open-golang v0.0.0-20200116055534-eef842397966
 	github.com/zserge/lorca v0.1.10
 	go.bug.st/serial v1.6.2
@@ -15,7 +15,9 @@ require (
 
 require (
 	github.com/creack/goselect v0.1.2 // indirect
-	github.com/gen2brain/shm v0.1.0 // indirect
+	github.com/dblohm7/wingoes v0.0.0-20240820181039-f2b84150679e // indirect
+	github.com/ebitengine/purego v0.8.2 // indirect
+	github.com/gen2brain/shm v0.1.1 // indirect
 	github.com/getlantern/context v0.0.0-20220418194847-3d5e7a086201 // indirect
 	github.com/getlantern/errors v1.0.4 // indirect
 	github.com/getlantern/golog v0.0.0-20230503153817-8e72de7e0a65 // indirect
@@ -26,29 +28,33 @@ require (
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/go-ole/go-ole v1.3.0 // indirect
 	github.com/go-stack/stack v1.8.1 // indirect
+	github.com/godbus/dbus/v5 v5.1.0 // indirect
 	github.com/jezek/xgb v1.1.1 // indirect
-	github.com/kbinani/screenshot v0.0.0-20230812210009-b87d31814237 // indirect
-	github.com/lufia/plan9stats v0.0.0-20231016141302-07b5767bb0ed // indirect
+	github.com/kbinani/screenshot v0.0.0-20250118074034-a3924b7bbc8c // indirect
+	github.com/lufia/plan9stats v0.0.0-20250317134145-8bc96cf8fc35 // indirect
 	github.com/lxn/win v0.0.0-20210218163916-a377121e959e // indirect
 	github.com/otiai10/gosseract v2.2.1+incompatible // indirect
 	github.com/oxtoacart/bpool v0.0.0-20190530202638-03653db5a59c // indirect
 	github.com/power-devops/perfstat v0.0.0-20240221224432-82ca36839d55 // indirect
-	github.com/robotn/xgb v0.0.0-20190912153532-2cb92d044934 // indirect
-	github.com/robotn/xgbutil v0.0.0-20190912154524-c861d6f87770 // indirect
+	github.com/robotn/xgb v0.10.0 // indirect
+	github.com/robotn/xgbutil v0.10.0 // indirect
 	github.com/shirou/gopsutil/v3 v3.24.1 // indirect
+	github.com/shirou/gopsutil/v4 v4.25.2 // indirect
 	github.com/shoenig/go-m1cpu v0.1.6 // indirect
-	github.com/tklauser/go-sysconf v0.3.13 // indirect
-	github.com/tklauser/numcpus v0.7.0 // indirect
-	github.com/vcaesar/gops v0.30.2 // indirect
-	github.com/vcaesar/imgo v0.40.0 // indirect
+	github.com/tailscale/win v0.0.0-20250213223159-5992cb43ca35 // indirect
+	github.com/tklauser/go-sysconf v0.3.15 // indirect
+	github.com/tklauser/numcpus v0.10.0 // indirect
+	github.com/vcaesar/gops v0.40.0 // indirect
+	github.com/vcaesar/imgo v0.40.2 // indirect
 	github.com/vcaesar/keycode v0.10.1 // indirect
-	github.com/vcaesar/tt v0.20.0 // indirect
+	github.com/vcaesar/tt v0.20.1 // indirect
 	github.com/yusufpapurcu/wmi v1.2.4 // indirect
 	go.opentelemetry.io/otel v1.32.0 // indirect
 	go.opentelemetry.io/otel/metric v1.32.0 // indirect
 	go.opentelemetry.io/otel/trace v1.32.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	go.uber.org/zap v1.27.0 // indirect
-	golang.org/x/image v0.18.0 // indirect
-	golang.org/x/sys v0.28.0 // indirect
+	golang.org/x/exp v0.0.0-20250305212735-054e65f0b394 // indirect
+	golang.org/x/image v0.25.0 // indirect
+	golang.org/x/sys v0.31.0 // indirect
 )
