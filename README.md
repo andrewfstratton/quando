@@ -74,12 +74,11 @@ Quando can be **built** for three different deployments:
 
 ## Runtime options for remote access
 
-At the command line, there are two options for running Quando to allow remote editing and client (end user) access:
+At the command line, there is one option for allow remote access:
 
-- -remote_editor
-  - allows editing of scripts from other machines - e.g.  by scanning the QR Code from the hub at 127.0.0.1.  _Note: testing scripts will also work_
-- -remote_client
-  - allows running **deployed** scripts emotely.  This is **UNSAFE** and allows scripts to potentially control the PCs keyboard and mouse (if quando has been built with 'full')
+- -remote
+  - allows editing and running of scripts from other machines - e.g.  by scanning the QR Code from the hub at 127.0.0.1.  _Note: testing scripts will also work_
+  - N.B.  if quando has been built with 'full', then this is **UNSAFE** since scripts can control the PCs keyboard and mouse 
 
 Otherwise, the client and editor are **only available to the local, i.e. on PC, browser** 
 

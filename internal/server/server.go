@@ -89,8 +89,8 @@ func ServeHTTPandIO(handlers []Handler) {
 
 	url := ""
 	port = ":80"
-	if !config.RemoteClient() && !config.RemoteEditor() {
-		// If all hosting is localhost, then firewall doesn't need to give permission
+	if !config.Remote() {
+		// If all hosting is localhost, then bind to local access only; also firewall doesn't need to give permission
 		url = "127.0.0.1"
 	}
 	listen, err = net.Listen("tcp", url+port)

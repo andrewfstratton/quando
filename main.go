@@ -12,11 +12,8 @@ var handlers = []server.Handler{} // extra handlers are added when full version 
 func main() {
 	fmt.Println("Quando Go Server started")
 	ipAddress := ip.PrivateIP()
-	if config.RemoteClient() {
-		fmt.Println("  Warning: Client can be accessed remotely at ", ipAddress)
-	}
-	if config.RemoteEditor() {
-		fmt.Println("**SECURITY WARNING** Editor can be accessed remotely at ", ipAddress)
+	if config.Remote() {
+		fmt.Println("**SECURITY WARNING** Quando can be accessed remotely at ", ipAddress)
 	}
 	server.ServeHTTPandIO(handlers)
 }
