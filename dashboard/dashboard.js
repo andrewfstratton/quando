@@ -16,10 +16,6 @@ function onload() {
         let remote = res.remote
         let editor_url = `${ip}${port}/editor`
         let client_url = `${ip}${port}/client/setup.html`
-        if (res.local == false) { // remote access 
-          editor_url = document.location + 'editor'
-          client_url = document.location + 'client'
-        }
         let editor_qrcode = document.getElementById('editor_qrcode')
         let client_qrcode = document.getElementById('client_qrcode')
         if (remote) {
