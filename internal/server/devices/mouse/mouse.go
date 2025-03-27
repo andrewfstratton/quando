@@ -48,6 +48,7 @@ func check_mouse(button_action string, last_action *string, button_name string) 
 }
 
 const INTERVAL = time.Duration(time.Second / 30)
+const MAX_INTERVAL_SKIP = time.Duration(INTERVAL * 5) // i.e. allow 1/6th of a second jump at max
 
 type movePair struct{ x, y *int }
 
@@ -69,25 +70,28 @@ func clamp(target *int, min, max int) {
 	}
 }
 
-var last_interval time.Time = time.Now()
+var last_time time.Time = time.Now()
 
 func interval(move movePair) {
-	// fmt.Print(".")
 	new_time := time.Now()
-	diff := new_time.Sub(last_interval)
-	last_interval = new_time
-	fmt.Println(diff)
+	time_diff := new_time.Sub(last_time)
+	last_time = new_time
 	if *move.x == 0 && *move.y == 0 { // i.e. no movement
 		return
 	} // else update location based on the interval and movement
 	current_x, current_y := robotgo.Location()
-	x := current_x + *move.x
-	y := current_y + *move.y
+	if time_diff > MAX_INTERVAL_SKIP {
+		time_diff = MAX_INTERVAL_SKIP
+	}
+	// calculate movement fro time difference
+	move_x := int(float64(*move.x) * time_diff.Seconds())
+	move_y := int(float64(*move.y) * time_diff.Seconds())
+	x := current_x + move_x
+	y := current_y + move_y
 	// apply limits
 	width, height := robotgo.GetScreenSize()
 	clamp(&x, 0, width)
 	clamp(&y, 0, height)
-	// fmt.Println("move:", x, y)
 	if current_x != x || current_y != y { // double check to avoid update when no movement
 		robotgo.Move(x, y) // update position : cannot use Smooth since that lifts the mouse buttons
 	}
@@ -111,8 +115,8 @@ func updateRelativeMove(moves moveChannel) {
 	}
 }
 
-func intervalPixels(val float32, max_pixels int, time float32) int {
-	pixels := int((float32(max_pixels) * float32(INTERVAL.Seconds()) * (2 * (val - 0.5))) / time)
+func pixelPerSecond(val float32, max_pixels int, time float32) int {
+	pixels := int((float32(max_pixels) * (2 * (val - 0.5))) / time)
 	return pixels
 }
 
@@ -120,11 +124,11 @@ func mouseMoveRelative(x_val, y_val *float32, time float32) {
 	width, height := robotgo.GetScreenSize()
 	move_pair := movePair{nil, nil}
 	if x_val != nil {
-		pixels := intervalPixels(*x_val, width, time)
+		pixels := pixelPerSecond(*x_val, width, time)
 		move_pair.x = &pixels
 	}
 	if y_val != nil {
-		pixels := intervalPixels(*y_val, height, time)
+		pixels := pixelPerSecond(*y_val, height, time)
 		move_pair.y = &pixels
 	}
 	moves <- move_pair
