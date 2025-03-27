@@ -14,23 +14,21 @@ if (!quando) {
     })
   }
 
-  self.moveX = ({val, inverted = false, limited=true, time, relative = false}) => {
+  self.moveX = ({val, inverted = false, relative = false, time}) => {
     if (inverted) { val = 1-val }
     mouse.x = val
     if (relative) {
       mouse.relative = true
       mouse.time = time
-      mouse.limited = limited
     }
   }
 
-  self.moveY = ({val, inverted = false, limited=true, time, relative = false}) => {
+  self.moveY = ({val, inverted = false, relative = false, time}) => {
     if (inverted) { val = 1-val }
     mouse.y = val
     if (relative) {
       mouse.relative = true
       mouse.time = time
-      mouse.limited = limited
     }
   }
 
@@ -67,10 +65,6 @@ if (!quando) {
     if (mouse.hasOwnProperty('time')) {
       send.time = mouse.time
       delete mouse.time
-    }
-    if (mouse.hasOwnProperty('limited')) {
-      send.limited = mouse.limited
-      delete mouse.limited
     }
     if (mouse.hasOwnProperty('relative')) {
       send.relative = mouse.relative

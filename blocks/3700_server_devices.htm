@@ -646,7 +646,7 @@
 
 
 <div data-quando-block-type="devices-control-mouse-xy" class="quando-block"
-data-quando-javascript="quando.mouse_control.move${XY}({val:val, inverted:${inverted}, relative:${relative}, time:${time}, limited:${limited}})">
+data-quando-javascript="quando.mouse_control.move${XY}({val:val, inverted:${inverted}, relative:${relative}, time:${time}})">
   <div class="quando-left quando-server-devices"></div>
   <div class="quando-right">
     <div class="quando-row quando-server-devices">
@@ -666,13 +666,9 @@ data-quando-javascript="quando.mouse_control.move${XY}({val:val, inverted:${inve
               <option value='true'>Relative</option>
           </select>
           <span data-quando-toggle="relative=true">
-            in
+            in <span class="iconify">≥</span>
             <input data-quando-name='time' type='number' value='1' style='width: 4em' min='0' max='10' data-quando-encode='normal'/>
             seconds
-            <select data-quando-name='limited' class='quando-toggle'>
-                <option value='true'>Display</option>
-                <option value='false'>Unlimited</option>
-            </select>
           </span>
           <select data-quando-name='inverted' class='quando-toggle'>
               <option value='false'>Normal</option>

@@ -14,7 +14,6 @@ type mouseJSON struct {
 	X        *float32 `json:"x,omitempty"`
 	Y        *float32 `json:"y,omitempty"`
 	Relative bool     `json:"relative,omitempty"`
-	Limited  bool     `json:"limited,omitempty"`
 	Time     *float32 `json:"time,omitempty"`
 	Left     string   `json:"left"`
 	Middle   string   `json:"middle"`
