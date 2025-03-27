@@ -123,7 +123,6 @@ function createGamepad(data) {
         gamepad.axis[R_X] = _axis_value(data.r_x)
         gamepad.axis[L_Y] = _axis_value(data.l_y)
         gamepad.axis[R_Y] = _axis_value(data.r_y)
-        console.log(gamepad.axis)
     }
     return gamepad
 }
