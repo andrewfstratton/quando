@@ -15,7 +15,7 @@ type mouseJSON struct {
 	X        *float32 `json:"x,omitempty"`
 	Y        *float32 `json:"y,omitempty"`
 	Relative bool     `json:"relative,omitempty"`
-	Time     *float32 `json:"time,omitempty"`
+	Time     *float32 `json:"best_time,omitempty"`
 	Left     string   `json:"left"`
 	Middle   string   `json:"middle"`
 	Right    string   `json:"right"`
@@ -83,7 +83,7 @@ func interval(move movePair) {
 	if time_diff > MAX_INTERVAL_SKIP {
 		time_diff = MAX_INTERVAL_SKIP
 	}
-	// calculate movement fro time difference
+	// calculate movement from time difference
 	move_x := int(float64(*move.x) * time_diff.Seconds())
 	move_y := int(float64(*move.y) * time_diff.Seconds())
 	x := current_x + move_x
@@ -115,20 +115,20 @@ func updateRelativeMove(moves moveChannel) {
 	}
 }
 
-func pixelPerSecond(val float32, max_pixels int, time float32) int {
-	pixels := int((float32(max_pixels) * (2 * (val - 0.5))) / time)
+func pixelPerSecond(val float32, max_pixels int, best_time float32) int {
+	pixels := int((float32(max_pixels) * (2 * (val - 0.5))) / best_time)
 	return pixels
 }
 
-func mouseMoveRelative(x_val, y_val *float32, time float32) {
+func mouseMoveRelative(x_val, y_val *float32, best_time float32) {
 	width, height := robotgo.GetScreenSize()
 	move_pair := movePair{nil, nil}
 	if x_val != nil {
-		pixels := pixelPerSecond(*x_val, width, time)
+		pixels := pixelPerSecond(*x_val, width, best_time)
 		move_pair.x = &pixels
 	}
 	if y_val != nil {
-		pixels := pixelPerSecond(*y_val, height, time)
+		pixels := pixelPerSecond(*y_val, height, best_time)
 		move_pair.y = &pixels
 	}
 	moves <- move_pair

@@ -63,7 +63,7 @@ if (!quando) {
       delete mouse.y
     }
     if (mouse.hasOwnProperty('time')) {
-      send.time = mouse.time
+      send.best_time = mouse.time
       delete mouse.time
     }
     if (mouse.hasOwnProperty('relative')) {
