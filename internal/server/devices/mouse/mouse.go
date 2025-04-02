@@ -93,7 +93,7 @@ func interval(move movePair) {
 	clamp(&x, 0, width)
 	clamp(&y, 0, height)
 	if current_x != x || current_y != y { // double check to avoid update when no movement
-		robotgo.Move(x, y) // update position : cannot use Smooth since that lifts the mouse buttons
+		robotgo.Move(x, y, robotgo.GetMainId()) // update position : cannot use Smooth since that lifts the mouse buttons
 	}
 }
 
