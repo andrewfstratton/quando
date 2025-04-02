@@ -52,12 +52,6 @@ const MAX_INTERVAL_SKIP = time.Duration(INTERVAL * 5) // i.e. allow 1/6th of a s
 
 type movePair struct{ x, y *int }
 
-func newMovePair() movePair {
-	return movePair{&ZERO_MOVE, &ZERO_MOVE}
-}
-
-var ZERO_MOVE int = 0
-
 type moveChannel chan (movePair)
 
 var moves moveChannel
@@ -72,11 +66,11 @@ func clamp(target *int, min, max int) {
 
 var last_time time.Time = time.Now()
 
-func interval(move movePair) {
+func interval(dx, dy int) {
 	new_time := time.Now()
 	time_diff := new_time.Sub(last_time)
 	last_time = new_time
-	if *move.x == 0 && *move.y == 0 { // i.e. no movement
+	if dx == 0 && dy == 0 { // i.e. no movement
 		return
 	} // else update location based on the interval and movement
 	current_x, current_y := robotgo.Location()
@@ -84,8 +78,9 @@ func interval(move movePair) {
 		time_diff = MAX_INTERVAL_SKIP
 	}
 	// calculate movement from time difference
-	move_x := int(float64(*move.x) * time_diff.Seconds())
-	move_y := int(float64(*move.y) * time_diff.Seconds())
+	move_x := int(float64(dx) * time_diff.Seconds())
+	move_y := int(float64(dy) * time_diff.Seconds())
+	fmt.Print(".", move_x, move_y)
 	x := current_x + move_x
 	y := current_y + move_y
 	// apply limits
@@ -98,19 +93,20 @@ func interval(move movePair) {
 }
 
 func updateRelativeMove(moves moveChannel) {
-	move_pair := newMovePair()
+	dx := 0
+	dy := 0
 	for {
 		select {
 		case new_move := <-moves:
 			if new_move.x != nil {
-				move_pair.x = new_move.x
+				dx = *new_move.x
 			}
 			if new_move.y != nil {
-				move_pair.y = new_move.y
+				dy = *new_move.y
 			}
-			// fmt.Println("<-", *move_pair.x, *move_pair.y)
+			// fmt.Println("<-", dx, dy)
 		case <-time.After(INTERVAL):
-			interval(move_pair)
+			interval(dx, dy)
 		}
 	}
 }
