@@ -77,10 +77,10 @@ func interval(dx, dy int) {
 	if time_diff > MAX_INTERVAL_SKIP {
 		time_diff = MAX_INTERVAL_SKIP
 	}
+	dy = -dy // invert vertical movement due to display coordinates being 0 at top
 	// calculate movement from time difference
 	move_x := int(float64(dx) * time_diff.Seconds())
 	move_y := int(float64(dy) * time_diff.Seconds())
-	fmt.Print(".", move_x, move_y)
 	x := current_x + move_x
 	y := current_y + move_y
 	// apply limits
