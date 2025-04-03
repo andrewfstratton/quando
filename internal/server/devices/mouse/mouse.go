@@ -86,13 +86,14 @@ func interval(dx, dy int) {
 	if dx == 0 && dy == 0 { // i.e. no movement
 		return
 	} // else update location based on the interval and movement
-	current_x, current_y := robotgo.Location()
-	pt := User32Point{}
-	result, _, _ := getCursorPos.Call(uintptr(unsafe.Pointer(&pt)))
-	if result == 0 {
-		// fmt.Println("@", pt.X, pt.Y)
+	// removed below due to bug with scaled display
+	// current_x, current_y := robotgo.Location()
+	current := User32Point{}
+	result, _, _ := getCursorPos.Call(uintptr(unsafe.Pointer(&current)))
+	if result == 0 { // 0 when fail
+		return
 	}
-	fmt.Println(" ", time_diff)
+	// fmt.Println(" ", time_diff)
 	if time_diff > MAX_INTERVAL_SKIP {
 		time_diff = MAX_INTERVAL_SKIP
 	}
@@ -100,17 +101,18 @@ func interval(dx, dy int) {
 	// calculate movement from time difference
 	move_x := int(float64(dx) * time_diff.Seconds())
 	move_y := int(float64(dy) * time_diff.Seconds())
-	x := current_x + move_x
-	y := current_y + move_y
+	x := int(current.X) + move_x
+	y := int(current.Y) + move_y
 	// apply limits
 	width, height := robotgo.GetScreenSize()
 	clamp(&x, 0, width)
 	clamp(&y, 0, height)
-	if current_x != x || current_y != y { // double check to avoid update when no movement
+	if int(current.X) != x || int(current.Y) != y { // double check to avoid update when no movement
 		result, _, _ := setCursorPos.Call(uintptr(x), uintptr(y))
-		if result != 0 {
+		if result == 0 { // i.e. fail on 0
 			// fmt.Println("%", x, y)
 		}
+		// removed below due to bug with scaled display
 		// robotgo.Move(x, y, robotgo.GetMainId()) // update position : cannot use Smooth since that lifts the mouse buttons
 	}
 }
@@ -165,10 +167,10 @@ func move_press(mouse mouseJSON) {
 		} else { // i.e. absolute
 			width, height := robotgo.GetScreenSize()
 			if mouse.X != nil {
-				x = int(*mouse.X * float32(width))
+				x = int(*mouse.X * float32(width) / 1.25)
 			}
 			if mouse.Y != nil {
-				y = int(*mouse.Y * float32(height))
+				y = int(*mouse.Y * float32(height) / 1.25)
 			}
 			robotgo.Move(x, y, robotgo.GetMainId())
 		}
