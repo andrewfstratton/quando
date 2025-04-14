@@ -6,7 +6,7 @@ toolchain go1.23.7
 
 require (
 	github.com/getlantern/systray v1.2.2
-	github.com/go-vgo/robotgo v0.110.6
+	github.com/go-vgo/robotgo v0.110.7
 	github.com/skratchdot/open-golang v0.0.0-20200116055534-eef842397966
 	github.com/zserge/lorca v0.1.10
 	go.bug.st/serial v1.6.2
@@ -39,7 +39,7 @@ require (
 	github.com/power-devops/perfstat v0.0.0-20240221224432-82ca36839d55 // indirect
 	github.com/robotn/xgb v0.10.0 // indirect
 	github.com/robotn/xgbutil v0.10.0 // indirect
-	github.com/shirou/gopsutil/v4 v4.25.2 // indirect
+	github.com/shirou/gopsutil/v4 v4.25.3 // indirect
 	github.com/tailscale/win v0.0.0-20250213223159-5992cb43ca35 // indirect
 	github.com/tklauser/go-sysconf v0.3.15 // indirect
 	github.com/tklauser/numcpus v0.10.0 // indirect
@@ -53,7 +53,7 @@ require (
 	go.opentelemetry.io/otel/trace v1.32.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	go.uber.org/zap v1.27.0 // indirect
-	golang.org/x/exp v0.0.0-20250305212735-054e65f0b394 // indirect
-	golang.org/x/image v0.25.0 // indirect
-	golang.org/x/sys v0.31.0 // indirect
+	golang.org/x/exp v0.0.0-20250408133849-7e4ce0ab07d0 // indirect
+	golang.org/x/image v0.26.0 // indirect
+	golang.org/x/sys v0.32.0 // indirect
 )

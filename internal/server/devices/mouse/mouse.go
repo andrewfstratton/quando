@@ -6,23 +6,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"syscall"
 	"time"
-	"unsafe"
 
 	"github.com/go-vgo/robotgo"
 )
-
-const (
-	USER32_DLL_FILENAME = "user32.dll"
-)
-
-var getCursorPos *syscall.Proc
-var setCursorPos *syscall.Proc
-
-type User32Point struct {
-	X, Y int32
-}
 
 type mouseJSON struct {
 	X        *float32 `json:"x,omitempty"`
@@ -86,16 +73,9 @@ func interval(dx, dy int) {
 	if dx == 0 && dy == 0 { // i.e. no movement
 		return
 	} // else update location based on the interval and movement
-	// fmt.Println(" ", time_diff)
 	dy = -dy // invert vertical movement due to display coordinates being 0 at top
-	// current_x, current_y := robotgo.Location() // removed due to bug with scaled display
-	current := User32Point{}
-	result, _, _ := getCursorPos.Call(uintptr(unsafe.Pointer(&current)))
-	if result == 0 { // 0 is fail
-		return
-	}
-	current_x := int(current.X)
-	current_y := int(current.Y)
+	// fmt.Println(" ", time_diff)
+	current_x, current_y := robotgo.Location() // removed due to bug with scaled display
 	if time_diff > MAX_INTERVAL_SKIP {
 		time_diff = MAX_INTERVAL_SKIP
 	}
@@ -109,12 +89,7 @@ func interval(dx, dy int) {
 	clamp(&x, 0, width)
 	clamp(&y, 0, height)
 	if current_x != x || current_y != y { // double check to avoid update when no movement
-		result, _, _ := setCursorPos.Call(uintptr(x), uintptr(y))
-		if result == 0 { // 0 is fail
-			// fmt.Println("%", x, y)
-		}
-		// removed below due to bug with scaled display
-		// robotgo.Move(x, y, robotgo.GetMainId()) // update position : cannot use Smooth since that lifts the mouse buttons
+		robotgo.Move(x, y, robotgo.GetMainId()) // update position : cannot use Smooth since that lifts the mouse buttons
 	}
 }
 
@@ -193,17 +168,4 @@ func HandleMouse(w http.ResponseWriter, req *http.Request) {
 func init() {
 	moves = make(moveChannel, 0)
 	go updateRelativeMove(moves)
-	dll, err := syscall.LoadDLL(USER32_DLL_FILENAME)
-	if err != nil {
-		fmt.Println("** Failed to find", USER32_DLL_FILENAME)
-	} else {
-		getCursorPos, err = dll.FindProc("GetCursorPos")
-		if err != nil {
-			fmt.Println("** Failed to find proc : GetCursorPos in ", USER32_DLL_FILENAME)
-		}
-		setCursorPos, err = dll.FindProc("SetCursorPos")
-		if err != nil {
-			fmt.Println("** Failed to find proc : GetCursorPos in ", USER32_DLL_FILENAME)
-		}
-	}
 }
