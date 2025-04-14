@@ -110,7 +110,7 @@ func updateRelativeMove(moves moveChannel) {
 		if new_move.y != nil {
 			dy = *new_move.y
 		}
-		fmt.Println("<-", dx, dy)
+		// fmt.Println("<-", dx, dy)
 	}
 }
 
