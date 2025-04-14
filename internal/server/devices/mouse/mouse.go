@@ -75,7 +75,7 @@ func interval(dx, dy int) {
 	} // else update location based on the interval and movement
 	dy = -dy // invert vertical movement due to display coordinates being 0 at top
 	// fmt.Println(" ", time_diff)
-	current_x, current_y := robotgo.Location() // removed due to bug with scaled display
+	current_x, current_y := robotgo.Location()
 	if time_diff > MAX_INTERVAL_SKIP {
 		time_diff = MAX_INTERVAL_SKIP
 	}
@@ -84,8 +84,8 @@ func interval(dx, dy int) {
 	move_y := int(float64(dy) * time_diff.Seconds())
 	x := current_x + move_x
 	y := current_y + move_y
+	width, height := robotgo.GetScaleSize() // this gets the real display pixel resolution
 	// apply limits
-	width, height := robotgo.GetScreenSize()
 	clamp(&x, 0, width)
 	clamp(&y, 0, height)
 	if current_x != x || current_y != y { // double check to avoid update when no movement
@@ -167,5 +167,6 @@ func HandleMouse(w http.ResponseWriter, req *http.Request) {
 
 func init() {
 	moves = make(moveChannel, 0)
+	robotgo.Scale = true
 	go updateRelativeMove(moves)
 }
