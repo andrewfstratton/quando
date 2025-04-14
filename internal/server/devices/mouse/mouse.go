@@ -89,7 +89,8 @@ func interval(dx, dy int) {
 	clamp(&x, 0, width)
 	clamp(&y, 0, height)
 	if current_x != x || current_y != y { // double check to avoid update when no movement
-		robotgo.Move(x, y, robotgo.GetMainId()) // update position : cannot use Smooth since that lifts the mouse buttons
+		// n.b. do not use Smooth since that lifts the mouse buttons
+		robotgo.Move(x, y, robotgo.GetMainId())
 	}
 }
 
@@ -167,6 +168,5 @@ func HandleMouse(w http.ResponseWriter, req *http.Request) {
 
 func init() {
 	moves = make(moveChannel, 0)
-	robotgo.Scale = true
 	go updateRelativeMove(moves)
 }
