@@ -121,19 +121,21 @@ func interval(dx, dy int) {
 func updateRelativeMove(moves moveChannel) {
 	dx := 0
 	dy := 0
-	for {
-		select {
-		case new_move := <-moves:
-			if new_move.x != nil {
-				dx = *new_move.x
-			}
-			if new_move.y != nil {
-				dy = *new_move.y
-			}
-			// fmt.Println("<-", dx, dy)
-		case <-time.After(INTERVAL):
+	go func() { // run interval regularily
+		for {
 			interval(dx, dy)
+			time.Sleep(INTERVAL)
 		}
+	}()
+	for {
+		new_move := <-moves
+		if new_move.x != nil {
+			dx = *new_move.x
+		}
+		if new_move.y != nil {
+			dy = *new_move.y
+		}
+		fmt.Println("<-", dx, dy)
 	}
 }
 
