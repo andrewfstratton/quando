@@ -86,30 +86,31 @@ func interval(dx, dy int) {
 	if dx == 0 && dy == 0 { // i.e. no movement
 		return
 	} // else update location based on the interval and movement
-	// removed below due to bug with scaled display
-	// current_x, current_y := robotgo.Location()
+	// fmt.Println(" ", time_diff)
+	dy = -dy // invert vertical movement due to display coordinates being 0 at top
+	// current_x, current_y := robotgo.Location() // removed due to bug with scaled display
 	current := User32Point{}
 	result, _, _ := getCursorPos.Call(uintptr(unsafe.Pointer(&current)))
-	if result == 0 { // 0 when fail
+	if result == 0 { // 0 is fail
 		return
 	}
-	// fmt.Println(" ", time_diff)
+	current_x := int(current.X)
+	current_y := int(current.Y)
 	if time_diff > MAX_INTERVAL_SKIP {
 		time_diff = MAX_INTERVAL_SKIP
 	}
-	dy = -dy // invert vertical movement due to display coordinates being 0 at top
 	// calculate movement from time difference
 	move_x := int(float64(dx) * time_diff.Seconds())
 	move_y := int(float64(dy) * time_diff.Seconds())
-	x := int(current.X) + move_x
-	y := int(current.Y) + move_y
+	x := current_x + move_x
+	y := current_y + move_y
 	// apply limits
 	width, height := robotgo.GetScreenSize()
 	clamp(&x, 0, width)
 	clamp(&y, 0, height)
-	if int(current.X) != x || int(current.Y) != y { // double check to avoid update when no movement
+	if current_x != x || current_y != y { // double check to avoid update when no movement
 		result, _, _ := setCursorPos.Call(uintptr(x), uintptr(y))
-		if result == 0 { // i.e. fail on 0
+		if result == 0 { // 0 is fail
 			// fmt.Println("%", x, y)
 		}
 		// removed below due to bug with scaled display
