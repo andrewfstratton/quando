@@ -23,6 +23,7 @@ if (!quando) {
         mouse.y = val
       }
     } else { // direction, i.e. up/down/left/right
+      // Set the value to 0.5 to 1 for up/right and 0.5 DOWN to 0 for left/down
       if ((direction == 'up') || (direction == 'right')) {
         val = 0.5 + (val/2)
       } else { // down or left
