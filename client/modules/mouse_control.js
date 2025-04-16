@@ -14,18 +14,26 @@ if (!quando) {
     })
   }
 
-  self.moveX = ({val, inverted = false, relative = false, time}) => {
+  self.move = ({xy = '', direction = '', val, inverted = false, relative = false, time}) => {
     if (inverted) { val = 1-val }
-    mouse.x = val
-    if (relative) {
-      mouse.relative = true
-      mouse.time = time
+    if (xy) {
+      if (xy =='X') {
+        mouse.x = val
+      } else { // xy == 'Y'
+        mouse.y = val
+      }
+    } else { // direction, i.e. up/down/left/right
+      if ((direction == 'up') || (direction == 'right')) {
+        val = 0.5 + (val/2)
+      } else { // down or left
+        val = 0.5 - (val/2)
+      }
+      if ((direction == 'up') || (direction == 'down')) {
+        mouse.y = val
+      } else { // left right
+        mouse.x = val
+      }
     }
-  }
-
-  self.moveY = ({val, inverted = false, relative = false, time}) => {
-    if (inverted) { val = 1-val }
-    mouse.y = val
     if (relative) {
       mouse.relative = true
       mouse.time = time

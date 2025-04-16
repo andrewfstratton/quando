@@ -646,34 +646,48 @@
 
 
 <div data-quando-block-type="devices-control-mouse-xy" class="quando-block"
-data-quando-javascript="quando.mouse_control.move${XY}({val:val, inverted:${inverted}, relative:${relative}, time:${time}})">
+data-quando-javascript="quando.mouse_control.move({$(eq$,${bidirection}$,true$,xy:'${XY}'$,direction:'${direction}')$, val:val, inverted:${inverted}, relative:${relative}, time:${time}})">
   <div class="quando-left quando-server-devices"></div>
   <div class="quando-right">
     <div class="quando-row quando-server-devices">
       ⚡ 🖱️ Mouse
-      <select data-quando-name='XY' class='quando-toggle'>
-        <option value='X'>⇔</option>
-        <option value='Y'>⇕</option>
-      </select>
+      <span data-quando-toggle="bidirection=true">
+        <select data-quando-name='XY' class='quando-toggle'>
+          <option value='X'>⇔</option>
+          <option value='Y'>⇕</option>
+        </select>
+      </span>
+      <span data-quando-toggle="bidirection=false">
+        <select data-quando-name='direction' class='quando-menu'>
+          <option value='up'>🡑</option>
+          <option value='down'>🡓</option>
+          <option value='left'>🡐</option>
+          <option value='right'>🡒</option>
+        </select>
+      </span>
       <select data-quando-name="extras" class="quando-toggle">
         <option value="hidden">+</option>
         <option value="show">-</option>
       </select>
       <span data-quando-toggle="extras=show">
         <br>
-          <select data-quando-name='relative' class='quando-toggle'>
-              <option value='false'>Absolute</option>
-              <option value='true'>Relative</option>
+        <select data-quando-name='relative' class='quando-toggle'>
+          <option value='false'>Absolute</option>
+          <option value='true'>Relative</option>
+        </select>
+        <span data-quando-toggle="relative=true">
+          <select data-quando-name='bidirection' class='quando-toggle'>
+            <option value='true'>⇔⇕</option>
+            <option value='false'>🡐🡒🡑🡓</option>
           </select>
-          <span data-quando-toggle="relative=true">
-            in <span class="iconify">≥</span>
-            <input data-quando-name='time' type='number' value='1' style='width: 4em' min='0' max='10' data-quando-encode='normal'/>
-            seconds
-          </span>
-          <select data-quando-name='inverted' class='quando-toggle'>
-              <option value='false'>Normal</option>
-              <option value='true'>Inverted</option>
-          </select>
+        </span>
+          in <span class="iconify">≥</span>
+          <input data-quando-name='time' type='number' value='1' style='width: 4em' min='0' max='10' data-quando-encode='normal'/>
+          seconds
+        <select data-quando-name='inverted' class='quando-toggle'>
+          <option value='false'>Normal</option>
+          <option value='true'>Inverted</option>
+        </select>
         </span>
     </div>
   </div>
