@@ -14,7 +14,7 @@ if (!quando) {
     })
   }
 
-  self.move = ({xy = '', direction = '', val, inverted = false, relative = false, time}) => {
+  self.move = ({xy = false, direction, val, inverted = false, relative = false, time}) => {
     if (inverted) { val = 1-val }
     if (xy) {
       if (xy =='X') {
