@@ -22,10 +22,11 @@ The main benefits of Quando are:
 
 Quando allows many different inputs (and more are being added), including:
 
+- browser client including buttons
 - Leap Motion hand movement in 3 dimensions and rotation in 3 'angles' (six degrees of freedom)
 - Mouse and Keyboard
 - micro:bit keys, orientation and (version 2 only) touch
-- Gamepad input (from browser)
+- Gamepad input (browser or local PC)
 - (experimental) EEG headset
 - (experimental) speech recognition
 
@@ -39,15 +40,15 @@ Some of these outputs also include inputs:
 - Speech
 - Control of (local PC) mouse and keyboard
 - (experimental) Nao Robot control including full movement, speech, etc.
-- (experimental) microbit servo contol and esp32 (display)
+- microbit + rp2040/pico servo control and esp32 (display)
 
 ## What can Quando be used for?
 
 Quando has been used for:
 
+- remote control of applications and games
 - interactive exhibits for museums, typically using the touchless Leap motion controller to interact with information displays
 - touchless interactive control of robots to aid understanding of robot abilites
-- 
 
 ## Why is it called Quando?
 
@@ -58,7 +59,7 @@ The name Quando comes from Latin for 'when' since Quando use a When based approa
 Quando can currently be installed:
 
 - On PC (windows tested) as a local server - please [see these instructions](./docs/install_local.md).  You should only need to do this once.
-- (NYI) Cloud - this installation will not include control of (PC) keyboard, mouse, or access to connected (USB) devices.
+- (NYI) Cloud - this installation will not include local PC control keyboard/mouse, or access to connected (USB) devices.
 
 # Running Quando
 
@@ -70,17 +71,17 @@ Quando can be **built** for three different deployments:
 
 1. (typical) local - which includes access to USB devices and typically runs on a PC
 2. full - the same as local but also including control of mouse and keyboard which may be **UNSAFE**. _See also below re. running Quando_
-3. cloud - without either the above tags - this build does not access any local devices or have access to keyboard or mouse and is intended for cloud deployment
+3. cloud - without either the above tags - this build does not access any local devices/keyboard/mouse
 
 ## Runtime options for remote access
 
-At the command line, there is one option for allow remote access:
+At the command line, there is one option that allows remote access:
 
 - -remote
-  - allows editing and running of scripts from other machines - e.g.  by scanning the QR Code from the hub at 127.0.0.1.  _Note: testing scripts will also work_
-  - N.B.  if quando has been built with 'full', then this is **UNSAFE** since scripts can control the PCs keyboard and mouse 
+  - allows editing and running scripts from other machines - e.g.  by scanning the QR Codes shown at http://127.0.0.1
+  - N.B. if quando has been built with 'full', then this is **UNSAFE** since scripts can control the PCs keyboard/mouse 
 
-Otherwise, the client and editor are **only available to the local, i.e. on PC, browser** 
+Otherwise, the client and editor are **only available to the local, i.e. local PC, browser** 
 
 # Using the Quando:Editor
 
@@ -99,9 +100,9 @@ git pull
 
 ### Optional - Leap Motion
 
-To use the Leap Motion, an older version of the Windows software v4.1.0+52211 must be installed on the 'client' PC:
+To use the Leap Motion, an older version of the Windows software v4.1.0+52211 must be installed on a PC (likely windows only)
 
-- i.e.  where the leap motion will be plugged in and the client interaction will be opened (in a web browser)
+- i.e. where the leap motion will be plugged in and the client interaction will be opened (in a web browser)
 - The software may be downloaded from [here](https://www2.leapmotion.com/downloads/orion/v4.1.0/windows).
   - Note: this will download a zip and also open the newer software page - which you should ignore.
 - You will need to extract the zip contents
@@ -117,7 +118,7 @@ After installing the Leap Motion Control Panel, the recommended settings are:
   - Low Resource Mode
   - Avoid Poor Performance
 
-It is then advisable to plug in the Leap Motion and test it with the Diagnostic Visualizer - this can help identify lighting issues as well.
+Then plug in the Leap Motion and test it with the Diagnostic Visualizer - this can help identify lighting issues as well.
 
 ### Client browser Kiosk setup - allows PC to boot straight into client browser interaction
 
