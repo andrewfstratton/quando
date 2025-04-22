@@ -111,7 +111,7 @@ function _update_val(type, segments, callback) {
 }
 
 let _filters = {}
-const MAX_PS = 1000/150 // limit updates to 1500/second
+const MAX_PS = 1000/150 // limit updates to 150/second
 self.filter = (type, times_per, units, near, id, val, callback) => {
   let _filter = _filters[id]
   if (!_filter) {
