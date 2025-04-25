@@ -14,8 +14,8 @@ function onload() {
           port = ":" + port
         }
         let remote = res.remote
-        let editor_url = `${ip}${port}/editor`
-        let client_url = `${ip}${port}/client/setup.html`
+        let editor_url = `http://${ip}${port}/editor`
+        let client_url = `http://${ip}${port}/client/setup.html`
         let editor_qrcode = document.getElementById('editor_qrcode')
         let client_qrcode = document.getElementById('client_qrcode')
         if (remote) {
