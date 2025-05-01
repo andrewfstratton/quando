@@ -22,11 +22,11 @@ function onload() {
           new QRCode(editor_qrcode, {
             text: editor_url, width:160, height:160, correctLevel : QRCode.CorrectLevel.L, colorDark : "#000088", colorLight : "#ffffff",
           })
-          editor_qrcode.onclick = () => { window.open('//' + editor_url) }
+          editor_qrcode.onclick = () => { window.open(editor_url) }
           new QRCode(client_qrcode, {
             text: client_url, width:160, height:160, correctLevel : QRCode.CorrectLevel.L, colorDark : "#008800", colorLight : "#ffffff",
           })
-          client_qrcode.onclick = () => { window.open('//' + client_url) }
+          client_qrcode.onclick = () => { window.open(client_url) }
         } else {
           editor_qrcode.innerHTML = "<p>remote editor disabled</p><p>run quando with --remote to enable<p>"
             client_qrcode.innerHTML = "<p>remote client disabled</p><p>run quando with --remote to enable<p>"
