@@ -4,8 +4,8 @@
     <div class="quando-left quando-server-devices"></div>
     <div class="quando-right">
         <div class="quando-row quando-server-devices">
-          <span class="quando-info" title="This block can only be dragged into When Display.">⚠</span>
-          🕹️️️ When
+          <span class="quando-info" title="Windows server only.&#013;This block can only be dragged into When Display.">🪟⚠</span>
+            🕹️️️ When
             <select data-quando-name="button_index">
                 <option value='0'>Ⓐ/✕</option>
                 <option value='1'>Ⓑ/◯</option>
@@ -46,7 +46,7 @@
     <div class="quando-left quando-server-devices"></div>
     <div class="quando-right">
         <div class="quando-row quando-server-devices">
-            <span class="quando-info" title="This block can only be dragged into When Display.">⚠</span>
+          <span class="quando-info" title="Windows server only.&#013;This block can only be dragged into When Display.">🪟⚠</span>
             🕹️️️ When
             <select data-quando-name='left' class='quando-toggle'>
                 <option value='true'>📍👈️</option>
@@ -89,7 +89,7 @@
     <div class="quando-left quando-server-devices"></div>
     <div class="quando-right">
         <div class="quando-row quando-server-devices">
-            <span class="quando-info" title="This block can only be dragged into When Display.">⚠</span>
+          <span class="quando-info" title="Windows server only.&#013;This block can only be dragged into When Display.">🪟⚠</span>
             🕹️️️️️ When
             <select data-quando-name='left' class='quando-toggle'>
                 <option value='true'>👈</option>
@@ -256,6 +256,32 @@
   </div>
 </div>
 
+
+<div data-quando-block-type="devices-chrome" class="quando-block" data-quando-id="true"
+  data-quando-drop-valid="display-when-display,advanced-comment,inventor-flip,inventor-function-block,advanced-group"
+  data-quando-javascript="quando.system.whenApp('${data-quando-id}','${title}',()=>{${box}},()=>{${box2}})">
+  <div class="quando-left quando-server-devices"></div>
+  <div class="quando-right">
+    <div class="quando-row quando-server-devices">
+      <span class="quando-info" title="This block can only be dragged into When Display.">⚠</span>
+      💾 When Application
+      <select data-quando-name="title">
+        <option value=' - Visual Studio Code'>VS Code</option>
+        <option value=' - Google Chrome'>Chrome</option>
+      </select>
+      <select data-quando-name="extras" class="quando-toggle">
+        <option value="hidden">+</option>
+        <option value="show">-</option>
+      </select>
+    </div>
+    <div data-quando-name="box" class="quando-box"></div>
+    <div class="quando-row quando-server-devices" data-quando-toggle="extras=show">
+      then when
+    </div>
+    <div data-quando-name="box2" class="quando-box" data-quando-toggle="extras=show"></div>
+    <div class="quando-row quando-server-devices"></div>
+  </div>
+</div>
 
 <div data-quando-block-type="devices-ubit-send" class="quando-block" data-quando-javascript="quando.ubit.display($(eq$,${txt}$,input$,'${text}'$,${txt})$)">
   <div class="quando-left quando-server-devices"></div>
