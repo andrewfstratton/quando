@@ -8,7 +8,7 @@
         {
             "name": "Local",
             "type": "go",
-            "buildFlags": "-tags='local full'",
+            "buildFlags": "-tags=local",
             "request": "launch",
             "mode": "debug",
             "program": ".",
@@ -20,7 +20,7 @@
         {
             "name": "Full",
             "type": "go",
-            "buildFlags": "-tags=full",
+            "buildFlags": "-tags='local full'",
             "request": "launch",
             "mode": "debug",
             "output": "debug",
