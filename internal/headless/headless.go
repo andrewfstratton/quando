@@ -1,13 +1,10 @@
 package headless
 
 import (
-	"github.com/andrewfstratton/quandoscript/block/widget/stringinput"
-	"github.com/andrewfstratton/quandoscript/block/widget/text"
-	"github.com/andrewfstratton/quandoscript/library"
+	"fmt"
+	_ "quando/internal/headless/system/log" // this calls init()
 )
 
-func AddBlocks() {
-	server_log := library.NewBlockType("server.log", "misc")
-	server_log.Add(text.New("Log "))
-	server_log.Add(stringinput.New("txt").Empty("message"))
+func init() {
+	fmt.Println("Quando Go Server loading headless library ...")
 }
