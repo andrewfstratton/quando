@@ -1,10 +1,9 @@
 module quando // N.B. This will never be a module
 
-go 1.23.0
-
-toolchain go1.23.7
+go 1.24.2
 
 require (
+	github.com/andrewfstratton/quandoscript v0.1.1
 	github.com/getlantern/systray v1.2.2
 	github.com/go-vgo/robotgo v0.110.7
 	github.com/skratchdot/open-golang v0.0.0-20200116055534-eef842397966

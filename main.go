@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"quando/internal/config"
+	"quando/internal/headless"
 	"quando/internal/server"
 	"quando/internal/server/ip"
 )
@@ -10,6 +11,8 @@ import (
 var handlers = []server.Handler{} // extra handlers are added when full version has been built, e.g. using build_full.bat
 
 func main() {
+	fmt.Println("Quando Go Server loading library ...")
+	headless.AddBlocks()
 	fmt.Println("Quando Go Server started")
 	ipAddress := ip.PrivateIP()
 	if config.Remote() {

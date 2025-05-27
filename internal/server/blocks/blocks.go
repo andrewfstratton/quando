@@ -9,6 +9,8 @@ import (
 	"os"
 	"regexp"
 	"strings"
+
+	"github.com/andrewfstratton/quandoscript/library"
 )
 
 type MenuJSON struct {
@@ -89,7 +91,26 @@ func Handle(w http.ResponseWriter, req *http.Request) {
 			}
 		}
 	}
+	qsMenu := MenuJSON{Title: true, Class: "quando-server", Name: "QuandoScript", Html: ""}
+	blocks = append(blocks, qsMenu)
+	block, found := library.FindBlockType("server.log")
+	if found {
+		html := block.Replace(BLOCK_HTML)
+		qsMenu = MenuJSON{Title: false, Html: html}
+		blocks = append(blocks, qsMenu)
+	}
 	blocksJSON := BlocksJSON{Blocks: blocks, Success: true}
 	str, _ := json.Marshal(blocksJSON)
 	w.Write(str)
 }
+
+const (
+	BLOCK_HTML = `<div data-quando-block-type="{{ .TypeName }}" class="quando-block" data-quandoscript='{{ .Params }}'>
+		<div class="quando-left {{ .Class }}"></div>
+		<div class="quando-right">
+			<div class="quando-row {{ .Class }}">
+				{{ .Widgets }}
+			</div>
+		</div>
+	</div>`
+)

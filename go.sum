@@ -1,5 +1,9 @@
 github.com/BurntSushi/freetype-go v0.0.0-20160129220410-b763ddbfe298/go.mod h1:D+QujdIlUNfa0igpNMk6UIvlb6C252URs4yupRUV4lQ=
 github.com/BurntSushi/graphics-go v0.0.0-20160129215708-b43f31a4a966/go.mod h1:Mid70uvE93zn9wgF92A/r5ixgnvX8Lh68fxp9KQBaI0=
+github.com/andrewfstratton/quandoscript v0.0.0-20250522140034-6fc5aeb87be6 h1:boRM/QYnh/kjvh0qsZddwoKtJiRezSwbVtn1nOiasK8=
+github.com/andrewfstratton/quandoscript v0.0.0-20250522140034-6fc5aeb87be6/go.mod h1:M23sjiQZwwl0FWgsx3yc66o20+zLyzZMhowm1hctdtw=
+github.com/andrewfstratton/quandoscript v0.1.1 h1:dIg/Zu/UvWNGBIk3RJxyiH60gtKK4ckNWlysE7xWacs=
+github.com/andrewfstratton/quandoscript v0.1.1/go.mod h1:M23sjiQZwwl0FWgsx3yc66o20+zLyzZMhowm1hctdtw=
 github.com/benbjohnson/clock v1.1.0/go.mod h1:J11/hYXuz8f4ySSvYwY0FKfm+ezbsZBKZxNJlLklBHA=
 github.com/creack/goselect v0.1.2 h1:2DNy14+JPjRBgPzAd1thbQp4BSIihxcBf0IXhQXDRa0=
 github.com/creack/goselect v0.1.2/go.mod h1:a/NhLweNvqIYMuxcMOuWY516Cimucms3DglDzQP3hKY=
