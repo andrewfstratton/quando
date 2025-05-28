@@ -1,0 +1,1 @@
+wgo -file .go go build -tags local,full main.go :: ./main.exe
