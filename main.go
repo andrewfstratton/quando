@@ -12,7 +12,7 @@ import (
 	"github.com/andrewfstratton/quandoscript/run/param"
 )
 
-var handlers = []server.Handler{} // extra handlers are added when full version has been built, e.g. using build_full.bat
+var handlers = []server.Handler{} // handlers are added for full/local builds, e.g. using build_full.bat
 
 func main() {
 	fmt.Println("Quando Go Server started")

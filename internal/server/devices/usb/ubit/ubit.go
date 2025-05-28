@@ -69,7 +69,7 @@ var device = usb.Device{
 	NewLine:    "\n",
 }
 
-var pressed = new(bool)
+var pressed = func() *bool { return new(bool) }()
 
 func HandleDisplay(w http.ResponseWriter, req *http.Request) {
 	display := displayJSON{}
@@ -178,8 +178,4 @@ func CheckMessages() {
 			handleMessage(response)
 		}
 	}
-}
-
-func init() {
-	*pressed = true
 }

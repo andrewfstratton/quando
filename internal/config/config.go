@@ -11,7 +11,7 @@ func Remote() bool {
 }
 
 func init() {
-	remote_p := flag.Bool("remote", false, "Allow access from other machines - Warning - this is insecur")
+	remote_p := flag.Bool("remote", false, "Allow access from other machines - Warning - this is insecure")
 	flag.Parse()
 	remote = *remote_p
 }
