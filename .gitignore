@@ -35,4 +35,4 @@ scripts/*
 
 # executables
 *.exe
-quando.code-workspace
+*.code-workspace
