@@ -8,7 +8,6 @@ import (
 	"quando/internal/server/ip"
 
 	"github.com/andrewfstratton/quandoscript/library"
-	"github.com/andrewfstratton/quandoscript/parse"
 	"github.com/andrewfstratton/quandoscript/run/param"
 )
 
@@ -22,10 +21,11 @@ func main() {
 	}
 	block, found := library.FindBlockType("server.log")
 	if found {
-		txt := param.Param{Val: "Hi", Qtype: parse.STRING}
-		start := param.Params{}
-		start["txt"] = txt
-		block.Op(start)(nil)
+		outer := param.Params{}
+		outer["txt"] = param.Param{Val: "Bob", Qtype: param.STRING}
+		inner := param.Params{}
+		inner["greeting"] = param.Param{Val: "Hi", Qtype: param.STRING}
+		block.Op(inner)(outer)
 	}
 	server.ServeHTTPandIO(handlers)
 }

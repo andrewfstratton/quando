@@ -6,5 +6,5 @@ import (
 )
 
 func init() {
-	fmt.Println("Quando Go Server loading headless library ...")
+	fmt.Println("\nQuando Go Server loading headless library ...")
 }
