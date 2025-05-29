@@ -12,6 +12,8 @@ github.com/andrewfstratton/quandoscript v0.1.2-0.20250528095959-99c02974ed6e h1:
 github.com/andrewfstratton/quandoscript v0.1.2-0.20250528095959-99c02974ed6e/go.mod h1:M23sjiQZwwl0FWgsx3yc66o20+zLyzZMhowm1hctdtw=
 github.com/andrewfstratton/quandoscript v0.1.2-0.20250528132159-34e9ef023e91 h1:hFZnheqQ+W+GHYSv/lzWH+SAersTHvv8GIwK4palt+M=
 github.com/andrewfstratton/quandoscript v0.1.2-0.20250528132159-34e9ef023e91/go.mod h1:M23sjiQZwwl0FWgsx3yc66o20+zLyzZMhowm1hctdtw=
+github.com/andrewfstratton/quandoscript v0.1.2-0.20250529102653-5f53d0cac9b2 h1:RXUzpseY0JaRHn1USl4YNHdLICh/4I8RkM/VB2HO4FY=
+github.com/andrewfstratton/quandoscript v0.1.2-0.20250529102653-5f53d0cac9b2/go.mod h1:M23sjiQZwwl0FWgsx3yc66o20+zLyzZMhowm1hctdtw=
 github.com/benbjohnson/clock v1.1.0/go.mod h1:J11/hYXuz8f4ySSvYwY0FKfm+ezbsZBKZxNJlLklBHA=
 github.com/creack/goselect v0.1.2 h1:2DNy14+JPjRBgPzAd1thbQp4BSIihxcBf0IXhQXDRa0=
 github.com/creack/goselect v0.1.2/go.mod h1:a/NhLweNvqIYMuxcMOuWY516Cimucms3DglDzQP3hKY=

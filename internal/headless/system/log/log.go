@@ -12,10 +12,10 @@ import (
 
 func init() {
 	server_log := library.NewBlockType("server.log", "misc", setup)
-	server_log.Add(text.New("Log "))
-	server_log.Add(stringinput.New("greeting").Empty("greeting"))
-	server_log.Add(text.New(" "))
-	server_log.Add(stringinput.New("txt").Empty("message"))
+	server_log.Add(text.New("Log "),
+		stringinput.New("greeting").Empty("greeting"),
+		text.New(" "),
+		stringinput.New("txt").Empty("message"))
 }
 
 func setup(outer param.Params) func(param.Params) {
