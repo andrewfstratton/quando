@@ -11,8 +11,8 @@ import (
 )
 
 func init() {
-	server_log := library.NewBlockType("server.log", "misc", setup)
-	server_log.Add(text.New("Log "),
+	library.NewBlockType("server.log", "misc", setup).Add(
+		text.New("Log "),
 		stringinput.New("greeting").Empty("greeting"),
 		text.New(" "),
 		stringinput.New("txt").Empty("message"))
