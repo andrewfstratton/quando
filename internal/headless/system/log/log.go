@@ -11,14 +11,17 @@ import (
 )
 
 func init() {
-	library.NewBlockType("server.log", "misc", setup).Add(
+	greeting := stringinput.New("greeting").Empty("greeting")
+	txt := stringinput.New("txt").Empty("greeting")
+
+	library.NewBlockType("server.log", "misc", op).Add(
 		text.New("Log "),
-		stringinput.New("greeting").Empty("greeting"),
+		greeting,
 		text.New(" "),
-		stringinput.New("txt").Empty("message"))
+		txt)
 }
 
-func setup(outer param.Params) func(param.Params) {
+func op(outer param.Params) func(param.Params) {
 	greeting := param.StringParam{Lookup: "greeting", Val: ""}
 	greeting.Update(outer)
 	txt := param.StringParam{Lookup: "txt", Val: ""}
