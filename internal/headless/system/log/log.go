@@ -4,30 +4,32 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/andrewfstratton/quandoscript/block/widget/stringinput"
-	"github.com/andrewfstratton/quandoscript/block/widget/text"
-	"github.com/andrewfstratton/quandoscript/library"
-	"github.com/andrewfstratton/quandoscript/run/param"
+	"quando/quandoscript/action/param"
+	"quando/quandoscript/block"
+	"quando/quandoscript/block/widget/stringinput"
+	"quando/quandoscript/block/widget/text"
 )
 
-func init() {
-	greeting := stringinput.New("greeting").Empty("greeting")
-	txt := stringinput.New("txt").Empty("greeting")
-
-	library.NewBlockType("server.log", "misc", op).Add(
-		text.New("Log "),
-		greeting,
-		text.New(" "),
-		txt)
+type LogDefn struct {
+	TypeName struct{}                `_:"system.log"`
+	Class    struct{}                `_:"quando-misc"`
+	_        text.Text               `txt:"Log "`
+	Greeting stringinput.StringInput `empty:"greeting"`
+	_        text.Text               `txt:" "`
+	Txt      stringinput.StringInput `empty:"name"`
 }
 
-func op(outer param.Params) func(param.Params) {
-	greeting := param.StringParam{Lookup: "greeting", Val: ""}
-	greeting.Update(outer)
-	txt := param.StringParam{Lookup: "txt", Val: ""}
-	return func(inner param.Params) {
-		txt.Update(inner)
-		now := time.Now()
-		fmt.Println("Log:", now, greeting.Val, txt.Val)
-	}
+func init() { // sets up the Block (UI) ONLY  - doesn't setup any action even though the early/late functions are referenced
+	log := &LogDefn{}
+	block.New(log).Op(
+		func(early param.Params) func(param.Params) {
+			greeting := log.Greeting.Param(early)
+			txt := log.Txt.Param(early)
+			return func(late param.Params) {
+				txt.Update(late)
+				greeting.Update(late)
+				now := time.Now()
+				fmt.Println("Log:", greeting.Val, txt.Val, now.Format(time.TimeOnly))
+			}
+		})
 }
