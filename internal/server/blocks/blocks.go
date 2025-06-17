@@ -10,7 +10,7 @@ import (
 	"regexp"
 	"strings"
 
-	"quando/quandoscript/library"
+	"github.com/andrewfstratton/quandoscript/library"
 )
 
 type MenuJSON struct {

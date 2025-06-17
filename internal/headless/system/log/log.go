@@ -4,15 +4,15 @@ import (
 	"fmt"
 	"time"
 
-	"quando/quandoscript/action/param"
-	"quando/quandoscript/block"
-	"quando/quandoscript/block/widget/stringinput"
-	"quando/quandoscript/block/widget/text"
+	"github.com/andrewfstratton/quandoscript/action/param"
+	"github.com/andrewfstratton/quandoscript/block/widget/stringinput"
+	"github.com/andrewfstratton/quandoscript/block/widget/text"
+	"github.com/andrewfstratton/quandoscript/library"
 )
 
 type LogDefn struct {
 	TypeName struct{}                `_:"system.log"`
-	Class    struct{}                `_:"quando-misc"`
+	Class    struct{}                `_:"misc"`
 	_        text.Text               `txt:"Log "`
 	Greeting stringinput.StringInput `empty:"greeting"`
 	_        text.Text               `txt:" "`
@@ -21,7 +21,9 @@ type LogDefn struct {
 
 func init() { // sets up the Block (UI) ONLY  - doesn't setup any action even though the early/late functions are referenced
 	log := &LogDefn{}
-	block.New(log).Op(
+	library.Block(log).Op(
+		// log := &LogDefn{}
+		// block.New(log).Op(
 		func(early param.Params) func(param.Params) {
 			greeting := log.Greeting.Param(early)
 			txt := log.Txt.Param(early)

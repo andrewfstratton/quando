@@ -7,8 +7,8 @@ import (
 	"quando/internal/server"
 	"quando/internal/server/ip"
 
-	"quando/quandoscript/action"
-	"quando/quandoscript/parse"
+	"github.com/andrewfstratton/quandoscript/action"
+	"github.com/andrewfstratton/quandoscript/library"
 )
 
 var handlers = []server.Handler{} // handlers are added for full/local builds, e.g. using build_full.bat
@@ -34,7 +34,7 @@ func main() {
 	if config.Remote() {
 		fmt.Println("**SECURITY WARNING** Quando can be accessed remotely at ", ipAddress)
 	}
-	parse.Lines(TEST_LINES)
+	library.Parse(TEST_LINES)
 	warn := action.Start()
 	if warn != "" {
 		fmt.Println(warn)
