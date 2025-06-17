@@ -3,7 +3,6 @@ package definition
 import (
 	"fmt"
 	"reflect"
-	"strings"
 )
 
 type Definition interface {
@@ -24,22 +23,21 @@ type (
 	PERCENT  = float64
 )
 
-func SetupWidget(defn any, uName string) {
-	if uName == "_" || uName == "" {
+func SetupWidget(defn any, name string) {
+	if name == "_" || name == "" {
 		return
 	}
 	// using reflection to set fields
 	v := reflect.ValueOf(defn).Elem() // i.e. pointer to struct
-	vField := v.FieldByName(uName)    // get (input) widget
+	vField := v.FieldByName(name)     // get (input) widget
 	if vField.CanSet() {
 		vName := vField.FieldByName("Name")
 		if vName.CanSet() {
-			lName := strings.ToLower(uName[:1]) + uName[1:]
-			vName.SetString(lName)
+			vName.SetString(name)
 			return
 		}
 		fmt.Printf("Cannot set Name on %T\n", defn)
 		return
 	}
-	fmt.Printf("Cannot set field '%s' on %T\n", uName, defn)
+	fmt.Printf("Cannot set field '%s' on %T\n", name, defn)
 }
