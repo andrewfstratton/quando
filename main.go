@@ -23,8 +23,9 @@ const (
 
 	// 6 system.log(greeting"Bye",txt"Jane")
 
-	TEST_LINES = `0 system.log(greeting"Hi",txt"Bob")
-7 system.log(txt".")
+	TEST_LINES = `0 system.log(Greeting"Hi",Txt"Bob")
+1 system.log(Greeting"greeting",Txt"name")
+7 system.log(Txt".")
 `
 )
 
