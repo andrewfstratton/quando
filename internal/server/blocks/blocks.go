@@ -91,13 +91,15 @@ func Handle(w http.ResponseWriter, req *http.Request) {
 			}
 		}
 	}
-	qsMenu := MenuJSON{Title: true, Class: "misc", Name: "QuandoScript", Html: ""}
-	blocks = append(blocks, qsMenu)
-	block, found := library.FindBlock("system.log")
-	if found {
-		html := block.Replace(BLOCK_HTML)
-		qsMenu = MenuJSON{Title: false, Html: html}
+	for _, cls := range library.Classes() {
+		menu := library.Menu(cls)
+		qsMenu := MenuJSON{Title: true, Class: menu.Class, Name: menu.Class, Html: ""}
 		blocks = append(blocks, qsMenu)
+		for _, blk := range menu.Blocks {
+			html := blk.Replace(BLOCK_HTML)
+			qsMenu = MenuJSON{Title: false, Html: html}
+			blocks = append(blocks, qsMenu)
+		}
 	}
 	blocksJSON := BlocksJSON{Blocks: blocks, Success: true}
 	str, _ := json.Marshal(blocksJSON)
