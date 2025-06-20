@@ -1,0 +1,39 @@
+package every
+
+import (
+	"time"
+
+	"github.com/andrewfstratton/quandoscript/action"
+	"github.com/andrewfstratton/quandoscript/action/param"
+	"github.com/andrewfstratton/quandoscript/block/widget/boxinput"
+	"github.com/andrewfstratton/quandoscript/block/widget/numberinput"
+	"github.com/andrewfstratton/quandoscript/block/widget/text"
+	"github.com/andrewfstratton/quandoscript/library"
+)
+
+type Every struct {
+	TypeName struct{}                `_:"time.every"`
+	Class    struct{}                `_:"time"`
+	_        text.Text               `txt:"Every " iconify:"true"`
+	Secs     numberinput.NumberInput `empty:"seconds" min:"0" max:"999" width:"4" default:"1"`
+	_        text.Text               `txt:"seconds"`
+	Callback boxinput.BoxInput       `txt:"box"`
+}
+
+func init() {
+	defn := &Every{}
+	library.Block(defn).Op(
+		func(early param.Params) func(param.Params) {
+			secs := defn.Secs.Param(early)
+			callback := defn.Callback.Param(early)
+			return func(late param.Params) {
+				secs.Update(late)
+				callback.Update(late)
+				go func() {
+					for range time.Tick(secs.Duration()) {
+						action.Run(callback.Val)
+					}
+				}()
+			}
+		})
+}
