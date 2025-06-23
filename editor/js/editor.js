@@ -448,7 +448,7 @@ function copyBlock(old, clone) {
       }
   }
   // Create new ids
-  let _id = json.nextDataQuandoId(0) // find the next free id
+  let _id = json.nextDataQuandoId(1) // find the next free id
   // Get all the clone divs that have a data-quando-id
   let nodes = []
   if (clone.dataset.quandoId) {
