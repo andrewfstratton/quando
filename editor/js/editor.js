@@ -100,10 +100,10 @@ function _show_right_menu(event) {
     menu.style.visibility = "hidden"
     let containing_block = elem
     // need to find the quando-block - may be ancestor
-    if (!elem.classList.contains("quando-block")) {	
-      containing_block = _getParentBlock(elem)	
-    }	
-    if (containing_block){	
+    if (!elem.classList.contains("quando-block")) {
+      containing_block = _getParentBlock(elem)
+    }
+    if (containing_block){
       handle_help(containing_block.dataset.quandoBlockType)
     }
   }, false)
@@ -180,7 +180,7 @@ export function toggleRelativesOnElement(elem) {
     }
     let disables = _buildDisableList(block)
     for (let child of disables) {
-      let disable_class = child.dataset && child.dataset.quandoDisable 
+      let disable_class = child.dataset && child.dataset.quandoDisable
       if (disable_class && disable_class.includes("=")) {
         let [key, value] = disable_class.split('=')
         if (key == elem_name) {
@@ -382,7 +382,7 @@ function handleSelect(event) {
   undo.done(_undo, _redo, "Change Selected")
   return false
 }
-  
+
 export function setElementHandlers (block) {
   block.addEventListener('contextmenu', handleRightClick, false)
   // add handler for list item change
@@ -434,7 +434,7 @@ export function setElementHandlers (block) {
 }
 
 // Note that clone is a 'simple' copy of old, e.g. used for dragging
-function copyBlock(old, clone) { 
+function copyBlock(old, clone) {
   // copy across selected indexes
   if (old.hasChildNodes()) {
     let selector = "select"
@@ -789,62 +789,48 @@ function _warning (message) {
   }
 
 export function loaded(obj) {
-    showObject(obj.script)
-    _deploy = obj.deploy
-    let name = obj.filename
-    _success('Loaded...')
-    $('#remote_save_key').val(name)
-    if (name == '') {
-      name = '[no file]'
-    }
-    $('#file_name').html(name)
-    undo.reset()
+  showObject(obj.script)
+  _deploy = obj.deploy
+  let name = obj.filename
+  _success('Loaded...')
+  $('#remote_save_key').val(name)
+  if (name == '') {
+    name = '[no file]'
   }
+  $('#file_name').html(name)
+  undo.reset()
+}
 
-  function _saved (name) {
-    _success('Saved...')
-    $('#remote_save_key').val(name)
-    $('#file_name').html(name)
-  }
+function _saved(name) {
+  _success('Saved...')
+  $('#remote_save_key').val(name)
+  $('#file_name').html(name)
+}
 
-  function _update_remote_list() {
-    $('#remote_load_list').html('')
-    for (let i = 0; i < _remote_list.length; i++) {
-      let main = {name:_remote_list[i], fn:'remote_load'}
-      $('#remote_load_list').append(_remote_load_list_add(i, main, 'remote_delete'))
-    }
+function _update_remote_list() {
+  $('#remote_load_list').html('')
+  for (let i = 0; i < _remote_list.length; i++) {
+    let main = {name: _remote_list[i], fn: 'remote_load'}
+    $('#remote_load_list').append(_remote_load_list_add(i, main, 'remote_delete'))
   }
+}
 
-  function _load_list_add_fn(id, obj) {
-    let result = ''
-    if (obj.fn) {
-      result = 'onclick="index.' + obj.fn + '(\'' + id + '\')"'
-    }
-    return result
+function _load_list_add_fn(id, obj) {
+  let result = ''
+  if (obj.fn) {
+    result = 'onclick="index.' + obj.fn + '(\'' + id + '\')"'
   }
+  return result
+}
 
-  function _remote_load_list_add (id, main, fn) {
-    let result = '<div class="row">' +
-        '<a class="list-group-item col-md-11"' + _load_list_add_fn(id, main)
-        + '>' + main.name + '</a>'
-        + '<div class="col-sm-1 glyphicon glyphicon-remove"'
-          + 'onclick="index.' + fn + '(' + id + ')"' + '>'
-        + '</div>' + 
-      '</div>\n'
-    return result
-  }
-
-export function generateCode(elem) {
-  let children = elem.children
-  let result = ""
-  for (let child of children) {
-    result += generator.getCode(child)
-  }
-  let prefix = generator.prefix()
-  if (prefix) {
-    result = prefix + result
-  }
-  result = result.replace(/(\r\n|\n|\r)+/gm, '\n')
+function _remote_load_list_add(id, main, fn) {
+  let result = '<div class="row">' +
+    '<a class="list-group-item col-md-11"' + _load_list_add_fn(id, main)
+    + '>' + main.name + '</a>'
+    + '<div class="col-sm-1 glyphicon glyphicon-remove"'
+    + 'onclick="index.' + fn + '(' + id + ')"' + '>'
+    + '</div>' +
+    '</div>\n'
   return result
 }
 
@@ -855,22 +841,22 @@ export function testCreator(code) {
 }
 
 export function handle_test() {
-    let code = generateCode(document.getElementById('script'))
-    if (code) {
-      let clipboard = document.getElementById('clipboard')
-      if (clipboard && code.startsWith('<div data-quando-block-type="')) { // if inventing a block
-        let tmp = document.createElement('div')
-        tmp.innerHTML = code
-        setElementHandlers(tmp.firstChild)
-        clipboard.appendChild(tmp.firstChild)
-        _leftClickTitle(document.getElementById('clipboard_title'))
-      } else {
-        testCreator(code)
-      }
+  let code = generator.getQuandoScript(document.getElementById('script'))
+  if (code) {
+    let clipboard = document.getElementById('clipboard')
+    if (clipboard && code.startsWith('<div data-quando-block-type="')) { // if inventing a block
+      let tmp = document.createElement('div')
+      tmp.innerHTML = code
+      setElementHandlers(tmp.firstChild)
+      clipboard.appendChild(tmp.firstChild)
+      _leftClickTitle(document.getElementById('clipboard_title'))
     } else {
-      alert('Behaviour incomplete.')
+      testCreator(code)
     }
+  } else {
+    alert('Behaviour incomplete.')
   }
+}
 
 export function handle_save(quick = false) {
   if (($('#remote_save_key').val() == "") // i.e. missing a filename
@@ -888,7 +874,7 @@ export function handle_save(quick = false) {
       script: _script
     }))
   }
-  
+
 export function handle_remote_save(close_modal = true) {
   let name = $('#remote_save_key').val()
   if (name == "") {
@@ -896,7 +882,7 @@ export function handle_remote_save(close_modal = true) {
   } else if (!FILENAME_REGEXP.test(name)){
     _error("Not saved - filename cannot contain \" * / : < > ? \\ | ")
   } else {
-    let code = generateCode(document.getElementById('script'))
+    let code = generator.getQuandoScript(document.getElementById('script'))
     common.Put('/scripts/' + encodeURI(name),
       (success) => {
         if (close_modal) {
@@ -923,7 +909,7 @@ export function load_autosave() {
       _warning('No Autosave...')
   }
 }
-  
+
 export function remote_load(index) {
   common.Get('/scripts/' + _remote_list[index],
     (success) => {
@@ -971,7 +957,7 @@ export function handle_clear() {
     showObject(old_object)
     _deploy = old_deploy
     document.getElementById("file_name").innerHTML = old_filename
-    document.getElementById("remote_save_key").value = old_remote_save_key 
+    document.getElementById("remote_save_key").value = old_remote_save_key
   }
   let _redo = () => {
     _deploy = ''
@@ -1003,7 +989,7 @@ export function handle_clear() {
       txt += ']'
     } else { // must be Code
       btn.text('Code') // In case the first time it's called
-      txt = generateCode(script)
+      txt = generator.getQuandoScript(script)
     }
     $('#show_modal_clip_paste_button').prop('disabled', disabled)
     $('#show_modal_code').prop('readonly', false)

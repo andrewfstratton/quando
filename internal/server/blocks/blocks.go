@@ -108,7 +108,7 @@ func Handle(w http.ResponseWriter, req *http.Request) {
 
 const (
 	// BLOCK_HTML = `data-quandoscript='...
-	BLOCK_HTML = `<div data-quando-block-type="{{ .TypeName }}" class="quando-block" data-quando-id="true" data-quando-javascript='${data-quando-id} {{ .TypeName }}({{ .Params }})'>
+	BLOCK_HTML = `<div data-quando-block-type="{{ .TypeName }}" class="quando-block" data-quando-id="true" data-quando-script='${data-quando-id} {{ .TypeName }}({{ .Params }})'>
 		<div class="quando-left {{ .Class }}"></div>
 		<div class="quando-right">
 			<div class="quando-row {{ .Class }}">

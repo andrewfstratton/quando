@@ -3,18 +3,6 @@
 import * as text from "/common/text.js";
 
 let fn = {}
-let _prefix = ''
-
-export function prefix() {
-    let result = _prefix
-    _prefix = ''
-    if (result == '') {
-        result = false
-    } else {
-        result += '\n'
-    }
-    return result
-}
 
 function nextMatch(str, open, close) {
     // returns the next found parsed..open..matched..close..remaining
@@ -35,15 +23,16 @@ function nextMatch(str, open, close) {
     return [parsed, matched, remaining]
 }
 
-function getCodeInBlock(block) {
-    let code = ''
-    if (block.dataset && block.dataset.quandoJavascript) {
-        code = block.dataset.quandoJavascript
+function getCodeForBlock(block) {
+    if (block.classList.contains("quando-disabled")) {
+        return {script:"", postscript: ""}
     }
     let right = block.querySelector(".quando-right")
     let matches = []
+    let block_script = ""
+    let block_subscript = ""
     for (let row_box of right.children) { // i.e. for each row or box
-        // collect the substitions in matches array
+        // collect the widget key values in matches array
         if (row_box.classList.contains("quando-row")) {
             for (let child of row_box.querySelectorAll('[data-quando-name]')) { // i.e. each named input
                 // N.B. Cannot have box here - will cause strange effects...
@@ -55,73 +44,100 @@ function getCodeInBlock(block) {
                     matches[child.dataset.quandoName] = value // stores a lookup for the value
                 }
             }
-        } else if (row_box.classList.contains("quando-box")) {
-            let box_code = ''
+        }
+        // collect the quando script and block/sub/post script
+        if (row_box.classList.contains("quando-box")) {
+            // should be && next if
             if (row_box.dataset.quandoName) {
-                let separator = "\n"
-                let pre = ""
-                let post = ""
-                if (row_box.dataset.quandoFnArray) {
-                    pre = "(val,txt) => {\n"
-                    separator = ",\n"
-                    post = "}"
-                }
-                let infix = ''
-                for (let block of row_box.children) {
-                    box_code += infix + pre + getCode(block) + post
-                    if (infix == '') {
-                        infix = separator
+                let box_id = '' // i.e. empty means no sub blocks
+                let {script, postscript} = getCodeForElement(row_box)
+                if (script != "") {
+                    // get id of first block here
+                    box_id += parseInt(script) // n.b. += forces a string
+                    matches[row_box.dataset.quandoName] = box_id
+                    block_script += "\n" + script
+                    if (postscript != "") {
+                        block_subscript += "\n" + postscript // force blankline between
                     }
                 }
-                matches[row_box.dataset.quandoName] = box_code
             }
         }
     }
     matches['data-quando-id'] = block.dataset.quandoId
-    let remaining = code // i.e. what to parse
-    code = '' // what has been parsed...
+    let script = '' // everything that has been parsed...
+    let remaining = ''
+    if (block.dataset && block.dataset.quandoScript) {
+        remaining = block.dataset.quandoScript // i.e. what to parse
+    }
     let parsed = ''
     let matched = ''
     while (remaining) {
         [parsed, matched, remaining] = nextMatch(remaining, '${', '}')
-        code += parsed
+        script += parsed
         if (matched) {
             let substitute = matches[matched]
             if (typeof substitute === 'string') {
-                code += substitute
+                script += substitute
             } else {
                 console.log('Warning - ${' + matched + '} is type ' + typeof substitute + ' - passed through')
-                code += '${' + matched + '}'
+                script += '${' + matched + '}'
             }
         }
     }
-    remaining = code // second pass for $(...)$ - parameters are already substituted
-    code =''
+    remaining = script // second pass for $(...)$ - parameters are already substituted
+    script = ''
     while (remaining) {
         [parsed, matched, remaining] = nextMatch(remaining, '$(', ')$')
-        code += parsed
+        script += parsed
         if (matched) {
             // split into comma separated
             let params = matched.split('$,')
             let func = fn[params[0]]
             if (func) {
                 params[0] = block
-                code += func.apply(null, params)
+                script += func.apply(null, params)
             } else {
                 console.log("Warning - function generator.fn." + matched + "() not found")
             }
         }
     }
-    return code
+    return { script: script, postscript: block_script }
 }
-    
-export function getCode(block) {
-    let result = '' 
-    if (block.dataset.quandoJavascript && !block.classList.contains("quando-disabled")) {
-      result = getCodeInBlock(block)
-      if (result != '') { result += '\n' }
+
+function getCodeForElement(elem) {
+    if (elem.classList.contains("quando-disabled")) {
+        return { script: "", postscript: "" }
     }
-    return result
+    let scriptblock = ""
+    let subscript = ""
+    let children = elem.children
+    for (let child of children) {
+        if (child.dataset.quandoScript) {
+            let {script, postscript} = getCodeForBlock(child)
+            if (script != "") {
+                if (scriptblock != "") {
+                    scriptblock += "\n" // separate lines
+                }
+                scriptblock += script
+                if (postscript != "") {
+                    if (subscript != "") {
+                        subscript += "\n" // separate lines
+                    }
+                    subscript += postscript
+                }
+            }
+        }
+    }
+    // may need to check substring for empty?!
+    return { script: scriptblock, postscript: subscript }
+}
+
+export function getQuandoScript(elem) {
+    let {script, postscript} = getCodeForElement(elem)
+    if (postscript != "") {
+        script += "\n" + postscript // add blankline between blocks
+    }
+    return script
 }
 
 fn.log = (block, str) => {
@@ -178,13 +194,6 @@ fn.rgb = (block, colour) => {
     // Modifed from https://stackoverflow.com/questions/36697749/html-get-color-in-rgb for conversion function
     // Converts #rrggbb to 'rrr, ggg, bbb'`
     return colour.match(/[A-Za-z0-9]{2}/g).map((v) => { return parseInt(v, 16) }).join(",")
-}
-
-fn.pre = (block, ...inserts) => {
-    for (let insert of inserts) {
-        _prefix += insert + '\n'
-    }
-    return ''
 }
 
 fn.eq = (block, str, val, gen, gen_else='') => {
