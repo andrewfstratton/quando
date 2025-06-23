@@ -3,8 +3,8 @@
 
 export function nextDataQuandoId (id) {
   let result = id
-  if (isNaN(id)) {
-    result = 0
+  if (isNaN(id) || result <= 0) {
+    result = 1
   }
   while (document.querySelector(`[data-quando-id='${result}']`)) {
     result++

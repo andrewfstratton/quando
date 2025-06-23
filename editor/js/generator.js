@@ -49,17 +49,17 @@ function getCodeForBlock(block) {
         if (row_box.classList.contains("quando-box")) {
             // should be && next if
             if (row_box.dataset.quandoName) {
-                let box_id = '' // i.e. empty means no sub blocks
+                let box_id = '0' // i.e. means no sub blocks
                 let {script, postscript} = getCodeForElement(row_box)
                 if (script != "") {
                     // get id of first block here
-                    box_id += parseInt(script) // n.b. += forces a string
-                    matches[row_box.dataset.quandoName] = box_id
+                    box_id = '' + parseInt(script) // n.b. forces a string
                     block_script += "\n" + script
                     if (postscript != "") {
                         block_subscript += "\n" + postscript // force blankline between
                     }
                 }
+                matches[row_box.dataset.quandoName] = box_id
             }
         }
     }
