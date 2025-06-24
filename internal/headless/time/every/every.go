@@ -17,7 +17,7 @@ type Every struct {
 	_        text.Text          `txt:"Every " iconify:"true"`
 	Secs     numberinput.Number `empty:"seconds" min:"0" max:"999" width:"4" default:"1"`
 	_        text.Text          `txt:"seconds"`
-	Callback boxinput.Box       `txt:"box"`
+	Box      boxinput.Box
 }
 
 func init() {
@@ -25,13 +25,13 @@ func init() {
 	library.Block(defn).Op(
 		func(early param.Params) func(param.Params) {
 			secs := defn.Secs.Param(early)
-			callback := defn.Callback.Param(early)
+			box := defn.Box.Param(early)
 			return func(late param.Params) {
 				secs.Update(late)
-				callback.Update(late)
+				box.Update(late)
 				go func() {
 					for range time.Tick(secs.Duration()) {
-						action.Run(callback.Val)
+						action.Run(box.Val)
 					}
 				}()
 			}
