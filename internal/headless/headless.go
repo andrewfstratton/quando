@@ -2,6 +2,7 @@ package headless
 
 import (
 	"fmt"
+	_ "quando/internal/headless/gamepad"
 	_ "quando/internal/headless/system/log" // this calls init()
 	_ "quando/internal/headless/time/after"
 	_ "quando/internal/headless/time/every"
