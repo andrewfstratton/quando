@@ -12,12 +12,12 @@ import (
 )
 
 type Every struct {
-	TypeName struct{}                `_:"time.every"`
-	Class    struct{}                `_:"time"`
-	_        text.Text               `txt:"Every " iconify:"true"`
-	Secs     numberinput.NumberInput `empty:"seconds" min:"0" max:"999" width:"4" default:"1"`
-	_        text.Text               `txt:"seconds"`
-	Callback boxinput.BoxInput       `txt:"box"`
+	TypeName struct{}           `_:"time.every"`
+	Class    struct{}           `_:"time"`
+	_        text.Text          `txt:"Every " iconify:"true"`
+	Secs     numberinput.Number `empty:"seconds" min:"0" max:"999" width:"4" default:"1"`
+	_        text.Text          `txt:"seconds"`
+	Callback boxinput.Box       `txt:"box"`
 }
 
 func init() {

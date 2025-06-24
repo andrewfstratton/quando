@@ -11,12 +11,12 @@ import (
 )
 
 type Defn struct {
-	TypeName struct{}                `_:"system.log"`
-	Class    struct{}                `_:"misc"`
-	_        text.Text               `txt:"Log "`
-	Greeting stringinput.StringInput `empty:"greeting"`
-	_        text.Text               `txt:" "`
-	Txt      stringinput.StringInput `empty:"name"`
+	TypeName struct{}           `_:"system.log"`
+	Class    struct{}           `_:"misc"`
+	_        text.Text          `txt:"Log "`
+	Greeting stringinput.String `empty:"greeting"`
+	_        text.Text          `txt:" "`
+	Txt      stringinput.String `empty:"name"`
 }
 
 func init() { // sets up the Block (UI) ONLY  - doesn't setup any action even though the early/late functions are referenced
