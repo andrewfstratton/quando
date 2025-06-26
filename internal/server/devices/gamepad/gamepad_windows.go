@@ -88,27 +88,29 @@ func maskUpdate() {
 func gamepadUpdate(num int) {
 	var gamepad Gamepad
 	last_gamepad := gamepads[num]
-	result, _, _ := getState.Call(uintptr(uint(num)), uintptr(unsafe.Pointer(&gamepad)))
+	err, _, _ := getState.Call(uintptr(uint(num)), uintptr(unsafe.Pointer(&gamepad)))
 	gamepadMask := GamepadMask{Gamepad: num, Mask: 0}
-	// swap success round to do fail first
-	if result == 0 { // success
-		gamepadMask.Mask = gamepad.button_mask
-		if last_gamepad == nil {
-			fmt.Println("Gamepad connected : ", num)
-			if gamepad.button_mask != 0 {
-				maskChannel <- gamepadMask
-			}
-		} else {
-			if last_gamepad.button_mask != gamepad.button_mask {
-				maskChannel <- gamepadMask
-			}
+	if err != 0 { // gamepad not found
+		if last_gamepad != nil { // has just disconnected
+			fmt.Println("Gamepad disconnected : ", num)
+			gamepads[num] = nil
+			maskChannel <- gamepadMask
 		}
-		gamepads[num] = &gamepad // always update
-	} else if last_gamepad != nil { // has just disconnected
-		fmt.Println("Gamepad disconnected : ", num)
-		gamepads[num] = nil
-		maskChannel <- gamepadMask
+		return
 	}
+	// gamepad found
+	gamepads[num] = &gamepad // always update for next time through
+	if last_gamepad == nil { // just connected
+		fmt.Println("Gamepad connected : ", num)
+		if gamepad.button_mask == 0 {
+			return // was disconnected and no buttons pressed - nothing to report
+		}
+	} else if last_gamepad.button_mask == gamepad.button_mask {
+		return // when no change in buttons pressed
+	}
+	// Something change - disconnection or a button press change
+	gamepadMask.Mask = gamepad.button_mask
+	maskChannel <- gamepadMask
 }
 
 func CheckChanged() {
