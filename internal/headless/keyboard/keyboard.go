@@ -16,15 +16,15 @@ type Defn struct {
 	Var          stringinput.String `empty:"⇕" show:"PressRelease=2"`
 	_            text.Text          `txt:"⌨️ Key "`
 	_            text.Text          `txt:"ctrl+" show:"Ctrl=1"`
-	_            text.Text          `txt:"shift+" show:"Shift=1"`
 	_            text.Text          `txt:"alt+" show:"Alt=1"`
+	_            text.Text          `txt:"shift+" show:"Shift=1"`
 	Key          stringinput.String `empty:"🗚" length:"1"`
 	_            text.Text          `txt:" "`
 	PressRelease menuinput.MenuInt  `2:"⇕" 1:"press" 0:"release"`
 	_            text.Text          `txt:"<br>" hover:"true"`
-	Ctrl         menuinput.MenuInt  `0:"no ctrl" 1:"ctrl" hover:"true"`
-	Alt          menuinput.MenuInt  `0:"no alt" 1:"alt" hover:"true"`
-	Shift        menuinput.MenuInt  `0:"no shift" 1:"shift" hover:"true"`
+	Ctrl         menuinput.MenuInt  `0:"no ctrl" 1:"ctrl" hover:"true" toggle:"true"`
+	Alt          menuinput.MenuInt  `0:"no alt" 1:"alt" hover:"true" toggle:"true"`
+	Shift        menuinput.MenuInt  `0:"no shift" 1:"shift" hover:"true" toggle:"true"`
 }
 
 func init() {
