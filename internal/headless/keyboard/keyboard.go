@@ -4,6 +4,7 @@ import (
 	device_keyboard "quando/internal/server/devices/keyboard"
 
 	"github.com/andrewfstratton/quandoscript/action/param"
+	"github.com/andrewfstratton/quandoscript/block/widget"
 	"github.com/andrewfstratton/quandoscript/block/widget/menuinput"
 	"github.com/andrewfstratton/quandoscript/block/widget/stringinput"
 	"github.com/andrewfstratton/quandoscript/block/widget/text"

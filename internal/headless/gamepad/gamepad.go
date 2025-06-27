@@ -5,6 +5,7 @@ import (
 
 	"github.com/andrewfstratton/quandoscript/action"
 	"github.com/andrewfstratton/quandoscript/action/param"
+	"github.com/andrewfstratton/quandoscript/block/widget"
 	"github.com/andrewfstratton/quandoscript/block/widget/boxinput"
 	"github.com/andrewfstratton/quandoscript/block/widget/menuinput"
 	"github.com/andrewfstratton/quandoscript/block/widget/text"
@@ -24,12 +25,6 @@ type Defn struct {
 	Box          boxinput.Box
 }
 
-const (
-	Release      = 0
-	Press        = 1
-	PressRelease = 2
-)
-
 func init() {
 	defn := &Defn{}
 	library.Block(defn).Op(
@@ -43,10 +38,10 @@ func init() {
 				box.Update(late)
 				gamepad_windows.ButtonHandle(buttonNum.Int(),
 					func(pressed bool) {
-						if press_release.Val == Release && pressed {
+						if press_release.Val == widget.RELEASE && pressed {
 							return
 						}
-						if press_release.Val == Press && !pressed {
+						if press_release.Val == widget.PRESS && !pressed {
 							return
 						}
 						action.Run(box.Val)
