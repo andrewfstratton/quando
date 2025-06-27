@@ -25,7 +25,7 @@ func press_release_modifiers(modifiers []string, up_down string) {
 	}
 }
 
-func PressRelease(key string, press int, shift, ctrl, alt bool) {
+func PressRelease(key string, press, shift, ctrl, alt bool) {
 	modifiers := []string{}
 	if shift {
 		modifiers = append(modifiers, "shift")
@@ -37,12 +37,12 @@ func PressRelease(key string, press int, shift, ctrl, alt bool) {
 		modifiers = append(modifiers, "alt")
 	}
 	state := "up"
-	if press == 1 { // press modifiers before pressing key
+	if press { // press modifiers before pressing key
 		state = "down"
 		press_release_modifiers(modifiers, state)
 	}
 	robotgo.KeyToggle(key, state)
-	if press != 1 { // release modifiers after releasing key
+	if !press { // release modifiers after releasing key
 		press_release_modifiers(modifiers, state)
 	}
 }

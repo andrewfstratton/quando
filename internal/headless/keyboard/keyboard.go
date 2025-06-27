@@ -38,8 +38,8 @@ func init() {
 			shift := defn.Shift.Param(early)
 			return func(late param.Params) {
 				key.Update(late)
-				press_release.Update(late)
-				device_keyboard.PressRelease(key.Val, press_release.Int(), shift.Bool(), ctrl.Bool(), alt.Bool())
+				press := press_release.Int() == widget.PRESS
+				device_keyboard.PressRelease(key.Val, press, shift.Bool(), ctrl.Bool(), alt.Bool())
 			}
 		})
 }
