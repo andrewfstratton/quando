@@ -9,12 +9,13 @@ import (
 	"github.com/andrewfstratton/quandoscript/block/widget/stringinput"
 	"github.com/andrewfstratton/quandoscript/block/widget/text"
 	"github.com/andrewfstratton/quandoscript/library"
+	"github.com/andrewfstratton/quandoscript/property"
 )
 
 type Defn struct {
 	TypeName     struct{}           `_:"keyboard.control"`
 	Class        struct{}           `_:"server-devices"`
-	Var          stringinput.String `empty:"⇕" show:"PressRelease=2"`
+	Vari         stringinput.String `empty:"⇕" show:"PressRelease=2"`
 	_            text.Text          `txt:"⌨️ Key "`
 	_            text.Text          `txt:"ctrl+" show:"Ctrl=1"`
 	_            text.Text          `txt:"alt+" show:"Alt=1"`
@@ -37,9 +38,14 @@ func init() {
 			ctrl := defn.Ctrl.Param(early)
 			alt := defn.Alt.Param(early)
 			shift := defn.Shift.Param(early)
+			vari := defn.Vari.Param(early)
 			return func(late param.Params) {
 				key.Update(late)
+				vari.Update(late)
 				press := press_release.Int() == widget.PRESS
+				if press_release.Int() == widget.PRESS_RELEASE {
+					press = property.GetBool(0, vari.Val)
+				}
 				device_keyboard.PressRelease(key.Val, press, shift.Bool(), ctrl.Bool(), alt.Bool())
 			}
 		})
