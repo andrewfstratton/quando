@@ -31,6 +31,7 @@ function getCodeForBlock(block) {
     let matches = []
     let block_script = ""
     let block_subscript = ""
+    let child_block_start_ids = " "  // start with space for replace
     for (let row_box of right.children) { // i.e. for each row or box
         // collect the widget key values in matches array
         if (row_box.classList.contains("quando-row")) {
@@ -58,6 +59,8 @@ function getCodeForBlock(block) {
                     if (postscript != "") {
                         block_subscript += "\n" + postscript // force blankline between
                     }
+                    // collect the first child box id for each group)
+                    child_block_start_ids += box_id + " " // n.b. extra space always is necessary
                 }
                 matches[row_box.dataset.quandoName] = box_id
             }
@@ -85,7 +88,9 @@ function getCodeForBlock(block) {
             }
         }
     }
-    remaining = script // second pass for $(...)$ - parameters are already substituted
+    // second pass for $(...)$ - parameters are already substituted
+    // this stage might become redundant if inventor is remvoed since $eq and $inDisplay, etc. should be handled differently
+    remaining = script
     script = ''
     while (remaining) {
         [parsed, matched, remaining] = nextMatch(remaining, '$(', ')$')
@@ -102,6 +107,7 @@ function getCodeForBlock(block) {
             }
         }
     }
+    script = script.replace(" ", child_block_start_ids) // insert any child box ids here ... should be tidier
     return { script: script, postscript: block_script }
 }
 
