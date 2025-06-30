@@ -1,7 +1,7 @@
 package keyboard
 
 import (
-	device_keyboard "quando/internal/server/devices/keyboard"
+	"quando/internal/server/devices/control_keyboard"
 
 	"github.com/andrewfstratton/quandoscript/action/param"
 	"github.com/andrewfstratton/quandoscript/block/widget"
@@ -46,7 +46,7 @@ func init() {
 				if press_release.Int() == widget.PRESS_RELEASE {
 					press = property.GetBool(0, vari.Val)
 				}
-				device_keyboard.PressRelease(key.Val, press, shift.Bool(), ctrl.Bool(), alt.Bool())
+				control_keyboard.PressRelease(key.Val, press, shift.Bool(), ctrl.Bool(), alt.Bool())
 			}
 		})
 }

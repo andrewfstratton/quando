@@ -1,4 +1,4 @@
-package keyboard
+package control_keyboard
 
 import (
 	"github.com/go-vgo/robotgo"
@@ -8,16 +8,6 @@ const (
 	KeysPerSecond = 8
 	msDelay       = 1000 / KeysPerSecond
 )
-
-type keyJSON struct {
-	Key   string `json:"key"`
-	Press bool   `json:"press"`
-	Shift bool   `json:"shift"`
-	Ctrl  bool   `json:"ctrl"`
-	Alt   bool   `json:"alt"`
-}
-
-type typeJSON string
 
 func press_release_modifiers(modifiers []string, up_down string) {
 	for _, key := range modifiers {
