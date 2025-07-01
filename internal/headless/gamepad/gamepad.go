@@ -6,6 +6,7 @@ import (
 	"github.com/andrewfstratton/quandoscript/action"
 	"github.com/andrewfstratton/quandoscript/action/param"
 	"github.com/andrewfstratton/quandoscript/block/widget"
+	"github.com/andrewfstratton/quandoscript/block/widget/boxinput"
 	"github.com/andrewfstratton/quandoscript/block/widget/menuinput"
 	"github.com/andrewfstratton/quandoscript/block/widget/stringinput"
 	"github.com/andrewfstratton/quandoscript/block/widget/text"
@@ -21,9 +22,9 @@ type Defn struct {
 	_         text.Text         `txt:"🕹️️️️️ When "`
 	ButtonNum menuinput.MenuInt `0:"Ⓐ/✕" 1:"Ⓑ/◯" 2:"Ⓧ/☐" 3:"Ⓨ/🛆" 14:"🠈" 15:"🠊" 12:"🠉" 13:"🠋" 4:"👈 Bumper" 5:"👉 Bumper" 10:"📍👈" 11:"👉📍" 8:"Back 👈" 9:"👉 Start"`
 	_         text.Text         `txt:" button " iconify:"true"`
-	widget.P_ressRelease
+	menuinput.P_ressRelease
 	Vari stringinput.String `empty:"⇕" show:"PressRelease=2"`
-	widget.B_ox
+	boxinput.B_ox
 }
 
 func init() {

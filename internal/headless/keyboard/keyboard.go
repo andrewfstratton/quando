@@ -23,7 +23,7 @@ type Defn struct {
 	_        text.Text          `txt:"shift+" show:"Shift=1"`
 	Key      stringinput.String `empty:"🗚" length:"1"`
 	_        text.Text          `txt:" "`
-	widget.P_ressRelease
+	menuinput.P_ressRelease
 	HoverDefn `hover:"true"`
 }
 
