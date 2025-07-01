@@ -14,17 +14,17 @@ import (
 )
 
 type Defn struct {
-	TypeName     widget.None        `_:"keyboard.control"`
-	Class        widget.None        `_:"server-devices"`
-	Vari         stringinput.String `empty:"⇕" show:"PressRelease=2"`
-	_            text.Text          `txt:"⌨️ Key "`
-	_            text.Text          `txt:"ctrl+" show:"Ctrl=1"`
-	_            text.Text          `txt:"alt+" show:"Alt=1"`
-	_            text.Text          `txt:"shift+" show:"Shift=1"`
-	Key          stringinput.String `empty:"🗚" length:"1"`
-	_            text.Text          `txt:" "`
-	PressRelease menuinput.MenuInt  `2:"⇕" 1:"press" 0:"release"`
-	HoverDefn    `hover:"true"`
+	TypeName widget.None        `_:"keyboard.control"`
+	Class    widget.None        `_:"server-devices"`
+	Vari     stringinput.String `empty:"⇕" show:"PressRelease=2"`
+	_        text.Text          `txt:"⌨️ Key "`
+	_        text.Text          `txt:"ctrl+" show:"Ctrl=1"`
+	_        text.Text          `txt:"alt+" show:"Alt=1"`
+	_        text.Text          `txt:"shift+" show:"Shift=1"`
+	Key      stringinput.String `empty:"🗚" length:"1"`
+	_        text.Text          `txt:" "`
+	widget.P_ressRelease
+	HoverDefn `hover:"true"`
 }
 
 type HoverDefn struct {
