@@ -5,14 +5,16 @@ import (
 	"time"
 
 	"github.com/andrewfstratton/quandoscript/action/param"
+	"github.com/andrewfstratton/quandoscript/block/widget"
 	"github.com/andrewfstratton/quandoscript/block/widget/stringinput"
 	"github.com/andrewfstratton/quandoscript/block/widget/text"
+	"github.com/andrewfstratton/quandoscript/definition"
 	"github.com/andrewfstratton/quandoscript/library"
 )
 
 type Defn struct {
-	TypeName struct{}           `_:"system.log"`
-	Class    struct{}           `_:"misc"`
+	TypeName widget.None        `_:"system.log"`
+	Class    widget.None        `_:"misc"`
 	_        text.Text          `txt:"Log "`
 	Greeting stringinput.String `empty:"greeting"`
 	_        text.Text          `txt:" "`
@@ -20,8 +22,9 @@ type Defn struct {
 }
 
 func init() { // sets up the Block (UI) ONLY  - doesn't setup any action even though the early/late functions are referenced
-	defn := &Defn{}
-	library.Block(defn).Op(
+	defn := Defn{}
+	definition.Setup(&defn)
+	library.NewBlock(defn).Op(
 		func(early param.Params) func(param.Params) {
 			greeting := defn.Greeting.Param(early)
 			txt := defn.Txt.Param(early)

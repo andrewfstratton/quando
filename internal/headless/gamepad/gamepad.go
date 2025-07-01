@@ -10,14 +10,15 @@ import (
 	"github.com/andrewfstratton/quandoscript/block/widget/menuinput"
 	"github.com/andrewfstratton/quandoscript/block/widget/stringinput"
 	"github.com/andrewfstratton/quandoscript/block/widget/text"
+	"github.com/andrewfstratton/quandoscript/definition"
 	"github.com/andrewfstratton/quandoscript/library"
 	"github.com/andrewfstratton/quandoscript/property"
 )
 
 // N.B. Button 16 is not included since it doesn't work on Server + may open Xbox game bar on Windows
 type Defn struct {
-	TypeName     struct{}           `_:"gamepad.button"`
-	Class        struct{}           `_:"server-devices"`
+	TypeName     widget.None        `_:"gamepad.button"`
+	Class        widget.None        `_:"server-devices"`
 	_            text.Text          `txt:"🕹️️️️️ When "`
 	ButtonNum    menuinput.MenuInt  `0:"Ⓐ/✕" 1:"Ⓑ/◯" 2:"Ⓧ/☐" 3:"Ⓨ/🛆" 14:"🠈" 15:"🠊" 12:"🠉" 13:"🠋" 4:"👈 Bumper" 5:"👉 Bumper" 10:"📍👈" 11:"👉📍" 8:"Back 👈" 9:"👉 Start"`
 	_            text.Text          `txt:" button " iconify:"true"`
@@ -27,8 +28,9 @@ type Defn struct {
 }
 
 func init() {
-	defn := &Defn{}
-	library.Block(defn).Op(
+	defn := Defn{}
+	definition.Setup(&defn)
+	library.NewBlock(defn).Op(
 		func(early param.Params) func(param.Params) {
 			buttonNum := defn.ButtonNum.Param(early)
 			press_release := defn.PressRelease.Param(early)
