@@ -14,12 +14,12 @@ import (
 )
 
 type Defn struct {
-	TypeName widget.None `_:"time.after"`
-	Class    widget.None `_:"time"`
-	_        text.Text   `txt:"After " iconify:"true"`
-	numberinput.S_ecs
-	_ text.Text `txt:"seconds"`
-	boxinput.B_ox
+	TypeName widget.None        `_:"time.after"`
+	Class    widget.None        `_:"time"`
+	_        text.Text          `txt:"After " iconify:"true"`
+	Secs     numberinput.Number `empty:"seconds" min:"0" max:"999" width:"4" default:"1"`
+	_        text.Text          `txt:"seconds"`
+	Box      boxinput.Box
 }
 
 func init() {

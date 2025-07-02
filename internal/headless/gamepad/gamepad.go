@@ -17,14 +17,14 @@ import (
 
 // N.B. Button 16 is not included since it doesn't work on Server + may open Xbox game bar on Windows
 type Defn struct {
-	TypeName  widget.None       `_:"gamepad.button"`
-	Class     widget.None       `_:"server-devices"`
-	_         text.Text         `txt:"🕹️️️️️ When "`
-	ButtonNum menuinput.MenuInt `0:"Ⓐ/✕" 1:"Ⓑ/◯" 2:"Ⓧ/☐" 3:"Ⓨ/🛆" 14:"🠈" 15:"🠊" 12:"🠉" 13:"🠋" 4:"👈 Bumper" 5:"👉 Bumper" 10:"📍👈" 11:"👉📍" 8:"Back 👈" 9:"👉 Start"`
-	_         text.Text         `txt:" button " iconify:"true"`
-	menuinput.P_ressRelease
-	Vari stringinput.String `empty:"⇕" show:"PressRelease=2"`
-	boxinput.B_ox
+	TypeName     widget.None        `_:"gamepad.button"`
+	Class        widget.None        `_:"server-devices"`
+	_            text.Text          `txt:"🕹️️️️️ When "`
+	ButtonNum    menuinput.MenuInt  `0:"Ⓐ/✕" 1:"Ⓑ/◯" 2:"Ⓧ/☐" 3:"Ⓨ/🛆" 14:"🠈" 15:"🠊" 12:"🠉" 13:"🠋" 4:"👈 Bumper" 5:"👉 Bumper" 10:"📍👈" 11:"👉📍" 8:"Back 👈" 9:"👉 Start"`
+	_            text.Text          `txt:" button " iconify:"true"`
+	PressRelease menuinput.MenuInt  `2:"⇕" 1:"press" 0:"release"`
+	Vari         stringinput.String `empty:"⇕" show:"PressRelease=2"`
+	Box          boxinput.Box
 }
 
 func init() {
