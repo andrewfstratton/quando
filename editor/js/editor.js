@@ -834,28 +834,28 @@ function _remote_load_list_add(id, main, fn) {
   return result
 }
 
-export function testCreator(code) {
-  client_script = code  // allows opened window to get generated code
-  let deploy_window = window.open('/client/client.html', 'quando_deployed_test', 'left=0,top=0,width=9999,height=9999');
-  deploy_window.focus() // moveTo(0,0);
-}
-
-export function handle_test() {
+export function handle_run_stop() {
   let code = generator.getQuandoScript(document.getElementById('script'))
-  if (code) {
-    let clipboard = document.getElementById('clipboard')
-    if (clipboard && code.startsWith('<div data-quando-block-type="')) { // if inventing a block
-      let tmp = document.createElement('div')
-      tmp.innerHTML = code
-      setElementHandlers(tmp.firstChild)
-      clipboard.appendChild(tmp.firstChild)
-      _leftClickTitle(document.getElementById('clipboard_title'))
-    } else {
-      testCreator(code)
-    }
-  } else {
+  if (!code) {
     alert('Behaviour incomplete.')
+    return
   }
+  common.Put('/run',
+    (success) => {
+      alert('Running...')
+    }, (fail) => {
+      alert('Failed to run')
+    }, { 'quandoscript': code })
+
+    // // if inventing a block
+    // let clipboard = document.getElementById('clipboard')
+    // if (clipboard && code.startsWith('<div data-quando-block-type="')) {
+    //   let tmp = document.createElement('div')
+    //   tmp.innerHTML = code
+    //   setElementHandlers(tmp.firstChild)
+    //   clipboard.appendChild(tmp.firstChild)
+    //   _leftClickTitle(document.getElementById('clipboard_title'))
+    // }
 }
 
 export function handle_save(quick = false) {

@@ -8,6 +8,7 @@ import (
 	"quando/internal/server/blocks"
 	"quando/internal/server/ip"
 	"quando/internal/server/media"
+	"quando/internal/server/run"
 	"quando/internal/server/scripts"
 	"quando/internal/server/socket"
 	"strings"
@@ -66,6 +67,7 @@ func ServeHTTPandIO(handlers []Handler) {
 	mux.HandleFunc("/", indexOrFail)
 	mux.HandleFunc("/scripts", scripts.HandleDirectory)
 	mux.HandleFunc("/scripts/", scripts.HandleFile)
+	mux.HandleFunc("/run", run.Handle)
 	mux.HandleFunc("/blocks", blocks.Handle)
 
 	mux.HandleFunc("/media/", media.HandleMedia)
