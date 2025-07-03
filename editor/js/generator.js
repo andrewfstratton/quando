@@ -23,7 +23,7 @@ function nextMatch(str, open, close) {
     return [parsed, matched, remaining]
 }
 
-function getCodeForBlock(block) {
+function getCodeForBlock(block, script_tag) {
     if (block.classList.contains("quando-disabled")) {
         return {script:"", postscript: ""}
     }
@@ -51,7 +51,7 @@ function getCodeForBlock(block) {
             // should be && next if
             if (row_box.dataset.quandoName) {
                 let box_id = '0' // i.e. means no sub blocks
-                let {script, postscript} = getCodeForElement(row_box)
+                let {script, postscript} = getCodeForElement(row_box, script_tag)
                 if (script != "") {
                     // get id of first block here
                     box_id = '' + parseInt(script) // n.b. forces a string
@@ -70,8 +70,8 @@ function getCodeForBlock(block) {
     matches['data-quando-id'] = block.dataset.quandoId
     let script = '' // everything that has been parsed...
     let remaining = ''
-    if (block.dataset && block.dataset.quandoScript) {
-        remaining = block.dataset.quandoScript // i.e. what to parse
+    if (block.dataset) {
+        remaining = block.dataset[script_tag] // i.e. what to parse
     }
     let parsed = ''
     let matched = ''
@@ -111,7 +111,7 @@ function getCodeForBlock(block) {
     return { script: script, postscript: block_script }
 }
 
-function getCodeForElement(elem) {
+function getCodeForElement(elem, script_tag) {
     if (elem.classList.contains("quando-disabled")) {
         return { script: "", postscript: "" }
     }
@@ -119,8 +119,8 @@ function getCodeForElement(elem) {
     let subscript = ""
     let children = elem.children
     for (let child of children) {
-        if (child.dataset.quandoScript) {
-            let {script, postscript} = getCodeForBlock(child)
+        if (child.dataset[script_tag]) {
+            let {script, postscript} = getCodeForBlock(child, script_tag)
             if (script != "") {
                 if (scriptblock != "") {
                     scriptblock += "\n" // separate lines
@@ -140,7 +140,7 @@ function getCodeForElement(elem) {
 }
 
 export function getQuandoScript(elem) {
-    let {script, postscript} = getCodeForElement(elem)
+    let {script, postscript} = getCodeForElement(elem, "quandoScript")
     if (postscript != "") {
         script += "\n" + postscript // add blankline between blocks
     }
