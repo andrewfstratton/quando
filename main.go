@@ -3,7 +3,11 @@ package main
 import (
 	"fmt"
 	"quando/internal/config"
-	_ "quando/internal/headless" // calls init() for blocks
+
+	// call init for blocks
+	_ "quando/internal/client"
+	_ "quando/internal/headless"
+
 	"quando/internal/server"
 	"quando/internal/server/ip"
 
