@@ -10,14 +10,14 @@ if (!quando) {
 }
 let self = quando.message = {}
 
-let io_protocol = "ws"
+let web_socket_protocol = "ws"
 let port = window.location.port
 let message_callback = {}
 let message_callback_id = 0
 let socket = false
 
 if (['wss:','https:'].includes(window.location.protocol)) {
-  io_protocol += "s"
+  web_socket_protocol += "s" // i.e. secure
   if (port == 443) {
     port = ''
   }
@@ -29,19 +29,19 @@ if (port != '') {
 }
 
 function _connectWebSocket() {
-  let ws = new WebSocket(io_protocol + '://' + window.location.hostname + port + "/ws/")
+  let web_socket = new WebSocket(web_socket_protocol + '://' + window.location.hostname + port + "/ws/")
 
-  ws.onclose = (e) => {
+  web_socket.onclose = (e) => {
     console.log("reconnecting")
     socket = false
     setTimeout(_connectWebSocket, 1000)
   }
-  ws.onerror = (e) => {
+  web_socket.onerror = (e) => {
     console.log("error:"+e)
-    ws.close(e)
+    web_socket.close(e)
   }
-  ws.onmessage = _handleWebSocketmessage
-  socket = ws
+  web_socket.onmessage = _handleWebSocketmessage
+  socket = web_socket
 }
 _connectWebSocket()
 
@@ -95,7 +95,7 @@ self.send = (message, val_txt, val) => {
         val = ''
       }
     }
-    let json = JSON.stringify({ 
+    let json = JSON.stringify({
       'type':'message', 'message':message, [val_txt]:val
     })
     socket.send(json)
