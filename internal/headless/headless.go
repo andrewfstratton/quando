@@ -2,7 +2,7 @@ package headless
 
 import (
 	"fmt"
-	// below are for side effects, i.e. calling init()
+	// below are for init() setup
 	_ "quando/internal/headless/gamepad"
 	_ "quando/internal/headless/keyboard"
 	_ "quando/internal/headless/system/log"
