@@ -19,7 +19,8 @@ This is needed if you wish to control the keyboard/mouse on your (tested on wind
 
 You will need to install GCC to build robotgo:
 
-1. Open https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/8.1.0/threads-posix/seh/x86_64-8.1.0-release-posix-seh-rt_v6-rev0.7z to download the compressed code for 64 bit windows.
+1. From https://winlibs.com/, download
+   https://github.com/brechtsanders/winlibs_mingw/releases/download/15.2.0posix-13.0.0-msvcrt-r1/winlibs-x86_64-posix-seh-gcc-15.2.0-mingw-w64msvcrt-13.0.0-r1.zip
 2. If you don't have an uncompress program that works, download from https://www.7-zip.org/
 3. Extract the compressed file to `C:\mingw64` - _check that you do not have a mingw64 folder inside C:\mingw64_
 4. Add C:\mingw64\bin to your path:
@@ -30,7 +31,8 @@ You will need to install GCC to build robotgo:
 
 To check that gcc is installed:
 - Open a **new** command line and typing 'gcc --version'
-  - you should see something like 'gcc (x86_64-posix-seh-rev0, Built by MinGW-W64 project) 8.1.0...'
+  - you should see something like
+  'gcc.exe (MinGW-W64 x86_64-msvcrt-posix-seh, built by Brecht Sanders, r1) 15.2.0'
 
 </details>
 
