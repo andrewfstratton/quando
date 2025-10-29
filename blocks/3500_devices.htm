@@ -208,53 +208,59 @@
       <span class="quando-info" title="This block can only be dragged into When Display.">⚠</span>
       ⌨️️ When
       <select data-quando-name="key_name">
-        <option value='Shift'>Shift</option>
-        <option value='Control'>Ctrl</option>
-        <option value='Alt'>Alt</option>
-        <option value='Tab'>Tab</option>
-        <option value='Delete'>Delete</option>
-        <option value='Backspace'>Backspace</option>
-        <option value='Enter'>Enter</option>
-        <option value='Space'>Space</option>
-        <option value='ArrowUp'>🠅 Up</option>
-        <option value='ArrowDown'>🠇 Down</option>
-        <option value='ArrowLeft'>🠄 Left</option>
-        <option value='ArrowRight'>🠆 Right</option>
-        <option value='PageUp'>Page Up</option>
-        <option value='PageDown'>Page Down</option>
-        <option value='Escape'>Escape</option>
-        <option value='Home'>Home</option>
-        <option value='Insert'>Insert</option>
-        <option value='Pause'>Pause</option>
-        <option value='End'>End</option>
-        <option value='PrintScreen'>(unsafe) Print Screen</option>
-        <!-- Note that commented out below tested but did not work
-        <option value='ShiftLeft'>Shift Left</option>
-        <option value='ShiftRight'>Shift Right</option> -->
-        <!-- <option value='ControlLeft'>Ctrl Left</option>
-        <option value='ControlRight'>Ctrl Right</option> -->
-        <!-- <option value='MetaLeft'>Cmd Left</option>
-        <option value='MetaRight'>Cmd Right</option> -->
-        <option value='AltLeft'>Alt Left</option>
-        <!-- <option value='AltRight'>Alt Right</option> -->
-        <option value='CapsLock'>Caps Lock</option>
-        <option value='NumLock'>Num Lock</option>
-        <option value='ContextMenu'>Menu (Win)</option>
-        <option value='F1'>(unsafe) F1</option>
-        <option value='F2'>F2</option>
-        <option value='F3'>F3-unsafe</option>
-        <option value='F4'>F4</option>
-        <option value='F5'>F5</option>
-        <option value='F6'>F6</option>
-        <option value='F7'>F7-unsafe</option>
-        <option value='F8'>F8</option>
-        <option value='F9'>F9</option>
-        <option value='F10'>F10</option>
-        <option value='F11'>(unsafe) F11</option>
-        <option value='F12'>(unsafe) F12</option>
-        <option value='AudioVolumeMute'>Mute</option>
-        <option value='AudioVolumeDown'>Volume Down</option>
-        <option value='AudioVolumeUp'>Volume Up</option>
+        <optgroup label="common">
+          <option value='Tab'>Tab</option>
+          <option value='Delete'>Delete</option>
+          <option value='Backspace'>Backspace</option>
+          <option value='Enter'>Enter</option>
+          <option value='Space'>Space</option>
+          <option value='Insert'>Insert</option>
+          <option value='Pause'>Pause</option>
+          <option value='Escape'>Escape</option>
+        </optgroup>
+        <optgroup label="move">
+          <option value='ArrowUp'>🠅 Up</option>
+          <option value='ArrowDown'>🠇 Down</option>
+          <option value='ArrowLeft'>🠄 Left</option>
+          <option value='ArrowRight'>🠆 Right</option>
+          <option value='PageUp'>Page Up</option>
+          <option value='PageDown'>Page Down</option>
+          <option value='Home'>Home</option>
+          <option value='End'>End</option>
+        </optgroup>
+        <optgroup label="modifier">
+          <option value='Shift'>Shift</option>
+          <option value='Control'>Ctrl</option>
+          <option value='Alt'>Alt</option>
+          <!-- Note that commented out below tested but did not work
+          <option value='ShiftLeft'>Shift Left</option>
+          <option value='ShiftRight'>Shift Right</option> -->
+          <!-- <option value='ControlLeft'>Ctrl Left</option>
+          <option value='ControlRight'>Ctrl Right</option> -->
+          <!-- <option value='MetaLeft'>Cmd Left</option>
+          <option value='MetaRight'>Cmd Right</option> -->
+          <option value='AltLeft'>Alt Left</option>
+          <!-- <option value='AltRight'>Alt Right</option> -->
+          <option value='CapsLock'>Caps Lock</option>
+          <option value='NumLock'>Num Lock</option>
+        </optgroup>
+        <optgroup label="audio">
+          <option value='AudioVolumeMute'>Mute</option>
+          <option value='AudioVolumeUp'>Volume Up</option>
+          <option value='AudioVolumeDown'>Volume Down</option>
+        </optgroup>
+        <optgroup label="function">
+          <option disabled="true">(unsafe moved)</option>
+          <option value='F2'>F2</option>
+          <option value='F4'>F4</option>
+          <option value='F5'>F5</option>
+          <option value='F6'>F6</option>
+          <option value='F8'>F8</option>
+          <option value='F9'>F9</option>
+          <option value='F10'>F10</option>
+        </optgroup>
+        <optgroup label="numpad">
+          <option disabled="true">(n/a)</option>
         <!-- <option value='Numpad0'>Num 0</option>
         <option value='Numpad1'>Num 1</option>
         <option value='Numpad2'>Num 2</option>
@@ -270,6 +276,18 @@
         <option value='NumpadMinus'>Num -</option>
         <option value='NumpadMultiply'>Num *</option>
         <option value='NumpadDivide'>Num /</option> -->
+        </optgroup>
+        <optgroup label="windows">
+          <option value='ContextMenu'>Menu</option>
+        </optgroup>
+        <optgroup label="unsafe">
+          <option value='PrintScreen'>Print Screen</option>
+          <option value='F1'>F1</option>
+          <option value='F3'>F3</option>
+          <option value='F7'>F7</option>
+          <option value='F11'>F11</option>
+          <option value='F12'>F12</option>
+        </optgroup>
       </select>
        special key
       </span>
