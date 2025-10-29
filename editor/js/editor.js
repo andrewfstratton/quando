@@ -24,9 +24,9 @@ export function appendObject(obj) {
   json.addObjectToElement(obj, script, setElementHandlers)
   _populateLists()
   json.setOptions(script) // N.B. must follow populateLists
-  // For option relevant show/hide
   for (let select of script.querySelectorAll("select")) {
-    toggleRelativesOnElement(select) // also handles menu as well as toggle
+    resizeSelectWidth(select) // resize the select drop down menus
+    toggleRelativesOnElement(select) // show/hide menu and toggle
   }
 }
 
@@ -100,10 +100,10 @@ function _show_right_menu(event) {
     menu.style.visibility = "hidden"
     let containing_block = elem
     // need to find the quando-block - may be ancestor
-    if (!elem.classList.contains("quando-block")) {	
-      containing_block = _getParentBlock(elem)	
-    }	
-    if (containing_block){	
+    if (!elem.classList.contains("quando-block")) {
+      containing_block = _getParentBlock(elem)
+    }
+    if (containing_block){
       handle_help(containing_block.dataset.quandoBlockType)
     }
   }, false)
@@ -180,7 +180,7 @@ export function toggleRelativesOnElement(elem) {
     }
     let disables = _buildDisableList(block)
     for (let child of disables) {
-      let disable_class = child.dataset && child.dataset.quandoDisable 
+      let disable_class = child.dataset && child.dataset.quandoDisable
       if (disable_class && disable_class.includes("=")) {
         let [key, value] = disable_class.split('=')
         if (key == elem_name) {
@@ -364,6 +364,18 @@ function _resizeWidth(event) {
     target.style.width = width + 'px'
 }
 
+function resizeSelectWidth(target) {
+    let hidden = document.getElementById('_hidden_width_element_')
+    hidden.textContent = target[target.selectedIndex].text
+    let width = hidden.offsetWidth + 6
+    if (target.className != "quando-toggle") {
+      width += 12 // allow for 'v' drop down
+    }
+    width = Math.min(width, 300)
+    width = Math.max(width, 0)
+    target.style.width = width + 'px'
+}
+
 function handleSelect(event) {
   event.preventDefault()
   let select = event.target
@@ -371,6 +383,7 @@ function handleSelect(event) {
   let new_index = select.selectedIndex
   select.dataset.quandoLastIndex = new_index
   toggleRelativesOnElement(select)
+  resizeSelectWidth(select)
   let _undo = () => {
     select.selectedIndex =  old_index;
     toggleRelativesOnElement(select)
@@ -382,7 +395,7 @@ function handleSelect(event) {
   undo.done(_undo, _redo, "Change Selected")
   return false
 }
-  
+
 export function setElementHandlers (block) {
   block.addEventListener('contextmenu', handleRightClick, false)
   // add handler for list item change
@@ -434,7 +447,7 @@ export function setElementHandlers (block) {
 }
 
 // Note that clone is a 'simple' copy of old, e.g. used for dragging
-function copyBlock(old, clone) { 
+function copyBlock(old, clone) {
   // copy across selected indexes
   if (old.hasChildNodes()) {
     let selector = "select"
@@ -738,6 +751,10 @@ export function setup() {
         for (let item of document.querySelectorAll(selector)) {
           setElementHandlers(item)
         }
+        // set select width
+        for (let select of document.querySelectorAll("select")) {
+          resizeSelectWidth(select)
+        }
         let first_title = document.getElementsByClassName("quando-title")[0]
         if (first_title) {
           _leftClickTitle(first_title)
@@ -829,7 +846,7 @@ export function loaded(obj) {
         + '>' + main.name + '</a>'
         + '<div class="col-sm-1 glyphicon glyphicon-remove"'
           + 'onclick="index.' + fn + '(' + id + ')"' + '>'
-        + '</div>' + 
+        + '</div>' +
       '</div>\n'
     return result
   }
@@ -888,7 +905,7 @@ export function handle_save(quick = false) {
       script: _script
     }))
   }
-  
+
 export function handle_remote_save(close_modal = true) {
   let name = $('#remote_save_key').val()
   if (name == "") {
@@ -923,7 +940,7 @@ export function load_autosave() {
       _warning('No Autosave...')
   }
 }
-  
+
 export function remote_load(index) {
   common.Get('/scripts/' + _remote_list[index],
     (success) => {
@@ -971,7 +988,7 @@ export function handle_clear() {
     showObject(old_object)
     _deploy = old_deploy
     document.getElementById("file_name").innerHTML = old_filename
-    document.getElementById("remote_save_key").value = old_remote_save_key 
+    document.getElementById("remote_save_key").value = old_remote_save_key
   }
   let _redo = () => {
     _deploy = ''
