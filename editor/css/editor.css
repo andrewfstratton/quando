@@ -21,7 +21,7 @@ body {
   height:60%;
 }
 
-#_hidden_width_element_ { 
+#_hidden_width_element_ {
   /* Used to calculate the width of text typed in */
   position: absolute;
   height: 0;
@@ -211,6 +211,14 @@ select.quando-toggle {
   text-align-last: center;
 }
 
+.quando-hover {
+  display: none;
+}
+
+.quando-right:hover .quando-hover {
+  display: inline;
+}
+
 .quando-info {
   padding-left: 6px;
   padding-right: 6px;
@@ -284,7 +292,7 @@ select.quando-toggle {
 .hover:hover .hovertext {
   visibility: visible;
   opacity: 1;
-} 
+}
 
 .quando-disabled * {
   filter: grayscale(100%);
@@ -294,7 +302,7 @@ select.quando-toggle {
 ::-webkit-scrollbar {
     width: 15px;
     height: 15px;
-    border-bottom: 1px solid #eee; 
+    border-bottom: 1px solid #eee;
     border-top: 1px solid #eee;
 }
 ::-webkit-scrollbar-thumb {
@@ -304,8 +312,8 @@ select.quando-toggle {
 }
 
 ::-webkit-scrollbar-track {
-    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.2); 
-} 
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.2);
+}
 
 .quando-block:hover {
   margin-left: 16px;
@@ -324,6 +332,6 @@ select.quando-toggle {
 }
 
 /* Fix for Firefox */
-input[type=number] { 
+input[type=number] {
   -moz-appearance: textfield;
 }

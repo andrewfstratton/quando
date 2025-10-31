@@ -9,7 +9,7 @@
             <span data-quando-toggle='txtval=input'>
                 &quot;<input data-quando-name="text" type="text" value="" data-quando-encode='normal' />&quot;
             </span>
-            <select data-quando-name="extras" class="quando-toggle">
+            <select data-quando-name="extras" class="quando-toggle quando-hover">
                 <option value="hidden">+</option>
                 <option value="show">-</option>
             </select>
@@ -37,7 +37,7 @@
                 &quot;<input data-quando-name='text' type='text' value='' placeholder=''
                     data-quando-encode='normal' />&quot;
             </span>
-            <select data-quando-name="extras" class="quando-toggle">
+            <select data-quando-name="extras" class="quando-toggle quando-hover">
                 <option value="hidden">+</option>
                 <option value="show">-</option>
             </select>
@@ -54,7 +54,7 @@
 </div>
 
 
-<div data-quando-block-type="advanced-comment" class="quando-block" data-quando-disable="enabled=false" data-quando-javascript="// ${description} 
+<div data-quando-block-type="advanced-comment" class="quando-block" data-quando-disable="enabled=false" data-quando-javascript="// ${description}
 $(eq$,${enabled}$,true$,${box})$">
     <div class="quando-left quando-advanced"></div>
     <div class="quando-right">
@@ -66,7 +66,7 @@ $(eq$,${enabled}$,true$,${box})$">
             </select>
             <select class="hover-display quando-toggle" data-quando-name="contents">
                 <option value="show">▲</option>
-                <option value="hidden">▼</option> 
+                <option value="hidden">▼</option>
             </select>
         </div>
         <div data-quando-name="box" data-quando-toggle='contents=show' class="quando-box"></div>
@@ -84,7 +84,7 @@ $(eq$,${enabled}$,true$,${box})$">
             <input data-quando-name='middle' type='number' value='50' placeholder='' style='width: 4em' min='0'
                 max='100' data-quando-encode='normal' />
             %
-            <select data-quando-name="extras" class="quando-toggle">
+            <select data-quando-name="extras" class="quando-toggle quando-hover">
                 <option value="hidden">+</option>
                 <option value="show">-</option>
             </select>
@@ -132,7 +132,7 @@ ${box}
     <div class="quando-left quando-advanced"></div>
     <div class="quando-right">
         <div class="quando-row quando-advanced">
-            <span class="quando-info" title="This block can only be dragged into When Display.">⚠</span>
+            <span class="quando-info quando-hover" title="This block can only be dragged into When Display.">⚠</span>
             📡 When message
             <input data-quando-name="message" type="text" value="" data-quando-encode="normal" />
             <select data-quando-name='txt' class='quando-toggle'>
@@ -152,7 +152,7 @@ ${box}
     <div class="quando-right">
         <div class="quando-row quando-advanced">
             🎲 Pick Random
-            <select data-quando-name='extras' class='quando-toggle'>
+            <select data-quando-name="extras" class="quando-toggle quando-hover">
                 <option value='hidden'>+</option>
                 <option value='show'>-</option>
             </select>
@@ -181,8 +181,7 @@ ${box}
                 <option value='true'>Next</option>
                 <option value='false'>Previous</option>
             </select>
-            &nbsp;
-            <select data-quando-name='extras' class='quando-toggle'>
+            <select data-quando-name="extras" class="quando-toggle quando-hover">
                 <option value='hidden'>+</option>
                 <option value='show'>-</option>
             </select>
@@ -261,7 +260,7 @@ ${box}
             <input data-quando-name='after' type='text' value='' placeholder='' data-quando-encode='normal' />
             </span>
             → ❓
-            <select data-quando-name="extras" class="quando-toggle">
+            <select data-quando-name="extras" class="quando-toggle quando-hover">
                 <option value="hidden">+</option>
                 <option value="show">-</option>
             </select>
@@ -311,7 +310,7 @@ ${box}
                 <option value='hours'>hours</option>
             </select>
             ⚡
-            <select data-quando-name="extras" class="quando-toggle">
+            <select data-quando-name="extras" class="quando-toggle quando-hover">
                 <option value="hidden">+</option>
                 <option value="show">-</option>
             </select>

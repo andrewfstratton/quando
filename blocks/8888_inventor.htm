@@ -70,7 +70,7 @@ $(visible$,_quando_inventor_row3_$,<div data-quando-name="${_quando_box_name2_}"
         <span data-quando-toggle="generator=api">
             <input data-quando-name="library" type="text" value="" placeholder="[library]" data-quando-encode="raw">
             .
-            <input data-quando-name="function" type="text" value="" placeholder="function" data-quando-encode="raw"> 
+            <input data-quando-name="function" type="text" value="" placeholder="function" data-quando-encode="raw">
         </span>
     </div>
     <div data-quando-name="_quando_inventor_generator_" class="quando-box" title="Parameters"></div>
@@ -99,9 +99,9 @@ $(eq$,${iconify}$,true$,</span>)$'>
     <div class="quando-left quando-inventor-display"></div>
     <div class="quando-right">
         <div class="quando-row quando-inventor-display">
-            📄 Text 
+            📄 Text
             <input data-quando-name="text" type="text" value=""/>
-            <select data-quando-name="extras" class="quando-toggle">
+            <select data-quando-name="extras" class="quando-toggle quando-hover">
                 <option value="hidden">+</option>
                 <option value="show">-</option>
             </select>
@@ -137,7 +137,7 @@ Default
       <input data-quando-name="default" type="text" value="" data-quando-encode="normal" />
 Empty
       <input data-quando-name="placeholder" type="text" value="" data-quando-encode="normal" />
-      <select data-quando-name="extras" class="quando-toggle">
+      <select data-quando-name="extras" class="quando-toggle quando-hover">
   <option value="hidden">+</option>
   <option value="show">-</option>
 </select>
@@ -233,7 +233,7 @@ data-quando-javascript="<select data-quando-name='${name}' class='quando-toggle'
         <option value='false'> </option>
       </select>
       <input data-quando-name='param' type='text' value='' placeholder='' data-quando-encode='normal' />
-      <select data-quando-name="extras" class="quando-toggle">
+      <select data-quando-name="extras" class="quando-toggle quando-hover">
         <option value="hidden">+</option>
         <option value="show">-</option>
       </select>
@@ -254,7 +254,7 @@ data-quando-javascript="<select data-quando-name='${name}' class='quando-toggle'
   <div class="quando-left quando-inventor-input"></div>
   <div class="quando-right">
     <div class="quando-row quando-inventor-input">📄
-      Parameter 
+      Parameter
       <select data-quando-name='comma' class='quando-toggle'>
         <option value='true'>,</option>
         <option value='false'></option>
@@ -294,7 +294,7 @@ data-quando-javascript="<select data-quando-name='${name}' class='quando-toggle'
 </div>
 
 
-<div data-quando-block-type="inventor-note" class="quando-block" data-quando-javascript="<span class='quando-info' title='${hover}'>${show}</span>">
+<div data-quando-block-type="inventor-note" class="quando-block" data-quando-javascript="<span class='quando-info quando-hover' title='${hover}'>${show}</span>">
     <div class="quando-left quando-inventor-picker"></div>
     <div class="quando-right">
         <div class="quando-row quando-inventor-picker">
@@ -351,7 +351,7 @@ ${box}</span>
     <div class="quando-left quando-inventor-collection"></div>
     <div class="quando-right">
         <div class="quando-row quando-inventor-collection">
-            Hover Text: 
+            Hover Text:
             "<input data-quando-name="hovertext" type="text" value="" placeholder="name" data-quando-encode="normal"/>"
         </div>
         <div data-quando-name="box" class="quando-box"></div>

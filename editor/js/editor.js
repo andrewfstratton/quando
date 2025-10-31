@@ -368,7 +368,7 @@ function resizeSelectWidth(target) {
     let hidden = document.getElementById('_hidden_width_element_')
     hidden.textContent = target[target.selectedIndex].text
     let width = hidden.offsetWidth + 6
-    if (target.className != "quando-toggle") {
+    if (!target.className.includes("quando-toggle")) {
       width += 12 // allow for 'v' drop down
     }
     width = Math.min(width, 300)
