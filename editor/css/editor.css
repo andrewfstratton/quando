@@ -215,8 +215,8 @@ select.quando-toggle {
   display: none;
 }
 
-.quando-right:hover .quando-hover {
-  display: inline;
+.quando-block:hover .quando-hover {
+  display: unset;
 }
 
 .quando-info {
@@ -321,14 +321,6 @@ select.quando-toggle {
 
 .right {
   float: right
-}
-
-.hover-display {
-  display:none;
-}
-
-.quando-block:hover .hover-display {
-  display:unset;
 }
 
 /* Fix for Firefox */
