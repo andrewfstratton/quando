@@ -140,6 +140,13 @@ input, #_hidden_width_element_ {
   border-radius: 0px 6px 6px 0px;
 }
 
+.quando-row hr {
+  height: 4px;
+  margin: 0px;
+  font-size: 0;
+  border: 0;
+}
+
 .quando-right>.quando-row:first-child {
   border-radius: 6px 6px 6px 6px;
   margin-left: -14px;
