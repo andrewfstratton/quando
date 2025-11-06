@@ -308,6 +308,7 @@ function _handleListNameChange(event) {
         let option = select.querySelector("option[value='" + id + "']") // update the text for any matching options
         if (option) {
           option.textContent = target.value
+          resizeSelectWidth(select)
         }
       }
     }
