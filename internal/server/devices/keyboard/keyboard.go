@@ -37,7 +37,7 @@ func press_release(key keyJSON) {
 		modifiers = append(modifiers, "shift")
 	}
 	if key.Ctrl {
-		modifiers = append(modifiers, "control")
+		modifiers = append(modifiers, "ctrl")
 	}
 	if key.Alt {
 		modifiers = append(modifiers, "alt")
