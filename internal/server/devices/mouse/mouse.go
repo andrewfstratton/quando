@@ -27,7 +27,7 @@ var (
 	last_right  = ""
 )
 
-func check_mouse(button_action string, last_action *string, button_name string) {
+func checkButton(button_action string, last_action *string, button_name string) {
 	if button_action != "" {
 		if button_action != *last_action {
 			switch button_action {
@@ -134,10 +134,10 @@ func mouseMoveRelative(x_val, y_val *float32, best_time float32) {
 	moves <- move_pair
 }
 
-func move_press(mouse mouseJSON) {
-	check_mouse(mouse.Left, &last_left, "left")
-	check_mouse(mouse.Right, &last_right, "right")
-	check_mouse(mouse.Middle, &last_middle, "center")
+func movePress(mouse mouseJSON) {
+	checkButton(mouse.Left, &last_left, "left")
+	checkButton(mouse.Right, &last_right, "right")
+	checkButton(mouse.Middle, &last_middle, "center")
 
 	if mouse.X != nil || mouse.Y != nil { // i.e. either x and/or y is changed
 		x, y := robotgo.Location()
@@ -163,7 +163,7 @@ func HandleMouse(w http.ResponseWriter, req *http.Request) {
 		fmt.Println("Error parsing request", err)
 		return
 	}
-	move_press(mouse)
+	movePress(mouse)
 }
 
 func init() {
