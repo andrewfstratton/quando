@@ -32,7 +32,12 @@ func press_release_modifiers(modifiers []string, up_down string) {
 }
 
 func press_release(key keyJSON) {
-	modifiers := []string{}
+	modifiers := []any{}
+	state := "up"
+	if key.Press {
+		state = "down"
+	}
+	modifiers = append(modifiers, state)
 	if key.Shift {
 		modifiers = append(modifiers, "shift")
 	}
@@ -42,15 +47,7 @@ func press_release(key keyJSON) {
 	if key.Alt {
 		modifiers = append(modifiers, "alt")
 	}
-	state := "up"
-	if key.Press { // press modifiers before pressing key
-		state = "down"
-		press_release_modifiers(modifiers, state)
-	}
-	robotgo.KeyToggle(key.Key, state)
-	if !key.Press { // release modifiers after releasing key
-		press_release_modifiers(modifiers, state)
-	}
+	robotgo.KeyToggle(key.Key, modifiers[:]...)
 }
 
 func type_string(str typeJSON) {
