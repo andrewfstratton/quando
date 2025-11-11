@@ -100,7 +100,7 @@ func gamepadUpdated(num uint) bool {
 				changed = true
 			}
 		}
-		gamepads[num] = &gamepad // always update even state hasn't changed
+		gamepads[num] = &gamepad // always update even when state hasn't changed
 	} else if gamepads[num] != nil { // has just disconnected
 		changed = true
 		gamepads[num] = nil
@@ -148,7 +148,7 @@ func CheckChanged() {
 			} else {
 				str := string(bout)
 				prefix := `{"type":"gamepad"`
-				if str != "{}" {
+				if str != "{}" { // i.e. contains updated data
 					prefix += ","
 				}
 				str = prefix + str[1:]
