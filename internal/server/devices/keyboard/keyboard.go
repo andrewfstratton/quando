@@ -25,28 +25,22 @@ type keyJSON struct {
 
 type typeJSON string
 
-func press_release_modifiers(modifiers []string, up_down string) {
-	for _, key := range modifiers {
-		robotgo.KeyToggle(key, up_down) // these will be shift/control/alt
+func _append_mod(mods []any, state bool, mod string) []any {
+	if state {
+		return append(mods, mod)
 	}
+	return mods
 }
 
 func press_release(key keyJSON) {
-	modifiers := []any{}
 	state := "up"
 	if key.Press {
 		state = "down"
 	}
-	modifiers = append(modifiers, state)
-	if key.Shift {
-		modifiers = append(modifiers, "shift")
-	}
-	if key.Ctrl {
-		modifiers = append(modifiers, "ctrl")
-	}
-	if key.Alt {
-		modifiers = append(modifiers, "alt")
-	}
+	modifiers := []any{state} // have to add up/down first ...
+	modifiers = _append_mod(modifiers, key.Shift, "shift")
+	modifiers = _append_mod(modifiers, key.Ctrl, "ctrl")
+	modifiers = _append_mod(modifiers, key.Alt, "alt")
 	robotgo.KeyToggle(key.Key, modifiers...)
 }
 
