@@ -47,7 +47,7 @@ func press_release(key keyJSON) {
 	if key.Alt {
 		modifiers = append(modifiers, "alt")
 	}
-	robotgo.KeyToggle(key.Key, modifiers[:]...)
+	robotgo.KeyToggle(key.Key, modifiers...)
 }
 
 func type_string(str typeJSON) {
