@@ -15,7 +15,7 @@ const (
 	MAX_GAMEPADS        = 4
 	XINPUT_DLL_FILENAME = "xinput1_3.dll"
 	XINPUT_GET_STATE    = "XInputGetState"
-	// Buton mapping for reference
+	// Button mapping for reference
 	// "UP" 0x0001
 	// "DOWN" 0x0002
 	// "LEFT" 0x0004
@@ -48,7 +48,7 @@ type Gamepad struct {
 
 var gamepads [MAX_GAMEPADS]*Gamepad // stores the last returned to identify changes - or nil
 
-type gamepadJSON struct {
+type GamepadJSON struct {
 	Id       int8   `json:"id"`
 	Drop     bool   `json:"drop,omitempty"`
 	Mask     uint16 `json:"mask,omitempty"`
@@ -108,7 +108,7 @@ func gamepadUpdated(num uint) bool {
 	return changed
 }
 
-func addPostJSON(gamepad *Gamepad, num int, gamepad_json *gamepadJSON) {
+func addPostJSON(gamepad *Gamepad, num int, gamepad_json *GamepadJSON) {
 	gamepad_json.Id = int8(num)
 	if gamepad == nil { // dropped
 		gamepad_json.Drop = true
@@ -130,7 +130,7 @@ func CheckChanged() {
 	} // else
 	for {
 		updated := false
-		gamepad_json := gamepadJSON{}
+		gamepad_json := GamepadJSON{}
 		for num := range MAX_GAMEPADS { // note this will be 0..3
 			if gamepadUpdated(uint(num)) {
 				updated = true
