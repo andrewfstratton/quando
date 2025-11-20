@@ -15,7 +15,7 @@ const (
 	msDelay       = 1000 / KeysPerSecond
 )
 
-type keyJSON struct {
+type KeyJSON struct {
 	Key   string `json:"key"`
 	Press bool   `json:"press"`
 	Shift bool   `json:"shift"`
@@ -23,7 +23,7 @@ type keyJSON struct {
 	Alt   bool   `json:"alt"`
 }
 
-type typeJSON string
+type TypeJSON string
 
 func _append_mod(mods []any, state bool, mod string) []any {
 	if state {
@@ -32,7 +32,7 @@ func _append_mod(mods []any, state bool, mod string) []any {
 	return mods
 }
 
-func press_release(key keyJSON) {
+func press_release(key KeyJSON) {
 	state := "up"
 	if key.Press {
 		state = "down"
@@ -44,13 +44,13 @@ func press_release(key keyJSON) {
 	robotgo.KeyToggle(key.Key, modifiers...)
 }
 
-func type_string(str typeJSON) {
+func type_string(str TypeJSON) {
 	robotgo.SetDelay(msDelay)
 	robotgo.TypeStr(string(str))
 }
 
 func HandleKey(w http.ResponseWriter, req *http.Request) {
-	var key keyJSON
+	var key KeyJSON
 	err := json.NewDecoder(req.Body).Decode(&key)
 	if err != nil {
 		fmt.Println("Error parsing request", err)
@@ -60,7 +60,7 @@ func HandleKey(w http.ResponseWriter, req *http.Request) {
 }
 
 func HandleType(w http.ResponseWriter, req *http.Request) {
-	var typeString typeJSON
+	var typeString TypeJSON
 	err := json.NewDecoder(req.Body).Decode(&typeString)
 	if err != nil {
 		fmt.Println("Error parsing request", err)
