@@ -50,7 +50,7 @@ func BroadcastJSON(js_type string, js_bytes []byte, err error) {
 		fmt.Println("Error marshalling ${js_type}", err)
 	} else {
 		str := string(js_bytes)
-		prefix := `{"type":"${js_type}"`
+		prefix := `{"type":"` + js_type + `"`
 		if str != "{}" { // i.e. contains updated data
 			prefix += ","
 		}
