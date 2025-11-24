@@ -32,6 +32,7 @@ const (
 	// "Y" 0x8000
 	// N.B. HOME/GUIDE Does not map with standard call - would be 0x0400
 )
+const JS_TYPE = "gamepad"
 
 var getState *syscall.Proc
 
@@ -108,18 +109,18 @@ func gamepadUpdated(num uint) bool {
 	return changed
 }
 
-func addPostJSON(gamepad *Gamepad, num int, gamepad_json *GamepadJSON) {
-	gamepad_json.Id = int8(num)
+func addPostJSON(gamepad *Gamepad, num int, gamepadJson *GamepadJSON) {
+	gamepadJson.Id = int8(num)
 	if gamepad == nil { // dropped
-		gamepad_json.Drop = true
+		gamepadJson.Drop = true
 	} else {
-		gamepad_json.Mask = gamepad.button_mask
-		gamepad_json.Ltrigger = gamepad.left_trigger
-		gamepad_json.Rtrigger = gamepad.right_trigger
-		gamepad_json.Lx = gamepad.left_x
-		gamepad_json.Ly = gamepad.left_y
-		gamepad_json.Rx = gamepad.right_x
-		gamepad_json.Ry = gamepad.right_y
+		gamepadJson.Mask = gamepad.button_mask
+		gamepadJson.Ltrigger = gamepad.left_trigger
+		gamepadJson.Rtrigger = gamepad.right_trigger
+		gamepadJson.Lx = gamepad.left_x
+		gamepadJson.Ly = gamepad.left_y
+		gamepadJson.Rx = gamepad.right_x
+		gamepadJson.Ry = gamepad.right_y
 	}
 }
 
@@ -130,7 +131,7 @@ func CheckChanged() {
 	} // else
 	for {
 		updated := false
-		gamepad_json := GamepadJSON{}
+		gamepadJson := GamepadJSON{}
 		for num := range MAX_GAMEPADS { // note this will be 0..3
 			if gamepadUpdated(uint(num)) {
 				updated = true
@@ -138,22 +139,12 @@ func CheckChanged() {
 				if gamepads[num] != nil {
 					gamepad = gamepads[num]
 				}
-				addPostJSON(gamepad, num, &gamepad_json)
+				addPostJSON(gamepad, num, &gamepadJson)
 			}
 		}
 		if updated {
-			bout, err := json.Marshal(gamepad_json)
-			if err != nil {
-				fmt.Println("Error marshalling gamepad", err)
-			} else {
-				str := string(bout)
-				prefix := `{"type":"gamepad"`
-				if str != "{}" { // i.e. contains updated data
-					prefix += ","
-				}
-				str = prefix + str[1:]
-				socket.Broadcast(str)
-			}
+			bout, err := json.Marshal(gamepadJson)
+			socket.BroadcastJSON(JS_TYPE, bout, err)
 		}
 		time.Sleep(time.Second / 60) // 60 times a second
 	}

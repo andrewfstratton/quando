@@ -14,25 +14,27 @@ import (
 	"go.bug.st/serial"
 )
 
-type displayJSON struct {
+const JS_TYPE = "ubit"
+
+type DisplayJSON struct {
 	Val string `json:"val"`
 }
 
-type iconJSON struct {
+type IconJSON struct {
 	Val json.Number `json:"val"`
 }
 
-type servoJSON struct {
+type ServoJSON struct {
 	Servo json.Number `json:"servo"`
 	Angle json.Number `json:"angle"`
 }
 
-type serialJSON struct {
+type SerialJSON struct {
 	Roll  json.Number `json:"Ro"`
 	Pitch json.Number `json:"Pi"`
 }
 
-type postJSON struct {
+type UbitJSON struct {
 	ButtonA     *bool  `json:"button_a,omitempty"`
 	ButtonB     *bool  `json:"button_b,omitempty"`
 	Pin0        *bool  `json:"pin_0,omitempty"`
@@ -41,7 +43,7 @@ type postJSON struct {
 	Orientation string `json:"orientation,omitempty"`
 }
 
-type postAngleJSON struct {
+type PostAngleJSON struct {
 	Roll  json.Number `json:"roll,omitempty"`
 	Pitch json.Number `json:"pitch,omitempty"`
 }
@@ -72,7 +74,7 @@ var device = usb.Device{
 var pressed = new(bool)
 
 func HandleDisplay(w http.ResponseWriter, req *http.Request) {
-	display := displayJSON{}
+	display := DisplayJSON{}
 	err := json.NewDecoder(req.Body).Decode(&display)
 	if err != nil {
 		fmt.Println("Error parsing request", err)
@@ -83,7 +85,7 @@ func HandleDisplay(w http.ResponseWriter, req *http.Request) {
 }
 
 func HandleIcon(w http.ResponseWriter, req *http.Request) {
-	icon := iconJSON{}
+	icon := IconJSON{}
 	err := json.NewDecoder(req.Body).Decode(&icon)
 	if err != nil {
 		fmt.Println("Error parsing request", err)
@@ -94,7 +96,7 @@ func HandleIcon(w http.ResponseWriter, req *http.Request) {
 }
 
 func HandleServo(w http.ResponseWriter, req *http.Request) {
-	servo := servoJSON{}
+	servo := ServoJSON{}
 	err := json.NewDecoder(req.Body).Decode(&servo)
 	if err != nil {
 		fmt.Println("Error parsing request", err)
@@ -105,21 +107,21 @@ func HandleServo(w http.ResponseWriter, req *http.Request) {
 }
 
 func handleButtonGestureTouchPin(msg string) {
-	post_json := postJSON{}
+	ubitJson := UbitJSON{}
 	if strings.Contains(msg, "a") {
-		post_json.ButtonA = pressed
+		ubitJson.ButtonA = pressed
 	}
 	if strings.Contains(msg, "b") {
-		post_json.ButtonB = pressed
+		ubitJson.ButtonB = pressed
 	}
 	if strings.Contains(msg, "0") {
-		post_json.Pin0 = pressed
+		ubitJson.Pin0 = pressed
 	}
 	if strings.Contains(msg, "1") {
-		post_json.Pin1 = pressed
+		ubitJson.Pin1 = pressed
 	}
 	if strings.Contains(msg, "2") {
-		post_json.Pin2 = pressed
+		ubitJson.Pin2 = pressed
 	}
 	orientation := ""
 	for k, v := range lookupGesture {
@@ -129,43 +131,21 @@ func handleButtonGestureTouchPin(msg string) {
 		}
 	}
 	if orientation != "" {
-		post_json.Orientation = orientation
+		ubitJson.Orientation = orientation
 	}
-	bout, err := json.Marshal(post_json)
-	if err != nil {
-		fmt.Println("Error marshalling message", err, ":", msg)
-	} else {
-		str := string(bout)
-		prefix := `{"type":"ubit"`
-		if str != "{}" {
-			prefix += ","
-		}
-		str = prefix + str[1:]
-		socket.Broadcast(str)
-	}
+	bout, err := json.Marshal(ubitJson)
+	socket.BroadcastJSON(JS_TYPE, bout, err)
 }
 
 func handleMessage(msg string) {
-	serial_in := serialJSON{}
+	serial_in := SerialJSON{}
 	err := json.Unmarshal([]byte(msg), &serial_in)
 	if err != nil || msg == "" { // i.e. non JSON - so this is encode gesture/button/pin touch
 		handleButtonGestureTouchPin(msg)
 	} else {
-		sendAngle := postAngleJSON{}
-		sendAngle.Roll = serial_in.Roll
-		sendAngle.Pitch = serial_in.Pitch
-		bout, err := json.Marshal(sendAngle)
-		if err != nil {
-			fmt.Println("Error marshalling message", err, ":", msg)
-		} else {
-			str := string(bout)
-			if str != "{}" {
-				prefix := `{"type":"ubit",`
-				str = prefix + str[1:]
-				socket.Broadcast(str)
-				// fmt.Println("  send ", str)
-			}
-		}
+		postAngleJson := PostAngleJSON{Roll: serial_in.Roll, Pitch: serial_in.Pitch}
+		bout, err := json.Marshal(postAngleJson)
+		socket.BroadcastJSON(JS_TYPE, bout, err)
 	}
 }
 

@@ -15,6 +15,7 @@ import (
 const (
 	KeysPerSecond = 8
 	msDelay       = 1000 / KeysPerSecond
+	JS_TYPE       = "keyboard"
 )
 
 type KeyJSON struct {
@@ -149,21 +150,9 @@ func CheckChanged() { // performance isn't a concern with <60 changes per second
 				key = gohook.RawcodetoKeychar(rawcode)
 			}
 			if key != "" {
-				keyboardJSON := &KeyboardJSON{Key: key, Down: down}
-				// TODO refactor to a common util broadcast
-				bout, err := json.Marshal(keyboardJSON)
-				if err != nil {
-					fmt.Println("Error marshalling keyboard", err)
-				} else {
-					str := string(bout)
-					prefix := `{"type":"keyboard"`
-					if str != "{}" {
-						prefix += ","
-					}
-					str = prefix + str[1:]
-					socket.Broadcast(string(bout))
-					// fmt.Println(str, rawcode)
-				}
+				keyboardJson := &KeyboardJSON{Key: key, Down: down}
+				bout, err := json.Marshal(keyboardJson)
+				socket.BroadcastJSON(JS_TYPE, bout, err)
 			}
 		}
 	}

@@ -45,7 +45,21 @@ func handleSend(ws *websocket.Conn, i int, send sendChannel) {
 	}
 }
 
-func Broadcast(msg string) {
+func BroadcastJSON(js_type string, js_bytes []byte, err error) {
+	if err != nil {
+		fmt.Println("Error marshalling ${js_type}", err)
+	} else {
+		str := string(js_bytes)
+		prefix := `{"type":"${js_type}"`
+		if str != "{}" { // i.e. contains updated data
+			prefix += ","
+		}
+		str = prefix + str[1:]
+		broadcast(str)
+	}
+}
+
+func broadcast(msg string) {
 	for _, send := range sends {
 		if send != nil {
 			send <- msg
@@ -55,7 +69,7 @@ func Broadcast(msg string) {
 
 func Deploy(fileloc string) {
 	bytes, _ := json.Marshal(messageJSON{Type: "deploy", Scriptname: fileloc[1:]}) // remove . at beginning
-	Broadcast(string(bytes))
+	broadcast(string(bytes))
 }
 
 func Serve(ws *websocket.Conn) {
@@ -75,7 +89,7 @@ func Serve(ws *websocket.Conn) {
 		switch message.Type {
 		case "message":
 			bytes, _ := json.Marshal(message) // i.e. forward the message
-			Broadcast(string(bytes))
+			broadcast(string(bytes))
 		default:
 			fmt.Println("Unhandled message type from client: " + message.Type)
 		}

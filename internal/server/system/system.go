@@ -4,7 +4,6 @@ package system
 
 import (
 	"encoding/json"
-	"fmt"
 	"quando/internal/server/socket"
 	"time"
 
@@ -13,6 +12,8 @@ import (
 
 var lastTitle = ""
 
+const JS_TYPE = "system"
+
 type postJSON struct {
 	Title string `json:"title,omitempty"`
 }
@@ -20,20 +21,9 @@ type postJSON struct {
 func changedFocus() {
 	newTitle := robotgo.GetTitle()
 	if newTitle != "" && (newTitle != lastTitle) {
-		postJson := postJSON{}
-		postJson.Title = newTitle
+		postJson := &postJSON{Title: newTitle}
 		bout, err := json.Marshal(postJson)
-		if err != nil {
-			fmt.Println("Error marshalling title", err, ":", newTitle)
-		} else {
-			str := string(bout)
-			prefix := `{"type":"system"`
-			if str != "{}" {
-				prefix += ","
-			}
-			str = prefix + str[1:]
-			socket.Broadcast(str)
-		}
+		socket.BroadcastJSON(JS_TYPE, bout, err)
 		lastTitle = newTitle
 	}
 }
