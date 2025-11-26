@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	KeysPerSecond = 8
+	KeysPerSecond = 8 // Speed at which virtual keys can be pressed.  Equivalent to 100 words/minute
 	msDelay       = 1000 / KeysPerSecond
 )
 
