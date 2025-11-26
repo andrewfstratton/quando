@@ -87,6 +87,10 @@ input, #_hidden_width_element_ {
 
 .quando-box {
   z-index:1;
+  margin: 0px 8px 0px 4px;
+  padding: 4px 0px 4px 0px;
+  min-height: 24px;
+  width: 100%;
 }
 
 #menu, #script, #clipboard, .quando-box {
@@ -155,13 +159,6 @@ input, #_hidden_width_element_ {
 .quando-block, .quando-box {
   text-align: left;
   transition: all .3s ease;
-}
-
-.quando-box {
-  margin: 0px 8px 0px 4px;
-  padding: 4px 0px 4px 0px;
-  min-height: 24px;
-  width: 100%;
 }
 
 input[type="color"] {
