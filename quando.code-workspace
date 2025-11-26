@@ -5,7 +5,7 @@
 		}
 	],
 	"settings": {
-		"workbench.colorTheme": "Kimbie Dark",
+		"workbench.colorTheme": "Visual Studio Light",
 		"workbench.colorCustomizations": {
 			"activityBar.background": "#4F0F55",
 			"titleBar.activeBackground": "#6F1577",
