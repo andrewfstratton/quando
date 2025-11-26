@@ -5,7 +5,6 @@ go 1.24.0
 require (
 	github.com/getlantern/systray v1.2.2
 	github.com/go-vgo/robotgo v0.110.8
-	github.com/robotn/gohook v0.42.2
 	github.com/skratchdot/open-golang v0.0.0-20200116055534-eef842397966
 	github.com/zserge/lorca v0.1.10
 	go.bug.st/serial v1.6.2
