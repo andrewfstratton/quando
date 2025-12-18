@@ -52,7 +52,7 @@ self.per = (times, units, callback) => {
 }
 
 let _pulses = {}
-self.pulse = (persec = 5, id, val, callback) => {
+self.pulse = (persec = 5, mirror = false, id, val, callback_low, callback_high) => {
   let _pulse = _pulses[id]
   if (_pulse != undefined) {
     _pulse.val = val
@@ -64,24 +64,24 @@ self.pulse = (persec = 5, id, val, callback) => {
   let check_fn = () => { // called every persec
     if (_pulse.val == 0) { // won't be pressed
       if (_pulse.up == false) { // no up scheduled
-        callback(0) // TODO too often - this should only happen once
+        callback_low(0) // TODO too often - this should only happen once
         // i.e. must be released
         return
       }
       clearTimeout(_pulse.up) // cancel scheduled up
       _pulse.up = false
-      callback(0) // force release
+      callback_low(0) // force release
       return
     }
     // press down
-    callback(1)
+    callback_low(1)
     if (_pulse.val == 1) {
       _pulse.up = false // no release
       return
     }
     // schedule release
     _pulse.up = setTimeout(() => {
-      callback(0)
+      callback_low(0)
       _pulse.up = false
     }, width_ms * _pulse.val)
   }
@@ -92,7 +92,7 @@ self.pulse = (persec = 5, id, val, callback) => {
     if (_pulse.up != false) {
       clearTimeout(_pulse.up)
     }
-    callback(0) // force back to nothing?!
+    callback_low(0) // force back to nothing?!
     delete _pulses[id]
   })
 }
