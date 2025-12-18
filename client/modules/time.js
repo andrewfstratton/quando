@@ -51,6 +51,52 @@ self.per = (times, units, callback) => {
   self.every(count, 'seconds', callback)
 }
 
+let _pulses = {}
+self.pulse = (persec = 5, id, val, callback) => {
+  let _pulse = _pulses[id]
+  if (_pulse != undefined) {
+    _pulse.val = val
+    return
+  }
+  // first time setup
+  let width_ms = 1000 / persec // width of pulse
+  _pulses[id] = _pulse = { up: false, val: val }
+  let check_fn = () => { // called every persec
+    if (_pulse.val == 0) { // won't be pressed
+      if (_pulse.up == false) { // no up scheduled
+        callback(0) // TODO too often - this should only happen once
+        // i.e. must be released
+        return
+      }
+      clearTimeout(_pulse.up) // cancel scheduled up
+      _pulse.up = false
+      callback(0) // force release
+      return
+    }
+    // press down
+    callback(1)
+    if (_pulse.val == 1) {
+      _pulse.up = false // no release
+      return
+    }
+    // schedule release
+    _pulse.up = setTimeout(() => {
+      callback(0)
+      _pulse.up = false
+    }, width_ms * _pulse.val)
+  }
+  _pulse.check = setInterval(check_fn, width_ms)
+  check_fn() // call immediately
+  destructor.add(() => {
+    clearInterval(_pulse.check)
+    if (_pulse.up != false) {
+      clearTimeout(_pulse.up)
+    }
+    callback(0) // force back to nothing?!
+    delete _pulses[id]
+  })
+}
+
 self.vary = (count, units, loop, per, per_units, inverted, callback) => {
   let time_ms = self.units_to_ms(units, count)
   let start_time = new Date().getTime()
