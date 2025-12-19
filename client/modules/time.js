@@ -52,38 +52,47 @@ self.per = (times, units, callback) => {
 }
 
 let _pulses = {}
+let DOWN = 1, UP = 0
+function cancel_up(_pulse) {
+  if (!_pulse.up) {
+    return
+  }
+  // release scheduled
+  clearTimeout(_pulse.up) // cancel scheduled up
+  _pulse.up = false
+}
+function _pulse_single_fn(_pulse, fn) {
+  if (_pulse.val == 0) { // won't be pressed
+    cancel_up(_pulse)
+    fn(UP) // TODO too often - this should only happen once
+    return
+  }
+  // val > 0
+  cancel_up(_pulse)
+  fn(DOWN) // press down
+  // TODO ^^^ too often - this should only happen once
+  if (_pulse.val == 1) {
+    return
+  }
+  _pulse.up = setTimeout(() => { // schedule release
+    fn(UP) // release
+    cancel_up(_pulse)
+  }, _pulse.width_ms * _pulse.val)
+}
 self.pulse = (persec = 5, mirror = false, id, val, callback_low, callback_high) => {
   let _pulse = _pulses[id]
-  if (_pulse != undefined) {
+  if (_pulse != undefined) { // already setup - just change val
     _pulse.val = val
     return
   }
   // first time setup
   let width_ms = 1000 / persec // width of pulse
-  _pulses[id] = _pulse = { up: false, val: val }
+  _pulses[id] = _pulse = { up: false, width_ms: width_ms, val: val }
   let check_fn = () => { // called every persec
-    if (_pulse.val == 0) { // won't be pressed
-      if (_pulse.up == false) { // no up scheduled
-        callback_low(0) // TODO too often - this should only happen once
-        // i.e. must be released
-        return
-      }
-      clearTimeout(_pulse.up) // cancel scheduled up
-      _pulse.up = false
-      callback_low(0) // force release
+    if (!mirror) {
+      _pulse_single_fn(_pulse, callback_low)
       return
     }
-    // press down
-    callback_low(1)
-    if (_pulse.val == 1) {
-      _pulse.up = false // no release
-      return
-    }
-    // schedule release
-    _pulse.up = setTimeout(() => {
-      callback_low(0)
-      _pulse.up = false
-    }, width_ms * _pulse.val)
   }
   _pulse.check = setInterval(check_fn, width_ms)
   check_fn() // call immediately
@@ -92,7 +101,8 @@ self.pulse = (persec = 5, mirror = false, id, val, callback_low, callback_high) 
     if (_pulse.up != false) {
       clearTimeout(_pulse.up)
     }
-    callback_low(0) // force back to nothing?!
+    callback_low(UP) // force back to released
+    callback_high(UP) // maybe empty
     delete _pulses[id]
   })
 }
