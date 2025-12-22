@@ -115,7 +115,10 @@ function _pulse_single_fn(_pulse, fn) {
   }, _pulse.val * _pulse.width_ms)
 }
 
-self.pulse = (persec = 5, mirror = false, id, val, callback_low, callback_high) => {
+self.pulse = (persec = 5, mirror = false, id, inverted, val, callback_low, callback_high) => {
+  if (inverted) {
+    val = 1-val
+  }
   let _pulse = _pulses[id]
   if (_pulse != undefined) { // already setup - just change val
     _pulse.val = val

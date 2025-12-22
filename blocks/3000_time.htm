@@ -132,7 +132,7 @@
 
 
 <div data-quando-block-type="" class="quando-block"  data-quando-id="true"
-  data-quando-javascript="quando.time.pulse(${persec},${mirror},${data-quando-id},val,(val)=>{${box}},(val)=>{${box2}})">
+  data-quando-javascript="quando.time.pulse(${persec},${mirror},${data-quando-id},${inverted},val,(val)=>{${box}},(val)=>{${box2}})">
   <div class="quando-left quando-time"></div>
   <div class="quando-right">
     <div class="quando-row quando-time">
@@ -151,16 +151,22 @@
           <option value='false'>Single</option>
         </select>
         Input
-        <select data-quando-name='inverted' class='quando-toggle'>
-          <option value='false'>normal</option>
-          <option value='true'>inverted</option>
-        </select>
       </span>
     </div>
     <div data-quando-name="box" class="quando-box"></div>
     <div class="quando-row quando-time" data-quando-toggle="mirror=true">
+      <select data-quando-name='inverted' class='quando-toggle quando-hover'>
+        <option value='false'>normal</option>
+        <option value='true'>inverted</option>
+      </select>
       <i class="quando-hover">
-        top block 🞁 is low ⚡, 🞃 is high ⚡
+        top block 🞁 is
+        <span data-quando-toggle="inverted=true">high</span>
+        <span data-quando-toggle="inverted=false">low</span>
+        ⚡, 🞃 is
+        <span data-quando-toggle="inverted=true">low</span>
+        <span data-quando-toggle="inverted=false">high</span>
+        ⚡
       </i>
     </div>
     <div data-quando-name="box2" class="quando-box" data-quando-toggle="mirror=true"></div>
