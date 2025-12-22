@@ -83,6 +83,10 @@ function _pulse_mirror_fn(_pulse, fn_low, fn_high) {
   }
   // set for high part first
   if (_pulse.val > 0.5) { // high part of mirror
+    if (_pulse.low == DOWN) {
+      cancel_up(_pulse)
+      fn_low(UP)
+    }
     let val = (_pulse.val - 0.5) * 2 // scale 0.5..1 to 0..1
     let [down_up, width_ms] = _val_to_downup_ms(val, _pulse.width_ms)
     // fn_high(down_up) // call every time at the moment
@@ -100,6 +104,10 @@ function _pulse_mirror_fn(_pulse, fn_low, fn_high) {
       cancel_up(_pulse)
     }, width_ms)
   } else { // low part of mirror, i.e. _pulse.val < 0.5
+    if (_pulse.high == DOWN) {
+      cancel_up(_pulse)
+      fn_high(UP)
+    }
     let val = 1 - (_pulse.val * 2) // scale 0.5..0 to 0..1 (reversed)
     let [down_up, width_ms] = _val_to_downup_ms(val, _pulse.width_ms)
     // fn_low(down_up) // call every time at the moment
