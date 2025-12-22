@@ -73,6 +73,53 @@ function _val_to_downup_ms(val, width_ms) {
 
 }
 
+function _pulse_mirror_fn(_pulse, fn_low, fn_high) {
+  // TODO need to release low when instant switch to high at val 1
+  if (_pulse.val == 0.5) {
+    cancel_up(_pulse) // nothing pressed so no release
+    fn_low(UP)
+    fn_high(UP)
+    return
+  }
+  // set for high part first
+  if (_pulse.val > 0.5) { // high part of mirror
+    let val = (_pulse.val - 0.5) * 2 // scale 0.5..1 to 0..1
+    let [down_up, width_ms] = _val_to_downup_ms(val, _pulse.width_ms)
+    // fn_high(down_up) // call every time at the moment
+    if (_pulse.high != down_up) {
+      fn_high(down_up) // only update when changed
+      _pulse.high = down_up // update for next time
+    }
+    if (val == 1) {
+      cancel_up(_pulse) // no release
+      return
+    }
+    _pulse.up_id = setTimeout(() => { // schedule release
+      fn_high(UP)
+      _pulse.high = UP // update for next time
+      cancel_up(_pulse)
+    }, width_ms)
+  } else { // low part of mirror, i.e. _pulse.val < 0.5
+    let val = 1 - (_pulse.val * 2) // scale 0.5..0 to 0..1 (reversed)
+    let [down_up, width_ms] = _val_to_downup_ms(val, _pulse.width_ms)
+    // fn_low(down_up) // call every time at the moment
+    if (_pulse.low != down_up) {
+      fn_low(down_up) // only update when changed
+      _pulse.low = down_up // update for next time
+    }
+    if (val == 1) {
+      cancel_up(_pulse) // no release
+      return
+    }
+    cancel_up(_pulse) // safer
+    _pulse.up_id = setTimeout(() => { // schedule release
+      fn_low(UP)
+      _pulse.low = UP // update for next time
+      cancel_up(_pulse)
+    }, width_ms)
+  }
+}
+
 function _pulse_single_fn(_pulse, fn) {
   let [down_up, width_ms] = _val_to_downup_ms(_pulse.val, _pulse.width_ms)
   cancel_up(_pulse) // safer
@@ -107,7 +154,7 @@ self.pulse = (persec = 5, mirror = false, id, val, callback_low, callback_high) 
       _pulse_single_fn(_pulse, callback_low)
       return
     }
-    // TODO call pulse mirror
+    _pulse_mirror_fn(_pulse, callback_low, callback_high)
   }
   _pulse.check = setInterval(check_fn, width_ms)
   check_fn() // call immediately
