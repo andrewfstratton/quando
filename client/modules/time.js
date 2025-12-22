@@ -84,7 +84,7 @@ function _pulse_mirror_fn(_pulse, fn_low, fn_high) {
       return
     }
     _pulse.up_id = setTimeout(() => { // schedule release
-    _if_neq_fn(_pulse, 'high', UP, fn_high)
+      _if_neq_fn(_pulse, 'high', UP, fn_high)
       cancel_up(_pulse)
     }, val * _pulse.width_ms)
   } else { // low part of mirror, i.e. _pulse.val < 0.5
@@ -101,23 +101,18 @@ function _pulse_mirror_fn(_pulse, fn_low, fn_high) {
 }
 
 function _pulse_single_fn(_pulse, fn) {
-  let [down_up, width_ms] = _val_to_downup_ms(_pulse.val, _pulse.width_ms)
-  cancel_up(_pulse) // safer
-  if (_pulse.low != down_up) {
-    fn(down_up) // only update when changed
-    _pulse.low = down_up // update for next time
+  if (_pulse.val == 0) {
+    _if_neq_fn(_pulse, 'low', UP, fn)
+    return
   }
-  if (down_up == UP) { // won't be pressed
-    return // i.e. val == 0
-  }
+  _if_neq_fn(_pulse, 'low', DOWN, fn)
   if (_pulse.val == 1) {
     return
   }
   _pulse.up_id = setTimeout(() => { // schedule release
-    fn(UP)
-    _pulse.low = UP // update for next time
+    _if_neq_fn(_pulse, 'low', UP, fn)
     cancel_up(_pulse)
-  }, width_ms)
+  }, _pulse.val * _pulse.width_ms)
 }
 
 self.pulse = (persec = 5, mirror = false, id, val, callback_low, callback_high) => {
