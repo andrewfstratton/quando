@@ -58,73 +58,45 @@ function cancel_up(_pulse) {
   if (!_pulse.up_id) { // nothing scheduled
     return
   }
-  // release scheduled
   clearTimeout(_pulse.up_id) // cancel scheduled up
   _pulse.up_id = false
 }
 
-function _val_to_downup_ms(val, width_ms) {
-  let down_up = UP
-  if (val > 0) {
-    down_up = DOWN
+function _if_neq_fn(pulse, property, state, fn) {
+  if (pulse[property] != state) {
+    fn(state)
+    pulse[property] = state
   }
-  let ms = val * width_ms
-  return [down_up, ms]
-
 }
 
 function _pulse_mirror_fn(_pulse, fn_low, fn_high) {
-  // TODO need to release low when instant switch to high at val 1
-  if (_pulse.val == 0.5) {
-    cancel_up(_pulse) // nothing pressed so no release
-    fn_low(UP)
-    fn_high(UP)
+  // scale 0.5..1 to 0..1 and 0.5..0 to 0..1 (inverted)
+  let val = Math.abs((_pulse.val - 0.5) * 2)
+  if (val == 0) {
+    _if_neq_fn(_pulse, 'low', UP, fn_low)
+    _if_neq_fn(_pulse, 'high', UP, fn_high)
     return
   }
-  // set for high part first
   if (_pulse.val > 0.5) { // high part of mirror
-    if (_pulse.low == DOWN) {
-      cancel_up(_pulse)
-      fn_low(UP)
-    }
-    let val = (_pulse.val - 0.5) * 2 // scale 0.5..1 to 0..1
-    let [down_up, width_ms] = _val_to_downup_ms(val, _pulse.width_ms)
-    // fn_high(down_up) // call every time at the moment
-    if (_pulse.high != down_up) {
-      fn_high(down_up) // only update when changed
-      _pulse.high = down_up // update for next time
-    }
-    if (val == 1) {
-      cancel_up(_pulse) // no release
+    _if_neq_fn(_pulse, 'low', UP, fn_low)
+    _if_neq_fn(_pulse, 'high', DOWN, fn_high)
+    if (val == 1) { // at the limit, so no pulse
       return
     }
     _pulse.up_id = setTimeout(() => { // schedule release
-      fn_high(UP)
-      _pulse.high = UP // update for next time
+    _if_neq_fn(_pulse, 'high', UP, fn_high)
       cancel_up(_pulse)
-    }, width_ms)
+    }, val * _pulse.width_ms)
   } else { // low part of mirror, i.e. _pulse.val < 0.5
-    if (_pulse.high == DOWN) {
-      cancel_up(_pulse)
-      fn_high(UP)
-    }
-    let val = 1 - (_pulse.val * 2) // scale 0.5..0 to 0..1 (reversed)
-    let [down_up, width_ms] = _val_to_downup_ms(val, _pulse.width_ms)
-    // fn_low(down_up) // call every time at the moment
-    if (_pulse.low != down_up) {
-      fn_low(down_up) // only update when changed
-      _pulse.low = down_up // update for next time
-    }
-    if (val == 1) {
-      cancel_up(_pulse) // no release
+    _if_neq_fn(_pulse, 'high', UP, fn_high)
+    _if_neq_fn(_pulse, 'low', DOWN, fn_low)
+    if (val == 1) { // at the limit, so no pulse
       return
     }
-    cancel_up(_pulse) // safer
     _pulse.up_id = setTimeout(() => { // schedule release
-      fn_low(UP)
-      _pulse.low = UP // update for next time
+      _if_neq_fn(_pulse, 'low', UP, fn_low)
       cancel_up(_pulse)
-    }, width_ms)
+    }, val * _pulse.width_ms)
   }
 }
 
