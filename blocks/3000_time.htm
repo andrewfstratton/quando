@@ -131,7 +131,43 @@
 </div>
 
 
-<div data-quando-block-type="" class="quando-block"  data-quando-id="true"
+<div data-quando-block-type="time-clicks" class="quando-block"  data-quando-id="true"
+  data-quando-javascript="quando.time.clicks(${persec},${mirror},${data-quando-id},${inverted},val,(val)=>{${box}},(val)=>{${box2}})">
+  <div class="quando-left quando-time"></div>
+  <div class="quando-right">
+    <div class="quando-row quando-time">
+      ⚡ Clicks ⇕
+      <select data-quando-name="extras" class="quando-toggle quando-hover">
+        <option value="hidden">+</option>
+        <option value="show">-</option>
+      </select>
+      <span data-quando-toggle="extras=show">
+        <hr>
+        Max
+        <input data-quando-name='persec' type='number' value='5' placeholder='' style='width: 4em' min='1' max='30'
+          data-quando-encode='normal' />
+        per second
+        <select data-quando-name='mirror' class='quando-toggle'>
+          <option value='false'>Single</option>
+          <option value='true'>Mirror</option>
+        </select>
+        Input
+      </span>
+    </div>
+    <div data-quando-name="box" class="quando-box"></div>
+    <div class="quando-row quando-time" data-quando-toggle="mirror=true">
+      <select data-quando-name='inverted' class='quando-toggle quando-hover'>
+        <option value='false'>low🞁 🞃high</option>
+        <option value='true'>low🞃 🞁high</option>
+      </select>
+    </div>
+    <div data-quando-name="box2" class="quando-box" data-quando-toggle="mirror=true"></div>
+    <div class="quando-row quando-time"></div>
+  </div>
+</div>
+
+
+<div data-quando-block-type="time-pulse" class="quando-block"  data-quando-id="true"
   data-quando-javascript="quando.time.pulse(${persec},${mirror},${data-quando-id},${inverted},val,(val)=>{${box}},(val)=>{${box2}})">
   <div class="quando-left quando-time"></div>
   <div class="quando-right">
