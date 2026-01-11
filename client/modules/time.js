@@ -51,21 +51,21 @@ self.per = (times, units, callback) => {
   self.every(count, 'seconds', callback)
 }
 
-let _pulses = {}
+let _clicks_pulses = {}
 let DOWN = 1, UP = 0
 
-function cancel_up(_pulse) {
-  if (!_pulse.up_id) { // nothing scheduled
+function cancel_up(_click_pulse) {
+  if (!_click_pulse.up_id) { // nothing scheduled
     return
   }
-  clearTimeout(_pulse.up_id) // cancel scheduled up
-  _pulse.up_id = false
+  clearTimeout(_click_pulse.up_id) // cancel scheduled up
+  _click_pulse.up_id = false
 }
 
-function _if_neq_fn(pulse, property, state, fn) {
-  if (pulse[property] != state) {
+function _if_neq_fn(click_pulse, property, state, fn) {
+  if (click_pulse[property] != state) {
     fn(state)
-    pulse[property] = state
+    click_pulse[property] = state
   }
 }
 
@@ -119,14 +119,14 @@ self.pulse = (persec = 5, mirror = false, id, inverted, val, callback_low, callb
   if (inverted) {
     val = 1-val
   }
-  let _pulse = _pulses[id]
+  let _pulse = _clicks_pulses[id]
   if (_pulse != undefined) { // already setup - just change val
     _pulse.val = val
     return
   }
   // first time setup
   let width_ms = 1000 / persec // width of pulse
-  _pulses[id] = _pulse = { up_id: false, low: UP, high:UP, width_ms: width_ms, val: val }
+  _clicks_pulses[id] = _pulse = { up_id: false, low: UP, high:UP, width_ms: width_ms, val: val }
   let check_fn = () => { // called every persec
     if (!mirror) {
       _pulse_single_fn(_pulse, callback_low)
@@ -143,7 +143,7 @@ self.pulse = (persec = 5, mirror = false, id, inverted, val, callback_low, callb
     if (mirror) {
       callback_high(UP)
     }
-    delete _pulses[id]
+    delete _clicks_pulses[id]
   })
 }
 
