@@ -411,7 +411,11 @@
     <div class="quando-left quando-media"></div>
     <div class="quando-right">
         <div class="quando-row quando-media">
-            ⚡🎵 frequency
+            ⚡🎵<span class="iconify">
+                <span data-quando-toggle='channel=1'>1</span>
+                <span data-quando-toggle='channel=2'>2</span>
+                <span data-quando-toggle='channel=3'>3</span>
+            </span> frequency
             <input data-quando-name='min' type='number' value='100' placeholder='' style='width: 5em' min='16'
                 max='32000' data-quando-encode='normal' />
             Hz to
@@ -422,23 +426,14 @@
                 <option value="hidden">+</option>
                 <option value="show">-</option>
             </select>
-            <span data-quando-toggle='channel=1'>
-                <b>on 1</b>
-            </span>
-            <span data-quando-toggle='channel=2'>
-                <b>on 2</b>
-            </span>
-            <span data-quando-toggle='channel=3'>
-                <b>on 3</b>
-            </span>
             <span data-quando-toggle="extras=show">
                 <hr>
                 Channel
                 <select data-quando-name="channel">
                     <option value='0'>main</option>
-                    <option value='1'>1</option>
-                    <option value='2'>2</option>
-                    <option value='3'>3</option>
+                    <option value='1'>🎵1</option>
+                    <option value='2'>🎵2</option>
+                    <option value='3'>🎵3</option>
                 </select>
             </span>
         </div>
