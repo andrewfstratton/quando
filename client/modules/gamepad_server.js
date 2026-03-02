@@ -63,7 +63,7 @@ self.handleAxis = (block_id, left, axis, middle, plus_minus, ignore, inverted, c
     }
     return callback(new_val)
   }
-  _handle(axis_handlers, block_id, axis_id, EITHER, ignore_handler) 
+  _handle(axis_handlers, block_id, axis_id, EITHER, ignore_handler)
 }
 
 self.handleTrigger = (block_id, left, min, max, inverted, callback) => {
@@ -75,7 +75,7 @@ self.handleTrigger = (block_id, left, min, max, inverted, callback) => {
     let new_val = min_max_scaler(val)
     return callback(new_val)
   }
-  _handle(axis_handlers, block_id, trigger_id, EITHER, handler) 
+  _handle(axis_handlers, block_id, trigger_id, EITHER, handler)
 }
 
 const BUTTON_MASK = [0x1000, 0x2000, 0x4000, 0x8000, // ABXY
@@ -145,7 +145,7 @@ self.handle_message = (data) => {
 function _handle_axes_update(gamepad, id) {
     let last_gamepad = gamepads[id]
     for (let i = 0; i < AXES; i++) {
-        let val = gamepad.axis[i]
+        let val = gamepad?.axis[i]
         let last_val = last_gamepad?.axis[i]
         if (val != last_val) {
             let handlers = axis_handlers[i]
